@@ -1,0 +1,23 @@
+#!/bin/ksh
+
+#TODO: disable filename expansion!
+#set -f
+#find . -name $1
+
+srch_ext=`echo $2 | awk -F/ '{ print $NF }' | awk -F. '{ print $NF }'`
+if [ $srch_ext = "tar" ]; then
+	EXE=tar
+elif [ $srch_ext = "jar" ]; then
+	EXE=jar
+else
+	exit
+fi
+
+for f in `${EXE} -tf $2`; do
+	name=`echo $f | awk -F/ '{ print $NF }'`
+	if [ ${#name} -gt 0 ]; then
+		if [ $name = $1 ]; then
+			echo $2" -> "$f
+		fi
+	fi
+done

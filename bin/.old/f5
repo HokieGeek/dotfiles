@@ -1,0 +1,117 @@
+#!/bin/bash
+## This is my refresh-any-build script
+
+RAN_BUILD=0
+TIMER_DAY=""
+TIMER_HOUR=""
+TIMER_MIN=""
+TIMER_SEC=""
+TIMER_MSEC=""
+
+## TODO: Implement a timer
+## TODO: gotta make it smart. break down the pwd to find a keyword
+
+## TIMER
+startTimerB() 
+{
+	TIMER_DAY=`date +%j`
+	TIMER_HOUR=`date +%H`;
+	TIMER_MIN=`date +%M`;
+	TIMER_SEC=`date +%S`;
+	#TIMER_MSEC=`date +%
+}
+getElapsedTimeB()
+{
+	#ETIME=`echo \`date +%s\`-${TIMER} | bc`;
+	ETIME=`echo \`date +%s\`-${TIMER}`;
+
+	echo ${ETIME}
+
+	#if [ ${ETIME} -lt 60 ];
+
+	#SECONDS="0";
+	#MINUTES="0";
+	#HOURS="0";
+	#DAYS="0";
+
+	#case ${LVL} in
+	#1)
+	#esac
+
+	#echo ${DAYS}"d "${HOURS}"h "${MINUTES}"m "${SECONDS}"s"
+}
+stopTimerB()
+{
+	#echo ""
+	#echo -n "Refreshed in:   "
+	getElapsedTimeB
+}
+
+startTimer() 
+{
+	TIMER_DAY=`date +%j`
+	TIMER_HOUR=`date +%H`;
+	TIMER_MIN=`date +%M`;
+	TIMER_SEC=`date +%S`;
+	#TIMER_MSEC=`date +%
+}
+
+getElapsedTime()
+{
+	#MILLISEC=`echo \`date +%\`-${TIMER_MSEC} | bc`
+	SECONDS=`echo \`date +%S\`-${TIMER_SEC} | bc`
+	MINUTES=`echo \`date +%M\`-${TIMER_MIN} | bc`
+	HOURS=`echo \`date +%H\`-${TIMER_HOUR} | bc`
+	DAYS=`echo \`date +%j\`-${TIMER_DAY} | bc`
+
+	echo ${DAYS}"d "${HOURS}"h "${MINUTES}"m "${SECONDS}"s"
+	#echo ${DAYS}"d "${HOURS}"h "${MINUTES}"m "${SECONDS}"s "${MILLISEC}"ms"
+}
+
+stopTimer()
+{
+	echo ""
+	echo -n "Refreshed in:   "
+	getElapsedTime
+}
+if ( [ $# -gt 0 ] && [ $1 = "-t" ] ); then
+	startTimerB;
+	stopTimerB;
+	exit
+fi
+
+## First, it seeks a build/go combo
+if [ `ls -1 | egrep -c "(build|go)\.sh"` -gt 0 ]; then
+	startTimer;
+	clear && ./build.sh && ./go.sh
+	#RAN_BUILD=1;
+	stopTimer;
+	exit
+fi
+#if [ ${RAN_BUILD} -gt 0 ]; then exit; fi
+
+## If there's only one java file in there, then call 'j'
+if [ `ls *.java 2>/dev/null | wc -l` -eq 1 ]; then
+	starTimer;
+	j `ls *.java`
+	stopTimer;
+	#RAN_BUILD=1;
+fi
+#if [ ${RAN_BUILD} -gt 0 ]; then exit; fi
+
+## Builds CBT OPS
+if [ `pwd | cut -d/ -f4` = "cbt_ops" ]; then
+	#
+	export JAVA_HOME=/home/ntms/thirdparty/jdk1.5.0_03
+	ANT='/home/ntms/thirdparty/ant/Ant-1.7.0/bin/ant'
+
+	#
+	startTimer;
+	cd $HOME/cbt_ops
+	cvs update -d -P
+	cd build && ${ANT} war
+	stopTimer;
+
+	#RAN_BUILD=1;
+fi
+if [ ${RAN_BUILD} -gt 0 ]; then exit; fi

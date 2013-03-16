@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -x
+ps -eaf | grep conky | grep -v grep | grep -v vi | grep -v `basename $0` | awk '{print $2}' | xargs kill -9
+"$(cd `dirname $0`; pwd)"/start

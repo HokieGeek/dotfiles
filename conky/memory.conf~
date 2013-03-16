@@ -1,0 +1,53 @@
+# Primary conky configuration
+
+### Options ###
+## General ##
+alignment top_right
+background yes
+cpu_avg_samples 2
+net_avg_samples 2
+no_buffers yes
+out_to_console no
+out_to_stderr no
+update_interval 1.0
+## Graphic ##
+border_width 0
+border_inner_margin 0
+default_color white
+default_outline_color white
+default_shade_color white
+draw_borders no
+draw_graph_borders yes
+draw_outline no
+draw_shades no
+use_xft yes
+gap_x 440
+gap_y 0
+minimum_size 86 23
+extra_newline no
+stippled_borders 0
+uppercase no
+use_spacer none
+show_graph_scale no
+show_graph_range no
+default_bar_size 0 3
+## Window ##
+own_window yes
+own_window_class Conky
+own_window_type desktop
+own_window_argb_visual yes
+own_window_argb_value 0
+
+# ${color grey}RAM:$color${if_match ${memperc} >= 95}${color red}$endif $mem/$memmax ${membar}${color}
+# ${color grey}Swap:$color $swap/$swapmax ${swapbar}
+
+# ${font Verdana:bold:size=6}${color tan1}NETWORKING ${hr 2}$color\
+# ${font Verdana:size=8} \
+# ${color grey}RAM:$color${if_match ${memperc} >= 95}${color red}$endif ${membar}${color}
+# ${color grey}Swap:$color ${swapbar}
+TEXT
+${voffset -4}\
+${font Verdana:bold:size=5} \
+${color tan1}  RAM$color\
+${if_match ${memperc} >= 95}${color red}$endif ${membar}${color}
+${voffset 2}${color tan1}SWAP$color ${swapbar}

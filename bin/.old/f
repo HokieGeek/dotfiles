@@ -1,0 +1,20 @@
+#!/bin/ksh
+
+set -f # disable filename expansion
+if [ $1 = "-" ]; then
+	shift
+	for f in `find .`; do
+		name=`echo $f | awk -F/ '{ print $NF }'`
+		ext=`echo $name | awk -F. '{ print $NF }'`
+		if [ $name = $1 ]; then
+			echo $f
+		elif [ ${#ext} -gt 0 ]; then
+			if [[ ${ext} = "tar" || ${ext} = "jar" ]]; then 
+				rt=`ft $1 $f`
+				[ ${#rt} -gt 0 ] && echo $rt
+			fi
+		fi
+	done
+else
+	find . -name $1
+fi

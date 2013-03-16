@@ -1,0 +1,24 @@
+[user]
+    name = HokieGeek
+    email = andres.f.perez@gmail.com
+[color]
+    ui = auto
+    branch = auto
+    diff = auto
+    interactive = auto
+    status = auto
+[merge]
+    tool = gvimdiff
+[diff]
+    # external = git_diff_wrapper
+    tool = gvimdiff
+    guitool = gvimdiff
+# [pager]
+    # diff =
+[alias]
+    st = status -sb
+    last = log -p -1 HEAD
+    stash-unapply = !git stash show -p | git apply -R
+    sf = submodule foreach
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(cyan)<%an>%Creset' --abbrev-commit --date=relative
+    dt = difftool -y

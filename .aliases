@@ -1,0 +1,64 @@
+#!/bin/bash
+
+alias nq='cvs -nq update -dP'
+alias psgrep='ps -ef --cols 300 | grep -v grep | grep'
+alias ping='whereis ping | cut -d" " -f2'
+
+## Mine
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/$\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias vi='vim'
+alias make='make -j`expr $NUM_PROCESSORS + 1`'
+alias scons='scons -j`expr $NUM_PROCESSORS + 1`'
+alias scont='scons -j`expr $NUM_PROCESSORS + 1` -c'
+alias mymake='$HOME/.bin/mybuild make -j`expr $NUM_PROCESSORS + 1`'
+alias myscons='$HOME/.bin/mybuild scons -j`expr $NUM_PROCESSORS + 1`'
+alias klean='make clean && make'
+alias myklean='mymake clean && mymake'
+alias cant='ant clean && ant'
+
+alias eclipse='$HOME/eclipse/eclipse -vm $JAVA_HOME/bin'
+alias netbeans='$HOME/netbeans-6.8/bin/netbeans'
+
+## S-based aliases
+alias g='$HOME/.bin/s -g'
+alias gi='$HOME/.bin/s -g -i'
+alias f='$HOME/.bin/s -f'
+# alias fi='$HOME/.bin/s -f -i'
+alias sa='$HOME/.bin/s -a'
+alias todo='g "(FIXME|TODO)"'
+
+## Color aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+alias du='$HOME/.bin/du_color'
+
+# alias u='source $HOME/.bin/u'
+
+## Git aliases
+# alias switch_project='source $HOME/.bin/switch_project'
+# alias switch_build='source $HOME/.bin/switch_build.sh'
+alias gp='$HOME/.bin/gitPull'
+alias smgp='gp && git submodule foreach $HOME/.bin/gitPull'
+alias gpp='gp && $HOME/.bin/gitPush'
+alias gpa='$HOME/.bin/gitPullAll'
+alias ga='$HOME/.bin/git_All '
+alias gsa='ga status'
+alias gimme='git clone /stor7/repos/git/SECRET/aic_releases'
+
+alias gcStor7Repos='pushd . >& /dev/null; cd /stor7/repos/git/UNCLASSIFIED; $HOME/.bin/gcRepos && cd ../SECRET && $HOME/.bin/gcRepos; popd >& /dev/null'
+
+## Typo fixing
+alias emacs='echo "Correcting typos in command..."; sleep 1s; gvim'
+alias xemacs='emacs'
+alias :q='exit'
+alias ..='cd ..'
+
+### Some more specific stuff
+alias buspirate='minicom buspirate'
+alias rn42='minicom rn42'

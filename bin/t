@@ -1,0 +1,6 @@
+#!/bin/tcsh
+
+set s=`date`
+$*
+echo "Start: $s"
+echo "End: `date`"

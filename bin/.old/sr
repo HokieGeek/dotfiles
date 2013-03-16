@@ -1,0 +1,7 @@
+#!/bin/sh
+
+while [ $# -gt 0 ]; do
+	from=`echo $1 | cut -d/ -f1`
+	s - $from | xargs r $1
+	shift
+done
