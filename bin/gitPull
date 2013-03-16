@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Make use of the native enchanced echo, if it exists
 RED=""
@@ -25,30 +25,32 @@ if [ "`\echo -e`" != "-e" ]; then
     ECHO='echo -e'
 fi
 
-if [ "$1" == "-help" -o "$1" == "-h" ]; then
-    {
-    echo "        Script Name: `basename $0`" 
-    echo ""
-    echo "        Syntax:      `basename $0` [-help|-h] [server] [branch]"
-    echo ""
-more << USAGE_INFO
-      Description: Allows you to perform a pull from any repository
-                 from any branch. It employs two paths for determining which 
+if [ $# -gt 0 ]; then
+    if [ "$1" = "-help" -o "$1" = "-h" ]; then
+        {
+        echo "        Script Name: `basename $0`"
+        echo ""
+        echo "        Syntax:      `basename $0` [-help|-h] [server] [branch]"
+        echo ""
+    more << USAGE_INFO
+          Description: Allows you to perform a pull from any repository
+                     from any branch. It employs two paths for determining which
 
-    Options:     -help -h 
+        Options:     -help -h
 
-    Arguments:   server         - location or git alias to server location 
-                 branch         - remote branch to pull from 
+        Arguments:   server         - location or git alias to server location
+                     branch         - remote branch to pull from
 
-             Default behavior for determining the server and branch is to retrieve 
-             the information from the currently checked out branch. If the branch is 
-             only available locally or if there are multiple remote servers which 
-             contain that branch, then it will ask for user input on how to proceed.
+                 Default behavior for determining the server and branch is to retrieve
+                 the information from the currently checked out branch. If the branch is
+                 only available locally or if there are multiple remote servers which
+                 contain that branch, then it will ask for user input on how to proceed.
 
-             The arguments will override the default behavior.
+                 The arguments will override the default behavior.
 USAGE_INFO
-    } >&2
-  exit 0
+        } >&2
+      exit 0
+    fi
 fi
 
 # if [  -e ~/.gitCurrentUpdate  ]; then
@@ -58,7 +60,7 @@ fi
 # fi
 # echo `date +%F` > ~/.gitCurrentUpdate
 
-if [  $# -gt 0 -a $# -lt 2  ]; then
+if [ $# -gt 0 -a $# -lt 2 ]; then
   echo "Error: Invalid number of arguments"
   exec $0 -help
 fi
@@ -86,7 +88,7 @@ git remote update --prune | tee ${tmpout}
 [ $? -ne 0 ] && self_status=$EXIT_ERROR
 
 #${ECHO} "DEBUG: server_branch"
-if [ "$branch" == '' -o "$server" == '' ]; then
+if [ "$branch" = '' -o "$server" = '' ]; then
     $DEBUG_ON && ${ECHO} "DEBUG: calling 'gitBranchID $server'"
     #
     gbid_log=/tmp/gitBranchID.$$

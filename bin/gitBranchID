@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Make use of the native enchanced echo, if it exists
 RED=""
@@ -25,27 +25,27 @@ if [ "`\echo -e`" != "-e" ]; then
     ECHO='echo -e'
 fi
 
-if [ "$1" == '-help' -o "$1" == '-h' ]; then
+if [ "$1" = "-help" -o "$1" = "-h" ]; then
     {
-	echo "        Script Name: `basename $0`" 
-	echo ""
-	echo "        Syntax:      `basename $0` [-help|-h] [server]"
-	echo ""
+    echo "        Script Name: `basename $0`" 
+    echo ""
+    echo "        Syntax:      `basename $0` [-help|-h] [server]"
+    echo ""
 more << USAGE_INFO
-  	Description: Allows you to perform a pull from any repository
-	             from any branch. It employs two paths for determining which 
-	
-	Options:     -help -h 
+      Description: Allows you to perform a pull from any repository
+                 from any branch. It employs two paths for determining which 
+    
+    Options:     -help -h 
 
-	Arguments:   server         - location or git alias to server location 
-	             branch         - remote branch to pull from 
+    Arguments:   server         - location or git alias to server location 
+                 branch         - remote branch to pull from 
 
-		     Default behavior for determining the server and branch is to retrieve 
-			 the information from the currently checked out branch. If the branch is 
-			 only available locally or if there are multiple remote servers which 
-			 contain that branch, then it will ask for user input on how to proceed.
+             Default behavior for determining the server and branch is to retrieve 
+             the information from the currently checked out branch. If the branch is 
+             only available locally or if there are multiple remote servers which 
+             contain that branch, then it will ask for user input on how to proceed.
 
-		     The arguments will override the default behavior.
+             The arguments will override the default behavior.
 USAGE_INFO
     } >&2
   exit 0
@@ -82,57 +82,57 @@ real_branch=""
 m=`pwd`
 
 # Determine the server and branch
-if [ "$branch" == '' -a $self_status -le 0 ]; then # Retrieve the currently selected branch
-	branch=`git branch -a | egrep "^\*" | sed -e "s/\*\s*//"`
+if [ "$branch" = '' -a $self_status -le 0 ]; then # Retrieve the currently selected branch
+    branch=`git branch -a | egrep "^\*" | sed -e "s/\*\s*//"`
 fi
 
 # Retrieve the matching remote names where the branch is located
 declare -a server=`git branch -a | grep "remotes" | grep -v "\->" | grep "${branch}" | sed -e 's;^\s*remotes/;;' -e "s;/${branch};;"`
 
-if [ "${server}" == ""  ]; then # If no remotes are found, ask if should pull from origin/master
-	${ECHO} "Branch '$branch' was not found on any of the remote servers."
-	${ECHO} -n "${BRIGHT}Rebase from origin/master? (y/n): ${ALLOFF}"
+if [ "${server}" = ""  ]; then # If no remotes are found, ask if should pull from origin/master
+    ${ECHO} "Branch '$branch' was not found on any of the remote servers."
+    ${ECHO} -n "${BRIGHT}Rebase from origin/master? (y/n): ${ALLOFF}"
     read dummy
-	#TODO: What if origin/master doesn't exist?
-	#if [  $< == 'y'  ]; then
-	if [ "$dummy" == 'y'  ]; then
-		real_branch=${branch}
-		server="origin"
-		branch="master"
-	else
-		self_status=$EXIT_ERROR_NO_REMOTE
-	fi
-	echo ""
+    #TODO: What if origin/master doesn't exist?
+    #if [  $< == 'y'  ]; then
+    if [ "$dummy" == 'y'  ]; then
+        real_branch=${branch}
+        server="origin"
+        branch="master"
+    else
+        self_status=$EXIT_ERROR_NO_REMOTE
+    fi
+    echo ""
 elif [ ${#server[@]} -gt 1  ]; then # If there are multiple remote names with this branch name, ask the user to select one
-	servers=(${server})
-	server=""
-	echo "Found branch '$branch' in multiple remote repositories. Choose one:"
-	while [ "${server}" == "" -a $self_status -le 0 ]; do
-		i=1
+    servers=(${server})
+    server=""
+    echo "Found branch '$branch' in multiple remote repositories. Choose one:"
+    while [ "${server}" == "" -a $self_status -le 0 ]; do
+        i=1
         for s in $servers; do
-		#foreach s ($servers)
-			# set r=`git remote -v | grep "fetch" | grep "${s}" | sed 's/\s*(fetch)$//'`
-			r=`git remote -v | grep "fetch" | grep "${s}" | awk '{ print $2 }'`
-			echo "${i}: $s   ($r)"
-			i=`expr $i + 1`
-		done
-		echo "0: SKIP THIS MODULE"
-		${ECHO} -n "${BRIGHT}Choose: ${ALLOFF}"
+        #foreach s ($servers)
+            # set r=`git remote -v | grep "fetch" | grep "${s}" | sed 's/\s*(fetch)$//'`
+            r=`git remote -v | grep "fetch" | grep "${s}" | awk '{ print $2 }'`
+            echo "${i}: $s   ($r)"
+            i=`expr $i + 1`
+        done
+        echo "0: SKIP THIS MODULE"
+        ${ECHO} -n "${BRIGHT}Choose: ${ALLOFF}"
         read choice
-		# set choice=$<
-		if [ $choice -eq 0 ]; then
-			self_status=$EXIT_SKIPPED
-		elif [ $choice -lt 0 -o $choice -gt ${#servers} ]; then
-			${ECHO} "${RED}ERROR: Invalid choice '$choice'. Please choose again${ALLOFF}"
-		else
-			server=${servers[$choice]}
-		fi
-	done
-	echo ""
+        # set choice=$<
+        if [ $choice -eq 0 ]; then
+            self_status=$EXIT_SKIPPED
+        elif [ $choice -lt 0 -o $choice -gt ${#servers} ]; then
+            ${ECHO} "${RED}ERROR: Invalid choice '$choice'. Please choose again${ALLOFF}"
+        else
+            server=${servers[$choice]}
+        fi
+    done
+    echo ""
 fi
 
 if [ $self_status -le 0 ]; then
-	echo -n "${server}:${branch}"
+    echo -n "${server}:${branch}"
     if [ "$?real_branch" != "" ]; then
         echo -n "|${real_branch}"
     fi
