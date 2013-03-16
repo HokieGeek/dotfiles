@@ -23,7 +23,7 @@ prompt_gitInfo() {
     numMods=`echo $status_out | egrep -c "(A|M|D)"`
     [ $numMods -gt 0 ] && info=${info}"%{$fg_bold[red]%}±%{$reset_color%} "
 
-    echo "${info}%{reset_color%}"
+    echo "${info}%{$reset_color%}"
 }
 
 prompt_repoInfo() {
