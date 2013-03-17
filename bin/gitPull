@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Make use of the native enchanced echo, if it exists
 RED=""
@@ -10,6 +10,7 @@ CYAN=""
 GRAY=""
 BRIGHT=""
 ALLOFF=""
+ECHO='echo'
 
 if [ "`\echo -e`" != "-e" ]; then
     RED="\033[31m"
@@ -23,6 +24,10 @@ if [ "`\echo -e`" != "-e" ]; then
     ALLOFF="\033[0m"
     #alias echo='\echo -e'
     ECHO='echo -e'
+fi
+if [ $# -gt 0 ]; then
+    echo "HERE"
+    exit 42
 fi
 
 if [ $# -gt 0 ]; then
@@ -71,7 +76,7 @@ EXIT_ERROR=2
 EXIT_ERROR_NO_REMOTE=3
 EXIT_CONFLICT=4
 self_status=$EXIT_NORMAL
-DEBUG_ON=false
+DEBUG_ON=true
 
 out="/tmp/gitPull_out.$$"
 tmpout="/tmp/gitPull_tmp.$$"

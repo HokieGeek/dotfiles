@@ -76,7 +76,7 @@ server=$1
 branch=""
 real_branch=""
 
-#echo "DEBUG: HERE"
+echo "DEBUG: HERE"
 # CD into the directory and update the remotes
 [ $? -ne 0 ] && self_status=$EXIT_ERROR
 m=`pwd`
