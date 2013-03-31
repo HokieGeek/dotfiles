@@ -1,8 +1,6 @@
 #!/bin/bash
 
-alias nq='cvs -nq update -dP'
 alias psgrep='ps -ef --cols 300 | grep -v grep | grep'
-alias ping='whereis ping | cut -d" " -f2'
 
 ## Mine
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/$\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
