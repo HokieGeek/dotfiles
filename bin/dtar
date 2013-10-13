@@ -1,7 +1,0 @@
-#!/bin/sh
-
-[ $# -le 0 ] && {
-	echo "No directory given"
-}
-
-tar -cvf $1.tar $1

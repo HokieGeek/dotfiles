@@ -1,2 +1,0 @@
-#!/bin/sh
-vimdiff "$1" "$2"

@@ -1,4 +1,0 @@
-#!/bin/sh
-
-echo "DONE" > /tmp/msg.$$
-mailx -s "Done with procedure" andres.perez@jdsu.com < /tmp/msg.$$
