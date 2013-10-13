@@ -17,7 +17,7 @@ set visualbell
 set ruler
 set showcmd " Shows the command being typed
 set wildmenu " Tab completion in command-line mode (:)
-set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~ " These file types are ignored when doing auto completions
+set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~ " These file types are ignored when doing autocmdto completions
 set viminfo=%,'20,"100,<1000,s100,:150,n~/.viminfo " freaking awesome. RTFM
 set incsearch " Searches as you type
 set spelllang=en_us
@@ -34,6 +34,7 @@ set wrapscan " Searches wrap around the end of the file
 set splitright
 set diffopt+=iwhite " Vimdiff will ignore whitespace diffs
 set ttyfast
+set noscrollbind
 
 if has("gui_running")
     colorscheme desert
@@ -49,14 +50,12 @@ endif
 syntax on
 " Disable syntax highlight for files larger than 50 MB
 autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
+autocmd VimLeave * windo diffoff
 
 """ Highlights
 highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
 highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
 " highlight NonText ctermbg=black ctermfg=lightgrey cterm=none
-" highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
-highlight AFP ctermbg=grey ctermfg=white cterm=bold
-match AFP /\cAFP/
 
 """ Sessions
 func! LoadSession()
@@ -87,8 +86,8 @@ func! DeleteSession()
         echo "Deleted session"
     endif
 endfun
-au VimEnter * call LoadSession()
-au VimLeavePre * call SaveSession(1)
+autocmd VimEnter * call LoadSession()
+autocmd VimLeavePre * call SaveSession(1)
 
 """ Views
 if ! &diff
@@ -97,8 +96,19 @@ if ! &diff
 endif
 
 """ Commands
+func! DiffWithCMedOriginal()
+    exe "topleft vnew | set bt=nofile"
+
+    " TODO: determine if currently in git or hg repo
+
+    " if GIT
+    exe "silent r !git show HEAD:#"
+
+    exe "0d_ | silent windo diffthis"
+endfun
 command! Dorig vnew | set bt=nofile | r # | 0d_ | windo diffthis
-" command! Dgit vnew | set bt=nofile | r # | 0d_ | windo diffthis
+command! Dcm call DiffWithCMedOriginal()
+command! Dclr silent only | diffoff
 " Will allow me to sudo a file that's open
 cmap w!! %!sudo tee > /dev/null %
 
@@ -107,19 +117,18 @@ nmap <Leader>13 maggg?G`a
 nmap <Leader>s :source $MYVIMRC<CR>
 nmap <Leader>v :tabnew $MYVIMRC<CR>
 nmap <silent> <Leader><Leader> :nohlsearch<CR>
-" Search down for a word under cursor in a new window
 nmap <silent> <Leader>] :sp<CR>:res 15<CR>/<C-R><C-W><CR>
-" Search up for a word under cursor in a new window
-nmap <silent> <Leader>[ :sp<CR>:res 15<CR>?<C-R><C-W><CR>
+" nmap <silent> <Leader>[ :sp<CR>:res 15<CR>?<C-R><C-W><CR>
 nmap <silent> <F7> :call SaveSession(0)<CR>
 nmap <silent> <Leader><F7> :call DeleteSession()<CR>
 nmap <silent> <F8> :bnext<CR>
 nmap <silent> <S-F8> :bprevious<CR>
-nmap <silent> <F9> :set cursorline!<CR>:set number!<CR>
+nmap <silent> <F9> :set cursorline! number! relativenumber!<CR>
+" nmap <silent> <S-F9> :set relativenumber!<CR>
 nmap <silent> <F10> :setlocal spell!<CR>
 " <F11> is too often taken by the terminal's FULLSCREEN handler
-nmap <silent> <F12> :if ! &diff<CR>Dorig<CR>else<CR>only<CR>diffoff<CR>endif<CR>
-" nmap <silent> <S-F12> :if ! &diff<CR>Dgit<CR>else<CR>only<CR>diffoff<CR>endif<CR>
+nmap <silent> <F12> :if ! &diff<CR>Dcm<CR>else<CR>Dclr<CR>endif<CR>
+nmap <silent> <S-F12> :if ! &diff<CR>Dorig<CR>else<CR>Dclr<CR>endif<CR>
 
 "" I feel like being a pain in the ass
 noremap <Up> :echoerr "Use k instead!"<CR>
@@ -132,23 +141,33 @@ nmap K k
 command! W w
 
 """ Abbreviations
-ab afp]] [AFP]
+" ab afp]] [AFP]
 
 """ Commenting
 func! SLCOtoggle()
+    normal ma
     if getline(".") =~ '^\s*'.g:slco " Remove the comment tag it contains
-        exe "silent normal ma:.s;".escape(g:slco, "[]")." *;;:nohlsearch`a".eval(strlen(g:slco)+1)."h"
+        silent exe ":.s;".escape(g:slco, "[]")." *;;"
+        normal `a
+        exe "silent normal ".eval(strlen(g:slco)+1)."h"
     else " Comment line
-        exe "normal maI".g:slco." `a".eval(strlen(g:slco)+1)."l"
+        exe "normal I".g:slco." "
+        normal `a
+        exe "normal ".eval(strlen(g:slco)+1)."l"
     endif
 
     if exists("g:slcoE")
         if getline(".") =~ g:slcoE.'\s*$'  " Remove the end comment tag it contains
-            exe "silent normal ma:.s; *".escape(g:slcoE, "[]").";;:nohlsearch`a3h"
+            silent exe ":.s; *".escape(g:slcoE, "[]").";;"
+            normal `a
+            " normal 3h
+            exe "silent normal ".eval(strlen(g:slcoE)+1)."h"
         else " Comment line (end)
-            exe "normal ma^A ".g:slcoE." `a"
+            exe "normal ^A ".g:slcoE." "
+            normal `a
         endif
     endif
+    nohlsearch
 endfun
 func! BLKCOtoggle(isVisual)
     "" Define a few variables
@@ -200,35 +219,50 @@ endfun
 if exists("g:slcoE")
     unlet! slcoE
 endif
-au FileType vim,vimrc let slco="\"" " vim
-au FileType sql let slco="--"       " SQL
-au FileType ahk let slco=";"        " AutoHotkey
-au FileType tex let slco="%"        " LaTeX
-au FileType tex let blkcoS="\begin{comment}"
-au FileType tex let blkcoE="\end{comment}"
-" Shell/Scripts
-au FileType sh,ksh,csh,tcsh,zsh,bash,dash,pl,python,make,gdb let slco="#"
-" XML
-au FileType xml,html let slco="<![CDATA[-----"
-au FileType xml,html let slcoE="-----]]>"
-au FileType xml,html let blkcoS="<![CDATA[-------------------"
-au FileType xml,html let blkcoE="-------------------]]>"
-" Java/C/C++
-au FileType java,c,c++,cpp,h,h++,hpp let slco="//"
-au FileType java,c,c++,cpp,h,h++,hpp let blkcoS="/*"
-au FileType java,c,c++,cpp,h,h++,hpp let blkcoE="*/"
-" All Code Files
-au FileType java,c,c++,cpp,h,h++,hpp,sql,xml,sh,ksh,csh,tcsh,zsh,bash,dash,pl,python,vim,vimrc,ahk,tex,make,gdb map <silent> <Tab> :call SLCOtoggle()<CR>
-au FileType java,c,c++,cpp,h,h++,hpp,xml vmap <silent> <S-Tab> :call BLKCOtoggle(1)<CR>
-au FileType java,c,c++,cpp,h,h++,hpp,xml nmap <silent> <S-Tab> :call BLKCOtoggle(0)<CR>
-au FileType sh,ksh,csh,tcsh,zsh,bash,pl,python,sql,vim,vimrc,ahk,tex,make,gdb nmap <silent> <S-Tab> :'k,.call SLCOtoggle()<CR>
-au FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc map <silent> todo oTODO: <ESC><Tab>==A
-au FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc map <silent> fixme oFIXME: <ESC><Tab>==A
+augroup commenting
+    autocmd!
+    autocmd FileType vim,vimrc let slco="\"" " vim
+    autocmd FileType sql let slco="--"       " SQL
+    autocmd FileType ahk let slco=";"        " AutoHotkey
+    " LaTeX
+    autocmd FileType tex
+        \ let slco="%" |
+        \ let blkcoS="\begin{comment}" |
+        \ let blkcoE="\end{comment}"
+    " Shell/Scripts
+    autocmd FileType sh,ksh,csh,tcsh,zsh,bash,dash,pl,python,make,gdb 
+        \ let slco="#"
+    " XML
+    autocmd FileType xml,html
+        \ let slco="<![CDATA[-----" |
+        \ let slcoE="-----]]>" |
+        \ let blkcoS="<![CDATA[-------------------" |
+        \ let blkcoE="-------------------]]>"
+    " Java/C/C++
+    autocmd FileType java,c,c++,cpp,h,h++,hpp
+        \ let slco="//" |
+        \ let blkcoS="/*" |
+        \ let blkcoE="*/"
+
+    " All Code Files
+    autocmd FileType java,c,c++,cpp,h,h++,hpp,xml
+        \ vmap <silent> <S-Tab> :call BLKCOtoggle(1)<CR> |
+        \ nmap <silent> <S-Tab> :call BLKCOtoggle(0)<CR>
+
+    autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,xml,sh,ksh,csh,tcsh,zsh,bash,dash,pl,python,vim,vimrc,ahk,tex,make,gdb 
+        \ map <silent> <Tab> :call SLCOtoggle()<CR>
+    autocmd FileType sh,ksh,csh,tcsh,zsh,bash,pl,python,sql,vim,vimrc,ahk,tex,make,gdb 
+        \ nmap <silent> <S-Tab> :'k,.call SLCOtoggle()<CR>
+
+    autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
+        \ map <silent> todo oTODO: <ESC><Tab>==A |
+        \ map <silent> fixme oFIXME: <ESC><Tab>==A
+augroup END
 
 """ Syntax lookups / Tagging
 " if filereadable("??/tags")
-    " au FileType c,c++,cpp,h,h++,hpp set tags=./tags
-    " au BufwinEnter *.* echo "Loaded tags file"
+    " autocmd FileType c,c++,cpp,h,h++,hpp set tags=./tags
+    " autocmd BufwinEnter *.* echo "Loaded tags file"
 
     " Map some keys to access these
     " nmap <silent> <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
@@ -237,64 +271,19 @@ au FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc m
 " endif
 
 "" Use <C-X><C-O> to access these
-au FileType c,c++,cpp,h,h++,hpp set omnifunc=ccomplete#Complete
-au FileType java set omnifunc=javacomplete#Complete
-au FileType python set omnifunc=pythoncomplete#Complete
-au FileType javascript set omnifunc=javascriptcomplete#CompleteJS
-au FileType css set omnifunc=csscomplete#CompleteCSS
-au FileType html set omnifunc=htmlcomplete#CompleteTags
-au FileType php set omnifunc=pythoncomplete#CompletePHP
-au FileType xml set omnifunc=xmlcomplete#CompleteTags
+augroup omni_complete
+    autocmd!
+    autocmd FileType c,c++,cpp,h,h++,hpp set omnifunc=ccomplete#Complete
+    autocmd FileType java set omnifunc=javacomplete#Complete
+    autocmd FileType python set omnifunc=pythoncomplete#Complete
+    autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+    autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+    autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
+    autocmd FileType php set omnifunc=pythoncomplete#CompletePHP
+    autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
+augroup END
 
 """ silly little time savers
 " Wraps brackets around a single-line if statement body
-au FileType c,c++,cpp,h,h++,hpp,java map <silent> <C-K> ^f(%A {wi<CR>o}kO
-
-" I have no idea why this is here
-" Steve Hall wrote this function
-" See :help attr-list for possible attrs to pass
-function! Highlight_remove_attr(attr)
-    " save selection registers
-    new
-    silent! put
-
-    " get current highlight configuration
-    redir @x
-    silent! highlight
-    redir END
-    " open temp buffer
-    new
-    " paste in
-    silent! put x
-
-    " convert to vim syntax (from Mkcolorscheme.vim,
-    "   http://vim.sourceforge.net/scripts/script.php?script_id=85)
-    " delete empty,"links" and "cleared" lines
-    silent! g/^$\| links \| cleared/d
-    " join any lines wrapped by the highlight command output
-    silent! %s/\n \+/ /
-    " remove the xxx's
-    silent! %s/ xxx / /
-    " add highlight commands
-    silent! %s/^/highlight /
-    " protect spaces in some font names
-    silent! %s/font=\(.*\)/font='\1'/
-
-    " substitute bold with "NONE"
-    execute 'silent! %s/' . a:attr . '\([\w,]*\)/NONE\1/geI'
-    " yank entire buffer
-    normal ggVG
-    " copy
-    silent! normal "xy
-    " run
-    execute @x
-
-    " remove temp buffer
-    bwipeout!
-
-    " restore selection registers
-    silent! normal ggVGy
-    bwipeout!
-endfunction
-" autocmd BufNewFile,BufRead * call Highlight_remove_attr("bold")
-
+autocmd FileType c,c++,cpp,h,h++,hpp,java 
+            \ map <silent> <C-K> ^f(%A {wi<CR>o}kO
