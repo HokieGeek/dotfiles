@@ -26,12 +26,12 @@ main = do
         { workspaces = myWorkspaces
         , manageHook = myManageHook <+> manageHook defaultConfig
         , layoutHook = avoidStruts $ layoutHook defaultConfig
-        } 
--- `additionalKeys`
-    -- [ ((controlMask, xK_Print), spawn "sleep 0.2; scrot -s")
-    -- , ((0, xK_Print), spawn "scrot")
+        } `additionalKeys`
+        [ ((controlMask, xK_Print), spawn "sleep 0.2; scrot -s")
+        , ((0, xK_Print), spawn "scrot")
         -- , ((modMask .|. controlMask, xK_Left), prevWS)
         -- , ((modMask .|. controlMask .|. shiftMask), xK_Right), moveTo Next EmptyWS)
         -- , ((modMask .|. controlMask, xK_Right), nextWS)
+        -- , ((modMask, xK_Down), nextWS)
         ]
 --}}}
