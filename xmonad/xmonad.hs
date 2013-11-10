@@ -10,7 +10,9 @@ import XMonad.Core
 import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.FadeInactive
+import XMonad.Hooks.FadeWindows
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Layout.NoBorders(smartBorders)
@@ -30,12 +32,12 @@ myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 -- Manage Hooks {{{
 myManageHook = composeAll
     [ isFullscreen --> doFullFloat
-    , className =? "Xmessage"                       --> doCenterFloat
-    , className =? "Gimp"                           --> doFloat <+> viewShift "-"
-    , className =? "VASSAL-launch-ModuleManager"    --> doFloat <+> doShift "9"
-    , className =? "VASSAL-launch-Player"           --> doFloat <+> doShift "9"
+    , className =? "Xmessage"   --> doCenterFloat
+    , className =? "Gimp"       --> doFloat <+> viewShift "-"
+    , className =? "VASSAL-launch-ModuleManager"  --> doFloat <+> doShift "0"
+    , className =? "VASSAL-launch-Player" --> doFloat <+> doShift "0"
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "2" -- Hangouts
-    , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> doFloat <+> viewShift "7" -- Google Keep
+    , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> doFloat <+> viewShift "2" -- Google Keep
 
     -- , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doF copyToAll
     ]
@@ -53,6 +55,10 @@ myLogHook h = dynamicLogWithPP $ defaultPP
       , ppWsSep             =   ""
       , ppOutput            =   hPutStrLn h
     }
+myFadeHook = composeAll
+    [ isUnfocused --> transparency 0.3
+    ,                 opaque
+    ]
 -- }}}
 -- }}}
 
@@ -97,6 +103,8 @@ main = do
             , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
             , layoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
             , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
+            -- , logHook = fadeWindowsLogHook myFadeHook <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
+            , handleEventHook = fullscreenEventHook
             , borderWidth = 0
             } `additionalKeys` myKeys
 --}}}
