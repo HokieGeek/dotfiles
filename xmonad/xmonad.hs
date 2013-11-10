@@ -78,7 +78,7 @@ main = do
             -- XF86AudioLowerVolume
             , ((0, 0x1008FF11), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3-")
             -- XF86AudioMute
-            , ((0, 0x1008FF12), spawn "amixer -q set Master toggle")
+            , ((0, 0x1008FF12), spawn "amixer -q set Master toggle; amixer -q set Speaker toggle; amixer -q set Headphone toggle")
             , ((0, xK_Print), spawn "scrot")
             , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -s")
             ]
