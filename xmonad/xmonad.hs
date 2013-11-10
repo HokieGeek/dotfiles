@@ -9,6 +9,7 @@ import XMonad
 import XMonad.Core
 import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
+import XMonad.Actions.GridSelect
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.FadeInactive
@@ -26,6 +27,7 @@ import qualified XMonad.StackSet as W
 modm = mod4Mask
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
+myGSMenu = ["chromium-browser", "terminator", "netflix-desktop", "gvim"]
 --}}}
 
 -- Hooks {{{
@@ -47,7 +49,7 @@ myManageHook = composeAll
 myLogHook :: Handle -> X ()
 myLogHook h = dynamicLogWithPP $ defaultPP
     {
-        ppCurrent           =   dzenColor "#ebac54" "#1B1D1E" . pad
+        ppCurrent           =   dzenColor "#e87511" "#1B1D1E" . pad
       , ppVisible           =   dzenColor "white" "#1B1D1E" . pad
       , ppHidden            =   dzenColor "white" "#1B1D1E" . pad
       , ppHiddenNoWindows   =   dzenColor "#7b7b7b" "#1B1D1E" . pad
@@ -65,6 +67,9 @@ myFadeHook = composeAll
 -- Keybindings {{{
 myKeys =
             [ ((modm, xK_q), spawn "~/.xmonad/restart")
+            , ((modm, xK_a), spawn "gmrun")
+            , ((modm, xK_z), goToSelected defaultGSConfig)
+            , (((modm .|. shiftMask), xK_z), spawnSelected defaultGSConfig myGSMenu)
             -- Workspace helpers
             , (((modm .|. mod1Mask), xK_Left), prevWS)
             , (((modm .|. mod1Mask), xK_Right), nextWS)
@@ -81,7 +86,7 @@ myKeys =
             , ((0, xF86XK_AudioMute), spawn "amixer -q set Master toggle; amixer -q set Speaker toggle; amixer -q set Headphone toggle")
             -- PrintScreen
             , ((0, xK_Print), spawn "scrot")
-            , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -s")
+            , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
             -- Sleep!
             , ((0, xF86XK_Sleep), spawn "sudo /usr/sbin/pm-suspend")
             ]
