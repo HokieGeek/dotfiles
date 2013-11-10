@@ -1,0 +1,6 @@
+#!/bin/sh
+
+t=/tmp/txt.$$
+[ $# -gt 0 ] && echo $@ > $t || tee $t >/dev/null
+[ "`cat $t`" != "" ] && mailx -r "txt@`hostname`" 7039079329@vtext.com < $t
+rm -rf $t

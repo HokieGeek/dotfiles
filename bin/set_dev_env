@@ -1,0 +1,13 @@
+#!/bin/csh -f
+
+if ( ${#argv} < 1 ) then
+	echo "USAGE: PROJECT_NAME [BRANCH_NAME]"
+	exit 1
+endif
+
+if ( ${#argv} >= 2 ) then
+	source $HOME/.bin/switch_branch $2
+else
+	source $HOME/.bin/switch_branch $MODE
+endif
+source $HOME/.bin/switch_project $1

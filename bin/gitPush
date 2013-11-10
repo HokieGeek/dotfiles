@@ -1,0 +1,120 @@
+#!/bin/bash
+
+# Make use of the native enchanced echo, if it exists
+RED=""
+GREEN=""
+YELLOW=""
+BLUE=""
+PURPLE=""
+CYAN=""
+GRAY=""
+BRIGHT=""
+ALLOFF=""
+
+if [ "`\echo -e`" != "-e" ]; then
+    RED="\033[31m"
+    GREEN="\033[32m"
+    YELLOW="\033[33m"
+    BLUE="\033[34m"
+    PURPLE="\033[35m"
+    CYAN="\033[36m"
+    GRAY="\033[37m"
+    BRIGHT="\033[1m"
+    ALLOFF="\033[0m"
+    #alias echo='\echo -e'
+    ECHO='echo -e'
+fi
+
+if [ "$1" = "-help" -o "$1" = "-h"  ]; then
+    {
+    echo "        Script Name: `basename $0`" 
+    echo ""
+    echo "        Syntax:      `basename $0` [-help|-h] [server] [branch]"
+    echo ""
+more << USAGE_INFO
+    Description: Allows you to perform a pull from any repository
+                 from any branch. It employs two paths for determining which 
+
+    Options:     -help -h 
+
+    Arguments:   server         - location or git alias to server location 
+                 branch         - remote branch to pull from 
+
+             Default behavior for determining the server and branch is to retrieve 
+             the information from the currently checked out branch. If the branch is 
+             only available locally or if there are multiple remote servers which 
+             contain that branch, then it will ask for user input on how to proceed.
+
+             The arguments will override the default behavior.
+USAGE_INFO
+    } >&2
+  exit 0
+fi
+
+# if [   -e ~/.gitCurrentUpdate  ]; then
+  # mv -f ~/.gitCurrentUpdate ~/.gitLastUpdate
+# else
+  # echo `date +%F` > ~/.gitLastUpdate
+# fi
+# echo `date +%F` > ~/.gitCurrentUpdate
+
+if [ $# -gt 0 -a $# -lt 2  ]; then
+  echo "Error: Invalid number of arguments"
+  exec $0 "-help"
+fi
+
+EXIT_NORMAL=0
+EXIT_SKIPPED=1
+EXIT_ERROR=2
+EXIT_ERROR_NO_REMOTE=3
+EXIT_CONFLICT=4
+self_status=$EXIT_NORMAL
+
+out="/tmp/gitPull_out.$$"
+tmpout="/tmp/gitPull_tmp.$$"
+server=$1
+branch=$2
+
+conflictPat="(CONFLICT|merge)"
+m=`pwd`
+
+# CD into the directory and update the remotes
+git remote update --prune | tee ${tmpout}
+[  $? != 0 ] && self_status=$EXIT_ERROR
+
+if [ "$branch" == "" -o "$server" == "" ]; then
+    server_branch=`$HOME/.bin/gitBranchID $server`
+    branch_id_status=$?
+    if [ $branch_id_status -eq $EXIT_SKIPPED ]; then
+        self_status=$EXIT_SKIPPED
+    # elif [  $branch_id_status -eq $EXIT_ERROR ]; then
+    elif [ $branch_id_status -eq $EXIT_ERROR_NO_REMOTE ]; then
+        self_status=$EXIT_ERROR
+    else
+        # server=`echo $server_branch | cut -d':' -f1`
+        # branch=`echo $server_branch | cut -d':' -f2`
+        server=`echo $server_branch | cut -d'|' -f1 | cut -d':' -f1`
+        branch=`echo $server_branch | cut -d'|' -f1 | cut -d':' -f2`
+        no_remote_branch=`echo $server_branch | cut -d'|' -f2`
+    fi
+fi
+
+if [ $self_status -le 0 ]; then
+    # Perform the update
+    ${ECHO} "${CYAN}Pushing to ${server}/${branch}${ALLOFF}"
+    git push --tags -v $server $branch 2>&1 | tee ${tmpout}
+
+    # Determine if there were any issues. Append to file to output at end
+    conflictCheck=`egrep -c "$conflictPat" ${tmpout}`
+    if [ $conflictCheck -gt 0 ]; then
+        self_status=$EXIT_CONFLICT
+        # awk_cmd="{ print "'"'"${BRIGHT}${RED}ERROR: ${name}: '"'"$0"'"'${ALLOFF}"'"'" }"
+        # egrep $conflictPat ${tmpout} | egrep "^error:" | awk "$awk_cmd" >> ${out}
+        # egrep $conflictPat ${tmpout} | awk "$awk_cmd" >> ${out}
+    fi
+fi
+
+# Cleanup
+[ -f ${tmpout} ] && rm -rf ${out} ${tmpout}
+
+exit $self_status

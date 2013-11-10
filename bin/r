@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Print usage information when no arguments are passed
+USAGE="r FROM/TO FILES..."
+if [ $# -lt 0 ]; then 
+	echo $USAGE
+	exit
+fi
+
+# Get the pattern
+#from=`echo $1 | cut -d/ -f1`
+#to=`echo $1 | cut -d/ -f2`
+
+# Build the ex commands
+cmd="0,\$s/$1/g"
+shift
+
+# Do the actual replacing
+while [ $# -gt 0 ]; do
+	echo $1":"`grep -n $from $1 | cut -d: -f1`
+	#echo $cmds | ex - $1
+	shift
+done

@@ -1,0 +1,43 @@
+#!/bin/bash
+
+cd ~/src/java/ws
+files=""
+
+# Add the majority of the files
+for f in `find . -iname "nmdsf*"`; do
+	echo "$f" | grep -i "build.eclipse" 2>&1 >/dev/null
+	if [ $? -gt 0 -a ! -d $f ]; then
+		files="${files} `echo "$f" | sed -e 's;^\./;;' -e 's;^ws/;;'`"
+	fi
+done
+
+# Add the source files
+for f in `find src/org/nswccd/ws/handlers/NMDSFInterface ! -name ".*" | grep -v "CVS"`; do
+	if [ ! -d $f ]; then
+		files="${files} `echo "$f" | sed -e 's;^\./;;' -e 's;^ws/;;'`"
+	fi
+done
+
+
+# Add the SQL files
+for f in `find meta/sql -iname "*metoc*"`; do
+	if [ ! -d $f ]; then
+		files="${files} `echo "$f" | sed -e 's;^\./;;' -e 's;^ws/;;'`"
+	fi
+done
+
+# Add a copy of the build and deploy xmls
+cp build.xml{,_afp}
+cp deploy.xml{,_afp}
+files="${files} build.xml_afp deploy.xml_afp"
+
+# Create the tarball
+tar_name="ws_nmdsf_snapshot_`date +%Y%m%d`.tar"
+[ -f ${tar_name} ] && rm -rf ${tar_name}
+tar -cvf ../${tar_name} ${files}
+
+# Restore the build and deploy scripts
+cp build.xml{_afp,}
+cp deploy.xml{_afp,}
+
+echo "Created `cd ..; pwd`/${tar_name}"

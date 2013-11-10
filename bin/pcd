@@ -1,0 +1,5 @@
+#!/bin/tcsh
+if ($# <= 0) exit 1
+set s=${IMAT_SRC}'/java/'`echo $1 | sed 's;\.;/;g'`
+if (`basename $s` == "*" || ! -d $s ) set s=`dirname $s`
+cd $s

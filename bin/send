@@ -1,0 +1,7 @@
+#!/bin/sh
+
+t=/tmp/txt.$$
+[ $# -gt 0 ] && echo $@ > $t || tee $t >/dev/null
+[ "`cat $t`" != "" ] && mailx -r "noreply@`hostname`" -s "Sent from `hostname`" andres.perez@jdsu.com < $t
+rm -rf $t
+
