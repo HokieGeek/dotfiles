@@ -22,7 +22,7 @@ import qualified XMonad.StackSet as W
 -- Manage Hooks {{{
 myManageHook = composeAll
     [ isFullscreen --> doFullFloat
-    , className =? "Gimp"                           --> doFloat
+    , className =? "Gimp"                           --> doFloat <+> viewShift "-"
     , className =? "VASSAL-launch-ModuleManager"    --> doFloat <+> doShift "9"
     , className =? "VASSAL-launch-Player"           --> doFloat <+> doShift "9"
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "2" -- Hangouts
@@ -52,7 +52,7 @@ myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 
 -- Main {{{
 workspaceStatusBar = "sleep 3s; dzen2 -x '1440' -y '0' -h '16' -w '270' -fg '#FFFFFF' -bg '#1B1D1E'"
-conkyStatusBar = "conky -c /home/andres/.conky/xmonad.conf | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF'"
+conkyStatusBar = "conky -c ~/.conky/xmonad.conf | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF'"
 main = do
         dzenLeftBar <- spawnPipe workspaceStatusBar
         dzenRightBar <- spawnPipe conkyStatusBar
@@ -68,8 +68,9 @@ main = do
             , (((mod4Mask .|. mod1Mask), xK_Right), nextWS)
             , (((mod4Mask .|. shiftMask), xK_Left), shiftToPrev)
             , (((mod4Mask .|. shiftMask), xK_Right), shiftToNext)
-            , (((mod4Mask .|. mod1Mask), xK_Down), moveTo Next EmptyWS)
-            -- , (((mod1Mask), xK_0), zip (XMonad.workspaces conf) "0")
+            , (((mod4Mask .|. mod1Mask), xK_Up), moveTo Next EmptyWS)
+            , (((mod4Mask .|. mod1Mask), xK_Down), toggleWS)
+            -- , (((mod1Mask), xK_0), W.greedyView "0")
             , (((mod4Mask .|. controlMask .|. shiftMask), xK_Left), spawn "xbacklight -inc 20")
             , (((mod4Mask .|. controlMask .|. shiftMask), xK_Right), spawn "xbacklight -dec 20")
             -- XF86AudioRaiseVolume
@@ -77,9 +78,12 @@ main = do
             -- XF86AudioLowerVolume
             , ((0, 0x1008FF11), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3-")
             -- XF86AudioMute
-            , ((0, 0x1008FF12), spawn "amixer -q set Master toggle ; amixer -q set Speaker toggle ; amixer -q set Headphone toggle")
-            , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -s")
+            , ((0, 0x1008FF12), spawn "amixer -q set Master toggle")
             , ((0, xK_Print), spawn "scrot")
-            , ((mod4Mask .|. shiftMask, xK_S), spawn "sudo /usr/sbin/pm-suspend")
+            , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -s")
             ]
+            -- ++
+            -- [((m .|. modMask, k), windows $ f i)
+                -- | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+                -- , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
 --}}}
