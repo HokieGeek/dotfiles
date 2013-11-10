@@ -1,9 +1,11 @@
 -- Imports {{{
 import Control.Monad (liftM2)
 import XMonad
+import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Layout.NoBorders
 import XMonad.Util.EZConfig(additionalKeys)
 import qualified XMonad.StackSet as W
 --}}}
@@ -11,17 +13,20 @@ import qualified XMonad.StackSet as W
 -- Hooks {{{
 -- Manage Hooks {{{
 myManageHook = composeAll
-    [ className =? "Gimp"                           --> doFloat
-    , className =? "VASSAL-launch-ModuleManager"    --> doFloat
-    , className =? "VASSAL-launch-Player"           --> doFloat
-    , className =? "VASSAL-launch-ModuleManager"    --> viewShift "9"
-    , className =? "VASSAL-launch-Player"           --> viewShift "9"
-    , isFullscreen --> doFullFloat
+    [ isFullscreen --> doFullFloat
+    , className =? "Gimp"                           --> doFloat
+    , className =? "VASSAL-launch-ModuleManager"    --> doFloat <+> doShift "9"
+    , className =? "VASSAL-launch-Player"           --> doFloat <+> doShift "9"
+    , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "2" -- Hangouts
+    , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> doFloat <+> viewShift "7" -- Google Keep
+
+    -- , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doF copyToAll
     ]
     where viewShift = doF . liftM2 (.) W.greedyView W.shift
 -- }}}
 -- }}}
 
+-- TODO: why do these not work?
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 
 -- Main {{{
@@ -29,8 +34,8 @@ main = do
     xmonad $ defaultConfig
         { workspaces = myWorkspaces
         , modMask = mod4Mask
-        , manageHook = myManageHook <+> manageHook defaultConfig
-        , layoutHook = avoidStruts $ layoutHook defaultConfig
+        , manageHook = myManageHook <+> manageHook defaultConfig -- conky/dzen <+> manageDocks
+        , layoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
         } `additionalKeys`
         [ (((mod4Mask .|. controlMask), xK_Left), prevWS)
         , (((mod4Mask .|. controlMask), xK_Right), nextWS)
