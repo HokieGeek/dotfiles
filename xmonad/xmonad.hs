@@ -51,7 +51,7 @@ myLogHook h = dynamicLogWithPP $ defaultPP
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 
 -- Main {{{
-workspaceStatusBar = "dzen2 -x '1440' -y '0' -h '16' -w '270' -fg '#FFFFFF' -bg '#1B1D1E'"
+workspaceStatusBar = "sleep 3s; dzen2 -x '1440' -y '0' -h '16' -w '270' -fg '#FFFFFF' -bg '#1B1D1E'"
 conkyStatusBar = "conky -c /home/andres/.conky/xmonad.conf | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF'"
 main = do
         dzenLeftBar <- spawnPipe workspaceStatusBar
