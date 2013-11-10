@@ -36,12 +36,13 @@ main = do
         , modMask = mod4Mask
         , manageHook = myManageHook <+> manageHook defaultConfig -- conky/dzen <+> manageDocks
         , layoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
+        , borderWidth = 0
         } `additionalKeys`
-        [ (((mod4Mask .|. controlMask), xK_Left), prevWS)
-        , (((mod4Mask .|. controlMask), xK_Right), nextWS)
+        [ (((mod4Mask .|. mod1Mask), xK_Left), prevWS)
+        , (((mod4Mask .|. mod1Mask), xK_Right), nextWS)
         , (((mod4Mask .|. shiftMask), xK_Left), shiftToPrev)
         , (((mod4Mask .|. shiftMask), xK_Right), shiftToNext)
-        , (((mod4Mask .|. controlMask .|. shiftMask), xK_Down), moveTo Next EmptyWS)
+        , (((mod4Mask .|. mod1Mask), xK_Down), moveTo Next EmptyWS)
         , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -s")
         , ((0, xK_Print), spawn "scrot")
         , ((mod4Mask .|. shiftMask, xK_S), spawn "sudo /usr/sbin/pm-suspend")
