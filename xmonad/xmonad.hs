@@ -1,6 +1,8 @@
 -- Imports {{{
 import Control.Monad(liftM2)
 
+import Graphics.X11.ExtraTypes.XF86
+
 import System.IO
 
 import XMonad
@@ -19,13 +21,16 @@ import qualified XMonad.StackSet as W
 --}}}
 
 -- Local Variables {{{
+modm = mod4Mask
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
+myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 --}}}
 
 -- Hooks {{{
 -- Manage Hooks {{{
 myManageHook = composeAll
     [ isFullscreen --> doFullFloat
+    , className =? "Xmessage"                       --> doCenterFloat
     , className =? "Gimp"                           --> doFloat <+> viewShift "-"
     , className =? "VASSAL-launch-ModuleManager"    --> doFloat <+> doShift "9"
     , className =? "VASSAL-launch-Player"           --> doFloat <+> doShift "9"
@@ -53,37 +58,31 @@ myLogHook h = dynamicLogWithPP $ defaultPP
 
 -- Keybindings {{{
 myKeys =
-            [ (((mod4Mask .|. mod1Mask), xK_Left), prevWS)
-            , (((mod4Mask .|. mod1Mask), xK_Right), nextWS)
-            , (((mod4Mask .|. shiftMask), xK_Left), shiftToPrev)
-            , (((mod4Mask .|. shiftMask), xK_Right), shiftToNext)
-            , (((mod4Mask .|. mod1Mask), xK_Up), moveTo Next EmptyWS)
-            , (((mod4Mask .|. mod1Mask), xK_Down), toggleWS)
-            -- Added 3 workspaces (0,-,=)
-            , (((mod4Mask), xK_0), windows $ W.greedyView "0")
-            , (((mod4Mask .|. shiftMask), xK_0), windows $ W.shift "0")
-            , (((mod4Mask), xK_minus), windows $ W.greedyView "-")
-            , (((mod4Mask .|. shiftMask), xK_minus), windows $ W.shift "-")
-            , (((mod4Mask), xK_equal), windows $ W.greedyView "=")
-            , (((mod4Mask .|. shiftMask), xK_equal), windows $ W.shift "=")
+            [ ((modm, xK_q), spawn "~/.xmonad/restart")
+            -- Workspace helpers
+            , (((modm .|. mod1Mask), xK_Left), prevWS)
+            , (((modm .|. mod1Mask), xK_Right), nextWS)
+            , (((modm .|. shiftMask), xK_Left), shiftToPrev)
+            , (((modm .|. shiftMask), xK_Right), shiftToNext)
+            , (((modm .|. mod1Mask), xK_Up), moveTo Next EmptyWS)
+            , (((modm .|. mod1Mask), xK_Down), toggleWS)
             -- Backlight
-            , (((mod4Mask .|. controlMask .|. shiftMask), xK_Left), spawn "xbacklight -inc 20")
-            , (((mod4Mask .|. controlMask .|. shiftMask), xK_Right), spawn "xbacklight -dec 20")
+            , (((modm .|. controlMask .|. shiftMask), xK_Left), spawn "xbacklight -inc 20")
+            , (((modm .|. controlMask .|. shiftMask), xK_Right), spawn "xbacklight -dec 20")
             -- Volume
-            -- XF86AudioRaiseVolume
-            , ((0, 0x1008FF13), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3+")
-            -- XF86AudioLowerVolume
-            , ((0, 0x1008FF11), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3-")
-            -- XF86AudioMute
-            , ((0, 0x1008FF12), spawn "amixer -q set Master toggle; amixer -q set Speaker toggle; amixer -q set Headphone toggle")
+            , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3+")
+            , ((0, xF86XK_AudioLowerVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3-")
+            , ((0, xF86XK_AudioMute), spawn "amixer -q set Master toggle; amixer -q set Speaker toggle; amixer -q set Headphone toggle")
             -- PrintScreen
             , ((0, xK_Print), spawn "scrot")
             , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -s")
+            -- Sleep!
+            , ((0, xF86XK_Sleep), spawn "sudo /usr/sbin/pm-suspend")
             ]
-            -- ++
-            -- [((m .|. mod4Mask, k), windows $ f i)
-                -- | (i, k) <- zip myWorkspaces [xK_1..xK_9]-- ++ [xK_0]
-                -- , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+            ++
+            [((m .|. modm, k), windows $ f i)
+                | (i, k) <- zip myWorkspaces myWorkspaceKeys
+                , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
 -- }}}
 
 -- Main {{{
@@ -94,7 +93,7 @@ main = do
         dzenRightBar <- spawnPipe conkyStatusBar
         xmonad $ defaultConfig
             { workspaces = myWorkspaces
-            , modMask = mod4Mask
+            , modMask = modm
             , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
             , layoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
             , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
