@@ -242,7 +242,7 @@ if exists("g:slcoE") | unlet! slcoE | endif
 augroup commenting
     autocmd!
     autocmd FileType vim,vimrc let slco="\"" " vim
-    autocmd FileType sql let slco="--"       " SQL
+    autocmd FileType sql,haskell let slco="--"    " SQL and Haskell
     autocmd FileType ahk let slco=";"        " AutoHotkey
     " Java/C/C++
     autocmd FileType java,c,c++,cpp,h,h++,hpp
