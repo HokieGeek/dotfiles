@@ -33,7 +33,6 @@ myManageHook = composeAll
     where viewShift = doF . liftM2 (.) W.greedyView W.shift
 -- }}}
 -- Log Hooks {{{
-myBitmapsDir = "/home/andres/dzen-temp"
 myLogHook :: Handle -> X ()
 myLogHook h = dynamicLogWithPP $ defaultPP
     {
@@ -42,37 +41,27 @@ myLogHook h = dynamicLogWithPP $ defaultPP
       , ppHidden            =   dzenColor "white" "#1B1D1E" . pad
       , ppHiddenNoWindows   =   dzenColor "#7b7b7b" "#1B1D1E" . pad
       , ppUrgent            =   dzenColor "#ff0000" "#1B1D1E" . pad
-      , ppWsSep             =   " "
-      , ppSep               =   "  |  "
-      , ppLayout            =   dzenColor "#ebac54" "#1B1D1E" .
-                                (\x -> case x of
-                                    "ResizableTall"             ->      "^i(" ++ myBitmapsDir ++ "/tall.xbm)"
-                                    "Mirror ResizableTall"      ->      "^i(" ++ myBitmapsDir ++ "/mtall.xbm)"
-                                    "Full"                      ->      "^i(" ++ myBitmapsDir ++ "/full.xbm)"
-                                    "Simple Float"              ->      "~"
-                                    _                           ->      x
-                                )
-      , ppTitle             =   (" " ++) . dzenColor "white" "#1B1D1E" . dzenEscape
+      , ppWsSep             =   ""
       , ppOutput            =   hPutStrLn h
     }
 -- }}}
 -- }}}
 
--- TODO: why do these not work?
+-- TODO: need to define the keybindings!!
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 
 -- Main {{{
--- myXmonadBar = "dzen2 -x '1440' -y '0' -h '24' -w '640' -ta 'l' -fg '#FFFFFF' -bg '#C0C0C0'" --'#1B1D1E'"
-myStatusBar = "conky -c /home/andres/.conky/xmonad.conf | dzen2 -x '2732' -w '1366' -h '20' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -y '0'"
+workspaceStatusBar = "dzen2 -x '1440' -y '0' -h '20' -w '270' -fg '#FFFFFF' -bg '#1B1D1E'"
+conkyStatusBar = "conky -c /home/andres/.conky/xmonad.conf | dzen2 -y '0' -x '2732' -w '1366' -h '20' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF'"
 main = do
-        -- dzenLeftBar <- spawnPipe myXmonadBar
-        dzenRightBar <- spawnPipe myStatusBar
+        dzenLeftBar <- spawnPipe workspaceStatusBar
+        dzenRightBar <- spawnPipe conkyStatusBar
         xmonad $ defaultConfig
             { workspaces = myWorkspaces
             , modMask = mod4Mask
             , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
             , layoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
-            -- , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
+            , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
             , borderWidth = 0
             } `additionalKeys`
             [ (((mod4Mask .|. mod1Mask), xK_Left), prevWS)
