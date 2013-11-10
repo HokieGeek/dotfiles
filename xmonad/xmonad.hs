@@ -103,7 +103,7 @@ main = do
             , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
             , layoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
             , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
-            -- , logHook = fadeWindowsLogHook myFadeHook <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
+            -- , logHook = fadeWindowsLogHook myFadeHook -- <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
             , handleEventHook = fullscreenEventHook
             , borderWidth = 0
             } `additionalKeys` myKeys
