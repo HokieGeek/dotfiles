@@ -62,17 +62,17 @@ myLogHook h = dynamicLogWithPP $ defaultPP
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 
 -- Main {{{
-myXmonadBar = "dzen2 -x '1440' -y '0' -h '24' -w '640' -ta 'l' -fg '#FFFFFF' -bg '#1B1D1E'"
-myStatusBar = "conky -c /home/andres/.conky/conky_dzen | dzen2 -x '2080' -w '1040' -h '24' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -y '0'"
+-- myXmonadBar = "dzen2 -x '1440' -y '0' -h '24' -w '640' -ta 'l' -fg '#FFFFFF' -bg '#C0C0C0'" --'#1B1D1E'"
+myStatusBar = "conky -c /home/andres/.conky/xmonad.conf | dzen2 -x '2732' -w '1366' -h '20' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -y '0'"
 main = do
-        dzenLeftBar <- spawnPipe myXmonadBar
+        -- dzenLeftBar <- spawnPipe myXmonadBar
         dzenRightBar <- spawnPipe myStatusBar
         xmonad $ defaultConfig
             { workspaces = myWorkspaces
             , modMask = mod4Mask
             , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
             , layoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
-            , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
+            -- , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
             , borderWidth = 0
             } `additionalKeys`
             [ (((mod4Mask .|. mod1Mask), xK_Left), prevWS)
