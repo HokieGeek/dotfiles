@@ -26,8 +26,13 @@ import qualified XMonad.StackSet as W
 -- Local Variables {{{
 modm = mod4Mask
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
+-- myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ"]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
-myGSMenu = ["chromium-browser", "terminator", "netflix-desktop", "gvim"]
+myDefaultGSMenu = ["chromium-browser" -- C
+                  , "terminator", "netflix-desktop", "gvim", "vlc" -- S, E, N, W
+                  , "Gimp"
+                  ]
+-- Gimp, Eclipse, Arduino... minicom?
 --}}}
 
 -- Hooks {{{
@@ -36,8 +41,8 @@ myManageHook = composeAll
     [ isFullscreen --> doFullFloat
     , className =? "Xmessage"   --> doCenterFloat
     , className =? "Gimp"       --> doFloat <+> viewShift "-"
-    , className =? "VASSAL-launch-ModuleManager"  --> doFloat <+> doShift "0"
-    , className =? "VASSAL-launch-Player" --> doFloat <+> doShift "0"
+    , className =? "VASSAL-launch-ModuleManager"  --> doFloat <+> doShift "="
+    , className =? "VASSAL-launch-Player" --> doFloat <+> doShift "="
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "2" -- Hangouts
     , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> doFloat <+> viewShift "2" -- Google Keep
 
@@ -57,10 +62,15 @@ myLogHook h = dynamicLogWithPP $ defaultPP
       , ppWsSep             =   ""
       , ppOutput            =   hPutStrLn h
     }
-myFadeHook = composeAll
-    [ isUnfocused --> transparency 0.3
+-- }}}
+-- Fade Hooks {{{
+myFadeHook0 = composeAll
+    [ isUnfocused --> transparency 1.0
     ,                 opaque
     ]
+myFadeHook :: X ()
+myFadeHook = fadeInactiveLogHook fadeAmount
+    where fadeAmount = 1
 -- }}}
 -- }}}
 
@@ -69,7 +79,7 @@ myKeys =
             [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), spawn "gmrun")
             , ((modm, xK_z), goToSelected defaultGSConfig)
-            , (((modm .|. shiftMask), xK_z), spawnSelected defaultGSConfig myGSMenu)
+            , (((modm .|. shiftMask), xK_z), spawnSelected defaultGSConfig myDefaultGSMenu)
             -- Workspace helpers
             , (((modm .|. mod1Mask), xK_Left), prevWS)
             , (((modm .|. mod1Mask), xK_Right), nextWS)
@@ -97,9 +107,14 @@ myKeys =
 -- }}}
 
 -- Main {{{
-workspaceStatusBar = "sleep 3s; dzen2 -x '1440' -y '0' -h '16' -w '270' -fg '#FFFFFF' -bg '#1B1D1E'"
-conkyStatusBar = "conky -c ~/.conky/xmonad.conf | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF'"
+compmgr = "xcompmgr"
+-- workspaceStatusBar = "sleep 3s; dzen2 -x '1440' -y '0' -h '16' -w '270' -fg '#FFFFFF' -bg '#1B1D1E'"
+-- workspaceStatusBar = "sleep 3s; dzen2 -fn '-*-terminus-*-r-normal-*-*-120-*-*-*-*-iso8859-*' -x '1440' -y '0' -h '16' -w '270' -fg '#FFFFFF' -bg '#1B1D1E'"
+workspaceStatusBar = "sleep 3s; dzen2 -fn '-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*' -x '1440' -y '0' -h '16' -w '230' -fg '#FFFFFF' -bg '#1B1D1E'"
+conkyStatusBar = "conky -c ~/.conky/xmonad.conf | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -fn '-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*'"
+-- conkyStatusBar = "conky -c ~/.conky/xmonad.conf | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -fn '-*-dejavusans-*-r-*-*-12-*-*-*-*-*-*-*'"
 main = do
+        compMgrStart <- spawn compmgr
         dzenLeftBar <- spawnPipe workspaceStatusBar
         dzenRightBar <- spawnPipe conkyStatusBar
         xmonad $ defaultConfig
@@ -107,9 +122,11 @@ main = do
             , modMask = modm
             , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
             , layoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
-            , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
+            , logHook = fadeWindowsLogHook myFadeHook0 <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
+            -- , logHook = myFadeHook <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
             -- , logHook = fadeWindowsLogHook myFadeHook -- <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
-            , handleEventHook = fullscreenEventHook
+            -- , handleEventHook = fullscreenEventHook
+            , handleEventHook = fadeWindowsEventHook
             , borderWidth = 0
             } `additionalKeys` myKeys
 --}}}
