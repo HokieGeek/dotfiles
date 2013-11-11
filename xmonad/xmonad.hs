@@ -64,13 +64,10 @@ myLogHook h = dynamicLogWithPP $ defaultPP
     }
 -- }}}
 -- Fade Hooks {{{
-myFadeHook0 = composeAll
+myFadeHook = composeAll
     [ isUnfocused --> transparency 1.0
     ,                 opaque
     ]
-myFadeHook :: X ()
-myFadeHook = fadeInactiveLogHook fadeAmount
-    where fadeAmount = 1
 -- }}}
 -- }}}
 
@@ -122,11 +119,8 @@ main = do
             , modMask = modm
             , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
             , layoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
-            , logHook = fadeWindowsLogHook myFadeHook0 <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
-            -- , logHook = myFadeHook <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
-            -- , logHook = fadeWindowsLogHook myFadeHook -- <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
-            -- , handleEventHook = fullscreenEventHook
-            , handleEventHook = fadeWindowsEventHook
+            , logHook = fadeWindowsLogHook myFadeHook <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
+            , handleEventHook = fadeWindowsEventHook -- <+> fullScreenEventHook
             , borderWidth = 0
             } `additionalKeys` myKeys
 --}}}
