@@ -10,7 +10,21 @@ cd $dotfilesDir
 ignores="`basename $0` README.md"
 for df in `ls -1`; do
     [ `echo ${ignores} | grep -c "${df}"` -eq 0 ] && {
-        echo "  Linking ${df}"
-        ln -s ${dotfilesDir} ${destination}/.${df}
+        echo -n " Linking "
+        [ -d ${df} ] && echo -n "directory" || echo -n "file"
+        echo " ${df}"
+
+        target="${destination}/.${df}"
+
+        [ -L ${target} ] && {
+            echo -n "   "
+            rm -i ${target}
+        }
+
+        if [ -L ${target} ]; then
+            echo "Did not create link for ${df}" 
+        else
+            ln -s ${dotfilesDir}/${df} ${target}
+        fi
     }
 done
