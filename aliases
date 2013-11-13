@@ -39,17 +39,13 @@ alias du='$HOME/.bin/du_color'
 # alias u='source $HOME/.bin/u'
 
 ## Git aliases
-# alias switch_project='source $HOME/.bin/switch_project'
-# alias switch_build='source $HOME/.bin/switch_build.sh'
-alias gp='$HOME/.bin/gitPull'
-alias smgp='gp && git submodule foreach $HOME/.bin/gitPull'
-alias gpp='gp && $HOME/.bin/gitPush'
-alias gpa='$HOME/.bin/gitPullAll'
-alias ga='$HOME/.bin/git_All '
-alias gsa='ga status'
-alias gimme='git clone /stor7/repos/git/SECRET/aic_releases'
-
-alias gcStor7Repos='pushd . >& /dev/null; cd /stor7/repos/git/UNCLASSIFIED; $HOME/.bin/gcRepos && cd ../SECRET && $HOME/.bin/gcRepos; popd >& /dev/null'
+#alias gtrack='git ???? --set-to-upstream=origin/`get branch` `get branch`'
+alias gp='git pull'
+alias smgp='gp && git submodule foreach "git pull"'
+#alias gpp='gp && $HOME/.bin/gitPush'
+#alias gpa='$HOME/.bin/gitPullAll'
+#alias ga='$HOME/.bin/git_All '
+#alias gsa='ga status'
 
 ## Typo fixing
 alias emacs='echo "Correcting typos in command..."; sleep 1s; gvim'
