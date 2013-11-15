@@ -14,6 +14,8 @@ alias klean='make clean && make'
 alias myklean='mymake clean && mymake'
 alias cant='ant clean && ant'
 
+alias roll='echo $((RANDOM%7))'
+
 alias eclipse='$HOME/eclipse/eclipse -vm $JAVA_HOME/bin'
 alias netbeans='$HOME/netbeans-6.8/bin/netbeans'
 
