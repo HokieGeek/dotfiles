@@ -79,7 +79,9 @@ myKeys =
             , (((modm .|. shiftMask), xK_z), spawnSelected defaultGSConfig myDefaultGSMenu)
             -- Workspace helpers
             , (((modm .|. mod1Mask), xK_Left), prevWS)
+            , (((controlMask .|. mod1Mask), xK_Left), prevWS)
             , (((modm .|. mod1Mask), xK_Right), nextWS)
+            , (((controlMask .|. mod1Mask), xK_Right), nextWS)
             , (((modm .|. shiftMask), xK_Left), shiftToPrev)
             , (((modm .|. shiftMask), xK_Right), shiftToNext)
             , (((modm .|. mod1Mask), xK_Up), moveTo Next EmptyWS)
