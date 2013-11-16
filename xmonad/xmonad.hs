@@ -25,6 +25,7 @@ import qualified XMonad.StackSet as W
 
 -- Local Variables {{{
 modm = mod4Mask
+myTerminal = "terminator"
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 -- myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ"]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
@@ -96,8 +97,9 @@ myKeys =
             -- PrintScreen
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
-            -- Sleep!
+            -- Others
             , ((0, xF86XK_Sleep), spawn "sudo /usr/sbin/pm-suspend")
+            , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
             ]
             ++
             [((m .|. modm, k), windows $ f i)
@@ -118,6 +120,7 @@ main = do
         dzenRightBar <- spawnPipe conkyStatusBar
         xmonad $ defaultConfig
             { workspaces = myWorkspaces
+            , terminal = myTerminal
             , modMask = modm
             , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
             , layoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
