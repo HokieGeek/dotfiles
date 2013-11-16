@@ -16,6 +16,7 @@ import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.FadeWindows
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.UrgencyHook
 import XMonad.Layout.NoBorders(smartBorders)
 import XMonad.Util.Run
 import XMonad.Util.EZConfig
@@ -118,7 +119,8 @@ main = do
         compMgrStart <- spawn compmgr
         dzenLeftBar <- spawnPipe workspaceStatusBar
         dzenRightBar <- spawnPipe conkyStatusBar
-        xmonad $ defaultConfig
+        xmonad  $ withUrgencyHook dzenUrgencyHook { args = ["-bg", "darkgreen", "-xs", "1"] }
+                $ defaultConfig
             { workspaces = myWorkspaces
             , terminal = myTerminal
             , modMask = modm
