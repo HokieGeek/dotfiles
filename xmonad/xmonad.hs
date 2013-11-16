@@ -45,8 +45,8 @@ myManageHook = composeAll
     , className =? "Gimp"       --> doFloat <+> viewShift "-"
     , className =? "VASSAL-launch-ModuleManager"  --> doFloat <+> doShift "="
     , className =? "VASSAL-launch-Player" --> doFloat <+> doShift "="
-    , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "2" -- Hangouts
-    , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> doFloat <+> viewShift "2" -- Google Keep
+    , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "1" -- Hangouts
+    , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> doFloat <+> viewShift "1" -- Google Keep
 
     -- , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doF copyToAll
     ]
