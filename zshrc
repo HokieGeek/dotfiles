@@ -44,5 +44,7 @@ export PATH=${PATH}:${HOME}/.bin
 export EDITOR="vim"
 bindkey -M vicmd v edit-command-line
 
+# source /usr/share/doc/pkgfile/command-not-found.zsh
+
 . $HOME/.bin/prompt.zsh
 . $HOME/.aliases
