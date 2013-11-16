@@ -1,51 +1,57 @@
 #!/bin/bash
 
-prompt_pwdlim=40
-prompt_lastReturnVal() {
-    ret=$1
-    val="\033[32;1m:)"
-    [ $ret -gt 0 ] && val="\033[31;1m:("
-    [ $ret -eq 42 ] && val="\033[34m;)"
-    echo -e "${val}\033[0m"
+prompt_gitInfo() {
+    # echo -en ' \[\e[35m\]'
+    echo -n ' \[\e[01;36m\]'
+
+    # Put in the branch
+    branch=`git branch | grep "^*" | sed "s/^\*\s*//"`
+    echo -n "${branch}"
+
+    status_out=`git status -sb -uno`
+
+    # Add a symbol if local needs to be updated with remote
+    isBehind=`echo ${status_out} | grep "##" | grep -c behind`
+    [ $isBehind -gt 0 ] && echo -n '\[\e[01;35m\]◂\[\e[0m'
+
+
+    # Add a symbol if changes need to be pushed
+    isAhead=`echo ${status_out} | grep "##" | grep -c ahead`
+    [ $isAhead -gt 0 ] && echo -n '\[\e[01;35m\]▸\[\e[0m'
+
+    # Add a symbol if modified files
+    numMods=`echo ${status_out} | egrep -c "(A|M|D)"`
+    [ $numMods -gt 0 ] && echo -n '\[\e[01;31m\]±\[\e[0m\] '
 }
 
 prompt_repoInfo() {
-    git status >/dev/null 2>&1
-    ret=$?
-    [ $ret -le 0 ] && {
-        echo -en "\033[35m<"
+    `git status >/dev/null 2>&1` && prompt_gitInfo
+}
 
-        # Put in the branch
-        branch=`git branch | grep "^*" | sed "s/^\*\s*//"`
-        echo -n "${branch}"
-
-        # Add the number of modified files
-        numMods=`git status -s -uno | egrep -c "(A|M|D)"`
-        [ $numMods -gt 0 ] && echo -en "\033[01;33m ${numMods}\033[0m"
-
-        echo -e "\033[35m>\033[0m "
-    }
+prompt_lastReturnVal() {
+    [ $1 -gt 0 ] && echo -n '\[\e[31m\]☹\[\e[0m\] '
 }
 
 prompt_jobs() {
-    # Should be bold white on red: \e[01;37;40m]
-    # :
-    numJobs=`jobs | wc -l`
-    [ $numJobs -gt 0 ] && echo "\033[01;37;40m[${numJobs}]\033[0m"
+    [ `jobs | wc -l` -gt 0 ] && echo -n '\[\e[01;31m\]¡\[\e[0m\] '
+}
+
+prompt_userHost() {
+    [ -n "$SSH_CLIENT" ] && echo -n '\[\e[35m\]@\h\[\e[0m\] '
+}
+
+prompt_pwd() {
+    # echo -n '\[\e[33;1m\]\w\[\e[0m\]'
+
+    echo -n '\[\e[33;1m\]'
+    top=$(dirname "$(dirname $HOME)")
+    trueHome=`readlink $top``echo $HOME | sed "s;$top;;"`
+    [ $(echo `pwd` | grep -c $trueHome) -gt 0 ] && echo -n $(echo `pwd` | sed "s;$trueHome;~;") || echo -n '\w'
+    echo -n '\[\e[0m\]'
 }
 
 prompt_display() {
-    pwdlen=$(pwd | wc -c)
-    [ $pwdlen -gt $prompt_pwdlim ] \
-        && echo "$pwdlen 2>" \
-        || echo "$pwdlen 1> "
-
-    # # && echo '`prompt_repoInfo`\[\e[37;1m\]\w\[\e[0m\]\n`prompt_lastReturnVal` \[\e[37m\]\u@\h\[\e[0m\] [\!]> ' \
-    # # || echo '`prompt_lastReturnVal` \[\e[37m\]\u@\h:\[\e[1m\]\w\[\e[0m\] `prompt_repoInfo`[\!]> '
+    echo 'val=$?;PS1="\[\e[37m\]╭\[\e[0m\] $(prompt_lastReturnVal $val)$(prompt_userHost)$(prompt_pwd)$(prompt_repoInfo)\n\[\e[37m\]╰─\[\e[0m\]$(prompt_jobs) "'
 }
-PS1=`prompt_display`
-
-#PS1='`prompt_lastReturnVal` \[\e[37m\]\u@\h:\[\e[1m\]\w\[\e[0m\] `prompt_repoInfo`[\!]> '
-#PROMPT_COMMAND='PS1="`prompt_lastReturnVal` \[\e[37m\]\u@\h:\[\e[1m\]$(if [[ `pwd | wc -c` > $prompt_pwdlim ]]; then echo "\\W"; else echo "\\w"; fi)\[\e[0m\] `prompt_repoInfo`[\!]> "'
-PROMPT_COMMAND='val=$?;PS1="\[\e[1m\]$(if [[ `pwd | wc -c` > $prompt_pwdlim ]]; then echo "\\W"; else echo "\\w"; fi)\[\e[0m\] `prompt_repoInfo` \n`prompt_lastReturnVal $val` "'
-# PROMPT_COMMAND='val=$?;PS1="$(printf "%*s\r%s" $(( COLUMNS-1 )) "$(prompt_jobs)" "\[\e[1m\]$(if [[ `pwd | wc -c` > $prompt_pwdlim ]]; then echo "\\W"; else echo "\\w"; fi)\[\e[0m\] `prompt_repoInfo` \n`prompt_lastReturnVal $val` ")"'
+PROMPT_COMMAND=$(prompt_display)
+# PROMPT_COMMAND='val=$?;PS1="$(prompt_jobs)$(prompt_userHost)$(prompt_pwd)$(prompt_repoInfo)\n$(prompt_lastReturnVal $val) "'
