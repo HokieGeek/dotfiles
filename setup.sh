@@ -2,6 +2,7 @@
 
 [ $# -gt 0 ] && destinationDir=$1 || destinationDir=$HOME
 dotfilesDir=$(cd $(dirname $0); pwd)
+configDir="${destinationDir}/.config"
 
 echo "Destination directory: $destinationDir"
 
@@ -11,41 +12,47 @@ doLink() {
     dfpath=$1
     target=$2
     df=`basename ${dfpath}`
+    # echo "doLink($1, $2)"
 
     # Output what is being linked
     echo -n "Linking "
-    [ -d ${df} ] && echo -n "directory" || echo -n "file"
-    echo " ${df}"
+    [ -d ${dfpath} ] && echo -n "directory " || echo -n "file "
+    [ $target = $configDir ] && echo -n "config/"
+    echo "${df}"
 
+    [ "${target}" = "${configDir}" ] && trueTarget=${target}/${df} || trueTarget=$target
+    # echo "tT = $trueTarget"
 
     ## If a file already exists with this name
     # If it's a symlink
-    [ -L ${target} ] && {
+    [ -L ${trueTarget} ] && {
         # Ignore if it's just a link to the respective dotfiles file. Ask to delete it otherwise
-        foundTarget="`ls -la ${target} | awk -F'->' '{ print $2 }' | cut -d' ' -f2`"
+        foundTarget="`ls -la ${trueTarget} | awk -F'->' '{ print $2 }' | cut -d' ' -f2`"
+        # echo "fT = $foundTarget"
         [ $foundTarget = "${dfpath}" ] && {
             echo "  Already exists"
             continue
         } || {
             echo -n "   "
-            rm -i ${target}
+            rm -i ${trueTarget}
         }
     }
 
     # If a file still exists (directory, symlink, whatever) then create a backup of it
-    [ -e ${target} ] && {
+    [ -e ${trueTarget} ] && {
         echo "  Backing up existing"
-        mv ${target}{,.orig}
+        mv ${trueTarget}{,.orig}
     }
 
     # Will not attempt to create the link if a file of the same name still exists after all of that
-    [ -e ${target} ] && {
+    [ -e ${trueTarget} ] && {
         echo "Did not create link for ${df}" 
-    } || {
-        #echo "$target" 
-        [ ! -d `dirname ${target}` ] && mkdir -p ${target}
-        ln -s ${dfpath} ${target}
+        continue
     }
+
+    #echo "$target" 
+    #[ ! -d `dirname ${target}` ] && mkdir -p ${target}
+    ln -s ${dfpath} ${target}
 }
 
 ignores='`basename $0` README.md *~'
@@ -54,11 +61,12 @@ for df in `ls -1`; do
     [ `echo ${ignores} | grep -c "${df}"` -eq 0 ] || continue
 
     [ "$df" = "config" ] && {
-        echo "You need to deal with this"
-        #echo "ok: ${df}"
-        #for cf in `ls -1 ${df}`; do
-        #    echo "cf: $cf"
-        #    doLink ${dotfilesDir}/${df}/${cf} "${destinationDir}/.config/${cf}"
-        #done
+        [ ! -d "${configDir}" ]  && mkdir ${configDir}
+        # echo ">>>>>> ok: ${df}"
+        for cf in `ls -1 ${df}`; do
+            # echo "cf: $cf"
+            doLink ${dotfilesDir}/${df}/${cf} ${configDir}
+        done
     } || doLink ${dotfilesDir}/${df} "${destinationDir}/.${df}"
 done
+# ls ${destinationDir}*(-@)
