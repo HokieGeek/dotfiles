@@ -110,11 +110,8 @@ myKeys =
 
 -- Main {{{
 compmgr = "xcompmgr"
--- workspaceStatusBar = "sleep 3s; dzen2 -x '1440' -y '0' -h '16' -w '270' -fg '#FFFFFF' -bg '#1B1D1E'"
--- workspaceStatusBar = "sleep 3s; dzen2 -fn '-*-terminus-*-r-normal-*-*-120-*-*-*-*-iso8859-*' -x '1440' -y '0' -h '16' -w '270' -fg '#FFFFFF' -bg '#1B1D1E'"
 workspaceStatusBar = "sleep 3s; dzen2 -fn '-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*' -x '1440' -y '0' -h '16' -w '230' -fg '#FFFFFF' -bg '#1B1D1E'"
 conkyStatusBar = "conky -c ~/.conky/xmonad.conf | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -fn '-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*'"
--- conkyStatusBar = "conky -c ~/.conky/xmonad.conf | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -fn '-*-dejavusans-*-r-*-*-12-*-*-*-*-*-*-*'"
 main = do
         compMgrStart <- spawn compmgr
         dzenLeftBar <- spawnPipe workspaceStatusBar
@@ -127,7 +124,8 @@ main = do
             , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
             , layoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
             , logHook = fadeWindowsLogHook myFadeHook <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
-            , handleEventHook = fadeWindowsEventHook -- <+> fullScreenEventHook
+            , handleEventHook = fadeWindowsEventHook <+> fullScreenEventHook
             , borderWidth = 0
             } `additionalKeys` myKeys
 --}}}
+--vim:set foldmethod=marker
