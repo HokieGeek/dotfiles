@@ -1,10 +1,21 @@
 #!/bin/bash
 
+## Helpers {{{
 alias psgrep='ps -ef --cols 300 | grep -v grep | grep'
-
-## Mine
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/$\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+## }}}
+
+## Mine {{{
 alias vi='vim'
+alias buspirate='minicom buspirate'
+alias rn42='minicom rn42'
+## }}}
+
+## Random {{{
+alias roll='echo $((RANDOM%7))'
+## }}}
+
+## Development {{{
 alias make='make -j`expr $NUM_PROCESSORS + 1`'
 alias scons='scons -j`expr $NUM_PROCESSORS + 1`'
 alias scont='scons -j`expr $NUM_PROCESSORS + 1` -c'
@@ -14,20 +25,24 @@ alias klean='make clean && make'
 alias myklean='mymake clean && mymake'
 alias cant='ant clean && ant'
 
-alias roll='echo $((RANDOM%7))'
+#alias gtrack='git ???? --set-to-upstream=origin/`get branch` `get branch`'
+alias gp='git pull'
+alias smgp='gp && git submodule foreach "git pull"'
 
 alias eclipse='$HOME/eclipse/eclipse -vm $JAVA_HOME/bin'
 alias netbeans='$HOME/netbeans-6.8/bin/netbeans'
+## }}}
 
-## S-based aliases
+## S-based aliases {{{
 alias g='$HOME/.bin/s -g'
 alias gi='$HOME/.bin/s -g -i'
 alias f='$HOME/.bin/s -f'
 # alias fi='$HOME/.bin/s -f -i'
 alias sa='$HOME/.bin/s -a'
 alias todo='g "(FIXME|TODO)"'
+## }}}
 
-## Color aliases
+## Color aliases {{{
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
@@ -37,24 +52,11 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 alias du='$HOME/.bin/du_color'
+## }}}
 
-# alias u='source $HOME/.bin/u'
-
-## Git aliases
-#alias gtrack='git ???? --set-to-upstream=origin/`get branch` `get branch`'
-alias gp='git pull'
-alias smgp='gp && git submodule foreach "git pull"'
-#alias gpp='gp && $HOME/.bin/gitPush'
-#alias gpa='$HOME/.bin/gitPullAll'
-#alias ga='$HOME/.bin/git_All '
-#alias gsa='ga status'
-
-## Typo fixing
+## Typo fixing {{{
 alias emacs='echo "Correcting typos in command..."; sleep 1s; gvim'
 alias xemacs='emacs'
 alias :q='exit'
 alias ..='cd ..'
-
-### Some more specific stuff
-alias buspirate='minicom buspirate'
-alias rn42='minicom rn42'
+## }}}
