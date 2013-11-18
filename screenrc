@@ -1,0 +1,4 @@
+startup_message off
+vbell on
+vbell_msg "Something or other is happening"
+hardstatus string "[%n%?: %t%?] %h"
