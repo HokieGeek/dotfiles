@@ -34,6 +34,7 @@ set wrapscan " Searches wrap around the end of the file
 set list " Displays unprintable characters (whitespace, essentially)
 set listchars=tab:>>,trail:.,extends:#,nbsp:_ " Define what symbols to use with unprintable characters
 set splitright " When doing a vertical split, it puts it to the right of the current window
+set splitbelow " When doing a horizontal split, it puts it below the current window
 set diffopt+=iwhite " Vimdiff will ignore whitespace diffs
 set ttyfast " Smoother redrawing
 set noscrollbind " Don't scroll windows synchronized
