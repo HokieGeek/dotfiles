@@ -77,6 +77,7 @@ myFadeHook = composeAll
 myKeys =
             [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), spawn "gmrun")
+            -- GridSelect
             , ((modm, xK_z), goToSelected defaultGSConfig)
             , (((modm .|. shiftMask), xK_z), spawnSelected defaultGSConfig myDefaultGSMenu)
             -- Workspace helpers
@@ -88,6 +89,7 @@ myKeys =
             , (((modm .|. shiftMask), xK_Right), shiftToNext)
             , (((modm .|. mod1Mask), xK_Up), moveTo Next EmptyWS)
             , (((modm .|. mod1Mask), xK_Down), toggleWS)
+            , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
             -- Backlight
             , (((modm .|. controlMask .|. shiftMask), xK_Left), spawn "xbacklight -inc 20")
             , (((modm .|. controlMask .|. shiftMask), xK_Right), spawn "xbacklight -dec 20")
@@ -116,7 +118,7 @@ main = do
         compMgrStart <- spawn compmgr
         dzenLeftBar <- spawnPipe workspaceStatusBar
         dzenRightBar <- spawnPipe conkyStatusBar
-        xmonad  $ withUrgencyHook dzenUrgencyHook { args = ["-bg", "darkgreen", "-xs", "1"] }
+        xmonad  $ withUrgencyHook dzenUrgencyHook { args = ["-bg", "orange", "-xs", "1"] }
                 $ defaultConfig
             { workspaces = myWorkspaces
             , terminal = myTerminal
