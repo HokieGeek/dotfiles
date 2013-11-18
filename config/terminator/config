@@ -6,6 +6,10 @@
   title_transmit_bg_color = "#dc5b2f"
   inactive_color_offset = 0.6
 [keybindings]
+  go_left = <Alt>h
+  go_down = <Alt>j
+  go_right = <Alt>l
+  go_up = <Alt>k
 [profiles]
   [[default]]
     background_darkness = 0.83
