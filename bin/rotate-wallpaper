@@ -4,12 +4,11 @@ dirs="$1"
 [ "$2" = "--cron" ] && {
     cronjobs=/tmp/cronjobs.$$
     crontab -l > $cronjobs
-    echo "0 */4 * * * /home/andres/.bin/rotate-wallpaper $dirs" >> $cronjobs
+    echo '*/30 * * * * DISPLAY=:0.0 $HOME/.bin/rotate-wallpaper $dirs' >> $cronjobs
     crontab < $cronjobs
     crontab -l
     exit 0
 }
-
 last=/tmp/rotate-wallpaper.last
 [ ! -f $last ] && echo "-" > $last
 sel=`find $dirs -type f ! -wholename "$(cat $last)" -print | shuf -n1`
