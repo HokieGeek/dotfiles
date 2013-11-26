@@ -30,8 +30,8 @@ myTerminal = "terminator"
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 -- myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ"]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
-myDefaultGSMenu = ["chromium-browser" -- C
-                  , "terminator", "netflix-desktop", "gvim", "vlc" -- S, E, N, W
+myDefaultGSMenu = ["chromium" -- C
+                  , "terminator", "gvim", "vlc" -- S, E, N, W
                   , "Gimp"
                   ]
 -- Gimp, Eclipse, Arduino... minicom?

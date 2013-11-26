@@ -56,7 +56,7 @@ prompt_gitInfo() {
 prompt_repoInfo() {
     `git status >/dev/null 2>&1` && prompt_gitInfo
     `hg status >/dev/null 2>&1` && prompt_mercurialInfo
-    `cvs status >/dev/null 2>&1` && prompt_cvsInfo
+    #`cvs status >/dev/null 2>&1` && prompt_cvsInfo
 }
 
 prompt_jobs() {
