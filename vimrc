@@ -314,4 +314,4 @@ augroup omni_complete
 augroup END
 " }}}
 
-" vim: set foldmethod=marker
+" vim: set foldmethod=marker:
