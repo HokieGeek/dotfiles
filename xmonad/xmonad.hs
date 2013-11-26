@@ -70,6 +70,8 @@ myFadeHook = composeAll
     [ isUnfocused --> transparency 1.0
     ,                 opaque
     ]
+    -- TODO: Figure out a way to ensure some windows are always opaque
+    --       classnames = "totem", "Totem"
 -- }}}
 -- }}}
 

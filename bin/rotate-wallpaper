@@ -12,5 +12,6 @@ dirs="$1"
 last=/tmp/rotate-wallpaper.last
 [ ! -f $last ] && echo "-" > $last
 sel=`find $dirs -type f ! -wholename "$(cat $last)" -print | shuf -n1`
+echo "`date` : $sel" >> /tmp/afp.log
 echo $sel > $last
 feh --bg-fill $sel
