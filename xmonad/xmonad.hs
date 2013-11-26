@@ -132,4 +132,5 @@ main = do
             , borderWidth = 0
             } `additionalKeys` myKeys
 --}}}
---vim:set foldmethod=marker
+
+-- vim: set foldmethod=marker
