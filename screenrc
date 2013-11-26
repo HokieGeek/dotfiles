@@ -1,0 +1,10 @@
+startup_message off
+vbell on
+vbell_msg "Something or other is happening"
+hardstatus string "[%n%?: %t%?] %h"
+
+## Keybindings
+bind j focus down
+bind k focus up
+bind h focus left
+bind l focus right
