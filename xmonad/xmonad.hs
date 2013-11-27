@@ -91,6 +91,7 @@ myKeys =
             , (((controlMask .|. mod1Mask), xK_Left), prevWS)
             , (((controlMask .|. mod1Mask), xK_Right), nextWS)
             , (((modm .|. mod1Mask), xK_Up), moveTo Next EmptyWS)
+            , (((modm .|. mod1Mask .|. shiftMask), xK_Up), moveTo Next NonEmptyWS)
             , (((modm .|. mod1Mask), xK_Down), toggleWS)
             , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
             -- Backlight
