@@ -78,6 +78,7 @@ myFadeHook = composeAll
 -- Keybindings {{{
 myKeys =
             [ ((modm, xK_q), spawn "~/.xmonad/restart")
+            [ ((controlMask .|. shiftMask, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), spawn "gmrun")
             , ((modm .|. shiftMask, xK_a), spawn "dmenu_run")
             -- , ((modm, xK_e), spawn "terminator --command ranger")
