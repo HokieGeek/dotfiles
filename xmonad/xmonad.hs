@@ -30,7 +30,7 @@ myTerminal = "terminator"
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 -- myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ"]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
-myDefaultGSMenu = ["chromium" -- C
+myAppGSMenu = ["chromium" -- C
                   , "terminator", "gvim", "vlc" -- S, E, N, W
                   , "Gimp"
                   ]
@@ -79,16 +79,17 @@ myFadeHook = composeAll
 myKeys =
             [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), spawn "gmrun")
+            , ((modm .|. shiftMask, xK_a), spawn "dmenu_run")
+            , ((modm, xK_e), spawn "terminator --command ranger")
+            -- , ((modm, xK_e), spawn "urxvt -e ranger")
             -- GridSelect
             , ((modm, xK_z), goToSelected defaultGSConfig)
-            , (((modm .|. shiftMask), xK_z), spawnSelected defaultGSConfig myDefaultGSMenu)
+            , (((modm .|. shiftMask), xK_z), spawnSelected defaultGSConfig myAppGSMenu)
             -- Workspace helpers
             , (((modm .|. mod1Mask), xK_k), prevWS)
             , (((modm .|. mod1Mask), xK_j), nextWS)
             , (((controlMask .|. mod1Mask), xK_Left), prevWS)
             , (((controlMask .|. mod1Mask), xK_Right), nextWS)
-            -- , (((modm .|. shiftMask), xK_Left), shiftToPrev)
-            -- , (((modm .|. shiftMask), xK_Right), shiftToNext)
             , (((modm .|. mod1Mask), xK_Up), moveTo Next EmptyWS)
             , (((modm .|. mod1Mask), xK_Down), toggleWS)
             , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
