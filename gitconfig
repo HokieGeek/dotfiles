@@ -24,3 +24,5 @@
     diff = diff --patience
     df = diff --ext-diff --patience
     dt = difftool -y
+[core]
+    eol = lf

@@ -1,0 +1,2 @@
+*/30 * * * * DISPLAY=:0.0 $HOME/.bin/rotate-wallpaper $HOME/.look/bgs
+*/4 * * * * $HOME/.bin/publishExternalIp.sh $HOME/Dropbox/ip
