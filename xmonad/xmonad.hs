@@ -78,15 +78,12 @@ myFadeHook = composeAll
 -- Keybindings {{{
 myKeys =
             [ ((modm, xK_q), spawn "~/.xmonad/restart")
-            , ((shiftMask, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), spawn "gmrun")
             , ((modm .|. shiftMask, xK_a), spawn "dmenu_run")
             -- , ((modm, xK_e), spawn "terminator --command ranger")
-            , ((shiftMask, xK_e), spawn "urxvt -e ranger")
-            -- , ((modm, xK_e), spawn "urxvt -e ranger")
+            , ((modm, xK_e), spawn "urxvt -e ranger")
             -- GridSelect
             , ((modm, xK_z), spawnSelected defaultGSConfig myAppGSMenu)
-            , ((shiftMask, xK_z), spawnSelected defaultGSConfig myAppGSMenu)
             , (((modm .|. shiftMask), xK_z), goToSelected defaultGSConfig)
             -- Workspace helpers
             , (((modm .|. mod1Mask), xK_k), prevWS)
