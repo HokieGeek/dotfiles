@@ -22,7 +22,7 @@ import XMonad.Util.Run
 import XMonad.Util.EZConfig
 
 import qualified XMonad.StackSet as W
---}}}
+-- }}}
 
 -- Local Variables {{{
 modm = mod4Mask
@@ -110,7 +110,7 @@ myKeys =
             [((m .|. modm, k), windows $ f i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys
                 , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
--- }}}
+--}}}
 
 -- Main {{{
 compmgr = "xcompmgr"
@@ -132,4 +132,5 @@ main = do
             , borderWidth = 0
             } `additionalKeys` myKeys
 --}}}
---vim:set foldmethod=marker
+
+-- vim: set foldmethod=marker:

@@ -1,4 +1,4 @@
-""" Options
+""" Options {{{
 filetype plugin indent on
 
 set nocompatible " Not compatible with plain vi
@@ -41,6 +41,7 @@ set noscrollbind " Don't scroll windows synchronized
 set dictionary=/usr/share/dict/words
 set spellsuggest=best,10
 set spelllang=en_us
+set modeline
 
 if has("gui_running")
     colorscheme desert
@@ -54,16 +55,18 @@ endif
 autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
 autocmd VimLeave * windo diffoff
 syntax on
+" }}}
 
-" Highlights
+""" Highlights {{{
 highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
 highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
 
 highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
 let m = matchadd("AFP", "AFP")
 let m = matchadd("AFP", "afp")
+" }}}
 
-""" Notes options
+""" Notes options {{{
 augroup Notes
     autocmd!
 
@@ -81,8 +84,9 @@ augroup Notes
         \ highlight NotesActionItem ctermbg=darkmagenta ctermfg=lightgrey cterm=underline | let m = matchadd("NotesActionItem", "@ .*$") |
         \ highlight NotesPersonCallout ctermbg=black ctermfg=blue cterm=bold | let m = matchadd("NotesPersonCallout", "\\[.*\\]")
 augroup END
+" }}}
 
-""" Sessions
+""" Sessions {{{
 """ Some logic that allows me to create a session with the current layout
 if exists("s:session_file")
     unlet! s:session_file
@@ -114,14 +118,16 @@ function! DeleteSession()
     endif
 endfunction
 autocmd VimEnter * call LoadSession()
+" }}}
 
-""" Views
+""" Views {{{
 if ! &diff
     autocmd BufWinLeave * if expand("%") != "" | mkview! | endif
     autocmd BufWinEnter * if expand("%") != "" | silent loadview | endif
 endif
+" }}}
 
-""" Commands
+""" Commands {{{
 func! DiffWithCMedOriginal()
     exe "mkview! 9"
     exe "topleft vnew | set bt=nofile"
@@ -138,8 +144,9 @@ command! Dcm call DiffWithCMedOriginal()
 command! Dclr silent only | diffoff | silent loadview 9
 " Will allow me to sudo a file that is open without write permissions
 cmap w!! %!sudo tee > /dev/null %
+" }}}
 
-""" Keyboard mappings
+""" Keyboard mappings {{{
 nmap <Leader>s :source $MYVIMRC<CR>
 nmap <silent> <Leader><Leader> :nohlsearch<CR>
 nmap <silent> <Leader>] :sp<CR>:res 15<CR>/<C-R><C-W><CR>
@@ -162,8 +169,9 @@ noremap <Up> :echoerr "Use k instead! :-p"<CR>
 noremap <Down> :echoerr "Use j instead! :-p"<CR>
 noremap <Left> :echoerr "Use h instead! :-p"<CR>
 noremap <Right> :echoerr "Use l instead! :-p"<CR>
+" }}}
 
-""" Commenting
+""" Commenting {{{
 function! SLCOtoggle()
     normal ma
     if getline(".") =~ '^\s*'.g:slco " Remove the comment tag it contains
@@ -279,8 +287,9 @@ augroup commenting
         \ map <silent> todo oTODO: <ESC><Tab>==A |
         \ map <silent> fixme oFIXME: <ESC><Tab>==A
 augroup END
+" }}}
 
-""" Syntax lookups / Tagging
+""" Completion {{{
 " if filereadable("??/tags")
     " autocmd FileType c,c++,cpp,h,h++,hpp set tags=./tags
     " autocmd BufwinEnter *.* echo "Loaded tags file"
@@ -303,3 +312,6 @@ augroup omni_complete
     autocmd FileType php set omnifunc=pythoncomplete#CompletePHP
     autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 augroup END
+" }}}
+
+" vim: set foldmethod=marker:
