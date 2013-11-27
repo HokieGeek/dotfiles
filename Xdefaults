@@ -1,7 +1,7 @@
 URxvt*saveLines: 12000
 
 URxvt*transparent: true
-URxvt*tintColor: Darkorange
+URxvt*tintColor: DarkOrange
 URxvt*foreground: White
 URxvt*background: Black
 
