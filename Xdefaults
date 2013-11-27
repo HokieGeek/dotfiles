@@ -5,8 +5,8 @@ URxvt*foreground: White
 URxvt*background: Black
 URxvt*font: xft:DejaVu Sans Mono:pixelsize=12:antialias=true:hinting=true
 URxvt*boldFont: xft:DejaVu Sans Mono:bold:pixelsize=12:antialias=true:hinting=true
-URxvt*color4: Brown
-URxvt*color12: Brown
+URxvt*color4: RoyalBlue
+URxvt*color12: RoyalBlue
 URxvt*scrollBar: false
 URxvt*scrollBar_right: false
 #URxvt*scrollstyle: rxvt
