@@ -80,8 +80,7 @@ myKeys =
             [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), spawn "gmrun")
             , ((modm .|. shiftMask, xK_a), spawn "dmenu_run")
-            -- , ((modm, xK_e), spawn "terminator --command ranger")
-            , ((modm, xK_e), spawn "urxvt -e ranger")
+            , ((modm, xK_e), spawn "export EDITOR=vim; urxvt +sb -e ranger")
             -- GridSelect
             , ((modm, xK_z), spawnSelected defaultGSConfig myAppGSMenu)
             , (((modm .|. shiftMask), xK_z), goToSelected defaultGSConfig)
@@ -91,7 +90,7 @@ myKeys =
             , (((controlMask .|. mod1Mask), xK_Left), prevWS)
             , (((controlMask .|. mod1Mask), xK_Right), nextWS)
             , (((modm .|. mod1Mask), xK_Up), moveTo Next EmptyWS)
-            , (((modm .|. mod1Mask .|. shiftMask), xK_Up), moveTo Next NonEmptyWS)
+            , (((modm .|. mod1Mask .|. controlMask), xK_Up), moveTo Next NonEmptyWS)
             , (((modm .|. mod1Mask), xK_Down), toggleWS)
             , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
             -- Backlight
