@@ -28,7 +28,6 @@ import qualified XMonad.StackSet as W
 modm = mod4Mask
 myTerminal = "terminator"
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
--- myWorkspaces = ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ"]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 myAppGSMenu = ["chromium" -- C
                   , "terminator", "gvim", "vlc" -- S, E, N, W
@@ -78,8 +77,8 @@ myFadeHook = composeAll
 -- Keybindings {{{
 myKeys =
             [ ((modm, xK_q), spawn "~/.xmonad/restart")
-            , ((modm, xK_a), spawn "gmrun")
-            , ((modm .|. shiftMask, xK_a), spawn "dmenu_run")
+            , ((modm, xK_a), spawn "dmenu_run")
+            , ((modm .|. shiftMask, xK_a), spawn "gmrun")
             , ((modm, xK_e), spawn "export EDITOR=vim; urxvt +sb -e ranger")
             -- GridSelect
             , ((modm, xK_z), spawnSelected defaultGSConfig myAppGSMenu)
