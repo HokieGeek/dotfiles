@@ -48,3 +48,5 @@ bindkey -M vicmd v edit-command-line
 
 . $HOME/.bin/prompt.zsh
 . $HOME/.aliases
+
+[[ -z "$TMUX" ]] && exec tmux
