@@ -26,14 +26,14 @@ import qualified XMonad.StackSet as W
 
 -- Local Variables {{{
 modm = mod4Mask
-myTerminal = "terminator"
+--myTerminal = "terminator"
+myTerminal = "urxvt"
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 myAppGSMenu = ["chromium" -- C
                   , "terminator", "gvim", "vlc" -- S, E, N, W
-                  , "Gimp"
+                  , "Gimp", "urxvt", "eclipse", "minicom"
                   ]
--- Gimp, Eclipse, Arduino... minicom?
 --}}}
 
 -- Hooks {{{
