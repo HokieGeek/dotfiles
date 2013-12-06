@@ -14,6 +14,7 @@ alias rn42='minicom rn42'
 
 ## Random {{{
 alias roll='echo $((RANDOM%7))'
+alias broadcast='script -qf | tee >(nc -kl 5000)'
 ## }}}
 
 ## Development {{{
