@@ -32,7 +32,7 @@ myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 myAppGSMenu = ["chromium" -- C
                   , "urxvt", "gvim", "vlc" -- S, E, N, W
-                  , "Gimp", "eclipse", "minicom"
+                  , "gimp", "eclipse", "minicom"
                   ]
 --}}}
 
@@ -41,7 +41,8 @@ myAppGSMenu = ["chromium" -- C
 myManageHook = composeAll
     [ isFullscreen --> doFullFloat
     , className =? "Xmessage"   --> doCenterFloat
-    , className =? "Gimp"       --> doFloat <+> viewShift "-"
+    , className =? "Gimp"       --> viewShift "-"
+    -- , className =? "Gimp"       --> doFloat <+> viewShift "-"
     , className =? "VASSAL-launch-ModuleManager"  --> doFloat <+> doShift "="
     , className =? "VASSAL-launch-Player" --> doFloat <+> doShift "="
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "1" -- Hangouts
@@ -99,6 +100,7 @@ myKeys =
             , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3+")
             , ((0, xF86XK_AudioLowerVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3-")
             , ((0, xF86XK_AudioMute), spawn "amixer -q set Master toggle; amixer -q set Speaker toggle; amixer -q set Headphone toggle")
+            , ((modm, xF86XK_AudioMute), spawn "urxvt +sb -e alsamixer")
             -- PrintScreen
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
