@@ -31,8 +31,8 @@ myTerminal = "urxvt"
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 myAppGSMenu = ["chromium" -- C
-                  , "urxvt", "gvim", "vlc" -- S, E, N, W
-                  , "gimp", "eclipse", "minicom"
+                  , "urxvt", "gvim", "vlc", "gimp" -- S, E, N, W
+                  , "eclipse", "minicom", "skype"
                   ]
 --}}}
 
@@ -84,6 +84,8 @@ myKeys =
             -- GridSelect
             , ((modm, xK_z), spawnSelected defaultGSConfig myAppGSMenu)
             , (((modm .|. shiftMask), xK_z), goToSelected defaultGSConfig)
+            -- , (((modm .|. mod1Mask), xK_z), gridselectWorkspace defaultGSConfig "=")
+            , (((modm .|. mod1Mask), xK_z), gridselectWorkspace defaultGSConfig W.greedyView)
             -- Workspace helpers
             , (((modm .|. mod1Mask), xK_k), prevWS)
             , (((modm .|. mod1Mask), xK_j), nextWS)
