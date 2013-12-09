@@ -26,15 +26,28 @@ import qualified XMonad.StackSet as W
 
 -- Local Variables {{{
 modm = mod4Mask
---myTerminal = "terminator"
 myTerminal = "urxvt"
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
-myAppGSMenu = ["chromium" -- C
-                  , "urxvt", "gvim", "vlc", "gimp" -- S, E, N, W
-                  , "eclipse", "minicom", "skype"
-                  ]
+myAppGSMenu = [ ("Chromium", "chromium")
+              , ("Terminal", myTerminal)
+              , ("Ranger", "export EDITOR=vim; " ++ myTerminal ++ " -e ranger")
+              , ("Skype", "skype")
+              , ("gVim", "gvim")
+              , ("Eclipse", "eclipse")
+              , ("Alsa Mixer", myTerminal ++ " -e alsamixer")
+              , ("VLC", "vlc")
+              , ("Gimp", "gimp")
+              , ("Irssi", myTerminal ++ " -e irssi")
+              -- , ("minicom", myTerminal ++ " -e minicom") #specific menu for the two configs
+              ]
 --}}}
+-- Local Methods {{{
+-- http://ixti.net/software/2013/09/07/xmonad-action-gridselect-spawnselected-with-nice-titles.html
+mySpawnSelected :: [(String, String)] -> X()
+mySpawnSelected lst = gridselect conf lst >>= flip whenJust spawn
+    where conf = defaultGSConfig
+-- }}}
 
 -- Hooks {{{
 -- Manage Hooks {{{
@@ -80,12 +93,12 @@ myKeys =
             [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), spawn "dmenu_run")
             , ((modm .|. shiftMask, xK_a), spawn "gmrun")
-            , ((modm, xK_e), spawn "export EDITOR=vim; urxvt +sb -e ranger")
+            , ((modm, xK_e), spawn "export EDITOR=vim; " ++ myTerminal ++ " -e ranger")
             -- GridSelect
-            , ((modm, xK_z), spawnSelected defaultGSConfig myAppGSMenu)
+            , ((modm, xK_z), mySpawnSelected myAppGSMenu)
             , (((modm .|. shiftMask), xK_z), goToSelected defaultGSConfig)
-            -- , (((modm .|. mod1Mask), xK_z), gridselectWorkspace defaultGSConfig "=")
-            , (((modm .|. mod1Mask), xK_z), gridselectWorkspace defaultGSConfig W.greedyView)
+            , ((modm, xK_x), gridselectWorkspace defaultGSConfig W.greedyView)
+            , (((modm .|. shiftMask), xK_x), gridselectWorkspace defaultGSConfig (\ws -> W.greedyView ws . W.shift ws))
             -- Workspace helpers
             , (((modm .|. mod1Mask), xK_k), prevWS)
             , (((modm .|. mod1Mask), xK_j), nextWS)
@@ -102,7 +115,7 @@ myKeys =
             , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3+")
             , ((0, xF86XK_AudioLowerVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3-")
             , ((0, xF86XK_AudioMute), spawn "amixer -q set Master toggle; amixer -q set Speaker toggle; amixer -q set Headphone toggle")
-            , ((modm, xF86XK_AudioMute), spawn "urxvt +sb -e alsamixer")
+            , ((modm, xF86XK_AudioMute), spawn myTerminal ++ " -e alsamixer")
             -- PrintScreen
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
