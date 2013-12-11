@@ -18,9 +18,10 @@ import XMonad.Hooks.FadeWindows
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.UrgencyHook
-import XMonad.Layout.NoBorders(smartBorders)
 -- import XMonad.Layout.MagicFocus
+import XMonad.Layout.NoBorders(smartBorders)
 -- import XMonad.Layout.PerWorkspace
+-- import XMonad.Layout.ResizableTile
 import XMonad.Util.Run
 import XMonad.Util.EZConfig
 
@@ -63,18 +64,18 @@ myManageHook = composeAll
     [ isFullscreen --> doFullFloat
     , className =? "Xmessage"   --> doCenterFloat
     , className =? "Gimp"       --> viewShift "-"
-    , [ className =? a --> doFloat <+> doShift "=" | a <- vassalClassnames ]
-    , [ appName =? b --> doFloat <+> viewShift "1" | b <- floatingInOne ]
-    -- , className =? "VASSAL-launch-ModuleManager"  --> doFloat <+> doShift "="
-    -- , className =? "VASSAL-launch-Player" --> doFloat <+> doShift "="
-    -- , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "1" -- Hangouts
-    -- , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> doFloat <+> viewShift "1" -- Google Keep
+    -- , [ className =? a --> doFloat <+> doShift "=" | a <- vassalClassnames ]
+    -- , [ appName =? b --> doFloat <+> viewShift "1" | b <- floatingInOne ]
+    , className =? "VASSAL-launch-ModuleManager"  --> doFloat <+> doShift "="
+    , className =? "VASSAL-launch-Player" --> doFloat <+> doShift "="
+    , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "1" -- Hangouts
+    , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> doFloat <+> viewShift "1" -- Google Keep
     ]
     where 
         viewShift = doF . liftM2 (.) W.greedyView W.shift
-        vassalClassnames = ["VASSAL-launch-ModuleManager", "VASSAL-launch-Player"]
-        floatingInOne = ["crx_nckgahadagoaajjgafhacjanaoiihapd",  -- Hangouts
-                         "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki"] -- Google Keep
+        -- vassalClassnames = ["VASSAL-launch-ModuleManager", "VASSAL-launch-Player"]
+        -- floatingInOne = ["crx_nckgahadagoaajjgafhacjanaoiihapd",  -- Hangouts
+                         -- "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki"] -- Google Keep
 -- }}}
 -- Log {{{
 myLogHook :: Handle -> X ()
@@ -102,9 +103,6 @@ myFadeHook = composeAll
 myLayoutHook = tiledStd ||| Mirror tiledStd ||| Full
     where
         tiledStd = Tall 1 (3/100) (1/2) -- number of masters, % to inc when resizing, % of screen used by master
-        -- nmaster = 1
-        -- delta = 3/100 -- Percent to increment when resizing panes
-        -- ratio = 1/2 -- Proportion of screen occupied by master pane
 -- }}}
 -- }}}
 
