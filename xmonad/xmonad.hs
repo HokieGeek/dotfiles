@@ -19,6 +19,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.UrgencyHook
 import XMonad.Layout.NoBorders(smartBorders)
+import XMonad.Layout.PerWorkspace
 import XMonad.Util.Run
 import XMonad.Util.EZConfig
 
@@ -56,7 +57,7 @@ mySpawnSelected lst = gridselect conf lst >>= flip whenJust spawn
 -- }}}
 
 -- Hooks {{{
--- Manage Hooks {{{
+-- Manage {{{
 myManageHook = composeAll
     [ isFullscreen --> doFullFloat
     , className =? "Xmessage"   --> doCenterFloat
@@ -71,7 +72,7 @@ myManageHook = composeAll
     ]
     where viewShift = doF . liftM2 (.) W.greedyView W.shift
 -- }}}
--- Log Hooks {{{
+-- Log {{{
 myLogHook :: Handle -> X ()
 myLogHook h = dynamicLogWithPP $ defaultPP
     {
@@ -84,13 +85,16 @@ myLogHook h = dynamicLogWithPP $ defaultPP
       , ppOutput            =   hPutStrLn h
     }
 -- }}}
--- Fade Hooks {{{
+-- Fade {{{
 myFadeHook = composeAll
     [ isUnfocused --> transparent
     ,                 opaque
     ]
     -- TODO: Figure out a way to ensure some windows are always opaque
     --       classnames = "totem", "Totem"
+-- }}}
+-- Layout{{{
+myLayoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
 -- }}}
 -- }}}
 
@@ -155,7 +159,7 @@ main = do
             , terminal = myTerminal
             , modMask = modm
             , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
-            , layoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
+            , layoutHook = myLayoutHook
             , logHook = fadeWindowsLogHook myFadeHook <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
             , handleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
             , borderWidth = 0
