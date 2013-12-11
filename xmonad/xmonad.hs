@@ -44,6 +44,7 @@ myAppGSMenu = [ ("Chromium", "chromium")
               , ("Gimp", "gimp")
               , ("Irssi", myTerminal ++ " -e irssi")
               -- , ("minicom", myTerminal ++ " -e minicom") -- specific menu for the two configs
+              -- deluge, playonlinux, virtualbox, mpd/c
               ]
 --}}}
 -- Local Methods {{{
@@ -111,9 +112,11 @@ myKeys =
             , (((modm .|. mod1Mask), xK_j), nextWS)
             , (((controlMask .|. mod1Mask), xK_Left), prevWS)
             , (((controlMask .|. mod1Mask), xK_Right), nextWS)
-            , (((modm .|. mod1Mask .|. controlMask), xK_Up), moveTo Next EmptyWS)
-            , (((modm .|. mod1Mask), xK_Up), moveTo Next NonEmptyWS)
-            , (((modm .|. mod1Mask), xK_Down), toggleWS)
+            , (((modm .|. mod1Mask), xK_l), moveTo Next NonEmptyWS)
+            , (((modm .|. mod1Mask), xK_h), moveTo Prev NonEmptyWS)
+            , (((modm .|. mod1Mask .|. shiftMask), xK_l), moveTo Next EmptyWS)
+            , (((modm .|. mod1Mask .|. shiftMask), xK_h), moveTo Prev EmptyWS)
+            , (((modm .|. mod1Mask .|. shiftMask), xK_j), toggleWS)
             -- Window helpers
             , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
             -- Backlight
@@ -142,8 +145,8 @@ main = do
         compMgrStart <- spawn compmgr
         dzenLeftBar <- spawnPipe workspaceStatusBar
         dzenRightBar <- spawnPipe conkyStatusBar
-        xmonad  $ withUrgencyHook dzenUrgencyHook { args = ["-bg", "orange", "-xs", "1"] }
-                $ defaultConfig
+        xmonad $ withUrgencyHook dzenUrgencyHook { args = ["-bg", "orange", "-xs", "1"] }
+               $ defaultConfig
             { workspaces = myWorkspaces
             , terminal = myTerminal
             , modMask = modm
