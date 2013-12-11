@@ -142,6 +142,7 @@ endfun
 command! Dorig mkview! 9 | topleft vnew | set bt=nofile | r # | 0d_ | windo diffthis
 command! Dcm call DiffWithCMedOriginal()
 command! Dclr silent only | diffoff | silent loadview 9
+command! Scratch botright new | set bt=nofile | res 10
 " Will allow me to sudo a file that is open without write permissions
 cmap w!! %!sudo tee > /dev/null %
 " }}}
@@ -163,6 +164,8 @@ nmap <silent> <S-F9> :set number! relativenumber!<CR>
 " <F11> is too often taken by the terminal's FULLSCREEN handler
 nmap <silent> <F12> :if ! &diff<CR>Dcm<CR>else<CR>Dclr<CR>endif<CR>
 nmap <silent> <S-F12> :if ! &diff<CR>Dorig<CR>else<CR>Dclr<CR>endif<CR><CR>
+nmap <silent> <S-F12> :if ! &diff<CR>Dorig<CR>else<CR>Dclr<CR>endif<CR><CR>
+nmap <silent> <C-F12> :Scratch<CR>
 
 "" I feel like being a pain in the ass
 noremap <Up> :echoerr "Use k instead! :-p"<CR>
