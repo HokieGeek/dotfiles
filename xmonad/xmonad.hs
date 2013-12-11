@@ -86,7 +86,7 @@ myLogHook h = dynamicLogWithPP $ defaultPP
 -- }}}
 -- Fade Hooks {{{
 myFadeHook = composeAll
-    [ isUnfocused --> transparency 0.1
+    [ isUnfocused --> transparent
     ,                 opaque
     ]
     -- TODO: Figure out a way to ensure some windows are always opaque
