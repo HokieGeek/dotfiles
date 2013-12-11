@@ -69,7 +69,7 @@ myManageHook = composeAll
     , className =? "VASSAL-launch-ModuleManager"  --> doFloat <+> doShift "="
     , className =? "VASSAL-launch-Player" --> doFloat <+> doShift "="
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "1" -- Hangouts
-    , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> doFloat <+> viewShift "1" -- Google Keep
+    , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> viewShift "1" -- Google Keep
     ]
     where 
         viewShift = doF . liftM2 (.) W.greedyView W.shift
@@ -170,15 +170,15 @@ main = do
         compMgrStart <- spawn compmgr
         dzenLeftBar <- spawnPipe workspaceStatusBar
         dzenRightBar <- spawnPipe conkyStatusBar
-        xmonad $ withUrgencyHook dzenUrgencyHook { args = ["-bg", "orange", "-xs", "1"] }
+        xmonad $ withUrgencyHook dzenUrgencyHook { args = ["-bg", "darkgreen", "-xs", "1"] } -- TODO: figure out appropriate color
                $ defaultConfig
             { workspaces = myWorkspaces
             , terminal = myTerminal
             , modMask = modm
             , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
-            -- , layoutHook = myLayoutHook
             , layoutHook = avoidStruts . smartBorders $ myLayoutHook
-            , logHook = fadeWindowsLogHook myFadeHook <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
+            -- , logHook = fadeWindowsLogHook myFadeHook <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
+            , logHook = fadeWindowsLogHook myFadeHook <+> myLogHook dzenLeftBar
             , handleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
             , borderWidth = 0
             } `additionalKeys` myKeys
