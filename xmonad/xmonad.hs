@@ -10,6 +10,7 @@ import XMonad.Core
 import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
 import XMonad.Actions.GridSelect
+import XMonad.Actions.SwapWorkspaces
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.FadeInactive
@@ -135,6 +136,9 @@ myKeys =
             [((m .|. modm, k), windows $ f i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys
                 , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+            ++
+            [((modm .|. controlMask, k), windows $ swapWithCurrent i)
+                | (i, k) <- zip myWorkspaces myWorkspaceKeys]
 --}}}
 
 -- Main {{{
