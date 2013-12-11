@@ -18,9 +18,9 @@ import XMonad.Hooks.FadeWindows
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.UrgencyHook
--- import XMonad.Layout.MagicFocus
+import XMonad.Layout.MagicFocus
 import XMonad.Layout.NoBorders(smartBorders)
--- import XMonad.Layout.PerWorkspace
+import XMonad.Layout.PerWorkspace
 -- import XMonad.Layout.ResizableTile
 import XMonad.Util.Run
 import XMonad.Util.EZConfig
@@ -100,9 +100,18 @@ myFadeHook = composeAll
 -- }}}
 -- Layout{{{
 -- myLayoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
-myLayoutHook = tiledStd ||| Mirror tiledStd ||| Full
+-- myDefaultLayout = avoidStruts( tiledStd ||| Mirror tiledStd ||| Full ||| magicFocus (tiledStd))
+myDefaultLayout =     tiledStd
+                  ||| Mirror tiledStd
+                  ||| Full
+                  ||| magicFocus (tiledStd)
     where
-        tiledStd = Tall 1 (3/100) (1/2) -- number of masters, % to inc when resizing, % of screen used by master
+        tiledStd = Tall 1 incDelta (1/2) -- number of masters, % to inc when resizing, % of screen used by master
+myLayoutHook =   onWorkspace "1" Tall 1 incDelta 1/3)
+               $ onWorkspace "2" Mirror (Tall 1 incDelta 1/3))
+               $ myDefaultLayout
+    where
+        incDelta = 3/100
 -- }}}
 -- }}}
 
