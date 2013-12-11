@@ -101,6 +101,7 @@ myFadeHook = composeAll
 -- Layout{{{
 -- myLayoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
 -- myDefaultLayout = avoidStruts( tiledStd ||| Mirror tiledStd ||| Full ||| magicFocus (tiledStd))
+incDelta = 3/100
 myDefaultLayout =     tiledStd
                   ||| Mirror tiledStd
                   ||| Full
@@ -110,8 +111,6 @@ myDefaultLayout =     tiledStd
 myLayoutHook =   onWorkspace "1" (Tall 1 incDelta 1/3)
                $ onWorkspace "2" (Mirror (Tall 1 incDelta 1/3))
                $ myDefaultLayout
-    where
-        incDelta = 3/100
 -- }}}
 -- }}}
 
