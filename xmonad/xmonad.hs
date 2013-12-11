@@ -108,8 +108,9 @@ myDefaultLayout =     tiledStd
                   ||| magicFocus (tiledStd)
     where
         tiledStd = Tall 1 incDelta (1/2) -- number of masters, % to inc when resizing, % of screen used by master
-myLayoutHook =   onWorkspace "1" (Tall 1 incDelta (1/3))
-               $ onWorkspace "2" (Mirror (Tall 1 incDelta (1/3)))
+myLayoutHook =   onWorkspace "1" (Tall 1 incDelta (3/4))
+               $ onWorkspace "2" (Mirror (Tall 1 incDelta (2/3)))
+               -- $ onWorkspace "2" magicFocus (Mirror (Tall 1 incDelta (2/3)))
                $ myDefaultLayout
 -- }}}
 -- }}}
