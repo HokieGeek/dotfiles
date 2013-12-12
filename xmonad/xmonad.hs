@@ -8,6 +8,7 @@ import System.IO
 import XMonad
 import XMonad.Core
 import XMonad.Actions.CycleWS
+import XMonad.Actions.FloatKeys
 import XMonad.Actions.GridSelect
 import XMonad.Actions.GroupNavigation -- historyHook
 import XMonad.Actions.RotSlaves
@@ -136,10 +137,12 @@ myKeys =
             , (((modm .|. mod1Mask .|. shiftMask), xK_j), toggleWS)
             -- Window helpers
             , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
-            , (((modm .|. shiftMask), xK_j), sendMessage MirrorShrink)
-            , (((modm .|. shiftMask), xK_k), sendMessage MirrorExpand)
+            , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink)
+            , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand)
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
-            , (((modm .|. controlMask), xK_k), rotSlavesUp)
+            , (((modm .|. controlMask), xK_j), rotSlavesDown)
+            , ((modm, xK_less), withFocused (keysResizeWindow (-10,-10) (1,1)))
+            , ((modm, xK_greater), withFocused (keysResizeWindow (10,10) (1,1)))
             -- , ((modm, xK_m), windows W.focusMaster)
             , (((modm .|. shiftMask), xK_m), nextMatch History (return True))
             -- Backlight
