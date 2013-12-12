@@ -52,6 +52,7 @@ myAppGSMenu = [ ("Chromium", "chromium")
               -- deluge, playonlinux, virtualbox, mpd/c
               ]
 --}}}
+
 -- Local Methods {{{
 -- http://ixti.net/software/2013/09/07/xmonad-action-gridselect-spawnselected-with-nice-titles.html
 mySpawnSelected :: [(String, String)] -> X()
@@ -99,8 +100,8 @@ myDefaultLayout = tiledStd ||| Mirror tiledStd ||| Full
     where
         tiledStd = ResizableTall 1 incDelta (1/2) [] -- # masters, % to inc when resizing, % of screen used by master, slaves
 myLayoutHook = avoidStruts
-               $ onWorkspace "1" (ResizableTall 1 incDelta (3/4) [])
-               $ onWorkspace "2" (magicFocus (Mirror (ResizableTall 1 incDelta (2/3) [])))
+               $ onWorkspace "1" ((ResizableTall 1 incDelta (3/4) []) ||| Full)
+               $ onWorkspace "2" (magicFocus (Mirror (ResizableTall 1 incDelta (2/3) [])) ||| Full)
                $ myDefaultLayout
 -- }}}
 -- HandleEvent {{{
