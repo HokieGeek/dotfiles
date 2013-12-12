@@ -22,7 +22,7 @@ import XMonad.Hooks.UrgencyHook
 import XMonad.Layout.MagicFocus
 import XMonad.Layout.NoBorders(smartBorders)
 import XMonad.Layout.PerWorkspace
--- import XMonad.Layout.ResizableTile
+import XMonad.Layout.ResizableTile
 import XMonad.Util.Run
 import XMonad.Util.EZConfig
 
@@ -97,10 +97,10 @@ myDzen h = defaultPP
 incDelta = 3/100
 myDefaultLayout = tiledStd ||| Mirror tiledStd ||| Full
     where
-        tiledStd = Tall 1 incDelta (1/2) -- number of masters, % to inc when resizing, % of screen used by master
+        tiledStd = ResizableTall 1 incDelta (1/2) [] -- # masters, % to inc when resizing, % of screen used by master, slaves
 myLayoutHook = avoidStruts
-               $ onWorkspace "1" (Tall 1 incDelta (3/4))
-               $ onWorkspace "2" (magicFocus (Mirror (Tall 1 incDelta (2/3))))
+               $ onWorkspace "1" (ResizableTall 1 incDelta (3/4) [])
+               $ onWorkspace "2" (magicFocus (Mirror (ResizableTall 1 incDelta (2/3) [])))
                $ myDefaultLayout
 -- }}}
 -- HandleEvent {{{
@@ -134,6 +134,8 @@ myKeys =
             , (((modm .|. mod1Mask .|. shiftMask), xK_j), toggleWS)
             -- Window helpers
             , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
+            , (((modm .|. shiftMask), xK_j), sendMessage MirrorShrink)
+            , (((modm .|. shiftMask), xK_k), sendMessage MirrorExpand)
             -- Backlight
             , (((modm .|. controlMask .|. shiftMask), xK_Left), spawn "xbacklight -inc 20")
             , (((modm .|. controlMask .|. shiftMask), xK_Right), spawn "xbacklight -dec 20")
