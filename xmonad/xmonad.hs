@@ -11,6 +11,7 @@ import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
 import XMonad.Actions.GridSelect
 import XMonad.Actions.SwapWorkspaces
+import XMonad.Actions.UpdatePointer
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.FadeInactive
@@ -105,7 +106,7 @@ myLayoutHook =   onWorkspace "1" (Tall 1 incDelta (3/4))
 myKeys =
             [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), spawn "dmenu_run")
-            , ((modm .|. shiftMask, xK_a), spawn "gmrun") -- Is there a point to this?
+            -- , ((modm .|. shiftMask, xK_a), spawn "gmrun") -- Is there a point to this?
             , ((modm, xK_e), spawn rangerExec)
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((0, xF86XK_Sleep), spawn "sudo /usr/sbin/pm-suspend")
@@ -161,9 +162,10 @@ main = do
             { workspaces = myWorkspaces
             , terminal = myTerminal
             , modMask = modm
+            , focusFollowsMouse = False
             , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
             , layoutHook = avoidStruts . smartBorders $ myLayoutHook
-            , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0.7
+            , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0.7 >> updatePointer (Relative 1 1)
             , handleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
             , borderWidth = 0
             } `additionalKeys` myKeys
