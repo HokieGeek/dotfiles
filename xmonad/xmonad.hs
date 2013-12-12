@@ -32,7 +32,7 @@ import qualified XMonad.StackSet as W
 rangerExec = "export EDITOR=vim; " ++ myTerminal ++ " -e ranger"
 
 modm = mod4Mask
-myTerminal = "urxvt"
+myTerminal = "urxvtc"
 
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
@@ -90,27 +90,13 @@ myLogHook h = dynamicLogWithPP $ defaultPP
       , ppOutput            =   hPutStrLn h
     }
 -- }}}
--- Fade {{{
-myFadeHook = composeAll
-    [ isUnfocused --> transparent
-    ,                 opaque
-    ]
-    -- TODO: Figure out a way to ensure some windows are always opaque
-    --       classnames = "totem", "Totem"
--- }}}
 -- Layout{{{
--- myLayoutHook = avoidStruts . smartBorders $ layoutHook defaultConfig
--- myDefaultLayout = avoidStruts( tiledStd ||| Mirror tiledStd ||| Full ||| magicFocus (tiledStd))
 incDelta = 3/100
-myDefaultLayout =     tiledStd
-                  ||| Mirror tiledStd
-                  ||| Full
-                  ||| magicFocus (tiledStd)
+myDefaultLayout = tiledStd ||| Mirror tiledStd ||| Full
     where
         tiledStd = Tall 1 incDelta (1/2) -- number of masters, % to inc when resizing, % of screen used by master
 myLayoutHook =   onWorkspace "1" (Tall 1 incDelta (3/4))
-               $ onWorkspace "2" (Mirror (Tall 1 incDelta (2/3)))
-               -- $ onWorkspace "2" magicFocus (Mirror (Tall 1 incDelta (2/3)))
+               $ onWorkspace "2" (magicFocus (Mirror (Tall 1 incDelta (2/3))))
                $ myDefaultLayout
 -- }}}
 -- }}}
@@ -177,8 +163,7 @@ main = do
             , modMask = modm
             , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
             , layoutHook = avoidStruts . smartBorders $ myLayoutHook
-            -- , logHook = fadeWindowsLogHook myFadeHook <+> myLogHook dzenLeftBar >> fadeInactiveLogHook 0xdddddddd
-            , logHook = fadeWindowsLogHook myFadeHook <+> myLogHook dzenLeftBar
+            , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0.7
             , handleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
             , borderWidth = 0
             } `additionalKeys` myKeys
