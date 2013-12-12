@@ -71,16 +71,18 @@ myManageHook = composeAll
     , className =? "VASSAL-launch-Player" --> doFloat <+> doShift "="
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "1" -- Hangouts
     , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> viewShift "1" -- Google Keep
-    ]
-    where 
+    ] <+> manageDocks
+    where
         viewShift = doF . liftM2 (.) W.greedyView W.shift
         -- vassalClassnames = ["VASSAL-launch-ModuleManager", "VASSAL-launch-Player"]
         -- floatingInOne = ["crx_nckgahadagoaajjgafhacjanaoiihapd",  -- Hangouts
                          -- "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki"] -- Google Keep
 -- }}}
 -- Log {{{
-myLogHook :: Handle -> X ()
-myLogHook h = dynamicLogWithPP $ defaultPP
+myLogHook h = (dynamicLogWithPP (myDzen h)) >> fadeInactiveLogHook 0.7
+                                            >> updatePointer (Relative 1 1)
+
+myDzen h = defaultPP
     {
         ppCurrent           =   dzenColor "#e87511" "#1B1D1E" . pad
       , ppVisible           =   dzenColor "white" "#1B1D1E" . pad
@@ -96,9 +98,13 @@ incDelta = 3/100
 myDefaultLayout = tiledStd ||| Mirror tiledStd ||| Full
     where
         tiledStd = Tall 1 incDelta (1/2) -- number of masters, % to inc when resizing, % of screen used by master
-myLayoutHook =   onWorkspace "1" (Tall 1 incDelta (3/4))
+myLayoutHook = avoidStruts
+               $ onWorkspace "1" (Tall 1 incDelta (3/4))
                $ onWorkspace "2" (magicFocus (Mirror (Tall 1 incDelta (2/3))))
                $ myDefaultLayout
+-- }}}
+-- HandleEvent {{{
+myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 -- }}}
 -- }}}
 
@@ -163,11 +169,11 @@ main = do
             , terminal = myTerminal
             , modMask = modm
             , focusFollowsMouse = False
-            , manageHook = myManageHook <+> manageHook defaultConfig <+> manageDocks
-            , layoutHook = avoidStruts . smartBorders $ myLayoutHook
-            , logHook = myLogHook dzenLeftBar >> fadeInactiveLogHook 0.7 >> updatePointer (Relative 1 1)
-            , handleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
             , borderWidth = 0
+            , manageHook = myManageHook
+            , layoutHook = myLayoutHook
+            , logHook = myLogHook dzenLeftBar
+            , handleEventHook = myHandleEventHook
             } `additionalKeys` myKeys
 --}}}
 
