@@ -7,20 +7,18 @@ import System.IO
 
 import XMonad
 import XMonad.Core
-import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
 import XMonad.Actions.GridSelect
 import XMonad.Actions.SwapWorkspaces
 import XMonad.Actions.UpdatePointer
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.EwmhDesktops --fullScreenEventHook
 import XMonad.Hooks.FadeInactive
-import XMonad.Hooks.FadeWindows
+import XMonad.Hooks.FadeWindows -- fadeWindowEventHook
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.UrgencyHook
 import XMonad.Layout.MagicFocus
-import XMonad.Layout.NoBorders(smartBorders)
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.ResizableTile
 import XMonad.Util.Run
