@@ -9,6 +9,8 @@ import XMonad
 import XMonad.Core
 import XMonad.Actions.CycleWS
 import XMonad.Actions.GridSelect
+import XMonad.Actions.GroupNavigation -- historyHook
+import XMonad.Actions.RotSlaves
 import XMonad.Actions.SwapWorkspaces
 import XMonad.Actions.UpdatePointer
 import XMonad.Hooks.DynamicLog
@@ -78,7 +80,8 @@ myManageHook = composeAll
                          -- "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki"] -- Google Keep
 -- }}}
 -- Log {{{
-myLogHook h = (dynamicLogWithPP (myDzen h)) >> fadeInactiveLogHook 0.7
+myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
+                                            >> fadeInactiveLogHook 0.7
                                             >> updatePointer (Relative 1 1)
 
 myDzen h = defaultPP
@@ -135,6 +138,10 @@ myKeys =
             , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
             , (((modm .|. shiftMask), xK_j), sendMessage MirrorShrink)
             , (((modm .|. shiftMask), xK_k), sendMessage MirrorExpand)
+            , (((modm .|. controlMask), xK_j), rotSlavesDown)
+            , (((modm .|. controlMask), xK_k), rotSlavesUp)
+            -- , ((modm, xK_m), windows W.focusMaster)
+            , (((modm .|. shiftMask), xK_m), nextMatch History (return True))
             -- Backlight
             , (((modm .|. controlMask .|. shiftMask), xK_Left), spawn "xbacklight -inc 20")
             , (((modm .|. controlMask .|. shiftMask), xK_Right), spawn "xbacklight -dec 20")
