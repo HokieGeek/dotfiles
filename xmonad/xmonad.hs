@@ -59,6 +59,22 @@ myAppGSMenu = [ ("Chromium", "chromium")
 mySpawnSelected :: [(String, String)] -> X()
 mySpawnSelected lst = gridselect conf lst >>= flip whenJust spawn
     where conf = defaultGSConfig
+
+focusTest :: X()
+-- focusTest = spawn "xmessage 'testing'"
+focusTest = windows W.focusMaster
+    -- where curr = windows W.index !! 0
+-- focusTest = spawn "xmessage 'test'"
+-- focusTest = spawn "xmessage '" ++ (windows W.peek) ++ "'"
+-- focusTest windows W.peek == windows W.index !! 0 = spawn "xmessage 'testing'"
+-- focusTest Eq windows W.peek windows W.index !! 0 = spawn "xmessage 'testing'"
+            -- nextMatch History (return True)
+-- focusTest = spawn msg
+--     where msg = "xmessage '" ++ myTerminal ++ "'"
+    -- where currentWin = W.index W.current
+-- W.current.stack
+            -- , ((modm, xK_m), windows W.focusMaster)
+            -- , (((modm .|. shiftMask), xK_m), nextMatch History (return True))
 -- }}}
 
 -- Hooks {{{
@@ -132,17 +148,18 @@ myKeys =
             , (((controlMask .|. mod1Mask), xK_Right), nextWS)
             , (((modm .|. mod1Mask), xK_l), moveTo Next NonEmptyWS)
             , (((modm .|. mod1Mask), xK_h), moveTo Prev NonEmptyWS)
-            , (((modm .|. mod1Mask .|. shiftMask), xK_l), moveTo Next EmptyWS)
-            , (((modm .|. mod1Mask .|. shiftMask), xK_h), moveTo Prev EmptyWS)
+            , ((modm, xK_n), moveTo Next EmptyWS)
             , (((modm .|. mod1Mask .|. shiftMask), xK_j), toggleWS)
             -- Window helpers
             , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
             , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink)
             , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand)
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
-            , (((modm .|. controlMask), xK_j), rotSlavesDown)
-            , ((modm, xK_less), withFocused (keysResizeWindow (-10,-10) (1,1)))
-            , ((modm, xK_greater), withFocused (keysResizeWindow (10,10) (1,1)))
+            , (((modm .|. controlMask), xK_k), rotSlavesUp)
+            -- , ((modm, xK_less), withFocused (keysResizeWindow (-10,-10) (1,1)))
+            -- , ((modm, xK_greater), withFocused (keysResizeWindow (10,10) (1,1)))
+            -- , ((modm, xK_c), focusTest $ windows W.peek)
+            , ((modm, xK_c), focusTest)
             -- , ((modm, xK_m), windows W.focusMaster)
             , (((modm .|. shiftMask), xK_m), nextMatch History (return True))
             -- Backlight
