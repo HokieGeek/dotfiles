@@ -103,7 +103,7 @@ myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
 
 myDzen h = defaultPP
     {
-        ppCurrent           =   dzenColor "#e87511" "#1B1D1E" . pad
+        ppCurrent           =   dzenColor "#9f0ac4" "#1B1D1E" . pad
       , ppVisible           =   dzenColor "white" "#1B1D1E" . pad
       , ppHidden            =   dzenColor "white" "#1B1D1E" . pad
       , ppHiddenNoWindows   =   dzenColor "#7b7b7b" "#1B1D1E" . pad
