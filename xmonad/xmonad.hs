@@ -45,10 +45,11 @@ myAppGSMenu = [ ("Chromium", "chromium")
               , ("Skype", "skype")
               , ("gVim", "gvim")
               , ("Eclipse", "eclipse")
-              , ("Alsa Mixer", myTerminal ++ " -e alsamixer")
+              , ("MPC", myTerminal ++ " -e ncmpcpp")
               , ("VLC", "vlc")
               , ("Gimp", "gimp")
               , ("Irssi", myTerminal ++ " -e irssi")
+              , ("Alsa Mixer", myTerminal ++ " -e alsamixer")
               -- , ("minicom", myTerminal ++ " -e minicom") -- specific menu for the two configs
               -- deluge, playonlinux, virtualbox, mpd/c
               ]
