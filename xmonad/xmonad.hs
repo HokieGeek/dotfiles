@@ -50,8 +50,10 @@ myAppGSMenu = [ ("Chromium", "chromium")
               , ("Gimp", "gimp")
               , ("Irssi", myTerminal ++ " -e irssi")
               , ("Alsa Mixer", myTerminal ++ " -e alsamixer")
+              , ("VirtualBox", myTerminal ++ " -e alsamixer")
+              , ("Steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
+              , ("Deluge", "deluge")
               -- , ("minicom", myTerminal ++ " -e minicom") -- specific menu for the two configs
-              -- deluge, playonlinux, virtualbox, mpd/c
               ]
 --}}}
 
@@ -99,7 +101,7 @@ myManageHook = composeAll
 -- }}}
 -- Log {{{
 myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
-                                            >> fadeInactiveLogHook 0.7
+                                            >> fadeInactiveLogHook 0.5
                                             >> updatePointer (Relative 1 1)
 
 myDzen h = defaultPP
