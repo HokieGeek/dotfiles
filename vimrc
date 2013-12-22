@@ -17,9 +17,9 @@ set ruler
 set showcmd " Shows the command being typed
 set wildmenu " Tab completion in command-line mode (:)
 set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~ " These file types are ignored when doing auto completions
-set viminfo=%,'20,"100,<1000,s100,:150,n~/.viminfo " Remembers stuff. RTFM
-set history=500
-set undolevels=500
+set viminfo=!,%,'20,"100,<1000,s100,:150,n~/.viminfo " Remembers stuff. RTFM
+set history=1000
+set undolevels=1000
 set directory=/tmp " Location of the swap file
 set browsedir=buffer " Open file browser in the current file's directory
 set foldenable
@@ -29,7 +29,7 @@ set showmatch " Briefly jumps to matching bracket
 set incsearch " Searches as you type
 set smartcase " If search pattern uses upper case chars, make search case sensitive
 set wrapscan " Searches wrap around the end of the file
-" set nowrap " TEST
+set nowrap
 " set wrapmargin=?
 set list " Displays unprintable characters (whitespace, essentially)
 set listchars=tab:>>,trail:.,extends:#,nbsp:_ " Define what symbols to use with unprintable characters
@@ -37,11 +37,22 @@ set splitright " When doing a vertical split, it puts it to the right of the cur
 set splitbelow " When doing a horizontal split, it puts it below the current window
 set diffopt+=iwhite " Vimdiff will ignore whitespace diffs
 set ttyfast " Smoother redrawing
+set lazyredraw " Don't redraw during macros
 set noscrollbind " Don't scroll windows synchronized
 set dictionary=/usr/share/dict/words
 set spellsuggest=best,10
 set spelllang=en_us
-set modeline
+set formatoptions+=n " Recognize numbered lists
+if $USER != "root"
+    set modeline
+endif
+if exists('$TMUX')
+    set clipboard=
+else
+    set clipboard=unnamed "sync with OS clipboard
+endif
+set hidden " you can change buffers without saving
+set timeoutlen=500 "Let's see if this works for me
 
 if has("gui_running")
     colorscheme desert
@@ -142,7 +153,7 @@ endfun
 command! Dorig mkview! 9 | topleft vnew | set bt=nofile | r # | 0d_ | windo diffthis
 command! Dcm call DiffWithCMedOriginal()
 command! Dclr silent only | diffoff | silent loadview 9
-command! Scratch botright new | set bt=nofile | res 10
+command! Scratch botright new | set bt=nofile bufhidden=true noswapfile modifiable | res 10
 " Will allow me to sudo a file that is open without write permissions
 cmap w!! %!sudo tee > /dev/null %
 " }}}
@@ -158,9 +169,8 @@ nmap <silent> <C-F7> :windo call SaveSession()<CR>
 nmap <silent> <Leader><F7> :call DeleteSession()<CR>
 nmap <silent> <F8> :bnext<CR>
 nmap <silent> <S-F8> :bprevious<CR>
-nmap <silent> <F9> :set cursorline! number! relativenumber!<CR>
+nmap <silent> <F9> :set number! relativenumber!<CR>
 nmap <silent> <C-F9> :set cursorline!<CR>
-nmap <silent> <S-F9> :set number! relativenumber!<CR>
 " <F11> is too often taken by the terminal's FULLSCREEN handler
 nmap <silent> <F12> :if ! &diff<CR>Dcm<CR>else<CR>Dclr<CR>endif<CR>
 nmap <silent> <S-F12> :if ! &diff<CR>Dorig<CR>else<CR>Dclr<CR>endif<CR><CR>
