@@ -154,6 +154,7 @@ command! Dorig mkview! 9 | topleft vnew | set bt=nofile | r # | 0d_ | windo diff
 command! Dcm call DiffWithCMedOriginal()
 command! Dclr silent only | diffoff | silent loadview 9
 command! Scratch botright new | set bt=nofile bufhidden=true noswapfile modifiable | res 10
+command! GitBlame mkview! 9 | topleft vnew | set bt=nofile | exe "silent r !git blame #" | 0d_ | res 50
 " Will allow me to sudo a file that is open without write permissions
 cmap w!! %!sudo tee > /dev/null %
 " }}}
@@ -162,20 +163,20 @@ cmap w!! %!sudo tee > /dev/null %
 nmap <Leader>s :source $MYVIMRC<CR>
 nmap <silent> <Leader><Leader> :nohlsearch<CR>
 nmap <silent> <Leader>] :sp<CR>:res 15<CR>/<C-R><C-W><CR>
+nmap <silent> <Leader>/ :Scratch<CR>
 nmap <silent> <F6> :setlocal spell!<CR>
 nmap <silent> <F7> :call SaveSession()<CR>
 nmap <silent> <S-F7> :call LoadSession()<CR>
 nmap <silent> <C-F7> :windo call SaveSession()<CR>
 nmap <silent> <Leader><F7> :call DeleteSession()<CR>
 nmap <silent> <F8> :bnext<CR>
-nmap <silent> <S-F8> :bprevious<CR>
+nmap <silent> <Leader><F8> :bprevious<CR>
 nmap <silent> <F9> :set number! relativenumber!<CR>
-nmap <silent> <C-F9> :set cursorline!<CR>
+nmap <silent> <Leader><F9> :set cursorline!<CR>
+nmap <silent> <F10> :GitBlame<CR>
 " <F11> is too often taken by the terminal's FULLSCREEN handler
 nmap <silent> <F12> :if ! &diff<CR>Dcm<CR>else<CR>Dclr<CR>endif<CR>
-nmap <silent> <S-F12> :if ! &diff<CR>Dorig<CR>else<CR>Dclr<CR>endif<CR><CR>
-nmap <silent> <S-F12> :if ! &diff<CR>Dorig<CR>else<CR>Dclr<CR>endif<CR><CR>
-nmap <silent> <C-F12> :Scratch<CR>
+nmap <silent> <Leader><F12> :if ! &diff<CR>Dorig<CR>else<CR>Dclr<CR>endif<CR><CR>
 
 "" I feel like being a pain in the ass
 noremap <Up> :echoerr "Use k instead! :-p"<CR>
