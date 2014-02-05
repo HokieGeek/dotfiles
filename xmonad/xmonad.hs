@@ -52,6 +52,7 @@ myAppGSMenu = [ ("Chromium", "chromium")
               , ("Alsa Mixer", myTerminal ++ " -e alsamixer")
               , ("VirtualBox", "virtualbox")
               , ("Steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
+              , ("VASSAL", "vassal")
               , ("Deluge", "deluge")
               -- , ("minicom", myTerminal ++ " -e minicom") -- specific menu for the two configs
               ]
@@ -194,7 +195,7 @@ main = do
         compMgrStart <- spawn compmgr
         dzenLeftBar <- spawnPipe workspaceStatusBar
         dzenRightBar <- spawnPipe conkyStatusBar
-        xmonad $ withUrgencyHook dzenUrgencyHook { args = ["-bg", "darkgreen", "-xs", "1"] } -- TODO: figure out appropriate color
+        xmonad $ withUrgencyHook dzenUrgencyHook { args = ["-bg", "#9F0AC4", "-xs", "1"] }
                $ defaultConfig
             { workspaces = myWorkspaces
             , terminal = myTerminal
