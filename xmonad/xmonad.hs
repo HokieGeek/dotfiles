@@ -50,7 +50,7 @@ myAppGSMenu = [ ("Chromium", "chromium")
               , ("Gimp", "gimp")
               , ("Irssi", myTerminal ++ " -e irssi")
               , ("Alsa Mixer", myTerminal ++ " -e alsamixer")
-              , ("VirtualBox", myTerminal ++ " -e alsamixer")
+              , ("VirtualBox", "virtualbox")
               , ("Steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
               , ("Deluge", "deluge")
               -- , ("minicom", myTerminal ++ " -e minicom") -- specific menu for the two configs
