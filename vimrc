@@ -60,6 +60,9 @@ if has("gui_running")
     set guioptions-=m " Never show the menubar.
 else
     colorscheme elflord
+    if !empty($TMUX)
+        set t_Co=256
+    endif
 endif
 
 " Disable syntax highlight for files larger than 50 MB
@@ -140,29 +143,34 @@ endif
 
 """ Commands {{{
 func! LoadLeft(command)
-    exe "mkview! 9"
-    exe "topleft vnew | set bt=nofile"
+    mkview! 9
+    topleft vnew
+    set bt=nofile
     exe "silent r ".a:command
-    exe "0d_"
+    0d_
 endfun
 func! PopDiff(command)
     call LoadLeft(a:command)
-    exe "silent windo diffthis"
+    silent windo diffthis
+    " diffthis
+    " wincmd p
+    " diffthis
 endfun
 func! PopSynched(command)
-    " TODO:  get current line(".")
+    let l:cline = line(".")
     call LoadLeft(a:command)
-    " TODO:  place cursor at given line
-    " exe "windo set scrollbind"
-    " TODO:  switch to original window
+    exe l:cline
+    windo set scrollbind
+endfun
 
+func! UnPopSynched(command)
+    " TODO: need a global that let's me know synched panel is up
     " TODO: On delete, need to grab the bufnr("%") in order to delete the buffer
 endfun
 command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
 command! Dorig call PopDiff("#")
 command! Dcm call PopDiff("!git show HEAD:#")
 command! Dclr silent only | diffoff | silent loadview 9
-" command! GitBlame call LoadLeft("!git blame #") | res 50
 command! GitBlame call PopSynched("!git blame #") | res 50
 " Will allow me to sudo a file that is open without write permissions
 cmap w!! %!sudo tee > /dev/null %
@@ -172,12 +180,15 @@ cmap w!! %!sudo tee > /dev/null %
 nmap <Leader>s :source $MYVIMRC<CR>
 nmap <silent> <Leader><Leader> :nohlsearch<CR>
 
-nmap <silent> <F8> :call SaveSession()<CR>
-nmap <silent> <Leader><F8> :windo call SaveSession()<CR>
-nmap <silent> <F9> :call LoadSession()<CR>
+nmap <silent> <F9> :call SaveSession()<CR>
+nmap <silent> <Leader><F9> :windo call SaveSession()<CR>
 nmap <silent> <F10> :call DeleteSession()<CR>
+nmap <silent> <Leader><F10> :call LoadSession()<CR>
 
 nmap <silent> g/c :sp<CR>:res 15<CR>/<C-R><C-W><CR>
+" nmap <silent> g/c :<c-u>vimgrep // % <bar> cw<left><left><left><left><left><left><left><left><left>
+nmap <silent> g// :<c-u>noau vimgrep // * <bar> cw<left><left><left><left><left><left><left><left>
+" nmap <silent> g// :grep -rnI  * <bar> cw<left><left><left><left><left><left><left>
 
 nmap <silent> gb :bnext<CR>
 nmap <silent> gB :bprevious<CR>
