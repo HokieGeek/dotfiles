@@ -151,29 +151,42 @@ func! LoadLeft(command)
 endfun
 func! PopDiff(command)
     call LoadLeft(a:command)
-    silent windo diffthis
-    " diffthis
-    " wincmd p
-    " diffthis
+    diffthis
+    wincmd l
+    diffthis
+endfun
+func! PopGitDiffPrompt()
+    call inputsave()
+    let l:commit = input('Commit: ')
+    call inputrestore()
+    call PopDiff("!git show ".l:commit.":./#")
 endfun
 func! PopSynched(command)
     let l:cline = line(".")
     call LoadLeft(a:command)
     exe l:cline
     windo set scrollbind
+    exe l:cline
 endfun
-
 func! UnPopSynched(command)
     " TODO: need a global that let's me know synched panel is up
     " TODO: On delete, need to grab the bufnr("%") in order to delete the buffer
 endfun
 command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
 command! Dorig call PopDiff("#")
-command! Dcm call PopDiff("!git show HEAD:#")
+command! DcmHead call PopDiff("!git show HEAD:./#")
+command! Dcm call PopGitDiffPrompt()
 command! Dclr silent only | diffoff | silent loadview 9
-command! GitBlame call PopSynched("!git blame #") | res 50
+command! GitBlame call PopSynched("!git blame --date=short #") | wincmd p | vertical res 40 | wincmd p
+
 " Will allow me to sudo a file that is open without write permissions
 cmap w!! %!sudo tee > /dev/null %
+
+if has("gui_running")
+    command! ProjectorView colorscheme peachpuff | set guifont=BitstreamVeraSansMono\ 12
+else
+    command! ProjectorView colorscheme slate
+endif
 " }}}
 
 """ Keyboard mappings {{{
@@ -186,9 +199,9 @@ nmap <silent> <F10> :call DeleteSession()<CR>
 nmap <silent> <Leader><F10> :call LoadSession()<CR>
 
 nmap <silent> g/c :sp<CR>:res 15<CR>/<C-R><C-W><CR>
-" nmap <silent> g/c :<c-u>vimgrep // % <bar> cw<left><left><left><left><left><left><left><left><left>
-nmap <silent> g// :<c-u>noau vimgrep // * <bar> cw<left><left><left><left><left><left><left><left>
-" nmap <silent> g// :grep -rnI  * <bar> cw<left><left><left><left><left><left><left>
+nmap <silent> g/w :<c-u>vimgrep // % <bar> cw<left><left><left><left><left><left><left>
+nmap <silent> g// :<c-u>noau vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left>
+nmap <silent> g/. :<c-u>noau vimgrep /<C-R><C-W>/ ** <bar> cw<CR>
 
 nmap <silent> gb :bnext<CR>
 nmap <silent> gB :bprevious<CR>
@@ -199,9 +212,10 @@ nmap <silent> cow :set wrap!<CR>
 nmap <silent> cos :setlocal spell!<CR>
 nmap <silent> col :set list!<CR>
 
-nmap <silent> Ub :GitBlame<CR>
-nmap <silent> Ug :if ! &diff<CR>Dcm<CR>else<CR>Dclr<CR>endif<CR>
 nmap <silent> Uo :if ! &diff<CR>Dorig<CR>else<CR>Dclr<CR>endif<CR><CR>
+nmap <silent> Uc :if ! &diff<CR>Dcm<CR>else<CR>Dclr<CR>endif<CR>
+nmap <silent> Uh :if ! &diff<CR>DcmHead<CR>else<CR>Dclr<CR>endif<CR>
+nmap <silent> Ub :GitBlame<CR>
 nmap <silent> Us :Scratch<CR>
 
 "" I feel like being a pain in the ass
