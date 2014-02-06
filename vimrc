@@ -157,6 +157,7 @@ func! PopSynched(command)
     " TODO:  switch to original window
 
     " TODO: On delete, need to grab the bufnr("%") in order to delete the buffer
+endfun
 command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
 command! Dorig call PopDiff("#")
 command! Dcm call PopDiff("!git show HEAD:#")
