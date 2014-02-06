@@ -145,12 +145,24 @@ func! LoadLeft(command)
     exe "silent r ".a:command
     exe "0d_"
 endfun
+func! PopDiff(command)
+    call LoadLeft(a:command)
+    exe "silent windo diffthis"
+endfun
+func! PopSynched(command)
+    " TODO:  get current line(".")
+    call LoadLeft(a:command)
+    " TODO:  place cursor at given line
+    " exe "windo set scrollbind"
+    " TODO:  switch to original window
+
+    " TODO: On delete, need to grab the bufnr("%") in order to delete the buffer
 command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
-command! Dorig call LoadLeft("#") | silent windo diffthis
-command! Dcm call LoadLeft("!git show HEAD:#") | silent windo diffthis
+command! Dorig call PopDiff("#")
+command! Dcm call PopDiff("!git show HEAD:#")
 command! Dclr silent only | diffoff | silent loadview 9
-command! GitBlame call LoadLeft("!git blame #") | res 50
-" TODO: windo set scrollbind    line(".")    bufnr("%")    might need a global flag
+" command! GitBlame call LoadLeft("!git blame #") | res 50
+command! GitBlame call PopSynched("!git blame #") | res 50
 " Will allow me to sudo a file that is open without write permissions
 cmap w!! %!sudo tee > /dev/null %
 " }}}
