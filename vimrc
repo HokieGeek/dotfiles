@@ -139,22 +139,18 @@ endif
 " }}}
 
 """ Commands {{{
-func! DiffWithCMedOriginal()
+func! LoadLeft(command)
     exe "mkview! 9"
     exe "topleft vnew | set bt=nofile"
-
-    " TODO: determine if currently in git or hg repo
-
-    " if GIT
-    exe "silent r !git show HEAD:#"
-
-    exe "0d_ | silent windo diffthis"
+    exe "silent r ".a:command
+    exe "0d_"
 endfun
 command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
-command! Dorig mkview! 9 | topleft vnew | set bt=nofile | r # | 0d_ | windo diffthis
-command! Dcm call DiffWithCMedOriginal()
+command! Dorig call LoadLeft("#") | silent windo diffthis
+command! Dcm call LoadLeft("!git show HEAD:#") | silent windo diffthis
 command! Dclr silent only | diffoff | silent loadview 9
-command! GitBlame mkview! 9 | topleft vnew | set bt=nofile | exe "silent r !git blame #" | 0d_ | res 50
+command! GitBlame call LoadLeft("!git blame #") | res 50
+" TODO: windo set scrollbind    line(".")    bufnr("%")    might need a global flag
 " Will allow me to sudo a file that is open without write permissions
 cmap w!! %!sudo tee > /dev/null %
 " }}}
