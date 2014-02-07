@@ -23,14 +23,11 @@ set undolevels=1000
 set directory=/tmp " Location of the swap file
 set browsedir=buffer " Open file browser in the current file's directory
 set foldenable
-" set foldclose=all " Folds will close when the cursor leaves them
-set backup " Create a backup file
 set showmatch " Briefly jumps to matching bracket
 set incsearch " Searches as you type
 set smartcase " If search pattern uses upper case chars, make search case sensitive
 set wrapscan " Searches wrap around the end of the file
 set nowrap
-" set wrapmargin=?
 set list " Displays unprintable characters (whitespace, essentially)
 set listchars=tab:>>,trail:.,extends:#,nbsp:_ " Define what symbols to use with unprintable characters
 set splitright " When doing a vertical split, it puts it to the right of the current window
@@ -43,8 +40,13 @@ set dictionary=/usr/share/dict/words
 set spellsuggest=best,10
 set spelllang=en_us
 set formatoptions+=n " Recognize numbered lists
+set backup " Create a backup file
+set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set backupskip=/tmp/*,/private/tmp/*
+set writebackup " Make a backup before overwriting a file.
+set hlsearch
 if $USER != "root"
-    set modeline
+    set modelines=1
 endif
 if exists('$TMUX')
     set clipboard=
@@ -157,9 +159,9 @@ func! PopDiff(command)
 endfun
 func! PopGitDiffPrompt()
     call inputsave()
-    let l:commit = input('Commit: ')
+    let l:response = input('Commit or branch: ')
     call inputrestore()
-    call PopDiff("!git show ".l:commit.":./#")
+    call PopDiff("!git show ".l:response.":./#")
 endfun
 func! PopSynched(command)
     let l:cline = line(".")
@@ -171,12 +173,14 @@ endfun
 func! UnPopSynched(command)
     " TODO: need a global that let's me know synched panel is up
     " TODO: On delete, need to grab the bufnr("%") in order to delete the buffer
+    " TODO: set scrollbind!
 endfun
 command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
 command! Dorig call PopDiff("#")
 command! DcmHead call PopDiff("!git show HEAD:./#")
 command! Dcm call PopGitDiffPrompt()
 command! Dclr silent only | diffoff | silent loadview 9
+"| exe "bd".bufnr("%")
 command! GitBlame call PopSynched("!git blame --date=short #") | wincmd p | vertical res 40 | wincmd p
 
 " Will allow me to sudo a file that is open without write permissions
@@ -217,6 +221,9 @@ nmap <silent> Uc :if ! &diff<CR>Dcm<CR>else<CR>Dclr<CR>endif<CR>
 nmap <silent> Uh :if ! &diff<CR>DcmHead<CR>else<CR>Dclr<CR>endif<CR>
 nmap <silent> Ub :GitBlame<CR>
 nmap <silent> Us :Scratch<CR>
+
+" Oh, man
+inoremap jk <esc>
 
 "" I feel like being a pain in the ass
 noremap <Up> :echoerr "Use k instead! :-p"<CR>
