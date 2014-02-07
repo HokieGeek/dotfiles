@@ -144,48 +144,59 @@ endif
 " }}}
 
 """ Commands {{{
+func! LoadLeftClear()
+    bdelete compare
+    diffoff
+    silent loadview 9
+    unlet! g:loaded_left
+endfun
 func! LoadLeft(command)
+    let g:loaded_left = 1
     topleft vnew
     set bt=nofile
     exe "silent r ".a:command
-    " file a:name " Gives the buffer a name
+    silent file compare " Gives the buffer a name
     0d_
 endfun
 func! PopDiff(command)
-    mkview! 9
-    call LoadLeft(a:command)
-    diffthis
-    wincmd l
-    diffthis
+    if exists("g:loaded_left")
+        call LoadLeftClear()
+    else
+        mkview! 9
+        call LoadLeft(a:command)
+        diffthis
+        wincmd l
+        diffthis
+    endif
 endfun
 func! PopGitDiffPrompt()
-    call inputsave()
-    let l:response = input('Commit or branch: ')
-    call inputrestore()
-    call PopDiff("!git show ".l:response.":./#")
+    if exists("g:loaded_left")
+        call LoadLeftClear()
+    else
+        call inputsave()
+        let l:response = input('Commit, tag or branch: ')
+        call inputrestore()
+        call PopDiff("!git show ".l:response.":./#")
+    endif
 endfun
 func! PopSynched(command)
-    let l:cline = line(".")
-    mkview! 9
-    %foldopen!
-    call LoadLeft(a:command)
-    exe l:cline
-    windo set scrollbind
-    exe l:cline
-    let g:synched_on = 1
-endfun
-func! UnPopSynched()
-    " TODO:  Make sure that you're on the correct buffer (not Scratch)
-    silent only
-    " TODO: On delete, need to grab the bufnr("%") in order to delete the buffer
-    silent loadview 9
-    unlet! g:synched_on
+    if exists("g:loaded_left")
+        call LoadLeftClear()
+    else
+        mkview! 9
+        let l:cline = line(".")
+        set foldenable!
+        0
+        call LoadLeft(a:command)
+        0
+        windo set scrollbind
+        exe l:cline
+    endif
 endfun
 command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
 command! DcmHead call PopDiff("!git show HEAD:./#")
 command! Dcm call PopGitDiffPrompt()
-command! Dclr silent only | diffoff | silent loadview 9
-"| exe "bd".bufnr("%")
+command! Dorig call PopDiff("#")
 command! GitBlame call PopSynched("!git blame --date=short #") | wincmd p | vertical res 40 | wincmd p
 
 " Will allow me to sudo a file that is open without write permissions
@@ -209,17 +220,16 @@ nmap <silent> g/. :<c-u>noau vimgrep /<C-R><C-W>/ ** <bar> cw<CR>
 nmap <silent> gb :bnext<CR>
 nmap <silent> gB :bprevious<CR>
 
-nmap <silent> con :set number! relativenumber!<CR>
-nmap <silent> coc :set cursorline!<CR>
-nmap <silent> cow :set wrap!<CR>
+nmap <silent> con :setlocal number! relativenumber!<CR>
+nmap <silent> coc :setlocal cursorline!<CR>
+nmap <silent> cow :setlocal wrap!<CR>
 nmap <silent> cos :setlocal spell!<CR>
-nmap <silent> col :set list!<CR>
+nmap <silent> col :setlocal list!<CR>
 
-nmap <silent> Uo :if ! &diff<CR>Dorig<CR>else<CR>Dclr<CR>endif<CR><CR>
-nmap <silent> Uc :if ! &diff<CR>Dcm<CR>else<CR>Dclr<CR>endif<CR>
-nmap <silent> Uh :if ! &diff<CR>DcmHead<CR>else<CR>Dclr<CR>endif<CR>
-" nmap <silent> Ub :GitBlame<CR>
-nmap <silent> Ub :if exists("g:synched_on")<CR>call UnPopSynched()<CR>else<CR>GitBlame<CR>endif<CR>
+nmap <silent> Uo :Dorig<CR>
+nmap <silent> Uc :Dcm<CR>
+nmap <silent> Uh :DcmHead<CR>
+nmap <silent> Ub :GitBlame<CR>
 nmap <silent> Us :Scratch<CR>
 
 " Oh, man
