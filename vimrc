@@ -145,13 +145,14 @@ endif
 
 """ Commands {{{
 func! LoadLeft(command)
-    mkview! 9
     topleft vnew
     set bt=nofile
     exe "silent r ".a:command
+    " file a:name " Gives the buffer a name
     0d_
 endfun
 func! PopDiff(command)
+    mkview! 9
     call LoadLeft(a:command)
     diffthis
     wincmd l
@@ -165,18 +166,22 @@ func! PopGitDiffPrompt()
 endfun
 func! PopSynched(command)
     let l:cline = line(".")
+    mkview! 9
+    %foldopen!
     call LoadLeft(a:command)
     exe l:cline
     windo set scrollbind
     exe l:cline
+    let g:synched_on = 1
 endfun
-func! UnPopSynched(command)
-    " TODO: need a global that let's me know synched panel is up
+func! UnPopSynched()
+    " TODO:  Make sure that you're on the correct buffer (not Scratch)
+    silent only
     " TODO: On delete, need to grab the bufnr("%") in order to delete the buffer
-    " TODO: set scrollbind!
+    silent loadview 9
+    unlet! g:synched_on
 endfun
 command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
-command! Dorig call PopDiff("#")
 command! DcmHead call PopDiff("!git show HEAD:./#")
 command! Dcm call PopGitDiffPrompt()
 command! Dclr silent only | diffoff | silent loadview 9
@@ -185,12 +190,6 @@ command! GitBlame call PopSynched("!git blame --date=short #") | wincmd p | vert
 
 " Will allow me to sudo a file that is open without write permissions
 cmap w!! %!sudo tee > /dev/null %
-
-if has("gui_running")
-    command! ProjectorView colorscheme peachpuff | set guifont=BitstreamVeraSansMono\ 12
-else
-    command! ProjectorView colorscheme slate
-endif
 " }}}
 
 """ Keyboard mappings {{{
@@ -219,7 +218,8 @@ nmap <silent> col :set list!<CR>
 nmap <silent> Uo :if ! &diff<CR>Dorig<CR>else<CR>Dclr<CR>endif<CR><CR>
 nmap <silent> Uc :if ! &diff<CR>Dcm<CR>else<CR>Dclr<CR>endif<CR>
 nmap <silent> Uh :if ! &diff<CR>DcmHead<CR>else<CR>Dclr<CR>endif<CR>
-nmap <silent> Ub :GitBlame<CR>
+" nmap <silent> Ub :GitBlame<CR>
+nmap <silent> Ub :if exists("g:synched_on")<CR>call UnPopSynched()<CR>else<CR>GitBlame<CR>endif<CR>
 nmap <silent> Us :Scratch<CR>
 
 " Oh, man
