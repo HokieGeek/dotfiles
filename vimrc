@@ -56,15 +56,17 @@ endif
 set hidden " you can change buffers without saving
 set timeoutlen=500 "Let's see if this works for me
 
+if !empty($TMUX)
+    set t_Co=256
+endif
+colorscheme solarized
+colorscheme badwolf
 if has("gui_running")
-    colorscheme desert
+    " colorscheme desert
     set guioptions-=T " Never show the toolbar.
     set guioptions-=m " Never show the menubar.
-else
-    colorscheme elflord
-    if !empty($TMUX)
-        set t_Co=256
-    endif
+" else
+    " colorscheme elflord
 endif
 
 " Disable syntax highlight for files larger than 50 MB
@@ -145,7 +147,7 @@ endif
 
 """ Commands {{{
 func! LoadLeftClear()
-    bdelete compare
+    bwipeout compare
     diffoff
     silent loadview 9
     unlet! g:loaded_left
@@ -185,10 +187,12 @@ func! PopSynched(command)
     else
         mkview! 9
         let l:cline = line(".")
+        " let l:filetype = filetype
         set foldenable!
         0
         call LoadLeft(a:command)
         0
+        " windo set filetype=l:filetype
         windo set scrollbind
         exe l:cline
     endif
