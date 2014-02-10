@@ -100,7 +100,7 @@ augroup Notes
 
     autocmd BufRead,BufNewFile *
         \ if &filetype == "" |
-        \   nmap <silent> <F5> :set filetype=notes<CR> |
+        \   nnoremap <silent> <F5> :set filetype=notes<CR> |
         \ endif
 
     autocmd Filetype notes
@@ -241,51 +241,50 @@ cmap w!! %!sudo tee > /dev/null %
 " }}}
 
 """ Keyboard mappings {{{
-nmap <Leader>s :source $MYVIMRC<CR>
-nmap <silent> <Leader><Leader> :nohlsearch<CR>
+nnoremap <Leader>s :source $MYVIMRC<CR>
+nnoremap <silent> <Leader><Leader> :nohlsearch<CR>
 
-nmap <silent> <F9> :call SaveSession()<CR>
-nmap <silent> <Leader><F9> :windo call SaveSession()<CR>
-nmap <silent> <F10> :call DeleteSession()<CR>
-nmap <silent> <Leader><F10> :call LoadSession()<CR>
+nnoremap <silent> <F9> :call SaveSession()<CR>
+nnoremap <silent> <Leader><F9> :windo call SaveSession()<CR>
+nnoremap <silent> <F10> :call DeleteSession()<CR>
+nnoremap <silent> <Leader><F10> :call LoadSession()<CR>
 
-nmap <silent> g/c :sp<CR>:res 15<CR>/<C-R><C-W><CR>
-nmap <silent> g/w :<c-u>vimgrep // % <bar> cw<left><left><left><left><left><left><left>
-nmap <silent> g// :<c-u>noau vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left>
-nmap <silent> g/. :<c-u>noau vimgrep /<C-R><C-W>/ ** <bar> cw<CR>
+nnoremap <silent> g/c :sp<CR>:res 15<CR>/<C-R><C-W><CR>
+nnoremap <silent> g/w :<c-u>vimgrep // % <bar> cw<left><left><left><left><left><left><left>
+nnoremap <silent> g// :<c-u>noau vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left>
+nnoremap <silent> g/. :<c-u>noau vimgrep /<C-R><C-W>/ ** <bar> cw<CR>
 
-nmap <silent> gb :bnext<CR>
-nmap <silent> gB :bprevious<CR>
+nnoremap <silent> gb :bnext<CR>
+nnoremap <silent> gB :bprevious<CR>
 
-nmap <silent> con :setlocal number! relativenumber!<CR>
-nmap <silent> coc :setlocal cursorline!<CR>
-nmap <silent> cow :setlocal wrap!<CR>
-nmap <silent> cos :setlocal spell!<CR>
-nmap <silent> col :setlocal list!<CR>
+nnoremap <silent> con :setlocal number! relativenumber!<CR>
+nnoremap <silent> coc :setlocal cursorline!<CR>
+nnoremap <silent> cow :setlocal wrap!<CR>
+nnoremap <silent> cos :setlocal spell!<CR>
+nnoremap <silent> col :setlocal list!<CR>
 
 " Toggle off a popped window
-nmap <silent> Uu :call LoadedContentClear()<CR>
+nnoremap <silent> Uu :call LoadedContentClear()<CR>
 " Diff unsaved changes against file saved on disk
-nmap <silent> Uo :call PopDiff("#")<CR>
+nnoremap <silent> Uo :call PopDiff("#")<CR>
 " Diff current file with a given git revision
-nmap <silent> Uc :call PopGitDiffPrompt()<CR>
+nnoremap <silent> Uc :call PopGitDiffPrompt()<CR>
 " Diff current file against branch head
-nmap <silent> Uh :call PopDiff("!git show HEAD:./#")<CR>
+nnoremap <silent> Uh :call PopDiff("!git show HEAD:./#")<CR>
 " Git blame on the right-side
-nmap <silent> Ub :call PopSynched("!git blame --date=short #")<bar>wincmd p<bar>vertical res 40<bar>wincmd p<CR>
+nnoremap <silent> Ub :call PopSynched("!git blame --date=short #")<bar>wincmd p<bar>vertical res 40<bar>wincmd p<CR>
 " Git log up top
-nmap <silent> Ul :call PopGitLog()<CR>
+nnoremap <silent> Ul :call PopGitLog()<CR>
 " A scratch space. Kinda useless, I think
-nmap <silent> Us :botright new<bar>set bt=nofile noswapfile modifiable<bar>res 10<CR>
+nnoremap <silent> Us :botright new<bar>set bt=nofile noswapfile modifiable<bar>res 10<CR>
 
 " Oh, man
 inoremap jk <esc>
 
 augroup GitLog
     autocmd!
-    " TODO: How to unload a map with the filetype no longer fits?
-    autocmd Filetype GitLog nmap <silent> <enter> :call PopGitDiffFromLog()<CR>
-    autocmd Filetype GitLog nmap <silent> <esc> :call LoadedContentClear()<CR>
+    autocmd Filetype GitLog nnoremap <silent> <enter> :call PopGitDiffFromLog()<CR>
+    autocmd Filetype GitLog nnoremap <silent> <esc> :call LoadedContentClear()<CR>
 augroup END
 
 "" I feel like being a pain in the ass
@@ -400,12 +399,12 @@ augroup commenting
     " All Code Files
     autocmd FileType java,c,c++,cpp,h,h++,hpp,xml
         \ vmap <silent> <S-Tab> :call BLKCOtoggle(1)<CR> |
-        \ nmap <silent> <S-Tab> :call BLKCOtoggle(0)<CR>
+        \ nnoremap <silent> <S-Tab> :call BLKCOtoggle(0)<CR>
 
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,xml,sh,ksh,csh,tcsh,zsh,bash,dash,pl,python,vim,vimrc,ahk,tex,make,gdb
         \ map <silent> <Tab> :call SLCOtoggle()<CR>
     autocmd FileType sh,ksh,csh,tcsh,zsh,bash,pl,python,sql,vim,vimrc,ahk,tex,make,gdb
-        \ nmap <silent> <S-Tab> :'k,.call SLCOtoggle()<CR>
+        \ nnoremap <silent> <S-Tab> :'k,.call SLCOtoggle()<CR>
 
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
         \ map <silent> todo oTODO: <ESC><Tab>==A|
@@ -419,9 +418,9 @@ augroup END
     " autocmd BufwinEnter *.* echo "Loaded tags file"
 
     " Map some keys to access these
-    " nmap <silent> <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+    " nnoremap <silent> <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
 " else
-    " nmap <silent> <C-\> :echoerr "No tags file loaded"<CR>
+    " nnoremap <silent> <C-\> :echoerr "No tags file loaded"<CR>
 " endif
 
 "" Use <C-X><C-O> to access these
