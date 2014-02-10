@@ -155,6 +155,7 @@ endif
 
 """ Commands {{{
 func! LoadedContentClear()
+    set modifiable
     bwipeout content
     diffoff
     silent loadview 9
@@ -183,9 +184,10 @@ func! PopDiff(command)
 
     mkview! 9
     call LoadContent("left", a:command)
-    diffthis
     wincmd l
-    diffthis
+    windo set diffthis
+    0
+    set nomodifiable
 endfun
 func! PopGitDiffPrompt()
     if exists("g:loaded_output")
@@ -209,8 +211,9 @@ func! PopSynched(command)
     0
     call LoadContent("left", a:command)
     " windo set filetype=l:ft
-    windo set scrollbind
+    windo set scrollbind nomodifiable
     exe l:cline
+    set modifiable
 endfun
 func! PopGitLog()
     if exists("g:loaded_output")
@@ -222,6 +225,7 @@ func! PopGitLog()
     set filetype=GitLog
     set nolist cursorline
     res 10
+    set nomodifiable
     " wincmd p
 endfun
 func! PopGitDiffFromLog()
@@ -275,6 +279,7 @@ nmap <silent> Us :Scratch<CR>
 inoremap jk <esc>
 
 autocmd Filetype GitLog nmap <silent> <enter> :call PopGitDiffFromLog()<CR>
+autocmd Filetype GitLog nmap <silent> <esc> :call LoadedContentClear()<CR>
 
 "" I feel like being a pain in the ass
 noremap <Up> :echoerr "Use k instead! :-p"<CR>
