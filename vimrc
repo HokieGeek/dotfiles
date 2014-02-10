@@ -83,10 +83,12 @@ let m = matchadd("AFP", "AFP")
 let m = matchadd("AFP", "afp")
 
 autocmd Filetype GitLog
-    \ highlight GitLogHash ctermbg=none ctermfg=red cterm=none | let m = matchadd("GitLogHash", "^[\*|/\]* [a-z0-9]* ") |
-    \ highlight GitLogAuthor ctermbg=none ctermfg=cyan cterm=none | let m = matchadd("GitLogAuthor", "\<.*\> -") |
+    \ highlight CursorLine ctermbg=darkblue ctermfg=white cterm=bold |
+    \ highlight GitLogTime ctermbg=none ctermfg=cyan cterm=none | let m = matchadd("GitLogTime", " \(.* ago\) \<") |
+    \ highlight GitLogAuthor ctermbg=none ctermfg=green cterm=none | let m = matchadd("GitLogAuthor", "\<.*\> -") |
+    \ highlight GitLogMessage ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogMessage", "-.*") |
     \ highlight GitLogBranch ctermbg=none ctermfg=yellow cterm=none | let m = matchadd("GitLogBranch", "- \(.*\)") |
-    \ highlight GitLogGraph ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogGraph", "^[\*\s|/\]*") |
+    \ highlight GitLogGraph ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogGraph", "^[\*\s|/\]* ") |
     \ highlight GitLogDash ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogDash", "-")
 " }}}
 
@@ -171,57 +173,56 @@ func! LoadContent(location, command)
     endif
     set bt=nofile
     exe "silent r ".a:command
-    silent file content " Gives the buffer a name
+    exe "silent file content_".a:location
     0d_
 endfun
 func! PopDiff(command)
     if exists("g:loaded_output")
         call LoadedContentClear()
-    else
-        mkview! 9
-        call LoadContent("left", a:command)
-        diffthis
-        wincmd l
-        diffthis
     endif
+
+    mkview! 9
+    call LoadContent("left", a:command)
+    diffthis
+    wincmd l
+    diffthis
 endfun
 func! PopGitDiffPrompt()
     if exists("g:loaded_output")
         call LoadedContentClear()
-    else
-        call inputsave()
-        let l:response = input('Commit, tag or branch: ')
-        call inputrestore()
-        call PopDiff("!git show ".l:response.":./#")
     endif
+
+    call inputsave()
+    let l:response = input('Commit, tag or branch: ')
+    call inputrestore()
+    call PopDiff("!git show ".l:response.":./#")
 endfun
 func! PopSynched(command)
     if exists("g:loaded_output")
         call LoadedContentClear()
-    else
-        mkview! 9
-        let l:cline = line(".")
-        " let l:ft = &filetype
-        set foldenable!
-        0
-        call LoadContent("left", a:command)
-        0
-        " windo set filetype=l:ft
-        windo set scrollbind
-        exe l:cline
     endif
+
+    mkview! 9
+    let l:cline = line(".")
+    " let l:ft = &filetype
+    set foldenable!
+    0
+    call LoadContent("left", a:command)
+    " windo set filetype=l:ft
+    windo set scrollbind
+    exe l:cline
 endfun
 func! PopGitLog()
     if exists("g:loaded_output")
         call LoadedContentClear()
-    else
-        mkview! 9
-        call LoadContent("top", "!git log --graph --pretty=format:'\\%h (\\%cr) <\\%an> -\\%d \\%s' #")
-        set filetype=GitLog
-        set nolist cursorline
-        res 10
-        " wincmd p
     endif
+
+    mkview! 9
+    call LoadContent("top", "!git log --graph --pretty=format:'\\%h (\\%cr) <\\%an> -\\%d \\%s' #")
+    set filetype=GitLog
+    set nolist cursorline
+    res 10
+    " wincmd p
 endfun
 func! PopGitDiffFromLog()
     let l:line = getline(".")
