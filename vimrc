@@ -68,6 +68,8 @@ else
     colorscheme desert
 endif
 
+" Turns on spell check when typing out long git commit messages
+autocmd FileType gitcommit set spell
 " Disable syntax highlight for files larger than 50 MB
 autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
 autocmd VimLeave * windo diffoff
@@ -233,12 +235,6 @@ func! PopGitDiffFromLog()
     call LoadedContentClear()
     call PopDiff("!git show echo '".l:line."' | cut -d '(' -f1 | awk '{ print $NF }'``:./#")
 endfun
-command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
-command! DcmHead call PopDiff("!git show HEAD:./#")
-command! Dcm call PopGitDiffPrompt()
-command! Dorig call PopDiff("#")
-command! GitBlame call PopSynched("!git blame --date=short #") | wincmd p | vertical res 40 | wincmd p
-command! GitLog call PopGitLog()
 
 " Will allow me to sudo a file that is open without write permissions
 cmap w!! %!sudo tee > /dev/null %
@@ -267,19 +263,30 @@ nmap <silent> cow :setlocal wrap!<CR>
 nmap <silent> cos :setlocal spell!<CR>
 nmap <silent> col :setlocal list!<CR>
 
+" Toggle off a popped window
 nmap <silent> Uu :call LoadedContentClear()<CR>
-nmap <silent> Uo :Dorig<CR>
-nmap <silent> Uc :Dcm<CR>
-nmap <silent> Uh :DcmHead<CR>
-nmap <silent> Ub :GitBlame<CR>
-nmap <silent> Ul :GitLog<CR>
-nmap <silent> Us :Scratch<CR>
+" Diff unsaved changes against file saved on disk
+nmap <silent> Uo :call PopDiff("#")<CR>
+" Diff current file with a given git revision
+nmap <silent> Uc :call PopGitDiffPrompt()<CR>
+" Diff current file against branch head
+nmap <silent> Uh :call PopDiff("!git show HEAD:./#")<CR>
+" Git blame on the right-side
+nmap <silent> Ub :call PopSynched("!git blame --date=short #")<bar>wincmd p<bar>vertical res 40<bar>wincmd p<CR>
+" Git log up top
+nmap <silent> Ul :call PopGitLog()<CR>
+" A scratch space. Kinda useless, I think
+nmap <silent> Us :botright new<bar>set bt=nofile noswapfile modifiable<bar>res 10<CR>
 
 " Oh, man
 inoremap jk <esc>
 
-autocmd Filetype GitLog nmap <silent> <enter> :call PopGitDiffFromLog()<CR>
-autocmd Filetype GitLog nmap <silent> <esc> :call LoadedContentClear()<CR>
+augroup GitLog
+    autocmd!
+    " TODO: How to unload a map with the filetype no longer fits?
+    autocmd Filetype GitLog nmap <silent> <enter> :call PopGitDiffFromLog()<CR>
+    autocmd Filetype GitLog nmap <silent> <esc> :call LoadedContentClear()<CR>
+augroup END
 
 "" I feel like being a pain in the ass
 noremap <Up> :echoerr "Use k instead! :-p"<CR>
@@ -401,7 +408,7 @@ augroup commenting
         \ nmap <silent> <S-Tab> :'k,.call SLCOtoggle()<CR>
 
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
-        \ map <silent> todo oTODO: <ESC><Tab>==A |
+        \ map <silent> todo oTODO: <ESC><Tab>==A|
         \ map <silent> fixme oFIXME: <ESC><Tab>==A
 augroup END
 " }}}
