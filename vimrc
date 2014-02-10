@@ -59,14 +59,13 @@ set timeoutlen=500 "Let's see if this works for me
 if !empty($TMUX)
     set t_Co=256
 endif
-colorscheme solarized
-colorscheme badwolf
 if has("gui_running")
-    " colorscheme desert
+    colorscheme solarized
+    colorscheme badwolf
     set guioptions-=T " Never show the toolbar.
     set guioptions-=m " Never show the menubar.
-" else
-    " colorscheme elflord
+else
+    colorscheme desert
 endif
 
 " Disable syntax highlight for files larger than 50 MB
@@ -146,23 +145,31 @@ endif
 " }}}
 
 """ Commands {{{
-func! LoadLeftClear()
-    bwipeout compare
+func! LoadedContentClear()
+    bwipeout content
     diffoff
     silent loadview 9
-    unlet! g:loaded_left
+    unlet! g:loaded_output
 endfun
 func! LoadLeft(command)
-    let g:loaded_left = 1
+    let g:loaded_output = 1
     topleft vnew
     set bt=nofile
     exe "silent r ".a:command
-    silent file compare " Gives the buffer a name
+    silent file content " Gives the buffer a name
+    0d_
+endfun
+func! LoadTop(command)
+    let g:loaded_output = 1
+    topleft new
+    set bt=nofile
+    exe "silent r ".a:command
+    silent file content " Gives the buffer a name
     0d_
 endfun
 func! PopDiff(command)
-    if exists("g:loaded_left")
-        call LoadLeftClear()
+    if exists("g:loaded_output")
+        call LoadedContentClear()
     else
         mkview! 9
         call LoadLeft(a:command)
@@ -172,8 +179,8 @@ func! PopDiff(command)
     endif
 endfun
 func! PopGitDiffPrompt()
-    if exists("g:loaded_left")
-        call LoadLeftClear()
+    if exists("g:loaded_output")
+        call LoadedContentClear()
     else
         call inputsave()
         let l:response = input('Commit, tag or branch: ')
@@ -182,8 +189,8 @@ func! PopGitDiffPrompt()
     endif
 endfun
 func! PopSynched(command)
-    if exists("g:loaded_left")
-        call LoadLeftClear()
+    if exists("g:loaded_output")
+        call LoadedContentClear()
     else
         mkview! 9
         let l:cline = line(".")
@@ -197,11 +204,22 @@ func! PopSynched(command)
         exe l:cline
     endif
 endfun
+func! PopGitLog()
+    if exists("g:loaded_output")
+        call LoadedContentClear()
+    else
+        mkview! 9
+        call LoadTop("!git log --graph --pretty=format:'\\%h (\\%cr) <\\%an> -\\%d \\%s' #")
+        set nolist
+        res 10
+    endif
+endfun
 command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
 command! DcmHead call PopDiff("!git show HEAD:./#")
 command! Dcm call PopGitDiffPrompt()
 command! Dorig call PopDiff("#")
 command! GitBlame call PopSynched("!git blame --date=short #") | wincmd p | vertical res 40 | wincmd p
+command! GitLog call PopGitLog()
 
 " Will allow me to sudo a file that is open without write permissions
 cmap w!! %!sudo tee > /dev/null %
@@ -230,10 +248,12 @@ nmap <silent> cow :setlocal wrap!<CR>
 nmap <silent> cos :setlocal spell!<CR>
 nmap <silent> col :setlocal list!<CR>
 
+nmap <silent> Uu :call LoadedContentClear()<CR>
 nmap <silent> Uo :Dorig<CR>
 nmap <silent> Uc :Dcm<CR>
 nmap <silent> Uh :DcmHead<CR>
 nmap <silent> Ub :GitBlame<CR>
+nmap <silent> Ul :GitLog<CR>
 nmap <silent> Us :Scratch<CR>
 
 " Oh, man
