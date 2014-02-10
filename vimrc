@@ -283,8 +283,8 @@ inoremap jk <esc>
 
 augroup GitLog
     autocmd!
-    autocmd Filetype GitLog nnoremap <silent> <enter> :call PopGitDiffFromLog()<CR>
-    autocmd Filetype GitLog nnoremap <silent> <esc> :call LoadedContentClear()<CR>
+    autocmd Filetype GitLog nnoremap <buffer> <silent> <enter> :call PopGitDiffFromLog()<CR>
+    autocmd Filetype GitLog nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<CR>
 augroup END
 
 "" I feel like being a pain in the ass
