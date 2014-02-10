@@ -220,7 +220,7 @@ func! PopGitLog()
         set filetype=GitLog
         set nolist
         res 10
-        wincmd p
+        " wincmd p
     endif
 endfun
 command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
