@@ -158,17 +158,17 @@ func! LoadedContentClear()
     silent loadview 9
     unlet! g:loaded_output
 endfun
-func! LoadLeft(command)
+func! LoadContent(location, command)
     let g:loaded_output = 1
-    topleft vnew
-    set bt=nofile
-    exe "silent r ".a:command
-    silent file content " Gives the buffer a name
-    0d_
-endfun
-func! LoadTop(command)
-    let g:loaded_output = 1
-    topleft new
+    if a:location == "left"
+        topleft vnew
+    elseif a:location == "right"
+        botright vnew
+    elseif a:location == "top"
+        topleft new
+    elseif a:location == "bottom"
+        botright new
+    endif
     set bt=nofile
     exe "silent r ".a:command
     silent file content " Gives the buffer a name
@@ -179,7 +179,7 @@ func! PopDiff(command)
         call LoadedContentClear()
     else
         mkview! 9
-        call LoadLeft(a:command)
+        call LoadContent("left", a:command)
         diffthis
         wincmd l
         diffthis
@@ -204,7 +204,7 @@ func! PopSynched(command)
         " let l:ft = &filetype
         set foldenable!
         0
-        call LoadLeft(a:command)
+        call LoadContent("left", a:command)
         0
         " windo set filetype=l:ft
         windo set scrollbind
@@ -216,7 +216,7 @@ func! PopGitLog()
         call LoadedContentClear()
     else
         mkview! 9
-        call LoadTop("!git log --graph --pretty=format:'\\%h (\\%cr) <\\%an> -\\%d \\%s' #")
+        call LoadContent("top", "!git log --graph --pretty=format:'\\%h (\\%cr) <\\%an> -\\%d \\%s' #")
         set filetype=GitLog
         set nolist cursorline
         res 10
@@ -224,10 +224,9 @@ func! PopGitLog()
     endif
 endfun
 func! PopGitDiffFromLog()
-    set number!
-    " set l:line = getline(".")
-    " set l:hash = GET HASH OUT OF l:line
-    " call PopDiff("!git show ".l:hash.":./#")
+    let l:line = getline(".")
+    call LoadedContentClear()
+    call PopDiff("!git show echo '".l:line."' | cut -d '(' -f1 | awk '{ print $NF }'``:./#")
 endfun
 command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
 command! DcmHead call PopDiff("!git show HEAD:./#")
