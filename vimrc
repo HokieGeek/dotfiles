@@ -218,10 +218,16 @@ func! PopGitLog()
         mkview! 9
         call LoadTop("!git log --graph --pretty=format:'\\%h (\\%cr) <\\%an> -\\%d \\%s' #")
         set filetype=GitLog
-        set nolist
+        set nolist cursorline
         res 10
         " wincmd p
     endif
+endfun
+func! PopGitDiffFromLog()
+    set number!
+    " set l:line = getline(".")
+    " set l:hash = GET HASH OUT OF l:line
+    " call PopDiff("!git show ".l:hash.":./#")
 endfun
 command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
 command! DcmHead call PopDiff("!git show HEAD:./#")
@@ -267,6 +273,8 @@ nmap <silent> Us :Scratch<CR>
 
 " Oh, man
 inoremap jk <esc>
+
+autocmd Filetype GitLog nmap <silent> <enter> :call PopGitDiffFromLog()<CR>
 
 "" I feel like being a pain in the ass
 noremap <Up> :echoerr "Use k instead! :-p"<CR>
