@@ -69,7 +69,7 @@ else
 endif
 
 " Turns on spell check when typing out long git commit messages
-autocmd FileType gitcommit set spell
+autocmd FileType gitcommit setlocal spell
 " Disable syntax highlight for files larger than 50 MB
 autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
 autocmd VimLeave * windo diffoff
