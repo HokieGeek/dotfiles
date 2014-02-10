@@ -81,6 +81,13 @@ highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
 highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
 let m = matchadd("AFP", "AFP")
 let m = matchadd("AFP", "afp")
+
+autocmd Filetype GitLog
+    \ highlight GitLogHash ctermbg=none ctermfg=red cterm=none | let m = matchadd("GitLogHash", "^[\*|/\]* [a-z0-9]* ") |
+    \ highlight GitLogAuthor ctermbg=none ctermfg=cyan cterm=none | let m = matchadd("GitLogAuthor", "\<.*\> -") |
+    \ highlight GitLogBranch ctermbg=none ctermfg=yellow cterm=none | let m = matchadd("GitLogBranch", "- \(.*\)") |
+    \ highlight GitLogGraph ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogGraph", "^[\*\s|/\]*") |
+    \ highlight GitLogDash ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogDash", "-")
 " }}}
 
 """ Notes options {{{
@@ -194,12 +201,12 @@ func! PopSynched(command)
     else
         mkview! 9
         let l:cline = line(".")
-        " let l:filetype = filetype
+        " let l:ft = &filetype
         set foldenable!
         0
         call LoadLeft(a:command)
         0
-        " windo set filetype=l:filetype
+        " windo set filetype=l:ft
         windo set scrollbind
         exe l:cline
     endif
@@ -210,8 +217,10 @@ func! PopGitLog()
     else
         mkview! 9
         call LoadTop("!git log --graph --pretty=format:'\\%h (\\%cr) <\\%an> -\\%d \\%s' #")
+        set filetype=GitLog
         set nolist
         res 10
+        wincmd p
     endif
 endfun
 command! Scratch botright new | set bt=nofile noswapfile modifiable | res 10
