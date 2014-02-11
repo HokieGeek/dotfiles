@@ -86,14 +86,17 @@ highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
 let m = matchadd("AFP", "AFP")
 let m = matchadd("AFP", "afp")
 
-autocmd Filetype GitLog
-    \ highlight CursorLine ctermbg=darkblue ctermfg=white cterm=bold |
-    \ highlight GitLogTime ctermbg=none ctermfg=cyan cterm=none | let m = matchadd("GitLogTime", " \(.* ago\) \<") |
-    \ highlight GitLogAuthor ctermbg=none ctermfg=green cterm=none | let m = matchadd("GitLogAuthor", "\<.*\> -") |
-    \ highlight GitLogMessage ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogMessage", "-.*") |
-    \ highlight GitLogBranch ctermbg=none ctermfg=yellow cterm=none | let m = matchadd("GitLogBranch", "- \(.*\)") |
-    \ highlight GitLogGraph ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogGraph", "^[\*\s|/\]* ") |
-    \ highlight GitLogDash ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogDash", "-")
+augroup GitLogHighlighting
+    autocmd!
+    autocmd Filetype GitLog
+        \ highlight CursorLine ctermbg=darkblue ctermfg=white cterm=bold |
+        \ highlight GitLogTime ctermbg=none ctermfg=cyan cterm=none | let m = matchadd("GitLogTime", " \(.* ago\) \<") |
+        \ highlight GitLogAuthor ctermbg=none ctermfg=green cterm=none | let m = matchadd("GitLogAuthor", "\<.*\> -") |
+        \ highlight GitLogMessage ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogMessage", "-.*") |
+        \ highlight GitLogBranch ctermbg=none ctermfg=yellow cterm=none | let m = matchadd("GitLogBranch", "- \(.*\)") |
+        \ highlight GitLogGraph ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogGraph", "^[\*\s|/\]* ") |
+        \ highlight GitLogDash ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogDash", "-")
+augroup END
 " }}}
 
 """ Notes options {{{
@@ -152,12 +155,26 @@ autocmd VimEnter * call LoadSession()
 
 """ Views {{{
 if ! &diff
-    autocmd BufWinLeave * if expand("%") != "" | mkview! | endif
+    func! MakeViewOnLeave()
+        if exists("g:loaded_output")
+            call LoadedContentClear()
+        endif
+        if expand("%") != ""
+            mkview!
+        endif
+    endfun
+    autocmd BufWinLeave * call MakeViewOnLeave()
     autocmd BufWinEnter * if expand("%") != "" | silent loadview | endif
 endif
 " }}}
 
 """ Commands {{{
+" Will allow me to sudo a file that is open without write permissions
+cmap w!! %!sudo tee > /dev/null %
+" }}}
+
+""" Keyboard mappings {{{
+"" Loaded content functions {{{
 func! LoadedContentClear()
     set modifiable
     bwipeout content
@@ -248,21 +265,19 @@ func! PopGitDiffFromLog()
     call LoadedContentClear()
     call PopDiff("!git show `echo '".l:line."' | cut -d '(' -f1 | awk '{ print $NF }'`:./#")
 endfun
+"" Loaded content functions }}}
 
-" Will allow me to sudo a file that is open without write permissions
-cmap w!! %!sudo tee > /dev/null %
-" }}}
-
-""" Keyboard mappings {{{
 nnoremap <Leader>s :source $MYVIMRC<CR>
 nnoremap <silent> <Leader><Leader> :nohlsearch<CR>
 
+"" Session saving (et.al.)
 nnoremap <silent> <F9> :call SaveSession()<CR>
 nnoremap <silent> <Leader><F9> :windo call SaveSession()<CR>
 nnoremap <silent> <F10> :call DeleteSession()<CR>
 nnoremap <silent> <Leader><F10> :call LoadSession()<CR>
 nnoremap <silent> <F12> :colorscheme solarized<bar>colorscheme badwolf<CR>
 
+"" Searching
 nnoremap <silent> g/c :sp<CR>:res 15<CR>/<C-R><C-W><CR>
 nnoremap <silent> g/, :<c-u>noau vimgrep /\<<C-R><C-W>\>/ % <bar> cw<CR>
 nnoremap <silent> g/\ :<c-u>noau vimgrep // % <bar> cw<left><left><left><left><left><left><left><left>
@@ -272,18 +287,20 @@ nnoremap <silent> g/. :<c-u>noau vimgrep /<C-R><C-W>/ ** <bar> cw<CR>
 nnoremap <silent> gb :bnext<CR>
 nnoremap <silent> gB :bprevious<CR>
 
+"" Configuration
 nnoremap <silent> con :setlocal number! relativenumber!<CR>
 nnoremap <silent> coc :setlocal cursorline!<CR>
 nnoremap <silent> cow :setlocal wrap!<CR>
 nnoremap <silent> cos :setlocal spell!<CR>
 nnoremap <silent> col :setlocal list!<CR>
 
+"" Loaded content
 " Toggle off a popped window
 nnoremap <silent> Uu :call LoadedContentClear()<CR>
 " Diff unsaved changes against file saved on disk
 nnoremap <silent> Uo :call PopDiff("#")<CR>
 " Diff current file with a given git revision
-nnoremap <silent> Uc :call PopGitDiffPrompt()<CR>
+nnoremap <silent> Ud :call PopGitDiffPrompt()<CR>
 " Diff current file against branch head
 nnoremap <silent> Uh :call PopDiff("!git show HEAD:./#")<CR>
 " Git blame on the right-side
@@ -310,7 +327,7 @@ noremap <Right> :echoerr "Use l instead! :-p"<CR>
 " }}}
 
 """ Commenting {{{
-function! SLCOtoggle()
+function! SLCOtoggle() "{{{
     normal ma
     if getline(".") =~ '^\s*'.g:slco " Remove the comment tag it contains
         silent exe ":.s;".escape(g:slco, "[]")." *;;"
@@ -334,8 +351,8 @@ function! SLCOtoggle()
         endif
     endif
     nohlsearch
-endfunction
-function! BLKCOtoggle(isVisual)
+endfunction "}}}
+function! BLKCOtoggle(isVisual) "{{{
     "" Define a few variables
     let curl = line(".")
     let curc = col(".")
@@ -380,7 +397,7 @@ function! BLKCOtoggle(isVisual)
         endif
     endif
     call cursor(curl, curc)
-endfunction
+endfunction "}}}
 
 " if exists("g:slco") | unlet! slco | endif
 if exists("g:slcoE") | unlet! slcoE | endif
