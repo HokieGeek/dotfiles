@@ -187,9 +187,10 @@ func! PopDiff(command)
     mkview! 9
     call LoadContent("left", a:command)
     wincmd l
-    windo set diffthis
+    windo diffthis
+    windo set nomodifiable
     0
-    set nomodifiable
+    set modifiable
 endfun
 func! PopGitDiffPrompt()
     if exists("g:loaded_output")
@@ -233,7 +234,7 @@ endfun
 func! PopGitDiffFromLog()
     let l:line = getline(".")
     call LoadedContentClear()
-    call PopDiff("!git show echo '".l:line."' | cut -d '(' -f1 | awk '{ print $NF }'``:./#")
+    call PopDiff("!git show `echo '".l:line."' | cut -d '(' -f1 | awk '{ print $NF }'`:./#")
 endfun
 
 " Will allow me to sudo a file that is open without write permissions
