@@ -67,6 +67,8 @@ if has("gui_running")
 else
     colorscheme desert
 endif
+" colorscheme solarized
+" colorscheme badwolf
 
 " Turns on spell check when typing out long git commit messages
 autocmd FileType gitcommit setlocal spell
@@ -249,9 +251,11 @@ nnoremap <silent> <F9> :call SaveSession()<CR>
 nnoremap <silent> <Leader><F9> :windo call SaveSession()<CR>
 nnoremap <silent> <F10> :call DeleteSession()<CR>
 nnoremap <silent> <Leader><F10> :call LoadSession()<CR>
+nnoremap <silent> <F12> :colorscheme solarized<bar>colorscheme badwolf<CR>
 
 nnoremap <silent> g/c :sp<CR>:res 15<CR>/<C-R><C-W><CR>
-nnoremap <silent> g/w :<c-u>vimgrep // % <bar> cw<left><left><left><left><left><left><left>
+nnoremap <silent> g/, :<c-u>noau vimgrep /\<<C-R><C-W>\>/ % <bar> cw<CR>
+nnoremap <silent> g/\ :<c-u>noau vimgrep // % <bar> cw<left><left><left><left><left><left><left><left>
 nnoremap <silent> g// :<c-u>noau vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left>
 nnoremap <silent> g/. :<c-u>noau vimgrep /<C-R><C-W>/ ** <bar> cw<CR>
 
@@ -277,7 +281,7 @@ nnoremap <silent> Ub :call PopSynched("!git blame --date=short #")<bar>wincmd p<
 " Git log up top
 nnoremap <silent> Ul :call PopGitLog()<CR>
 " A scratch space. Kinda useless, I think
-nnoremap <silent> Us :botright new<bar>set bt=nofile noswapfile modifiable<bar>res 10<CR>
+" nnoremap <silent> Us :botright new<bar>set bt=nofile noswapfile modifiable<bar>res 10<CR>
 
 " Oh, man
 inoremap jk <esc>
