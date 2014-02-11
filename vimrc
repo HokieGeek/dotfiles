@@ -233,6 +233,16 @@ func! PopGitLog()
     set nomodifiable
     " wincmd p
 endfun
+func! PopGitBlame()
+    call PopSynched("!git blame --date=short #")
+    wincmd p
+    " TODO: Find first occurrence of ) and make that column the res value
+    " normal f )
+    " exe "vertical res ".col(".")
+    " normal 0
+    vertical res 40
+    wincmd p
+endfun
 func! PopGitDiffFromLog()
     let l:line = getline(".")
     call LoadedContentClear()
@@ -277,7 +287,7 @@ nnoremap <silent> Uc :call PopGitDiffPrompt()<CR>
 " Diff current file against branch head
 nnoremap <silent> Uh :call PopDiff("!git show HEAD:./#")<CR>
 " Git blame on the right-side
-nnoremap <silent> Ub :call PopSynched("!git blame --date=short #")<bar>wincmd p<bar>vertical res 40<bar>wincmd p<CR>
+nnoremap <silent> Ub :call PopGitBlame<CR>
 " Git log up top
 nnoremap <silent> Ul :call PopGitLog()<CR>
 " A scratch space. Kinda useless, I think
