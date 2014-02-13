@@ -67,8 +67,6 @@ if has("gui_running")
 else
     colorscheme desert
 endif
-" colorscheme solarized
-" colorscheme badwolf
 
 augroup MiscOptions
     " Turns on spell check when typing out long git commit messages
@@ -250,7 +248,7 @@ func! PopGitLog()
     set nolist cursorline
     res 10
     set nomodifiable
-    " wincmd p
+    call cursor(line("."), 2)
 endfun
 func! PopGitBlame()
     call PopSynched("!git blame --date=short #")
