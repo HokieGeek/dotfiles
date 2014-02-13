@@ -70,11 +70,13 @@ endif
 " colorscheme solarized
 " colorscheme badwolf
 
-" Turns on spell check when typing out long git commit messages
-autocmd FileType gitcommit setlocal spell
-" Disable syntax highlight for files larger than 50 MB
-autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
-autocmd VimLeave * windo diffoff
+augroup MiscOptions
+    " Turns on spell check when typing out long git commit messages
+    autocmd FileType gitcommit setlocal spell
+    " Disable syntax highlight for files larger than 50 MB
+    autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
+    autocmd VimLeave * windo diffoff
+augroup END
 syntax on
 " }}}
 
@@ -253,17 +255,19 @@ endfun
 func! PopGitBlame()
     call PopSynched("!git blame --date=short #")
     wincmd p
-    " TODO: Find first occurrence of ) and make that column the res value
-    " normal f )
-    " exe "vertical res ".col(".")
-    " normal 0
-    vertical res 40
+    normal f)
+    exe "vertical res ".col(".")
     wincmd p
 endfun
 func! PopGitDiffFromLog()
-    let l:line = getline(".")
-    call LoadedContentClear()
-    call PopDiff("!git show `echo '".l:line."' | cut -d '(' -f1 | awk '{ print $NF }'`:./#")
+    call PopDiff("!git show `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'`:./#")
+endfun
+func! CheckoutFromGit()
+    let l:cmd = "!git checkout `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'` ./#"
+    silent exe l:cmd
+    if exists("g:loaded_output")
+        call LoadedContentClear()
+    endif
 endfun
 "" Loaded content functions }}}
 
@@ -286,6 +290,8 @@ nnoremap <silent> g/. :<c-u>noau vimgrep /<C-R><C-W>/ ** <bar> cw<CR>
 
 nnoremap <silent> gb :bnext<CR>
 nnoremap <silent> gB :bprevious<CR>
+" A scratch space. Kinda useless, I think
+nnoremap <silent> gs :botright new<bar>set bt=nofile noswapfile modifiable<bar>res 10<CR>
 
 "" Configuration
 nnoremap <silent> con :setlocal number! relativenumber!<CR>
@@ -304,11 +310,9 @@ nnoremap <silent> Ud :call PopGitDiffPrompt()<CR>
 " Diff current file against branch head
 nnoremap <silent> Uh :call PopDiff("!git show HEAD:./#")<CR>
 " Git blame on the right-side
-nnoremap <silent> Ub :call PopGitBlame<CR>
+nnoremap <silent> Ub :call PopGitBlame()<CR>
 " Git log up top
 nnoremap <silent> Ul :call PopGitLog()<CR>
-" A scratch space. Kinda useless, I think
-" nnoremap <silent> Us :botright new<bar>set bt=nofile noswapfile modifiable<bar>res 10<CR>
 
 " Oh, man
 inoremap jk <esc>
@@ -316,6 +320,7 @@ inoremap jk <esc>
 augroup GitLog
     autocmd!
     autocmd Filetype GitLog nnoremap <buffer> <silent> <enter> :call PopGitDiffFromLog()<CR>
+    autocmd Filetype GitLog nnoremap <buffer> <silent> co :call CheckoutFromGit()<CR>
     autocmd Filetype GitLog nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<CR>
 augroup END
 
