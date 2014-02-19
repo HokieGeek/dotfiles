@@ -177,7 +177,7 @@ cmap w!! %!sudo tee > /dev/null %
 "" Loaded content functions {{{
 func! LoadedContentClear()
     set modifiable
-    bwipeout content
+    bdelete content
     diffoff
     silent loadview 9
     unlet! g:loaded_output
