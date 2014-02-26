@@ -29,10 +29,13 @@ sed -e '/^<<<<<<< /,/^=======$/d' -e '/^>>>>>>> /d' "${MERGED}" > "${merged_remo
 sed -e '/^=======$/,/^>>>>>>> /d' -e '/<<<<<<< /d' "${MERGED}" > "${merged_local}"
 
 # Kick off vim
-vim -f -d "${merged_local}" "${merged_remote}" \
-    -c ":tabedit $QLOCAL" -c ":vertical diffsplit $QBASE" -c ":vertical diffsplit $QREMOTE" \
-    -c ":windo setlocal readonly nomodifiable" \
-    -c ":wincmd t" \
+vim -f -R -d "${merged_local}" "${merged_remote}" \
+    -c ":windo set nomodifiable | wincmd t" \
+    -c ":setlocal noreadonly modifiable" \
+    -c ":tabedit $QLOCAL | silent file LOCAL" \
+    -c ":vertical diffsplit $QBASE | silent file BASE" \
+    -c ":vertical diffsplit $QREMOTE | silent file REMOTE" \
+    -c ":wincmd K | res 10 | wincmd j" \
     -c ":tabfirst"
 
 retval=$?
