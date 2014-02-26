@@ -17,7 +17,6 @@ MERGED=$4
 printf -v QBASE '%q' "${BASE}"
 printf -v QLOCAL '%q' "${LOCAL}"
 printf -v QREMOTE '%q' "${REMOTE}"
-# printf -v QMERGED '%q' "${MERGED}"
 
 merged_remote="${MERGED}.REMOTE.$$.tmp"
 merged_local="${MERGED}.LOCAL.$$.tmp"
@@ -30,12 +29,11 @@ sed -e '/^<<<<<<< /,/^=======$/d' -e '/^>>>>>>> /d' "${MERGED}" > "${merged_remo
 sed -e '/^=======$/,/^>>>>>>> /d' -e '/<<<<<<< /d' "${MERGED}" > "${merged_local}"
 
 # Kick off vim
-vim -f -R -d "${merged_local}" "${merged_remote}" \
-    -c ":set noreadonly" \
+vim -f -d "${merged_local}" "${merged_remote}" \
     -c ":tabedit $QLOCAL" -c ":vertical diffsplit $QBASE" -c ":vertical diffsplit $QREMOTE" \
-    -c ":wincmd t" 
+    -c ":windo setlocal readonly nomodifiable" \
+    -c ":wincmd t" \
     -c ":tabfirst"
-    # -c ":wincmd t" -c ":tabedit $QMERGED"  \
 
 retval=$?
 [[ $retval == "0" ]] && cat "${merged_local}" > "${MERGED}"
