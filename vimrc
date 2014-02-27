@@ -209,7 +209,7 @@ func! PopDiff(command)
     windo diffthis
     windo set nomodifiable
     0
-    set modifiable
+    set modifiable syntax=off
 endfun
 func! PopGitDiffPrompt()
     if exists("g:loaded_output")
