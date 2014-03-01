@@ -4,8 +4,7 @@ filetype plugin indent on
 set nocompatible " Not compatible with plain vi
 " set autoread " Automatically loads file that has changed
 set autoindent " Indents when you insert
-" set smartindent
-set cindent " C-like indenting
+" set cindent " C-like indenting
 set tabstop=4 " Tab = 4 spaces. Because I'm not a savage
 set softtabstop=4
 set shiftwidth=4
