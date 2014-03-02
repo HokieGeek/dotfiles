@@ -2,9 +2,7 @@
 filetype plugin indent on
 
 set nocompatible " Not compatible with plain vi
-" set autoread " Automatically loads file that has changed
 set autoindent " Indents when you insert
-" set cindent " C-like indenting
 set tabstop=4 " Tab = 4 spaces. Because I'm not a savage
 set softtabstop=4
 set shiftwidth=4
@@ -54,6 +52,7 @@ else
 endif
 set hidden " you can change buffers without saving
 set timeoutlen=500 "Let's see if this works for me
+set noequalalways " Does not resize windows during a split or window close
 
 if !empty($TMUX)
     set t_Co=256
@@ -118,6 +117,17 @@ augroup Notes
 augroup END
 " }}}
 
+""" No clue what to call this {{{
+"" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
+augroup NoSimultaneousEdits
+    autocmd!
+    autocmd SwapExists * let v:swapchoice = 'o'
+    autocmd SwapExists * echomsg ErrorMsg
+    autocmd SwapExists * echo 'Duplicate edit session (readonly)'
+    autocmd SwapExists * echohl None
+augroup END
+" }}}
+
 """ Sessions {{{
 """ Some logic that allows me to create a session with the current layout
 if exists("s:session_file")
@@ -170,6 +180,11 @@ endif
 """ Commands {{{
 " Will allow me to sudo a file that is open without write permissions
 cmap w!! %!sudo tee > /dev/null %
+" }}}
+
+""" Abbreviations {{{
+" This is ridiculously useful
+iabbrev date- <c-r>=strftime("%d/%m/%Y %H:%M:%S")<CR>
 " }}}
 
 """ Keyboard mappings {{{
@@ -254,6 +269,7 @@ func! PopGitBlame()
     wincmd p
     normal f)
     exe "vertical res ".col(".")
+    normal 0
     wincmd p
 endfun
 func! PopGitDiffFromLog()
@@ -285,8 +301,13 @@ nnoremap <silent> g/\ :<c-u>noau vimgrep // % <bar> cw<left><left><left><left><l
 nnoremap <silent> g// :<c-u>noau vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left>
 nnoremap <silent> g/. :<c-u>noau vimgrep /<C-R><C-W>/ ** <bar> cw<CR>
 
-nnoremap <silent> gb :bnext<CR>
-nnoremap <silent> gB :bprevious<CR>
+" Ctrl+W is a horrible window control whatsit
+nnoremap <silent> gw <c-w>
+" This version of the buffer navigation keywords might be a bit more useful than the last
+nnoremap <silent> gb :<c-u>exec(v:count ? 'b '.v:count : 'bnext')<CR>
+nnoremap <silent> gB :<c-u>exec(v:count ? 'b '.v:count : 'bprevious')<CR>
+" I have no clue how useful this is
+nnoremap <silent> gq :botright copen<CR>
 " A scratch space. Kinda useless, I think
 nnoremap <silent> gs :botright new<bar>set bt=nofile noswapfile modifiable<bar>res 10<CR>
 
@@ -302,17 +323,23 @@ nnoremap <silent> col :setlocal list!<CR>
 nnoremap <silent> Uu :call LoadedContentClear()<CR>
 " Diff unsaved changes against file saved on disk
 nnoremap <silent> Uo :call PopDiff("#")<CR>
-" Diff current file with a given git revision
+" Diff current file with a given git revision. If no input given, diffs against head
 nnoremap <silent> Ud :call PopGitDiffPrompt()<CR>
 " Diff current file against branch head
-nnoremap <silent> Uh :call PopDiff("!git show HEAD:./#")<CR>
+" nnoremap <silent> Uh :call PopDiff("!git show HEAD:./#")<CR>
 " Git blame on the right-side
 nnoremap <silent> Ub :call PopGitBlame()<CR>
 " Git log up top
 nnoremap <silent> Ul :call PopGitLog()<CR>
 
-" Oh, man
+" Some (probably questionable) overrides/shorcuts
 inoremap jk <esc>
+inoremap kj <esc>
+nnoremap ZZ :wqa<cr>
+nnoremap <space> :
+" nnoremap ; :
+" nnoremap : ;
+" xnoremap Y "+y
 
 augroup GitLog
     autocmd!
