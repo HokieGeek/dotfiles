@@ -103,7 +103,7 @@ augroup Notes
 
     autocmd BufRead,BufNewFile *
         \ if &filetype == "" |
-        \   nnoremap <silent> <F5> :set filetype=notes<CR> |
+        \   nnoremap <silent> <F5> :set filetype=notes<cr> |
         \ endif
 
     autocmd Filetype notes
@@ -184,7 +184,7 @@ cmap w!! %!sudo tee > /dev/null %
 
 """ Abbreviations {{{
 " This is ridiculously useful
-iabbrev date- <c-r>=strftime("%d/%m/%Y %H:%M:%S")<CR>
+iabbrev date- <c-r>=strftime("%d/%m/%Y %H:%M:%S")<cr>
 " }}}
 
 """ Keyboard mappings {{{
@@ -284,53 +284,53 @@ func! CheckoutFromGit()
 endfun
 "" Loaded content functions }}}
 
-nnoremap <Leader>s :source $MYVIMRC<CR>
-nnoremap <silent> <Leader><Leader> :nohlsearch<CR>
+nnoremap <Leader>s :source $MYVIMRC<cr>
+nnoremap <silent> <Leader><Leader> :nohlsearch<cr>
 
 "" Session saving (et.al.)
-nnoremap <silent> <F9> :call SaveSession()<CR>
-nnoremap <silent> <Leader><F9> :windo call SaveSession()<CR>
-nnoremap <silent> <F10> :call DeleteSession()<CR>
-nnoremap <silent> <Leader><F10> :call LoadSession()<CR>
-nnoremap <silent> <F12> :colorscheme solarized<bar>colorscheme badwolf<CR>
+nnoremap <silent> <F9> :call SaveSession()<cr>
+nnoremap <silent> <Leader><F9> :windo call SaveSession()<cr>
+nnoremap <silent> <F10> :call DeleteSession()<cr>
+nnoremap <silent> <Leader><F10> :call LoadSession()<cr>
+nnoremap <silent> <F12> :colorscheme solarized<bar>colorscheme badwolf<cr>
 
 "" Searching
-nnoremap <silent> g/c :sp<CR>:res 15<CR>/<C-R><C-W><CR>
-nnoremap <silent> g/, :<c-u>noau vimgrep /\<<C-R><C-W>\>/ % <bar> cw<CR>
+nnoremap <silent> g/c :sp<cr>:res 15<cr>/<C-R><C-W><cr>
+nnoremap <silent> g/, :<c-u>noau vimgrep /\<<C-R><C-W>\>/ % <bar> cw<cr>
 nnoremap <silent> g/\ :<c-u>noau vimgrep // % <bar> cw<left><left><left><left><left><left><left><left>
 nnoremap <silent> g// :<c-u>noau vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left>
-nnoremap <silent> g/. :<c-u>noau vimgrep /<C-R><C-W>/ ** <bar> cw<CR>
+nnoremap <silent> g/. :<c-u>noau vimgrep /<C-R><C-W>/ ** <bar> cw<cr>
 
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
 " This version of the buffer navigation keywords might be a bit more useful than the last
-nnoremap <silent> gb :<c-u>exec(v:count ? 'b '.v:count : 'bnext')<CR>
-nnoremap <silent> gB :<c-u>exec(v:count ? 'b '.v:count : 'bprevious')<CR>
+nnoremap <silent> gb :<c-u>exec(v:count ? 'b '.v:count : 'bnext')<cr>
+nnoremap <silent> gB :<c-u>exec(v:count ? 'b '.v:count : 'bprevious')<cr>
 " I have no clue how useful this is
-nnoremap <silent> gq :botright copen<CR>
+nnoremap <silent> gq :botright copen<cr>
 " A scratch space. Kinda useless, I think
-nnoremap <silent> gs :botright new<bar>set bt=nofile noswapfile modifiable<bar>res 10<CR>
+nnoremap <silent> gs :botright new<bar>set bt=nofile noswapfile modifiable<bar>res 10<cr>
 
 "" Configuration
-nnoremap <silent> con :setlocal number! relativenumber!<CR>
-nnoremap <silent> coc :setlocal cursorline!<CR>
-nnoremap <silent> cow :setlocal wrap!<CR>
-nnoremap <silent> cos :setlocal spell!<CR>
-nnoremap <silent> col :setlocal list!<CR>
+nnoremap <silent> con :setlocal number! relativenumber!<cr>
+nnoremap <silent> coc :setlocal cursorline!<cr>
+nnoremap <silent> cow :setlocal wrap!<cr>
+nnoremap <silent> cos :setlocal spell!<cr>
+nnoremap <silent> col :setlocal list!<cr>
 
 "" Loaded content
 " Toggle off a popped window
-nnoremap <silent> Uu :call LoadedContentClear()<CR>
+nnoremap <silent> Uu :call LoadedContentClear()<cr>
 " Diff unsaved changes against file saved on disk
-nnoremap <silent> Uo :call PopDiff("#")<CR>
+nnoremap <silent> Uo :call PopDiff("#")<cr>
 " Diff current file with a given git revision. If no input given, diffs against head
-nnoremap <silent> Ud :call PopGitDiffPrompt()<CR>
+nnoremap <silent> Ud :call PopGitDiffPrompt()<cr>
 " Diff current file against branch head
-" nnoremap <silent> Uh :call PopDiff("!git show HEAD:./#")<CR>
+" nnoremap <silent> Uh :call PopDiff("!git show HEAD:./#")<cr>
 " Git blame on the right-side
-nnoremap <silent> Ub :call PopGitBlame()<CR>
+nnoremap <silent> Ub :call PopGitBlame()<cr>
 " Git log up top
-nnoremap <silent> Ul :call PopGitLog()<CR>
+nnoremap <silent> Ul :call PopGitLog()<cr>
 
 " Some (probably questionable) overrides/shorcuts
 inoremap jk <esc>
@@ -343,16 +343,16 @@ nnoremap <space> :
 
 augroup GitLog
     autocmd!
-    autocmd Filetype GitLog nnoremap <buffer> <silent> <enter> :call PopGitDiffFromLog()<CR>
-    autocmd Filetype GitLog nnoremap <buffer> <silent> co :call CheckoutFromGit()<CR>
-    autocmd Filetype GitLog nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<CR>
+    autocmd Filetype GitLog nnoremap <buffer> <silent> <enter> :call PopGitDiffFromLog()<cr>
+    autocmd Filetype GitLog nnoremap <buffer> <silent> co :call CheckoutFromGit()<cr>
+    autocmd Filetype GitLog nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<cr>
 augroup END
 
 "" I feel like being a pain in the ass
-noremap <Up> :echoerr "Use k instead! :-p"<CR>
-noremap <Down> :echoerr "Use j instead! :-p"<CR>
-noremap <Left> :echoerr "Use h instead! :-p"<CR>
-noremap <Right> :echoerr "Use l instead! :-p"<CR>
+noremap <Up> :echoerr "Use k instead! :-p"<cr>
+noremap <Down> :echoerr "Use j instead! :-p"<cr>
+noremap <Left> :echoerr "Use h instead! :-p"<cr>
+noremap <Right> :echoerr "Use l instead! :-p"<cr>
 " }}}
 
 """ Commenting {{{
@@ -459,13 +459,13 @@ augroup commenting
 
     " All Code Files
     autocmd FileType java,c,c++,cpp,h,h++,hpp,xml
-        \ vmap <silent> <S-Tab> :call BLKCOtoggle(1)<CR> |
-        \ nnoremap <silent> <S-Tab> :call BLKCOtoggle(0)<CR>
+        \ vmap <silent> <S-Tab> :call BLKCOtoggle(1)<cr> |
+        \ nnoremap <silent> <S-Tab> :call BLKCOtoggle(0)<cr>
 
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,xml,sh,ksh,csh,tcsh,zsh,bash,dash,pl,python,vim,vimrc,ahk,tex,make,gdb
-        \ map <silent> <Tab> :call SLCOtoggle()<CR>
+        \ map <silent> <Tab> :call SLCOtoggle()<cr>
     autocmd FileType sh,ksh,csh,tcsh,zsh,bash,pl,python,sql,vim,vimrc,ahk,tex,make,gdb
-        \ nnoremap <silent> <S-Tab> :'k,.call SLCOtoggle()<CR>
+        \ nnoremap <silent> <S-Tab> :'k,.call SLCOtoggle()<cr>
 
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
         \ map <silent> todo oTODO: <ESC><Tab>==A|
@@ -479,9 +479,9 @@ augroup END
     " autocmd BufwinEnter *.* echo "Loaded tags file"
 
     " Map some keys to access these
-    " nnoremap <silent> <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+    " nnoremap <silent> <C-\> :tab split<cr>:exec("tag ".expand("<cword>"))<cr>
 " else
-    " nnoremap <silent> <C-\> :echoerr "No tags file loaded"<CR>
+    " nnoremap <silent> <C-\> :echoerr "No tags file loaded"<cr>
 " endif
 
 "" Use <C-X><C-O> to access these
