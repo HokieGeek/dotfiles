@@ -117,17 +117,6 @@ augroup Notes
 augroup END
 " }}}
 
-""" No clue what to call this {{{
-"" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
-augroup NoSimultaneousEdits
-    autocmd!
-    autocmd SwapExists * let v:swapchoice = 'o'
-    autocmd SwapExists * echomsg ErrorMsg
-    autocmd SwapExists * echo 'Duplicate edit session (readonly)'
-    autocmd SwapExists * echohl None
-augroup END
-" }}}
-
 """ Sessions {{{
 """ Some logic that allows me to create a session with the current layout
 if exists("s:session_file")
@@ -306,10 +295,10 @@ nnoremap <silent> gw <c-w>
 " This version of the buffer navigation keywords might be a bit more useful than the last
 nnoremap <silent> gb :<c-u>exec(v:count ? 'b '.v:count : 'bnext')<cr>
 nnoremap <silent> gB :<c-u>exec(v:count ? 'b '.v:count : 'bprevious')<cr>
-" I have no clue how useful this is
-nnoremap <silent> gq :botright copen<cr>
 " A scratch space. Kinda useless, I think
 nnoremap <silent> gs :botright new<bar>set bt=nofile noswapfile modifiable<bar>res 10<cr>
+" I have no clue how useful this is
+" nnoremap <silent> gq :botright copen<cr>
 
 "" Configuration
 nnoremap <silent> con :setlocal number! relativenumber!<cr>
@@ -324,7 +313,7 @@ nnoremap <silent> Uu :call LoadedContentClear()<cr>
 " Diff unsaved changes against file saved on disk
 nnoremap <silent> Uo :call PopDiff("#")<cr>
 " Diff current file with a given git revision. If no input given, diffs against head
-nnoremap <silent> Ud :call PopGitDiffPrompt()<cr>
+nnoremap <silent> Ug :call PopGitDiffPrompt()<cr>
 " Diff current file against branch head
 " nnoremap <silent> Uh :call PopDiff("!git show HEAD:./#")<cr>
 " Git blame on the right-side
@@ -337,9 +326,6 @@ inoremap jk <esc>
 inoremap kj <esc>
 nnoremap ZZ :wqa<cr>
 nnoremap <space> :
-" nnoremap ; :
-" nnoremap : ;
-" xnoremap Y "+y
 
 augroup GitLog
     autocmd!
@@ -495,6 +481,15 @@ augroup omni_complete
     autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
     autocmd FileType php set omnifunc=pythoncomplete#CompletePHP
     autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
+augroup END
+" }}}
+
+""" No clue what to call this {{{
+"" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
+augroup NoSimultaneousEdits
+    autocmd!
+    autocmd SwapExists * let v:swapchoice = 'o'
+    autocmd SwapExists * echoerr 'Duplicate edit session (readonly)'
 augroup END
 " }}}
 
