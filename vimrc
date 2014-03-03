@@ -48,10 +48,10 @@ endif
 if exists('$TMUX')
     set clipboard=
 else
-    set clipboard=unnamed "sync with OS clipboard
+    set clipboard=unnamed " Sync with OS clipboard
 endif
-set hidden " you can change buffers without saving
-set timeoutlen=500 "Let's see if this works for me
+set hidden " You can change buffers without saving
+set timeoutlen=500 " Let's see if this works for me
 set noequalalways " Does not resize windows during a split or window close
 
 if !empty($TMUX)
@@ -324,6 +324,8 @@ nnoremap <silent> Ul :call PopGitLog()<cr>
 " Some (probably questionable) overrides/shorcuts
 inoremap jk <esc>
 inoremap kj <esc>
+inoremap df <c-n>
+inoremap fd <c-x><c-l>
 nnoremap ZZ :wqa<cr>
 nnoremap <space> :
 
