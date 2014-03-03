@@ -34,7 +34,7 @@ set ttyfast " Smoother redrawing
 set lazyredraw " Don't redraw during macros
 set noscrollbind " Don't scroll windows synchronized
 set dictionary=/usr/share/dict/words
-set spellsuggest=best,10
+set spellsuggest=best,15
 set spelllang=en_us
 set formatoptions+=n " Recognize numbered lists
 set backup " Create a backup file
@@ -168,7 +168,7 @@ endif
 
 """ Commands {{{
 " Will allow me to sudo a file that is open without write permissions
-cmap w!! %!sudo tee > /dev/null %
+cnoremap w!! %!sudo tee > /dev/null %
 " }}}
 
 """ Abbreviations {{{
@@ -445,17 +445,17 @@ augroup commenting
 
     " All Code Files
     autocmd FileType java,c,c++,cpp,h,h++,hpp,xml
-        \ vmap <silent> <S-Tab> :call BLKCOtoggle(1)<cr> |
+        \ vnoremap <silent> <S-Tab> :call BLKCOtoggle(1)<cr> |
         \ nnoremap <silent> <S-Tab> :call BLKCOtoggle(0)<cr>
 
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,xml,sh,ksh,csh,tcsh,zsh,bash,dash,pl,python,vim,vimrc,ahk,tex,make,gdb
-        \ map <silent> <Tab> :call SLCOtoggle()<cr>
+        \ noremap <silent> <Tab> :call SLCOtoggle()<cr>
     autocmd FileType sh,ksh,csh,tcsh,zsh,bash,pl,python,sql,vim,vimrc,ahk,tex,make,gdb
         \ nnoremap <silent> <S-Tab> :'k,.call SLCOtoggle()<cr>
 
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
-        \ map <silent> todo oTODO: <ESC><Tab>==A|
-        \ map <silent> fixme oFIXME: <ESC><Tab>==A
+        \ noremap <silent> todo oTODO: <ESC><Tab>==A|
+        \ noremap <silent> fixme oFIXME: <ESC><Tab>==A
 augroup END
 " }}}
 
