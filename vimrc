@@ -324,12 +324,18 @@ nnoremap <silent> Ub :call PopGitBlame()<cr>
 " Git log up top
 nnoremap <silent> Ul :call PopGitLog()<cr>
 
-" Some (probably questionable) overrides/shorcuts
+" Some (probably questionable) overrides/shortcuts
 inoremap jk <esc>
 inoremap kj <esc>
 inoremap df <c-n>
-inoremap fd <c-x><c-l>
+inoremap fd <c-n>
+inoremap sd <c-x><c-l>
+inoremap ds <c-x><c-l>
+inoremap cs <c-x><c-o>
+inoremap sc <c-x><c-o>
+
 nnoremap ZZ :wqa<cr>
+nnoremap ZQ :qa!<cr>
 nnoremap <space> :
 
 augroup GitLog
