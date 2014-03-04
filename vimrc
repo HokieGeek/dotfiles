@@ -284,11 +284,17 @@ nnoremap <silent> <Leader><F10> :call LoadSession()<cr>
 nnoremap <silent> <F12> :colorscheme solarized<bar>colorscheme badwolf<cr>
 
 "" Searching
-nnoremap <silent> g/c :sp<cr>:res 15<cr>/<C-R><C-W><cr>
-nnoremap <silent> g/, :<c-u>noau vimgrep /\<<C-R><C-W>\>/ % <bar> cw<cr>
-nnoremap <silent> g/\ :<c-u>noau vimgrep // % <bar> cw<left><left><left><left><left><left><left><left>
-nnoremap <silent> g// :<c-u>noau vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left>
-nnoremap <silent> g/. :<c-u>noau vimgrep /<C-R><C-W>/ ** <bar> cw<cr>
+" Current file
+nnoremap <silent> g/c :sp<CR>:res 15<CR>/<C-R><C-W><CR>
+nnoremap <silent> g/. :<c-u>noau vimgrep /\<<C-R><C-W>\>/ % <bar> cw<CR>
+nnoremap <silent> g// :<c-u>noau vimgrep // % <bar> cw<left><left><left><left><left><left><left><left>
+" All open buffers
+nnoremap <silent> g\\ :cex [] <bar> bufdo vimgrepadd //g % <bar> cw<left><left><left><left><left><left><left><left><left>
+nnoremap <silent> g\. :cex [] <bar> bufdo vimgrepadd /<C-R><C-W>/g % <bar> cw<CR>
+" nnoremap <silent> g\\ :execute ":cex [] | bufdo vimgrepadd /" . expand('<cword>') . "/g %" | cw
+" All files in current directory and down
+nnoremap <silent> g/\ :<c-u>noau vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left><left>
+nnoremap <silent> g/, :<c-u>noau vimgrep /<C-R><C-W>/ ** <bar> cw<CR>
 
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
