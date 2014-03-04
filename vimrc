@@ -18,13 +18,12 @@ set viminfo=!,%,'20,"100,<1000,s100,:150,n~/.viminfo " Remembers stuff. RTFM
 set history=1000
 set undolevels=1000
 set directory=/tmp " Location of the swap file
-set browsedir=buffer " Open file browser in the current file's directory
 set foldenable
 set showmatch " Briefly jumps to matching bracket
 set incsearch " Searches as you type
 set smartcase " If search pattern uses upper case chars, make search case sensitive
 set wrapscan " Searches wrap around the end of the file
-set nowrap
+set nowrap " I prefer this. I can always turn wrap on when its necessary with the mapping below
 set list " Displays unprintable characters (whitespace, essentially)
 set listchars=tab:>>,trail:.,extends:#,nbsp:_ " Define what symbols to use with unprintable characters
 set splitright " When doing a vertical split, it puts it to the right of the current window
@@ -42,6 +41,9 @@ set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set backupskip=/tmp/*,/private/tmp/*
 set writebackup " Make a backup before overwriting a file.
 set hlsearch
+set hidden " You can change buffers without saving
+set timeoutlen=500 " Let's see if this works for me
+set noequalalways " Does not resize windows during a split or window close
 if $USER != "root"
     set modelines=1
 endif
@@ -50,9 +52,6 @@ if exists('$TMUX')
 else
     set clipboard=unnamed " Sync with OS clipboard
 endif
-set hidden " You can change buffers without saving
-set timeoutlen=500 " Let's see if this works for me
-set noequalalways " Does not resize windows during a split or window close
 
 if !empty($TMUX)
     set t_Co=256
@@ -209,7 +208,7 @@ func! PopDiff(command)
     mkview! 9
     call LoadContent("left", a:command)
     wincmd l
-    windo diffthis
+    silent windo diffthis
     windo set nomodifiable
     0
     set modifiable syntax=off
@@ -231,11 +230,9 @@ func! PopSynched(command)
 
     mkview! 9
     let l:cline = line(".")
-    " let l:ft = &filetype
     set foldenable!
     0
     call LoadContent("left", a:command)
-    " windo set filetype=l:ft
     windo set scrollbind nomodifiable
     exe l:cline
     set modifiable
@@ -457,13 +454,14 @@ augroup commenting
         \ nnoremap <silent> <S-Tab> :call BLKCOtoggle(0)<cr>
 
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,xml,sh,ksh,csh,tcsh,zsh,bash,dash,pl,python,vim,vimrc,ahk,tex,make,gdb
-        \ noremap <silent> <Tab> :call SLCOtoggle()<cr>
+        \ nnoremap <silent> <Tab> :call SLCOtoggle()<cr>
     autocmd FileType sh,ksh,csh,tcsh,zsh,bash,pl,python,sql,vim,vimrc,ahk,tex,make,gdb
         \ nnoremap <silent> <S-Tab> :'k,.call SLCOtoggle()<cr>
 
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
-        \ noremap <silent> todo oTODO: <ESC><Tab>==A|
-        \ noremap <silent> fixme oFIXME: <ESC><Tab>==A
+        \ nnoremap <silent> todo oTODO: <ESC><Tab>==A
+    autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
+        \ nnoremap <silent> fixme oFIXME: <ESC><Tab>==A
 augroup END
 " }}}
 
