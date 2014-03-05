@@ -16,6 +16,7 @@ set ruler
 set showcmd " Shows the command being typed
 set wildmenu " Tab completion in command-line mode (:)
 set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~ " These file types are ignored when doing auto completions
+set wildmode=list:longest,full
 set viminfo=h,%,'50,<10000,s1000,/1000,:1000,n~/.viminfo " Remembers stuff. RTFM
 set history=1000
 set undolevels=5000
@@ -70,14 +71,6 @@ if has("gui_running")
 else
     colorscheme desert
 endif
-
-augroup MiscOptions
-    " Turns on spell check when typing out long git commit messages
-    autocmd FileType gitcommit setlocal spell
-    " Disable syntax highlight for files larger than 50 MB
-    autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
-    autocmd VimLeave * windo diffoff
-augroup END
 syntax on
 " }
 
@@ -509,18 +502,25 @@ augroup omni_complete
 augroup END
 " }
 
-""" Stop asking about simultaneous edits {
-"" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
-augroup NoSimultaneousEdits
+""" Misc {
+augroup MiscOptions
     autocmd!
+
+    "" Stop asking about simultaneous edits. 
+    "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
     autocmd SwapExists * let v:swapchoice = 'o'
     autocmd SwapExists * echoerr 'Duplicate edit session (readonly)'
-augroup END
-" }
 
-""" Auto-reload vimrc {
-augroup AutoReloadVimrc
-    autocmd!
+    " Turns on spell check when typing out long git commit messages
+    autocmd FileType gitcommit setlocal spell
+
+    " Disable syntax highlight for files larger than 50 MB
+    autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
+
+    " Turn off diffing
+    autocmd VimLeave * windo diffoff
+
+    " Automatically reload this file
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
 augroup END
 " }
