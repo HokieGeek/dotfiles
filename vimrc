@@ -1,4 +1,4 @@
-""" Options {{{
+""" Options {
 filetype plugin indent on
 
 set nocompatible " Not compatible with plain vi
@@ -79,9 +79,9 @@ augroup MiscOptions
     autocmd VimLeave * windo diffoff
 augroup END
 syntax on
-" }}}
+" }
 
-""" Highlights {{{
+""" Highlights {
 highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
 highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
 
@@ -106,9 +106,9 @@ highlight Pmenu ctermbg=white ctermfg=black
 highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
 highlight PmenuSbar ctermbg=grey ctermfg=grey
 " highlight PmenuThumb ctermbg=blue ctermfg=blue
-" }}}
+" }
 
-""" Notes options {{{
+""" Notes options {
 augroup Notes
     autocmd!
 
@@ -126,9 +126,9 @@ augroup Notes
         \ highlight NotesActionItem ctermbg=darkmagenta ctermfg=lightgrey cterm=underline | let m = matchadd("NotesActionItem", "@ .*$") |
         \ highlight NotesPersonCallout ctermbg=black ctermfg=blue cterm=bold | let m = matchadd("NotesPersonCallout", "\\[.*\\]")
 augroup END
-" }}}
+" }
 
-""" Sessions {{{
+""" Sessions {
 """ Some logic that allows me to create a session with the current layout
 if exists("s:session_file")
     unlet! s:session_file
@@ -160,9 +160,9 @@ function! DeleteSession()
     endif
 endfunction
 autocmd VimEnter * call LoadSession()
-" }}}
+" }
 
-""" Views {{{
+""" Views {
 if ! &diff
     func! MakeViewOnLeave()
         if exists("g:loaded_output")
@@ -175,20 +175,20 @@ if ! &diff
     autocmd BufWinLeave * call MakeViewOnLeave()
     autocmd BufWinEnter * if expand("%") != "" | silent loadview | endif
 endif
-" }}}
+" }
 
-""" Commands {{{
+""" Commands {
 " Will allow me to sudo a file that is open without write permissions
 cnoremap w!! %!sudo tee > /dev/null %
-" }}}
+" }
 
-""" Abbreviations {{{
+""" Abbreviations {
 " This is ridiculously useful
 iabbrev date- <c-r>=strftime("%d/%m/%Y %H:%M:%S")<cr>
-" }}}
+" }
 
-""" Keyboard mappings {{{
-"" Loaded content functions {{{
+""" Keyboard mappings {
+"" Loaded content functions {
 func! LoadedContentClear()
     set modifiable
     bdelete content
@@ -280,7 +280,7 @@ func! CheckoutFromGit()
         call LoadedContentClear()
     endif
 endfun
-"" Loaded content functions }}}
+"" Loaded content functions }
 
 nnoremap <Leader>s :source $MYVIMRC<cr>
 nnoremap <silent> <Leader><Leader> :nohlsearch<cr>
@@ -363,10 +363,10 @@ noremap <Up> :echoerr "Use k instead! :-p"<cr>
 noremap <Down> :echoerr "Use j instead! :-p"<cr>
 noremap <Left> :echoerr "Use h instead! :-p"<cr>
 noremap <Right> :echoerr "Use l instead! :-p"<cr>
-" }}}
+" }
 
-""" Commenting {{{
-function! SLCOtoggle() "{{{
+""" Commenting {
+function! SLCOtoggle() "{
     normal ma
     if getline(".") =~ '^\s*'.g:slco " Remove the comment tag it contains
         silent exe ":.s;".escape(g:slco, "[]")." *;;"
@@ -390,8 +390,8 @@ function! SLCOtoggle() "{{{
         endif
     endif
     nohlsearch
-endfunction "}}}
-function! BLKCOtoggle(isVisual) "{{{
+endfunction "}
+function! BLKCOtoggle(isVisual) "{
     "" Define a few variables
     let curl = line(".")
     let curc = col(".")
@@ -436,7 +436,7 @@ function! BLKCOtoggle(isVisual) "{{{
         endif
     endif
     call cursor(curl, curc)
-endfunction "}}}
+endfunction "}
 
 " if exists("g:slco") | unlet! slco | endif
 if exists("g:slcoE") | unlet! slcoE | endif
@@ -482,9 +482,9 @@ augroup commenting
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
         \ nnoremap <silent> fixme oFIXME: <ESC><Tab>==A
 augroup END
-" }}}
+" }
 
-""" Completion {{{
+""" Completion {
 " if filereadable("??/tags")
     " autocmd FileType c,c++,cpp,h,h++,hpp set tags=./tags
     " autocmd BufwinEnter *.* echo "Loaded tags file"
@@ -507,15 +507,22 @@ augroup omni_complete
     autocmd FileType php set omnifunc=pythoncomplete#CompletePHP
     autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 augroup END
-" }}}
+" }
 
-""" No clue what to call this {{{
+""" Stop asking about simultaneous edits {
 "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
 augroup NoSimultaneousEdits
     autocmd!
     autocmd SwapExists * let v:swapchoice = 'o'
     autocmd SwapExists * echoerr 'Duplicate edit session (readonly)'
 augroup END
-" }}}
+" }
 
-" vim: set foldmethod=marker:
+""" Auto-reload vimrc {
+augroup AutoReloadVimrc
+    autocmd!
+    autocmd BufWritePost $MYVIMRC source $MYVIMRC
+augroup END
+" }
+
+" vim: set foldmarker={,} foldmethod=marker:
