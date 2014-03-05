@@ -7,6 +7,8 @@ set tabstop=4 " Tab = 4 spaces. Because I'm not a savage
 set softtabstop=4
 set shiftwidth=4
 set expandtab
+set shiftround " Always indent to nearest tabstop
+set smarttab " Use shiftwidth at left margin, instead of tabstops
 set title
 set noerrorbells
 set visualbell
@@ -14,13 +16,14 @@ set ruler
 set showcmd " Shows the command being typed
 set wildmenu " Tab completion in command-line mode (:)
 set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~ " These file types are ignored when doing auto completions
-set viminfo=!,%,'20,"100,<1000,s100,:150,n~/.viminfo " Remembers stuff. RTFM
+set viminfo=h,%,'50,<10000,s1000,/1000,:1000,n~/.viminfo " Remembers stuff. RTFM
 set history=1000
-set undolevels=1000
+set undolevels=5000
 set directory=/tmp " Location of the swap file
 set foldenable
 set showmatch " Briefly jumps to matching bracket
 set incsearch " Searches as you type
+set ignorecase " I use \c enough times that this is the obvious choice
 set smartcase " If search pattern uses upper case chars, make search case sensitive
 set wrapscan " Searches wrap around the end of the file
 set nowrap " I prefer this. I can always turn wrap on when its necessary with the mapping below
@@ -42,8 +45,11 @@ set backupskip=/tmp/*,/private/tmp/*
 set writebackup " Make a backup before overwriting a file.
 set hlsearch
 set hidden " You can change buffers without saving
-set timeoutlen=500 " Let's see if this works for me
+set timeoutlen=400 " Let's see if this works for me
 set noequalalways " Does not resize windows during a split or window close
+" set virtualedit=block " 'Square up' visual selections
+set updatecount=20 " Save buffer every 20 characters
+set scrolloff=2 " Scroll file when cursor is 2 lines from top or bottom
 if $USER != "root"
     set modelines=1
 endif
@@ -94,6 +100,12 @@ augroup GitLogHighlighting
         \ highlight GitLogGraph ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogGraph", "^[\*\s|/\]* ") |
         \ highlight GitLogDash ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogDash", "-")
 augroup END
+
+" Make the completion menu actually visible
+highlight Pmenu ctermbg=white ctermfg=black
+highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
+highlight PmenuSbar ctermbg=grey ctermfg=grey
+" highlight PmenuThumb ctermbg=blue ctermfg=blue
 " }}}
 
 """ Notes options {{{
@@ -309,6 +321,7 @@ nnoremap <silent> coc :setlocal cursorline!<cr>
 nnoremap <silent> cow :setlocal wrap!<cr>
 nnoremap <silent> cos :setlocal spell!<cr>
 nnoremap <silent> col :setlocal list!<cr>
+nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
 
 "" Loaded content
 " Toggle off a popped window
@@ -331,8 +344,8 @@ inoremap df <c-n>
 inoremap fd <c-n>
 inoremap sd <c-x><c-l>
 inoremap ds <c-x><c-l>
-inoremap cs <c-x><c-o>
-inoremap sc <c-x><c-o>
+inoremap cv <c-x><c-o>
+inoremap vc <c-x><c-o>
 
 nnoremap ZZ :wqa<cr>
 nnoremap ZQ :qa!<cr>
