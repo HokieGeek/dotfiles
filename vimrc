@@ -4,19 +4,21 @@ set nocompatible " Not compatible with plain vi
 filetype off
 
 " TODO: bootstrap vundle into place
-let s:bundle_dir=expand("$HOME/.vim/bundle")
-if isdirectory(s:bundle_dir."/vundle") == 0
-    if isdirectory(s:bundle_dir) == 0
-        mkdir(s:bundle_dir)
-    endif
-    execute "!git clone https://github.com/gmarik/vundle.git ".s:bundle_dir."/vundle"
-    execute "BundleInstall"
-endif
+" let s:bundle_dir=expand("$HOME/.vim/bundle")
+" if isdirectory(s:bundle_dir."/vundle") == 0
+    " if isdirectory(s:bundle_dir) == 0
+        " call mkdir(s:bundle_dir)
+    " endif
+    " execute "!git clone https://github.com/gmarik/vundle.git ".s:bundle_dir."/vundle"
+    " TODO: how to ensure this function is available?
+    " execute "BundleInstall"
+" endif
 
 " Set the runtime path to include Vundle and initialize
-set rtp+=s:bundle_dir."/vundle/"
+" set rtp+=s:bundle_dir."/vundle/"
+set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
-unlet bundle_dir
+" unlet bundle_dir
 
 " Let Vundle manage Vundle, required
 Bundle 'gmarik/vundle'
