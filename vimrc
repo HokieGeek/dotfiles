@@ -1,7 +1,32 @@
+set nocompatible " Not compatible with plain vi
+
+""" Plugins {
+filetype off
+
+" TODO: bootstrap bundle into place
+if isdirectory(expand("$HOME/.vim/bundle/vundle")) == 0
+    if isdirectory(expand("$HOME/.vim/bundle")) == 0
+        mkdir(expand("$HOME/.vim/bundle"))
+    endif
+    exec "!git clone https://github.com/gmarik/vundle.git $HOME/.vim/bundle/vundle"
+    exec "BundleInstall"
+endif
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let Vundle manage Vundle, required
+Bundle 'gmarik/vundle'
+
+" All of the plugins and scripts with GitHub repos
+Bundle 'sjl/gundo.vim'
+Bundle 'scrooloose/nerdtree'
+" }
+
 """ Options {
 filetype plugin indent on
 
-set nocompatible " Not compatible with plain vi
 set autoindent " Indents when you insert
 set tabstop=4 " Tab = 4 spaces. Because I'm not a savage
 set softtabstop=4
@@ -17,7 +42,7 @@ set showcmd " Shows the command being typed
 set wildmenu " Tab completion in command-line mode (:)
 set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~ " These file types are ignored when doing auto completions
 set wildmode=list:longest,full
-set viminfo=h,%,'50,<10000,s1000,/1000,:1000,n~/.viminfo " Remembers stuff. RTFM
+set viminfo=h,%,'50,"100,<10000,s1000,/1000,:1000 " Remembers stuff. RTFM
 set history=1000
 set undolevels=5000
 set directory=/tmp " Location of the swap file
@@ -29,7 +54,8 @@ set smartcase " If search pattern uses upper case chars, make search case sensit
 set wrapscan " Searches wrap around the end of the file
 set nowrap " I prefer this. I can always turn wrap on when its necessary with the mapping below
 set list " Displays unprintable characters (whitespace, essentially)
-set listchars=tab:>>,trail:.,extends:#,nbsp:_ " Define what symbols to use with unprintable characters
+" Define what symbols to use with unprintable characters
+execute "set listchars=tab:>>,trail:\uB7,extends:#,nbsp:_"
 set splitright " When doing a vertical split, it puts it to the right of the current window
 set splitbelow " When doing a horizontal split, it puts it below the current window
 set diffopt+=iwhite " Vimdiff will ignore whitespace diffs
@@ -108,6 +134,7 @@ augroup Notes
         \ if &filetype == "" |
         \   nnoremap <silent> <F5> :set filetype=notes<cr> |
         \ endif
+    autocmd BufRead,BufNewFile *.confluence set filetype=confluencewiki spell
 
     autocmd Filetype notes
         \ setlocal spell |
@@ -329,13 +356,17 @@ nnoremap <silent> Ub :call PopGitBlame()<cr>
 " Git log up top
 nnoremap <silent> Ul :call PopGitLog()<cr>
 
+"" Plugins
+nnoremap <silent> pu :GundoToggle<cr>
+nnoremap <silent> pe :NERDTree<cr>
+
 " Some (probably questionable) overrides/shortcuts
 inoremap jk <esc>
 inoremap kj <esc>
 inoremap df <c-n>
 inoremap fd <c-n>
 inoremap sd <c-x><c-l>
-inoremap ds <c-x><c-l>
+" inoremap ds <c-x><c-l> d'oh!
 inoremap cv <c-x><c-o>
 inoremap vc <c-x><c-o>
 
