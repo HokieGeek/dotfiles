@@ -3,25 +3,29 @@ set nocompatible " Not compatible with plain vi
 """ Plugins {
 filetype off
 
-" TODO: bootstrap bundle into place
-if isdirectory(expand("$HOME/.vim/bundle/vundle")) == 0
-    if isdirectory(expand("$HOME/.vim/bundle")) == 0
-        mkdir(expand("$HOME/.vim/bundle"))
+" TODO: bootstrap vundle into place
+let s:bundle_dir=expand("$HOME/.vim/bundle")
+if isdirectory(s:bundle_dir."/vundle") == 0
+    if isdirectory(s:bundle_dir) == 0
+        mkdir(s:bundle_dir)
     endif
-    exec "!git clone https://github.com/gmarik/vundle.git $HOME/.vim/bundle/vundle"
-    exec "BundleInstall"
+    execute "!git clone https://github.com/gmarik/vundle.git ".s:bundle_dir."/vundle"
+    execute "BundleInstall"
 endif
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/vundle/
+" Set the runtime path to include Vundle and initialize
+set rtp+=s:bundle_dir."/vundle/"
 call vundle#rc()
+unlet bundle_dir
 
-" let Vundle manage Vundle, required
+" Let Vundle manage Vundle, required
 Bundle 'gmarik/vundle'
 
 " All of the plugins and scripts with GitHub repos
 Bundle 'sjl/gundo.vim'
 Bundle 'scrooloose/nerdtree'
+
+" TODO: What about matchvis?
 " }
 
 """ Options {
@@ -134,7 +138,8 @@ augroup Notes
         \ if &filetype == "" |
         \   nnoremap <silent> <F5> :set filetype=notes<cr> |
         \ endif
-    autocmd BufRead,BufNewFile *.confluence set filetype=confluencewiki spell
+    autocmd BufRead,BufNewFile *.confluence set filetype=confluencewiki spell foldmethod=manual
+    " TODO: An automatic way to fold (based on headings, for instance)
 
     autocmd Filetype notes
         \ setlocal spell |
@@ -226,7 +231,7 @@ func! LoadContent(location, command)
     elseif a:location == "bottom"
         botright new
     endif
-    set bt=nofile
+    set buftype=nofile
     exe "silent r ".a:command
     exe "silent file content_".a:location
     0d_
@@ -301,38 +306,35 @@ func! CheckoutFromGit()
 endfun
 "" Loaded content functions }
 
-nnoremap <Leader>s :source $MYVIMRC<cr>
-nnoremap <silent> <Leader><Leader> :nohlsearch<cr>
+nnoremap <leader>s :source $MYVIMRC<cr>
+nnoremap <silent> <leader><leader> :nohlsearch<cr>
 
 "" Session saving (et.al.)
 nnoremap <silent> <F9> :call SaveSession()<cr>
-nnoremap <silent> <Leader><F9> :windo call SaveSession()<cr>
+nnoremap <silent> <leader><F9> :windo call SaveSession()<cr>
 nnoremap <silent> <F10> :call DeleteSession()<cr>
-nnoremap <silent> <Leader><F10> :call LoadSession()<cr>
+nnoremap <silent> <leader><F10> :call LoadSession()<cr>
 nnoremap <silent> <F12> :colorscheme solarized<bar>colorscheme badwolf<cr>
 
 "" Searching
 " Current file
-nnoremap <silent> g/c :sp<CR>:res 15<CR>/<C-R><C-W><CR>
-nnoremap <silent> g/. :<c-u>noau vimgrep /\<<C-R><C-W>\>/ % <bar> cw<CR>
-nnoremap <silent> g// :<c-u>noau vimgrep // % <bar> cw<left><left><left><left><left><left><left><left>
+" nnoremap <silent> g/c :sp<CR>:res 15<CR>/<C-R><C-W><CR>
+nnoremap <silent> g// :<c-u>noautocmd vimgrep // % <bar> cw<left><left><left><left><left><left><left><left>
+nnoremap <silent> g/. :<c-u>noautocmd vimgrep /\<<C-R><C-W>\>/ % <bar> cw<CR>
 " All open buffers
 nnoremap <silent> g\\ :cex [] <bar> bufdo vimgrepadd //g % <bar> cw<left><left><left><left><left><left><left><left><left>
 nnoremap <silent> g\. :cex [] <bar> bufdo vimgrepadd /<C-R><C-W>/g % <bar> cw<CR>
-" nnoremap <silent> g\\ :execute ":cex [] | bufdo vimgrepadd /" . expand('<cword>') . "/g %" | cw
 " All files in current directory and down
-nnoremap <silent> g/\ :<c-u>noau vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left><left>
-nnoremap <silent> g/, :<c-u>noau vimgrep /<C-R><C-W>/ ** <bar> cw<CR>
+nnoremap <silent> g/\ :<c-u>noautocmd vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left><left>
+nnoremap <silent> g/, :<c-u>noautocmd vimgrep /<C-R><C-W>/ ** <bar> cw<CR>
 
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
 " This version of the buffer navigation keywords might be a bit more useful than the last
-nnoremap <silent> gb :<c-u>exec(v:count ? 'b '.v:count : 'bnext')<cr>
-nnoremap <silent> gB :<c-u>exec(v:count ? 'b '.v:count : 'bprevious')<cr>
+nnoremap <silent> gb :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
+nnoremap <silent> gB :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
 " A scratch space. Kinda useless, I think
-nnoremap <silent> gs :botright new<bar>set bt=nofile noswapfile modifiable<bar>res 10<cr>
-" I have no clue how useful this is
-" nnoremap <silent> gq :botright copen<cr>
+nnoremap <silent> gs :botright new<bar>set buftype=nofile noswapfile modifiable<bar>res 10<cr>
 
 "" Configuration
 nnoremap <silent> con :setlocal number! relativenumber!<cr>
@@ -343,18 +345,20 @@ nnoremap <silent> col :setlocal list!<cr>
 nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
 
 "" Loaded content
-" Toggle off a popped window
-nnoremap <silent> Uu :call LoadedContentClear()<cr>
 " Diff unsaved changes against file saved on disk
 nnoremap <silent> Uo :call PopDiff("#")<cr>
 " Diff current file with a given git revision. If no input given, diffs against head
 nnoremap <silent> Ug :call PopGitDiffPrompt()<cr>
-" Diff current file against branch head
-" nnoremap <silent> Uh :call PopDiff("!git show HEAD:./#")<cr>
-" Git blame on the right-side
 nnoremap <silent> Ub :call PopGitBlame()<cr>
-" Git log up top
 nnoremap <silent> Ul :call PopGitLog()<cr>
+nnoremap <silent> Uu :call LoadedContentClear()<cr>
+
+augroup GitLog
+    autocmd!
+    autocmd Filetype GitLog nnoremap <buffer> <silent> <enter> :call PopGitDiffFromLog()<cr>
+    autocmd Filetype GitLog nnoremap <buffer> <silent> co :call CheckoutFromGit()<cr>
+    autocmd Filetype GitLog nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<cr>
+augroup END
 
 "" Plugins
 nnoremap <silent> pu :GundoToggle<cr>
@@ -365,27 +369,19 @@ inoremap jk <esc>
 inoremap kj <esc>
 inoremap df <c-n>
 inoremap fd <c-n>
+
 inoremap sd <c-x><c-l>
-" inoremap ds <c-x><c-l> d'oh!
 inoremap cv <c-x><c-o>
-inoremap vc <c-x><c-o>
 
 nnoremap ZZ :wqa<cr>
 nnoremap ZQ :qa!<cr>
 nnoremap <space> :
 
-augroup GitLog
-    autocmd!
-    autocmd Filetype GitLog nnoremap <buffer> <silent> <enter> :call PopGitDiffFromLog()<cr>
-    autocmd Filetype GitLog nnoremap <buffer> <silent> co :call CheckoutFromGit()<cr>
-    autocmd Filetype GitLog nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<cr>
-augroup END
-
 "" I feel like being a pain in the ass
-noremap <Up> :echoerr "Use k instead! :-p"<cr>
-noremap <Down> :echoerr "Use j instead! :-p"<cr>
-noremap <Left> :echoerr "Use h instead! :-p"<cr>
-noremap <Right> :echoerr "Use l instead! :-p"<cr>
+noremap <up> :echoerr "Use k instead! :-p"<cr>
+noremap <down> :echoerr "Use j instead! :-p"<cr>
+noremap <left> :echoerr "Use h instead! :-p"<cr>
+noremap <right> :echoerr "Use l instead! :-p"<cr>
 " }
 
 """ Commenting {
@@ -501,9 +497,9 @@ augroup commenting
         \ nnoremap <silent> <S-Tab> :'k,.call SLCOtoggle()<cr>
 
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
-        \ nnoremap <silent> todo oTODO: <ESC><Tab>==A
+        \ nnoremap <silent> todo oTODO: <esc><Tab>==A
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
-        \ nnoremap <silent> fixme oFIXME: <ESC><Tab>==A
+        \ nnoremap <silent> fixme oFIXME: <esc><Tab>==A
 augroup END
 " }
 
@@ -513,7 +509,7 @@ augroup END
     " autocmd BufwinEnter *.* echo "Loaded tags file"
 
     " Map some keys to access these
-    " nnoremap <silent> <C-\> :tab split<cr>:exec("tag ".expand("<cword>"))<cr>
+    " nnoremap <silent> <C-\> :tab split<cr>:execute("tag ".expand("<cword>"))<cr>
 " else
     " nnoremap <silent> <C-\> :echoerr "No tags file loaded"<cr>
 " endif
@@ -538,6 +534,7 @@ augroup MiscOptions
 
     "" Stop asking about simultaneous edits. 
     "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
+    " TODO: This isn't working (not setting as readonly. Should also be not modifiable, I think)
     autocmd SwapExists * let v:swapchoice = 'o'
     autocmd SwapExists * echoerr 'Duplicate edit session (readonly)'
 
