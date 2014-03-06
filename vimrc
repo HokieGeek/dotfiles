@@ -26,8 +26,12 @@ Bundle 'gmarik/vundle'
 " All of the plugins and scripts with GitHub repos
 Bundle 'sjl/gundo.vim'
 Bundle 'scrooloose/nerdtree'
+" Bundle 'scrooloose/syntastic'
+" Bundle 'kien/ctrlp.vim'
 
-" TODO: What about matchvis?
+Bundle 'tpope/vim-surround'
+Bundle 'kien/rainbow_parentheses.vim'
+Bundle 'bling/vim-airline'
 " }
 
 """ Options {
@@ -74,7 +78,7 @@ set spelllang=en_us
 set formatoptions+=n " Recognize numbered lists
 set backup " Create a backup file
 set backupdir=~/.tmp,~/tmp,/var/tmp,/tmp " Why not on .?
-set writebackup " Make a backup before overwriting a file.
+set writebackup " Make a backup before overwriting a file
 set hlsearch
 set hidden " You can change buffers without saving
 set timeoutlen=400 " Let's see if this works for me
@@ -97,8 +101,11 @@ endif
 if has("gui_running")
     colorscheme solarized
     colorscheme badwolf
-    set guioptions-=T " Never show the toolbar.
-    set guioptions-=m " Never show the menubar.
+    set guioptions-=T " Never show the toolbar
+    set guioptions-=m " Never show the menubar
+    set guioptions-=r " Never show the right scrollbar
+    set guioptions-=l " Never show the left scrollbar
+    set guioptions-=b " Never show the bottom scrollbar
 else
     colorscheme desert
 endif
