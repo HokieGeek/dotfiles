@@ -48,7 +48,7 @@ set hlsearch
 set hidden " You can change buffers without saving
 set timeoutlen=400 " Let's see if this works for me
 set noequalalways " Does not resize windows during a split or window close
-" set virtualedit=block " 'Square up' visual selections
+set virtualedit=block " 'Square up' visual selections
 set updatecount=20 " Save buffer every 20 characters
 set scrolloff=2 " Scroll file when cursor is 2 lines from top or bottom
 if $USER != "root"
@@ -98,7 +98,7 @@ augroup END
 highlight Pmenu ctermbg=white ctermfg=black
 highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
 highlight PmenuSbar ctermbg=grey ctermfg=grey
-" highlight PmenuThumb ctermbg=blue ctermfg=blue
+highlight PmenuThumb ctermbg=blue ctermfg=blue
 " }
 
 """ Notes options {
@@ -525,4 +525,4 @@ augroup MiscOptions
 augroup END
 " }
 
-" vim: set foldmarker={,} foldmethod=marker:
+" vim: set foldmarker={,} foldmethod=marker number relativenumber:
