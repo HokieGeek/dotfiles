@@ -41,8 +41,7 @@ set spellsuggest=best,15
 set spelllang=en_us
 set formatoptions+=n " Recognize numbered lists
 set backup " Create a backup file
-set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-set backupskip=/tmp/*,/private/tmp/*
+set backupdir=~/.tmp,~/tmp,/var/tmp,/tmp " Why not on .?
 set writebackup " Make a backup before overwriting a file.
 set hlsearch
 set hidden " You can change buffers without saving
