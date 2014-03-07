@@ -18,20 +18,22 @@ filetype off
 " set rtp+=s:bundle_dir."/vundle/"
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
-" unlet bundle_dir
+" unlet s:bundle_dir
 
 " Let Vundle manage Vundle, required
 Bundle 'gmarik/vundle'
 
 " All of the plugins and scripts with GitHub repos
 Bundle 'sjl/gundo.vim'
-Bundle 'scrooloose/nerdtree'
-" Bundle 'scrooloose/syntastic'
-" Bundle 'kien/ctrlp.vim'
-
+Bundle 'kien/ctrlp.vim'
+Bundle 'scrooloose/syntastic'
 Bundle 'tpope/vim-surround'
 Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'bling/vim-airline'
+
+augroup PluginSettings
+    autocmd!
+    autocmd VimEnter * RainbowParenthesesToggle
+augroup END
 " }
 
 """ Options {
@@ -329,13 +331,16 @@ nnoremap <silent> <F12> :colorscheme solarized<bar>colorscheme badwolf<cr>
 " Current file
 " nnoremap <silent> g/c :sp<CR>:res 15<CR>/<C-R><C-W><CR>
 nnoremap <silent> g// :<c-u>noautocmd vimgrep // % <bar> cw<left><left><left><left><left><left><left><left>
-nnoremap <silent> g/. :<c-u>noautocmd vimgrep /\<<C-R><C-W>\>/ % <bar> cw<CR>
+nnoremap <silent> g/. :<c-u>noautocmd vimgrep /\<<c-r><c-w>\>/ % <bar> cw<cr>
 " All open buffers
 nnoremap <silent> g\\ :cex [] <bar> bufdo vimgrepadd //g % <bar> cw<left><left><left><left><left><left><left><left><left>
-nnoremap <silent> g\. :cex [] <bar> bufdo vimgrepadd /<C-R><C-W>/g % <bar> cw<CR>
+nnoremap <silent> g\. :cex [] <bar> bufdo vimgrepadd /<c-r><c-w>/g % <bar> cw<cr>
+nnoremap <silent> g\p :CtrlPBuffer<cr>
+nnoremap <silent> g/p :CtrlP<cr>
 " All files in current directory and down
 nnoremap <silent> g/\ :<c-u>noautocmd vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left><left>
-nnoremap <silent> g/, :<c-u>noautocmd vimgrep /<C-R><C-W>/ ** <bar> cw<CR>
+nnoremap <silent> g/, :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cw<cr>
+nnoremap <silent> g/p :CtrlP<cr>
 
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
@@ -371,7 +376,6 @@ augroup END
 
 "" Plugins
 nnoremap <silent> pu :GundoToggle<cr>
-nnoremap <silent> pe :NERDTree<cr>
 
 " Some (probably questionable) overrides/shortcuts
 inoremap jk <esc>
@@ -544,8 +548,8 @@ augroup MiscOptions
     "" Stop asking about simultaneous edits. 
     "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
     " TODO: This isn't working (not setting as readonly. Should also be not modifiable, I think)
-    autocmd SwapExists * let v:swapchoice = 'o'
-    autocmd SwapExists * echoerr 'Duplicate edit session (readonly)'
+    " autocmd SwapExists * let v:swapchoice = 'o'
+    " autocmd SwapExists * echoerr 'Duplicate edit session (readonly)'
 
     " Turns on spell check when typing out long git commit messages
     autocmd FileType gitcommit setlocal spell
