@@ -350,6 +350,8 @@ nnoremap <silent> gB :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
 " A scratch space. Kinda useless, I think
 nnoremap <silent> gs :botright new<bar>set buftype=nofile noswapfile modifiable<bar>res 10<cr>
 
+" TODO: nnoremap <silent> ge :ExSidebar<cr>
+
 "" Configuration
 nnoremap <silent> con :setlocal number! relativenumber!<cr>
 nnoremap <silent> coc :setlocal cursorline!<cr>

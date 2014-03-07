@@ -1,0 +1,11 @@
+#!/bin/sh
+
+mntpoint=/mnt/kindle
+part=$1
+shift
+files=$@
+
+sudo mount $part $mntpoint
+sudo cp $@ $mntpoint
+sync
+sudo umount $mntpoint
