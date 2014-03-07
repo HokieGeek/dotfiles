@@ -168,14 +168,9 @@ highlight SL_HL_GitModified ctermbg=236 ctermfg=196 cterm=none
 " }
 
 " File name, type and modified
-set statusline=%#SL_HL_Default#
-set statusline+=%t
-set statusline+=%#SL_HL_FileType#
-set statusline+=%y " Filetype
-set statusline+=%#SL_HL_FileReadOnly#
-set statusline+=%r " Is read-only?
-set statusline+=%#SL_HL_FileModified#
-set statusline+=%m " Is modified?
+set statusline=%#SL_HL_Default#%t
+set statusline+=%#SL_HL_FileType#%y " Filetype
+set statusline+=%-7(%#SL_HL_FileReadOnly#%r%#SL_HL_FileModified#%m%)
 set statusline+=%*
 
 " Display a warning if fileformat isn't unix
