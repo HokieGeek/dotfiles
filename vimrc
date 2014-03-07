@@ -317,6 +317,12 @@ func! CheckoutFromGit()
 endfun
 "" Loaded content functions }
 
+"" Other mapped functions {
+function! ExplorerLeftPane()
+    " TODO
+endfunction
+" }
+
 nnoremap <leader>s :source $MYVIMRC<cr>
 nnoremap <silent> <leader><leader> :nohlsearch<cr>
 
