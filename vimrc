@@ -127,7 +127,58 @@ syntax on
 " }
 
 """ Status line {
-" set laststatus=2
+"" Status line functions {
+function! SLGitInfo()
+    redir => l:branch
+    silent execute 'ls'
+    redir END
+    new | put=l:branch
+
+    " redir => l:branch
+    " silent execute "!git branch | grep '^*' | sed 's/^\*\s*//'"
+    " redir END
+
+    " redir => l:is_modified
+    " silent execute "!git status -s -uno | grep -c %"
+    " redir END
+
+    " let b:status_line_git_info = ' <'.l:branch.'>'.((l:is_modified > 0)?'+':'').' '
+    " return b:status_line_git_info
+endfunction
+nnoremap <F2> :call SLGitInfo()<CR>
+" }
+"" Status line highlights {
+" }
+" File name, type and modified
+" set statusline=%#identifier#
+set statusline=%t
+" set statusline+=%*
+set statusline+=%y " Filetype
+set statusline+=%r " Is read-only?
+set statusline+=%m " Is modified?
+
+" Display a warning if fileformat isn't unix
+set statusline+=%#warningmsg#
+set statusline+=%{&ff!='unix'?'['.&ff.']':''}
+set statusline+=%*
+
+" Display git info
+" set statusline+=%#SLGitInfoHL#
+" set statusline+=%{SLGitInfo()}
+" set statusline+=%*
+
+" Syntastic flag
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+set statusline+=%=      "left/right separator
+
+set statusline+=%l/%L   "cursor line/total lines
+set statusline+=\ %c     "cursor column
+set statusline+=\ %P    "percent through file
+
+set laststatus=2
 " }
 
 """ Highlights {
