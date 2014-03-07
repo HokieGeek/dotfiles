@@ -3,6 +3,7 @@ set nocompatible " Not compatible with plain vi
 """ Plugins {
 filetype off
 
+"" Vundle {
 " TODO: bootstrap vundle into place
 " let s:bundle_dir=expand("$HOME/.vim/bundle")
 " if isdirectory(s:bundle_dir."/vundle") == 0
@@ -16,19 +17,22 @@ filetype off
 
 " Set the runtime path to include Vundle and initialize
 " set rtp+=s:bundle_dir."/vundle/"
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+" set runtimepath+=~/.vim/bundle/vundle/
+" call vundle#rc()
 " unlet s:bundle_dir
 
 " Let Vundle manage Vundle, required
-Bundle 'gmarik/vundle'
+" Bundle 'gmarik/vundle'
 
 " All of the plugins and scripts with GitHub repos
-Bundle 'sjl/gundo.vim'
-Bundle 'kien/ctrlp.vim'
-Bundle 'scrooloose/syntastic'
-Bundle 'tpope/vim-surround'
-Bundle 'kien/rainbow_parentheses.vim'
+" Bundle 'sjl/gundo.vim'
+" Bundle 'kien/ctrlp.vim'
+" Bundle 'scrooloose/syntastic'
+" Bundle 'tpope/vim-surround'
+" Bundle 'kien/rainbow_parentheses.vim'
+" }
+
+execute pathogen#infect()
 
 augroup PluginSettings
     autocmd!
@@ -46,25 +50,30 @@ set shiftwidth=4
 set expandtab
 set shiftround " Always indent to nearest tabstop
 set smarttab " Use shiftwidth at left margin, instead of tabstops
+set backspace=2 " Make backspace actually work, because why not?
 set title
 set noerrorbells
 set visualbell
 set ruler
 set showcmd " Shows the command being typed
+set complete-=i " Don't search includes because they are slow
 set wildmenu " Tab completion in command-line mode (:)
 set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~ " These file types are ignored when doing auto completions
 set wildmode=list:longest,full
 set viminfo=h,%,'50,"100,<10000,s1000,/1000,:1000 " Remembers stuff. RTFM
 set history=1000
 set undolevels=5000
-set directory=/tmp " Location of the swap file
-set foldenable
+" set directory=/tmp " Location of the swap file
+set foldenable " Close folds on open
+set foldnestmax=5 " I think 5 nests is enough, thank you
+" TODO: set foldopen=?? " What movements open folds
 set showmatch " Briefly jumps to matching bracket
 set incsearch " Searches as you type
 set ignorecase " I use \c enough times that this is the obvious choice
 set smartcase " If search pattern uses upper case chars, make search case sensitive
 set wrapscan " Searches wrap around the end of the file
 set nowrap " I prefer this. I can always turn wrap on when its necessary with the mapping below
+set linebreak " Wrap lines at convenient points
 set list " Displays unprintable characters (whitespace, essentially)
 " Define what symbols to use with unprintable characters
 execute "set listchars=tab:>>,trail:\uB7,extends:#,nbsp:_"
@@ -84,10 +93,13 @@ set writebackup " Make a backup before overwriting a file
 set hlsearch
 set hidden " You can change buffers without saving
 set timeoutlen=400 " Let's see if this works for me
+set ttimeoutlen=100 " Escape and others a bit faster
 set noequalalways " Does not resize windows during a split or window close
 set virtualedit=block " 'Square up' visual selections
 set updatecount=20 " Save buffer every 20 characters
 set scrolloff=2 " Scroll file when cursor is 2 lines from top or bottom
+set sidescrolloff=4 " Scroll file horizontally when the cursor is 4 columns from left or right
+set sidescroll=1 " Trying this out...
 if $USER != "root"
     set modelines=1
 endif
@@ -97,9 +109,8 @@ else
     set clipboard=unnamed " Sync with OS clipboard
 endif
 
-if !empty($TMUX)
-    set t_Co=256
-endif
+" Always want it
+set t_Co=256
 if has("gui_running")
     colorscheme solarized
     colorscheme badwolf
@@ -112,6 +123,82 @@ else
     colorscheme desert
 endif
 syntax on
+" }
+
+""" Status line {
+"" Functions {
+function! SLGitInfo()
+    redir => l:branch
+    silent execute 'ls'
+    redir END
+    new | put=l:branch
+
+    " redir => l:branch
+    " silent execute "!git branch | grep '^*' | sed 's/^\*\s*//'"
+    " redir END
+
+    " redir => l:is_modified
+    " silent execute "!git status -s -uno | grep -c %"
+    " redir END
+
+    " let b:status_line_git_info = ' <'.l:branch.'>'.((l:is_modified > 0)?'+':'').' '
+    " return b:status_line_git_info
+endfunction
+nnoremap <F2> :call SLGitInfo()<CR>
+" function! SLGitBranch()
+    " let l:file = /tmp/test
+    " redir >> l:file
+    " silent execute "!ls"
+    " redir END
+    " new | r l:file
+" endfunction
+" function! SLGitStatus()
+" endfunction
+" }
+"" Highlights {
+highlight SL_HL_Default ctermbg=236 ctermfg=249 cterm=none
+highlight SL_HL_FileModified ctermbg=236 ctermfg=208 cterm=bold
+highlight SL_HL_FileReadOnly ctermbg=88 ctermfg=233 cterm=none
+highlight SL_HL_FileType ctermbg=236 ctermfg=239 cterm=none
+
+" highlight SL_HL_CapsLockWarning ctermbg=236 ctermfg=190 cterm=none
+
+highlight SL_HL_GitBranch ctermbg=236 ctermfg=177 cterm=none
+highlight SL_HL_GitModified ctermbg=236 ctermfg=196 cterm=none
+" }
+
+" File name, type and modified
+set statusline=%#SL_HL_Default#%t
+set statusline+=%#SL_HL_FileType#%y " Filetype
+set statusline+=%-7(%#SL_HL_FileReadOnly#%r%#SL_HL_FileModified#%m%)
+set statusline+=%*
+
+" Display a warning if fileformat isn't unix
+set statusline+=%#warningmsg#
+set statusline+=%{&ff!='unix'?'['.&ff.']':''}
+set statusline+=%#SL_HL_Default#
+
+" Display git info
+" set statusline+=%#SL_HL_GitBranch#
+" set statusline+=\ %{SLGitBranch()}
+" set statusline+=%#SL_HL_GitModified#
+" set statusline+=%{SLGitStatus()}
+set statusline+=%#SL_HL_Default#
+
+set statusline+=%=      "left/right separator
+
+" Syntastic flag
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%#SL_HL_Default#
+
+set statusline+=\ %l/%L   "cursor line/total lines
+set statusline+=,%c     "cursor column
+set statusline+=\ %P    "percent through file
+
+set statusline+=%*
+
+set laststatus=2
 " }
 
 """ Highlights {
@@ -325,6 +412,7 @@ endfunction
 
 nnoremap <leader>s :source $MYVIMRC<cr>
 nnoremap <silent> <leader><leader> :nohlsearch<cr>
+nnoremap Y y$
 
 "" Session saving (et.al.)
 nnoremap <silent> <F9> :call SaveSession()<cr>
@@ -342,7 +430,6 @@ nnoremap <silent> g/. :<c-u>noautocmd vimgrep /\<<c-r><c-w>\>/ % <bar> cw<cr>
 nnoremap <silent> g\\ :cex [] <bar> bufdo vimgrepadd //g % <bar> cw<left><left><left><left><left><left><left><left><left>
 nnoremap <silent> g\. :cex [] <bar> bufdo vimgrepadd /<c-r><c-w>/g % <bar> cw<cr>
 nnoremap <silent> g\p :CtrlPBuffer<cr>
-nnoremap <silent> g/p :CtrlP<cr>
 " All files in current directory and down
 nnoremap <silent> g/\ :<c-u>noautocmd vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left><left>
 nnoremap <silent> g/, :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cw<cr>
@@ -365,6 +452,7 @@ nnoremap <silent> cow :setlocal wrap!<cr>
 nnoremap <silent> cos :setlocal spell!<cr>
 nnoremap <silent> col :setlocal list!<cr>
 nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
+nnoremap <silent> cot :if &laststatus == 2<bar>set laststatus=1<bar>else<bar>set laststatus=2<bar>endif<cr>
 
 "" Loaded content
 " Diff unsaved changes against file saved on disk
@@ -573,4 +661,4 @@ augroup MiscOptions
 augroup END
 " }
 
-" vim: set foldmarker={,} foldmethod=marker number relativenumber:
+" vim: set foldmarker={,} foldmethod=marker number relativenumber formatoptions-=t:
