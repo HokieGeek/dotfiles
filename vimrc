@@ -109,9 +109,8 @@ else
     set clipboard=unnamed " Sync with OS clipboard
 endif
 
-if !empty($TMUX)
-    set t_Co=256
-endif
+" Always want it
+set t_Co=256
 if has("gui_running")
     colorscheme solarized
     colorscheme badwolf
@@ -127,7 +126,7 @@ syntax on
 " }
 
 """ Status line {
-"" Status line functions {
+"" Functions {
 function! SLGitInfo()
     redir => l:branch
     silent execute 'ls'
@@ -146,37 +145,63 @@ function! SLGitInfo()
     " return b:status_line_git_info
 endfunction
 nnoremap <F2> :call SLGitInfo()<CR>
+" function! SLGitBranch()
+    " let l:file = /tmp/test
+    " redir >> l:file
+    " silent execute "!ls"
+    " redir END
+    " new | r l:file
+" endfunction
+" function! SLGitStatus()
+" endfunction
 " }
-"" Status line highlights {
+"" Highlights {
+highlight SL_HL_Default ctermbg=236 ctermfg=249 cterm=none
+highlight SL_HL_FileModified ctermbg=236 ctermfg=208 cterm=bold
+highlight SL_HL_FileReadOnly ctermbg=88 ctermfg=233 cterm=none
+highlight SL_HL_FileType ctermbg=236 ctermfg=239 cterm=none
+
+" highlight SL_HL_CapsLockWarning ctermbg=236 ctermfg=190 cterm=none
+
+highlight SL_HL_GitBranch ctermbg=236 ctermfg=177 cterm=none
+highlight SL_HL_GitModified ctermbg=236 ctermfg=196 cterm=none
 " }
+
 " File name, type and modified
-" set statusline=%#identifier#
-set statusline=%t
-" set statusline+=%*
+set statusline=%#SL_HL_Default#
+set statusline+=%t
+set statusline+=%#SL_HL_FileType#
 set statusline+=%y " Filetype
+set statusline+=%#SL_HL_FileReadOnly#
 set statusline+=%r " Is read-only?
+set statusline+=%#SL_HL_FileModified#
 set statusline+=%m " Is modified?
+set statusline+=%*
 
 " Display a warning if fileformat isn't unix
 set statusline+=%#warningmsg#
 set statusline+=%{&ff!='unix'?'['.&ff.']':''}
-set statusline+=%*
+set statusline+=%#SL_HL_Default#
 
 " Display git info
-" set statusline+=%#SLGitInfoHL#
-" set statusline+=%{SLGitInfo()}
-" set statusline+=%*
+" set statusline+=%#SL_HL_GitBranch#
+" set statusline+=\ %{SLGitBranch()}
+" set statusline+=%#SL_HL_GitModified#
+" set statusline+=%{SLGitStatus()}
+set statusline+=%#SL_HL_Default#
+
+set statusline+=%=      "left/right separator
 
 " Syntastic flag
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+set statusline+=%#SL_HL_Default#
 
-set statusline+=%=      "left/right separator
-
-set statusline+=%l/%L   "cursor line/total lines
-set statusline+=\ %c     "cursor column
+set statusline+=\ %l/%L   "cursor line/total lines
+set statusline+=,%c     "cursor column
 set statusline+=\ %P    "percent through file
+
+set statusline+=%*
 
 set laststatus=2
 " }
@@ -404,7 +429,6 @@ nnoremap <silent> g/. :<c-u>noautocmd vimgrep /\<<c-r><c-w>\>/ % <bar> cw<cr>
 nnoremap <silent> g\\ :cex [] <bar> bufdo vimgrepadd //g % <bar> cw<left><left><left><left><left><left><left><left><left>
 nnoremap <silent> g\. :cex [] <bar> bufdo vimgrepadd /<c-r><c-w>/g % <bar> cw<cr>
 nnoremap <silent> g\p :CtrlPBuffer<cr>
-nnoremap <silent> g/p :CtrlP<cr>
 " All files in current directory and down
 nnoremap <silent> g/\ :<c-u>noautocmd vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left><left>
 nnoremap <silent> g/, :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cw<cr>
@@ -427,6 +451,7 @@ nnoremap <silent> cow :setlocal wrap!<cr>
 nnoremap <silent> cos :setlocal spell!<cr>
 nnoremap <silent> col :setlocal list!<cr>
 nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
+nnoremap <silent> cot :if &laststatus == 2<bar>set laststatus=1<bar>else<bar>set laststatus=2<bar>endif<cr>
 
 "" Loaded content
 " Diff unsaved changes against file saved on disk
