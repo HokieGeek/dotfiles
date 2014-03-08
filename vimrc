@@ -130,7 +130,7 @@ syntax on
 "" Functions {
 " Git {
 function! SL_GitFileStatus()
-    let l:status = system("git status -s | grep ".expand("%:t"))
+    let l:status = system("git status --porcelain | grep ".expand("%:t"))
     let l:status = substitute(substitute(l:status, '\s*\n*$', '', ''), '^\s*', '', '')
 
     if match(l:status, '^fatal') > -1
@@ -140,9 +140,9 @@ function! SL_GitFileStatus()
     elseif match(l:status, '^?') > -1
         let l:status_val = 2 " Untracked
     elseif match(l:status, '^AM') > -1
-        let l:status_val = 5 " Staged and Modified
+        let l:status_val = 5 " Added and Modified
     elseif match(l:status, '^A') > -1
-        let l:status_val = 3 " Staged
+        let l:status_val = 3 " Added
     elseif match(l:status, '^M') > -1
         let l:status_val = 4 " Modified
     else
@@ -169,7 +169,7 @@ function! SL_GitBranchModified()
     else
         return ""
 endfunction
-function! SL_GitBranchStaged()
+function! SL_GitBranchAdded()
     if SL_GitFileStatus() == 3 && SL_GitFileStatus() != 4
         return SL_GitBranch()
     else
@@ -182,7 +182,7 @@ function! SL_GitBranchUntracked()
         return ""
 endfunction
 " }
-" File name {
+" File name/Type {
 function! SL_GetFilename()
     return " ".expand("%:t")." "
 endfunction
@@ -228,31 +228,42 @@ function! SL_GetFilenameNotModifiableReadOnly()
         return ""
     endif
 endfunction
+function! SL_GetFiletypeIsUnix()
+    if &fileformat == 'unix'
+        return &filetype
+    else
+        return ""
+    endif
+endfunction
+function! SL_GetFiletypeNotUnix()
+    if &fileformat != 'unix'
+        return &filetype
+    else
+        return ""
+    endif
+endfunction
 " }
 " }
 "" Highlights {
 highlight SL_HL_Default ctermbg=233 ctermfg=249 cterm=none
-highlight SL_HL_Mode ctermbg=18 ctermfg=7 cterm=bold
-" highlight SL_HL_Mode ctermbg=58 ctermfg=233 cterm=bold
-" highlight SL_HL_Mode ctermbg=118 ctermfg=236 cterm=bold
+highlight SL_HL_Mode ctermbg=55 ctermfg=7 cterm=bold
 highlight SL_HL_FileNotModifiedNotReadOnly ctermbg=233 ctermfg=249 cterm=none
 highlight SL_HL_FileNotModifiedReadOnly ctermbg=233 ctermfg=88 cterm=bold
-" highlight SL_HL_FileModifiedNotReadOnly ctermbg=60 ctermfg=232 cterm=bold
-" highlight SL_HL_FileModifiedReadOnly ctermbg=60 ctermfg=196 cterm=bold
-highlight SL_HL_FileModifiedNotReadOnly ctermbg=22 ctermfg=249 cterm=none
+highlight SL_HL_FileModifiedNotReadOnly ctermbg=22 ctermfg=7 cterm=none
 highlight SL_HL_FileModifiedReadOnly ctermbg=22 ctermfg=196 cterm=bold
 
 highlight SL_HL_FileNotModifiableNotReadOnly ctermbg=88 ctermfg=232 cterm=bold
 highlight SL_HL_FileNotModifiableReadOnly ctermbg=88 ctermfg=9 cterm=bold
 
-highlight SL_HL_FileType ctermbg=233 ctermfg=239 cterm=none
+highlight SL_HL_FileTypeIsUnix ctermbg=233 ctermfg=239 cterm=none
+highlight SL_HL_FileTypeNotUnix ctermbg=52 ctermfg=233 cterm=none
 
 " highlight SL_HL_CapsLockWarning ctermbg=236 ctermfg=190 cterm=none
 
-highlight SL_HL_GitBranch ctermbg=93 ctermfg=232 cterm=bold
-highlight SL_HL_GitModified ctermbg=93 ctermfg=88 cterm=bold
-highlight SL_HL_GitStaged ctermbg=93 ctermfg=34 cterm=bold
-highlight SL_HL_GitUntracked ctermbg=93 ctermfg=19 cterm=bold
+highlight SL_HL_GitBranch ctermbg=25 ctermfg=232 cterm=bold
+highlight SL_HL_GitModified ctermbg=25 ctermfg=88 cterm=bold
+highlight SL_HL_GitAdded ctermbg=25 ctermfg=40 cterm=bold
+highlight SL_HL_GitUntracked ctermbg=25 ctermfg=7 cterm=bold
 
 highlight SL_HL_FileInfo ctermbg=234 ctermfg=244 cterm=none
 highlight SL_HL_FileInfoTotalLines ctermbg=234 ctermfg=239 cterm=none
@@ -268,23 +279,18 @@ set statusline+=%#SL_HL_FileModifiedReadOnly#%{SL_GetFilenameModifiedReadOnly()}
 set statusline+=%#SL_HL_FileNotModifiableNotReadOnly#%{SL_GetFilenameNotModifiableNotReadOnly()}
 set statusline+=%#SL_HL_FileNotModifiableReadOnly#%{SL_GetFilenameNotModifiableReadOnly()}
 
-set statusline+=%#SL_HL_FileType#%{&filetype} " Filetype
-
-set statusline+=\ %*
-
-" Display a warning if fileformat isn't unix
-set statusline+=%#warningmsg#
-set statusline+=%{&ff!='unix'?'!':''}
-set statusline+=%#SL_HL_Default#
+set statusline+=%#SL_HL_FileTypeIsUnix#%{SL_GetFiletypeIsUnix()}
+set statusline+=%#SL_HL_FileTypeNotUnix#%{SL_GetFiletypeNotUnix()}
 
 " Display git info
-set statusline+=\ %#SL_HL_GitBranch#%{SL_GitBranchClean()}
+set statusline+=%#SL_HL_Default#\ \ %#SL_HL_GitBranch#%{SL_GitBranchClean()}
 set statusline+=%#SL_HL_GitModified#%{SL_GitBranchModified()}
-set statusline+=%#SL_HL_GitStaged#%{SL_GitBranchStaged()}
+set statusline+=%#SL_HL_GitAdded#%{SL_GitBranchAdded()}
 set statusline+=%#SL_HL_GitUntracked#%{SL_GitBranchUntracked()}
 set statusline+=%#SL_HL_Default#
 
-set statusline+=%= "left/right separator
+" Right-justify the rest
+set statusline+=%=
 
 " Syntastic flag
 set statusline+=%#warningmsg#
