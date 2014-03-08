@@ -243,8 +243,17 @@ function! SL_GetFiletypeNotUnix()
     endif
 endfunction
 " }
+function! IsCapsLockOn()
+    let l:capsState = system("xset -q | grep \"Caps Lock\" | awk '{ print $2$3$4 }'")
+    " return match(l:capsState, "on") > -1
+    if match(l:capsState, "on") > -1
+        return ' CAPS '
+    else
+        return ''
+    endif
+endfunction
 " }
-"" Highlights {
+" Highlights {
 highlight SL_HL_Default ctermbg=233 ctermfg=249 cterm=none
 highlight SL_HL_Mode ctermbg=55 ctermfg=7 cterm=bold
 highlight SL_HL_FileNotModifiedNotReadOnly ctermbg=233 ctermfg=249 cterm=none
@@ -263,7 +272,7 @@ highlight SL_HL_GitModified ctermbg=25 ctermfg=88 cterm=bold
 highlight SL_HL_GitAdded ctermbg=25 ctermfg=40 cterm=bold
 highlight SL_HL_GitUntracked ctermbg=25 ctermfg=7 cterm=bold
 
-" highlight SL_HL_CapsLockWarning ctermbg=236 ctermfg=190 cterm=none
+highlight SL_HL_CapsLockWarning ctermbg=118 ctermfg=232 cterm=bold
 
 highlight SL_HL_FileInfo ctermbg=234 ctermfg=244 cterm=none
 highlight SL_HL_FileInfoTotalLines ctermbg=234 ctermfg=239 cterm=none
@@ -297,7 +306,9 @@ set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%#SL_HL_Default#
 
-set statusline+=\ %#SL_HL_FileInfo#\ %l%#SL_HL_FileInfoTotalLines#/%L%#SL_HL_FileInfo#
+set statusline+=%#SL_HL_CapsLockWarning#%{IsCapsLockOn()}%#SL_HL_Default#
+
+set statusline+=%#SL_HL_FileInfo#\ %l%#SL_HL_FileInfoTotalLines#/%L%#SL_HL_FileInfo#
 set statusline+=,%c\ %P
 
 set statusline+=%*
