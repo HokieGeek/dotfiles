@@ -336,6 +336,16 @@ augroup GitLogHighlighting
         \ highlight GitLogDash ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogDash", "-")
 augroup END
 
+augroup GitStatusHighlighting
+    autocmd!
+    autocmd Filetype GitStatus
+        \ highlight GitStatusColumn2 ctermbg=none ctermfg=darkred cterm=none | let m = matchadd("GitStatusColumn2", "^.. ") |
+        \ highlight GitStatusColumn1 ctermbg=none ctermfg=darkgreen cterm=none | let m = matchadd("GitStatusColumn1", "^.") |
+        \ highlight GitStatusUntracked ctermbg=none ctermfg=darkred cterm=none | let m = matchadd("GitStatusUntracked", "^\?\? ") |
+        \ highlight GitStatusBranch ctermbg=none ctermfg=darkgreen cterm=none | let m = matchadd("GitStatusBranch", "## .*") |
+        \ highlight GitStatusBranchHashes ctermbg=none ctermfg=white cterm=none | let m = matchadd("GitStatusBranchHashes", "## ")
+augroup END
+
 " Make the completion menu actually visible
 highlight Pmenu ctermbg=white ctermfg=black
 highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
@@ -517,6 +527,21 @@ endfunction
 function! ResetFileInGitIndex()
     call system("git reset ".expand("%"))
 endfunction
+function! GitStatus()
+    if exists("g:loaded_output")
+        call LoadedContentClear()
+    endif
+
+    mkview! 9
+    call LoadContent("right", "!git status -sb")
+    set filetype=GitStatus
+    vertical resize 25
+    set nolist nomodifiable
+    wincmd t
+endfunction
+function! GitCommit()
+    echo "TODO: commit"
+endfunction
 function! Git(command)
     if a:command == "blame"
         call PopGitBlame()
@@ -528,6 +553,8 @@ function! Git(command)
         call AddFileToGit()
     elseif a:command == "reset"
         call ResetFileInGitIndex()
+    elseif a:command == "status"
+        call GitStatus()
     elseif a:command == "commit"
         echo "TODO: commit"
     else
@@ -607,6 +634,7 @@ nnoremap <silent> Uu :call LoadedContentClear()<cr>
 nnoremap <silent> Ug :Git diff<cr>
 nnoremap <silent> Ub :Git blame<cr>
 nnoremap <silent> Ul :Git log<cr>
+nnoremap <silent> Us :Git status<cr>
 
 augroup GitLog
     autocmd!
