@@ -258,12 +258,12 @@ highlight SL_HL_FileNotModifiableReadOnly ctermbg=88 ctermfg=9 cterm=bold
 highlight SL_HL_FileTypeIsUnix ctermbg=233 ctermfg=239 cterm=none
 highlight SL_HL_FileTypeNotUnix ctermbg=52 ctermfg=233 cterm=none
 
-" highlight SL_HL_CapsLockWarning ctermbg=236 ctermfg=190 cterm=none
-
 highlight SL_HL_GitBranch ctermbg=25 ctermfg=232 cterm=bold
 highlight SL_HL_GitModified ctermbg=25 ctermfg=88 cterm=bold
 highlight SL_HL_GitAdded ctermbg=25 ctermfg=40 cterm=bold
 highlight SL_HL_GitUntracked ctermbg=25 ctermfg=7 cterm=bold
+
+" highlight SL_HL_CapsLockWarning ctermbg=236 ctermfg=190 cterm=none
 
 highlight SL_HL_FileInfo ctermbg=234 ctermfg=244 cterm=none
 highlight SL_HL_FileInfoTotalLines ctermbg=234 ctermfg=239 cterm=none
@@ -403,26 +403,16 @@ if ! &diff
 endif
 " }
 
-""" Commands {
-" Will allow me to sudo a file that is open without write permissions
-cnoremap w!! %!sudo tee > /dev/null %
-" }
-
-""" Abbreviations {
-" This is ridiculously useful
-iabbrev date- <c-r>=strftime("%d/%m/%Y %H:%M:%S")<cr>
-" }
-
-""" Keyboard mappings {
-"" Loaded content functions {
-func! LoadedContentClear()
+""" Functions {
+"" Loaded content {
+function! LoadedContentClear()
     set modifiable
     bdelete content
     diffoff
     silent loadview 9
     unlet! g:loaded_output
-endfun
-func! LoadContent(location, command)
+endfunction
+function! LoadContent(location, command)
     let g:loaded_output = 1
     if a:location == "left"
         topleft vnew
@@ -434,11 +424,11 @@ func! LoadContent(location, command)
         botright new
     endif
     set buftype=nofile
-    exe "silent r ".a:command
-    exe "silent file content_".a:location
+    execute "silent read ".a:command
+    execute "silent file content_".a:location
     0d_
-endfun
-func! PopDiff(command)
+endfunction
+function! PopDiff(command)
     if exists("g:loaded_output")
         call LoadedContentClear()
     endif
@@ -450,18 +440,8 @@ func! PopDiff(command)
     windo set nomodifiable
     0
     set modifiable syntax=off
-endfun
-func! PopGitDiffPrompt()
-    if exists("g:loaded_output")
-        call LoadedContentClear()
-    endif
-
-    call inputsave()
-    let l:response = input('Commit, tag or branch: ')
-    call inputrestore()
-    call PopDiff("!git show ".l:response.":./#")
-endfun
-func! PopSynched(command)
+endfunction
+function! PopSynched(command)
     if exists("g:loaded_output")
         call LoadedContentClear()
     endif
@@ -472,10 +452,22 @@ func! PopSynched(command)
     0
     call LoadContent("left", a:command)
     windo set scrollbind nomodifiable
-    exe l:cline
+    execute l:cline
     set modifiable
-endfun
-func! PopGitLog()
+endfunction
+" }
+"" Git {
+function! PopGitDiffPrompt()
+    if exists("g:loaded_output")
+        call LoadedContentClear()
+    endif
+
+    call inputsave()
+    let l:response = input('Commit, tag or branch: ')
+    call inputrestore()
+    call PopDiff("!git show ".l:response.":./#")
+endfunction
+function! PopGitLog()
     if exists("g:loaded_output")
         call LoadedContentClear()
     endif
@@ -484,36 +476,73 @@ func! PopGitLog()
     call LoadContent("top", "!git log --graph --pretty=format:'\\%h (\\%cr) <\\%an> -\\%d \\%s' #")
     set filetype=GitLog
     set nolist cursorline
-    res 10
+    resize 10
     set nomodifiable
     call cursor(line("."), 2)
-endfun
-func! PopGitBlame()
+endfunction
+function! PopGitBlame()
     call PopSynched("!git blame --date=short #")
     wincmd p
     normal f)
-    exe "vertical res ".col(".")
+    execute "vertical resize ".col(".")
     normal 0
     wincmd p
-endfun
-func! PopGitDiffFromLog()
+endfunction
+function! PopGitDiffFromLog()
     call PopDiff("!git show `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'`:./#")
-endfun
-func! CheckoutFromGit()
-    let l:cmd = "!git checkout `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'` ./#"
-    silent exe l:cmd
+endfunction
+function! CheckoutFromGit()
+    " let l:cmd = "!git checkout `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'` ./#"
+    " silent exe l:cmd
+    call system("git checkout `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'` ./#")
     if exists("g:loaded_output")
         call LoadedContentClear()
     endif
-endfun
-"" Loaded content functions }
-
-"" Other mapped functions {
-function! ExplorerLeftPane()
-    " TODO
+    " TODO: update buffer
+endfunction
+function! AddFileToGit()
+    call system("git add ".expand("%"))
+endfunction
+function! ResetFileInGitIndex()
+    call system("git reset ".expand("%"))
+endfunction
+function! Git(command)
+    if a:command == "blame"
+        call PopGitBlame()
+    elseif a:command == "log"
+        call PopGitLog()
+    elseif a:command == "diff"
+        call PopGitDiffPrompt()
+    elseif a:command == "add"
+        call AddFileToGit()
+    elseif a:command == "reset"
+        call ResetFileInGitIndex()
+    elseif a:command == "commit"
+        echo "TODO: commit"
+    else
+        echoerr "Unrecgonized git command: ".a:command
+    endif
 endfunction
 " }
 
+" function! ExplorerLeftPane()
+    " TODO
+" endfunction
+
+" }
+
+""" Commands {
+" Will allow me to sudo a file that is open without write permissions
+cnoremap w!! %!sudo tee > /dev/null %
+command! -nargs=1 Git :execute Git(<q-args>)
+" }
+
+""" Abbreviations {
+" This is ridiculously useful
+iabbrev date- <c-r>=strftime("%d/%m/%Y %H:%M:%S")<cr>
+" }
+
+""" Keyboard mappings {
 nnoremap <leader>s :source $MYVIMRC<cr>
 nnoremap <silent> <leader><leader> :nohlsearch<cr>
 nnoremap Y y$
@@ -561,11 +590,12 @@ nnoremap <silent> cot :if &laststatus == 2<bar>set laststatus=1<bar>else<bar>set
 "" Loaded content
 " Diff unsaved changes against file saved on disk
 nnoremap <silent> Uo :call PopDiff("#")<cr>
-" Diff current file with a given git revision. If no input given, diffs against head
-nnoremap <silent> Ug :call PopGitDiffPrompt()<cr>
-nnoremap <silent> Ub :call PopGitBlame()<cr>
-nnoremap <silent> Ul :call PopGitLog()<cr>
 nnoremap <silent> Uu :call LoadedContentClear()<cr>
+
+" Diff current file with a given git revision. If no input given, diffs against head
+nnoremap <silent> Ug :Git diff<cr>
+nnoremap <silent> Ub :Git blame<cr>
+nnoremap <silent> Ul :Git log<cr>
 
 augroup GitLog
     autocmd!
