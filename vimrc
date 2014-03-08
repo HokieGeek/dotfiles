@@ -56,6 +56,7 @@ set noerrorbells
 set visualbell
 set ruler
 set showcmd " Shows the command being typed
+set noshowmode " Don't show -- INSERT --
 set complete-=i " Don't search includes because they are slow
 set wildmenu " Tab completion in command-line mode (:)
 set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~ " These file types are ignored when doing auto completions
@@ -127,74 +128,154 @@ syntax on
 
 """ Status line {
 "" Functions {
-function! SLGitInfo()
-    redir => l:branch
-    silent execute 'ls'
-    redir END
-    new | put=l:branch
-
-    " redir => l:branch
-    " silent execute "!git branch | grep '^*' | sed 's/^\*\s*//'"
-    " redir END
-
-    " redir => l:is_modified
-    " silent execute "!git status -s -uno | grep -c %"
-    " redir END
-
-    " let b:status_line_git_info = ' <'.l:branch.'>'.((l:is_modified > 0)?'+':'').' '
-    " return b:status_line_git_info
+" Git {
+function! SL_GitFileStatus()
+    let l:status = system("git status -s | grep ".expand("%:t"))
+    let l:status = substitute(substitute(l:status, '\s*\n*$', '', ''), '^\s*', '', '')
+    return l:status
 endfunction
-nnoremap <F2> :call SLGitInfo()<CR>
-" function! SLGitBranch()
-    " let l:file = /tmp/test
-    " redir >> l:file
-    " silent execute "!ls"
-    " redir END
-    " new | r l:file
-" endfunction
-" function! SLGitStatus()
-" endfunction
+nnoremap <F2> :echo SL_GitFileStatus()<CR>
+function! SL_GitBranch()
+    let l:branch = system("git branch | grep '^*' | sed 's/^\*\s*//'")
+    let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
+    return l:branch
+endfunction
+function! SL_GitBranchClean()
+    if match(SL_GitFileStatus(), '^\(M\|A\|?\)') > -1
+        return ""
+    else
+        return SL_GitBranch()
+endfunction
+function! SL_GitBranchModified()
+    if match(SL_GitFileStatus(), '^A*M') > -1
+        return SL_GitBranch()
+    else
+        return ""
+endfunction
+function! SL_GitBranchStaged()
+    if match(SL_GitFileStatus(), '^A') > -1 && match(SL_GitFileStatus(), '^A*M') < 0
+        return SL_GitBranch()
+    else
+        return ""
+endfunction
+function! SL_GitBranchUntracked()
+    if match(SL_GitFileStatus(), '^?') > -1
+        return SL_GitBranch()
+    else
+        return ""
+endfunction
+" }
+" File name {
+function! SL_GetFilename()
+    return " ".expand("%:t")." "
+endfunction
+function! SL_GetFilenameNotModifiedNotReadOnly()
+    if &readonly == 0 && &modified == 0 && &modifiable == 1
+        return SL_GetFilename()
+    else
+        return ""
+    endif
+endfunction
+function! SL_GetFilenameNotModifiedReadOnly()
+    if &readonly == 1 && &modified == 0 && &modifiable == 1
+        return SL_GetFilename()
+    else
+        return ""
+    endif
+endfunction
+function! SL_GetFilenameModifiedNotReadOnly()
+    if &readonly == 0 && &modified == 1 && &modifiable == 1
+        return SL_GetFilename()
+    else
+        return ""
+    endif
+endfunction
+function! SL_GetFilenameModifiedReadOnly()
+    if &readonly == 1 && &modified == 1 && &modifiable == 1
+        return SL_GetFilename()
+    else
+        return ""
+    endif
+endfunction
+function! SL_GetFilenameNotModifiableNotReadOnly()
+    if &modifiable == 0 && &readonly == 0
+        return SL_GetFilename()
+    else
+        return ""
+    endif
+endfunction
+function! SL_GetFilenameNotModifiableReadOnly()
+    if &modifiable == 0 && &readonly == 1
+        return SL_GetFilename()
+    else
+        return ""
+    endif
+endfunction
+" }
 " }
 "" Highlights {
-highlight SL_HL_Default ctermbg=236 ctermfg=249 cterm=none
-highlight SL_HL_FileModified ctermbg=236 ctermfg=208 cterm=bold
-highlight SL_HL_FileReadOnly ctermbg=88 ctermfg=233 cterm=none
-highlight SL_HL_FileType ctermbg=236 ctermfg=239 cterm=none
+highlight SL_HL_Default ctermbg=233 ctermfg=249 cterm=none
+highlight SL_HL_Mode ctermbg=18 ctermfg=7 cterm=bold
+" highlight SL_HL_Mode ctermbg=58 ctermfg=233 cterm=bold
+" highlight SL_HL_Mode ctermbg=118 ctermfg=236 cterm=bold
+highlight SL_HL_FileNotModifiedNotReadOnly ctermbg=233 ctermfg=249 cterm=none
+highlight SL_HL_FileNotModifiedReadOnly ctermbg=233 ctermfg=88 cterm=bold
+" highlight SL_HL_FileModifiedNotReadOnly ctermbg=60 ctermfg=232 cterm=bold
+" highlight SL_HL_FileModifiedReadOnly ctermbg=60 ctermfg=196 cterm=bold
+highlight SL_HL_FileModifiedNotReadOnly ctermbg=22 ctermfg=249 cterm=none
+highlight SL_HL_FileModifiedReadOnly ctermbg=22 ctermfg=196 cterm=bold
+
+highlight SL_HL_FileNotModifiableNotReadOnly ctermbg=88 ctermfg=232 cterm=bold
+highlight SL_HL_FileNotModifiableReadOnly ctermbg=88 ctermfg=9 cterm=bold
+
+highlight SL_HL_FileType ctermbg=233 ctermfg=239 cterm=none
 
 " highlight SL_HL_CapsLockWarning ctermbg=236 ctermfg=190 cterm=none
 
-highlight SL_HL_GitBranch ctermbg=236 ctermfg=177 cterm=none
-highlight SL_HL_GitModified ctermbg=236 ctermfg=196 cterm=none
+highlight SL_HL_GitBranch ctermbg=93 ctermfg=232 cterm=bold
+highlight SL_HL_GitModified ctermbg=93 ctermfg=88 cterm=bold
+highlight SL_HL_GitStaged ctermbg=93 ctermfg=34 cterm=bold
+highlight SL_HL_GitUntracked ctermbg=93 ctermfg=19 cterm=bold
+
+highlight SL_HL_FileInfo ctermbg=234 ctermfg=244 cterm=none
+highlight SL_HL_FileInfoTotalLines ctermbg=234 ctermfg=239 cterm=none
 " }
 
 " File name, type and modified
-set statusline=%#SL_HL_Default#%t
-set statusline+=%#SL_HL_FileType#%y " Filetype
-set statusline+=%-7(%#SL_HL_FileReadOnly#%r%#SL_HL_FileModified#%m%)
-set statusline+=%*
+set statusline=%#SL_HL_mode#\ %{mode()}\ %#SL_HL_Default#
+set statusline+=\ %#SL_HL_FileNotModifiedNotReadOnly#%{SL_GetFilenameNotModifiedNotReadOnly()}
+set statusline+=%#SL_HL_FileNotModifiedReadOnly#%{SL_GetFilenameNotModifiedReadOnly()}
+set statusline+=%#SL_HL_FileModifiedNotReadOnly#%{SL_GetFilenameModifiedNotReadOnly()}
+set statusline+=%#SL_HL_FileModifiedReadOnly#%{SL_GetFilenameModifiedReadOnly()}
+
+set statusline+=%#SL_HL_FileNotModifiableNotReadOnly#%{SL_GetFilenameNotModifiableNotReadOnly()}
+set statusline+=%#SL_HL_FileNotModifiableReadOnly#%{SL_GetFilenameNotModifiableReadOnly()}
+
+set statusline+=%#SL_HL_FileType#%{&filetype} " Filetype
+
+set statusline+=\ %*
 
 " Display a warning if fileformat isn't unix
 set statusline+=%#warningmsg#
-set statusline+=%{&ff!='unix'?'['.&ff.']':''}
+set statusline+=%{&ff!='unix'?'!':''}
 set statusline+=%#SL_HL_Default#
 
 " Display git info
-" set statusline+=%#SL_HL_GitBranch#
-" set statusline+=\ %{SLGitBranch()}
-" set statusline+=%#SL_HL_GitModified#
-" set statusline+=%{SLGitStatus()}
-set statusline+=%#SL_HL_Default#
+set statusline+=\ %#SL_HL_GitBranch#\ %{SL_GitBranchClean()}
+set statusline+=%#SL_HL_GitModified#%{SL_GitBranchModified()}
+set statusline+=%#SL_HL_GitStaged#%{SL_GitBranchStaged()}
+set statusline+=%#SL_HL_GitUntracked#%{SL_GitBranchUntracked()}
+set statusline+=\ %#SL_HL_Default#
 
-set statusline+=%=      "left/right separator
+set statusline+=%= "left/right separator
 
 " Syntastic flag
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%#SL_HL_Default#
 
-set statusline+=\ %l/%L   "cursor line/total lines
-set statusline+=,%c     "cursor column
-set statusline+=\ %P    "percent through file
+set statusline+=\ %#SL_HL_FileInfo#\ %l%#SL_HL_FileInfoTotalLines#/%L%#SL_HL_FileInfo#
+set statusline+=,%c\ %P
 
 set statusline+=%*
 
