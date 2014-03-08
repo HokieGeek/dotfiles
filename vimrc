@@ -132,34 +132,51 @@ syntax on
 function! SL_GitFileStatus()
     let l:status = system("git status -s | grep ".expand("%:t"))
     let l:status = substitute(substitute(l:status, '\s*\n*$', '', ''), '^\s*', '', '')
-    return l:status
+
+    if match(l:status, '^fatal') > -1
+        let l:status_val = 0 " Not a git repo
+    elseif match(l:status, '^\(M\|A\|?\)') < 0
+        let l:status_val = 1 " Clean
+    elseif match(l:status, '^?') > -1
+        let l:status_val = 2 " Untracked
+    elseif match(l:status, '^AM') > -1
+        let l:status_val = 5 " Staged and Modified
+    elseif match(l:status, '^A') > -1
+        let l:status_val = 3 " Staged
+    elseif match(l:status, '^M') > -1
+        let l:status_val = 4 " Modified
+    else
+        let l:status_val = -1 " foobar
+    endif
+
+    return l:status_val
 endfunction
 nnoremap <F2> :echo SL_GitFileStatus()<CR>
 function! SL_GitBranch()
     let l:branch = system("git branch | grep '^*' | sed 's/^\*\s*//'")
     let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
-    return l:branch
+    return " ".l:branch." "
 endfunction
 function! SL_GitBranchClean()
-    if match(SL_GitFileStatus(), '^\(M\|A\|?\)') > -1
-        return ""
-    else
+    if SL_GitFileStatus() == 1
         return SL_GitBranch()
+    else
+        return ""
 endfunction
 function! SL_GitBranchModified()
-    if match(SL_GitFileStatus(), '^A*M') > -1
+    if SL_GitFileStatus() == 4 || SL_GitFileStatus() == 5
         return SL_GitBranch()
     else
         return ""
 endfunction
 function! SL_GitBranchStaged()
-    if match(SL_GitFileStatus(), '^A') > -1 && match(SL_GitFileStatus(), '^A*M') < 0
+    if SL_GitFileStatus() == 3 && SL_GitFileStatus() != 4
         return SL_GitBranch()
     else
         return ""
 endfunction
 function! SL_GitBranchUntracked()
-    if match(SL_GitFileStatus(), '^?') > -1
+    if SL_GitFileStatus() == 2
         return SL_GitBranch()
     else
         return ""
@@ -261,11 +278,11 @@ set statusline+=%{&ff!='unix'?'!':''}
 set statusline+=%#SL_HL_Default#
 
 " Display git info
-set statusline+=\ %#SL_HL_GitBranch#\ %{SL_GitBranchClean()}
+set statusline+=\ %#SL_HL_GitBranch#%{SL_GitBranchClean()}
 set statusline+=%#SL_HL_GitModified#%{SL_GitBranchModified()}
 set statusline+=%#SL_HL_GitStaged#%{SL_GitBranchStaged()}
 set statusline+=%#SL_HL_GitUntracked#%{SL_GitBranchUntracked()}
-set statusline+=\ %#SL_HL_Default#
+set statusline+=%#SL_HL_Default#
 
 set statusline+=%= "left/right separator
 
