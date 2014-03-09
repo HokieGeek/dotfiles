@@ -129,28 +129,6 @@ syntax on
 """ Status line {
 "" Functions {
 " Git {
-function! SL_GitFileStatus()
-    let l:status = system("git status --porcelain | grep ".expand("%:t"))
-    let l:status = substitute(substitute(l:status, '\s*\n*$', '', ''), '^\s*', '', '')
-
-    if match(l:status, '^fatal') > -1
-        let l:status_val = 0 " Not a git repo
-    elseif match(l:status, '^\(M\|A\|?\)') < 0
-        let l:status_val = 1 " Clean
-    elseif match(l:status, '^?') > -1
-        let l:status_val = 2 " Untracked
-    elseif match(l:status, '^AM') > -1
-        let l:status_val = 5 " Added and Modified
-    elseif match(l:status, '^A') > -1
-        let l:status_val = 3 " Added
-    elseif match(l:status, '^M') > -1
-        let l:status_val = 4 " Modified
-    else
-        let l:status_val = -1 " foobar
-    endif
-
-    return l:status_val
-endfunction
 function! SL_GitBranch()
     let l:branch = system("git branch | grep '^*' | sed 's/^\*\s*//'")
     let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
@@ -477,6 +455,37 @@ function! PopSynched(command)
 endfunction
 " }
 "" Git {
+function! IsCurrentFileGitStaged()
+    let l:status = system("git status --porcelain | grep ".expand("%:t"))
+    let l:status = substitute(l:status, '\s*\n*$', '', '')
+    if match(l:status, '^fatal') > -1 || match(l:status, '^ ') > -1
+        return 0
+    else
+        return 1
+    endif
+endfunction
+function! GitFileStatus()
+    let l:status = system("git status --porcelain | grep ".expand("%:t"))
+    let l:status = substitute(substitute(l:status, '\s*\n*$', '', ''), '^\s*', '', '')
+
+    if match(l:status, '^fatal') > -1
+        let l:status_val = 0 " Not a git repo
+    elseif match(l:status, '^\(M\|A\|?\)') < 0
+        let l:status_val = 1 " Clean
+    elseif match(l:status, '^?') > -1
+        let l:status_val = 2 " Untracked
+    elseif match(l:status, '^AM') > -1
+        let l:status_val = 5 " Staged and Modified
+    elseif match(l:status, '^A') > -1
+        let l:status_val = 3 " Added
+    elseif match(l:status, '^M') > -1
+        let l:status_val = 4 " Modified
+    else
+        let l:status_val = -1 " foobar
+    endif
+
+    return l:status_val
+endfunction
 function! PopGitDiffPrompt()
     if exists("g:loaded_output")
         call LoadedContentClear()
@@ -520,12 +529,14 @@ function! CheckoutFromGit()
     endif
     " TODO: update buffer
 endfunction
-function! AddFileToGit()
+function! AddFileToGit(display_status)
     call system("git add ".expand("%"))
     echomsg "Added ".expand("%")." to the stage"
-    call GitStatus()
-    " silent execute "3sleep"
-    " call LoadedContentClear()
+    if a:display_status == 1
+        call GitStatus()
+        " silent execute "3sleep"
+        " call LoadedContentClear()
+    endif
 endfunction
 function! ResetFileInGitIndex()
     call system("git reset ".expand("%"))
@@ -549,6 +560,12 @@ function! GitCommit()
     let l:response = confirm("Commit all of the staged changes?", "y\nN", 2)
     if l:response == 1
         " 1a. Maybe, if the current file is marked as unstaged in any way, ask to add it?
+        if IsCurrentFileGitStaged() == 0
+            let l:response = confirm("Add the file?", "Y\nn", 1)
+            if l:response == 1
+                call AddFileToGit(0)
+            endif
+        endif
 
         " 2. Pop up a small window with for commit message
         " call LoadedContentClear()
@@ -569,11 +586,11 @@ function! GitCommitFinish()
     " TODO: exit status of the window?
     call system("sed -i '/^#/d' ".s:commit_message_file)
     call system("git commit --file=".s:commit_message_file)
-    " echomsg "Successfully committed this file"
-    " call delete(s:commit_message_file)
-    " silent execute "bdelete ".s:commit_message_file
-    " unlet s:commit_message_file
-    " redraw
+    echomsg "Successfully committed this file"
+    call delete(s:commit_message_file)
+    silent execute "bdelete ".s:commit_message_file
+    unlet s:commit_message_file
+    redraw
 endfunction
 function! Git(command)
     if a:command == "blame"
@@ -583,7 +600,7 @@ function! Git(command)
     elseif a:command == "diff"
         call PopGitDiffPrompt()
     elseif a:command == "add"
-        call AddFileToGit()
+        call AddFileToGit(1)
     elseif a:command == "reset"
         call ResetFileInGitIndex()
     elseif a:command == "status"
@@ -711,6 +728,7 @@ inoremap cv <c-x><c-o>
 nnoremap ZZ :wqa<cr>
 nnoremap ZQ :qa!<cr>
 nnoremap <space> :
+vnoremap <space> :
 
 "" I feel like being a pain in the ass
 noremap <up> :echoerr "Use k instead! :-p"<cr>
