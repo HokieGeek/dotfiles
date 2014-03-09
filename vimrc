@@ -522,6 +522,7 @@ function! CheckoutFromGit()
 endfunction
 function! AddFileToGit()
     call system("git add ".expand("%"))
+    echomsg "Added ".expand("%")." to the stage"
     call GitStatus()
     " silent execute "3sleep"
     " call LoadedContentClear()
@@ -566,11 +567,13 @@ function! GitCommit()
 endfunction
 function! GitCommitFinish()
     " TODO: exit status of the window?
-    " echomsg "git commit --file=".s:commit_message_file
+    call system("sed -i '/^#/d' ".s:commit_message_file)
     call system("git commit --file=".s:commit_message_file)
-    call delete(s:commit_message_file)
-    silent execute "bdelete ".s:commit_message_file
-    unlet s:commit_message_file
+    " echomsg "Successfully committed this file"
+    " call delete(s:commit_message_file)
+    " silent execute "bdelete ".s:commit_message_file
+    " unlet s:commit_message_file
+    " redraw
 endfunction
 function! Git(command)
     if a:command == "blame"
