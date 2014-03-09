@@ -461,7 +461,7 @@ function! GitFileStatus()
 
     if match(l:status, '^fatal') > -1
         let l:status_val = 0 " Not a git repo
-    elseif match(l:status, '^\(M\|A\|?\)') < 0
+    elseif match(l:status, '.*') < 0
         let l:status_val = 1 " Clean
     elseif match(l:status, '^?') > -1
         let l:status_val = 2 " Untracked
@@ -519,7 +519,7 @@ function! CheckoutFromGit()
     " TODO: update buffer
 endfunction
 function! AddFileToGit(display_status)
-    call silent system("git add ".expand("%"))
+    call system("git add ".expand("%"))
     echomsg "Added ".expand("%")." to the stage"
     if a:display_status == 1
         call GitStatus()
@@ -528,7 +528,7 @@ function! AddFileToGit(display_status)
     endif
 endfunction
 function! ResetFileInGitIndex(display_status)
-    call silent system("git reset ".expand("%"))
+    call system("git reset ".expand("%"))
     echomsg "Unstaged ".expand("%")
     if a:display_status == 1
         call GitStatus()
@@ -550,7 +550,7 @@ function! GitCommit()
     " TODO: 1. (maybe) Display Git Status and ask for confirmation
     " call GitStatus()
 
-    let l:response = confirm("Commit all of the staged changes?", "y\nN", 2)
+    let l:response = confirm("Are you sure?", "y\nN", 2)
     if l:response == 1
         " 1a. Maybe, if the current file is marked as unstaged in any way, ask to add it?
         if GitFileStatus() != 4
@@ -561,8 +561,6 @@ function! GitCommit()
         endif
 
         " 2. Pop up a small window with for commit message
-        " call LoadedContentClear()
-
         let s:commit_message_file = "/tmp/".expand("%").".gitcommitmsg"
         call system("git status -sb | awk '{ print \"# \" $0 }' > ".s:commit_message_file)
         mkview! 9
@@ -593,9 +591,9 @@ function! Git(command)
     elseif a:command == "diff"
         call PopGitDiffPrompt()
     elseif a:command == "add"
-        call AddFileToGit(1)
+        call AddFileToGit(0)
     elseif a:command == "reset"
-        call ResetFileInGitIndex()
+        call ResetFileInGitIndex(0)
     elseif a:command == "status"
         call GitStatus()
     elseif a:command == "commit"
