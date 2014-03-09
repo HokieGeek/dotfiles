@@ -545,24 +545,30 @@ function! GitCommit()
 
     let l:response = confirm("Commit all of the staged changes?", "y\nN", 2)
     if l:response == 1
-        echo "COMMITTING!"
         " 1a. Maybe, if the current file is marked as unstaged in any way, ask to add it?
 
         " 2. Pop up a small window with for commit message
         " call LoadedContentClear()
 
+        let s:commit_message_file = "/tmp/".expand("%").".gitcommitmsg"
+        call system("git status -sb | awk '{ print \"# \" $0 }' > ".s:commit_message_file)
         mkview! 9
         botright new
-        set filetype=gitcommit
-        let l:commit_message_file = "/tmp/".expand("%").".gitcommitmsg"
-        " silent execute "silent r ".l:commit_message_file
+        execute "edit ".s:commit_message_file
         resize 10
-
-        " 3. call system("git commit --file=".l:commit_message_file)
-        delete(l:commit_message_file)
+        set filetype=gitcommit
+        normal ggO
     else
         echo "chicken..."
     endif
+endfunction
+function! GitCommitFinish()
+    " TODO: exit status of the window?
+    echomsg "git commit --file=".s:commit_message_file
+    " call system("git commit --file=".s:commit_message_file)
+    " call delete(s:commit_message_file)
+    " silent execute "bdelete ".s:commit_message_file
+    " unlet s:commit_message_file
 endfunction
 function! Git(command)
     if a:command == "blame"
@@ -864,6 +870,8 @@ augroup MiscOptions
 
     " Turns on spell check when typing out long git commit messages
     autocmd FileType gitcommit setlocal spell
+
+    autocmd BufWinLeave *.gitcommitmsg call GitCommitFinish()
 
     " Disable syntax highlight for files larger than 50 MB
     autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
