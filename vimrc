@@ -549,38 +549,37 @@ function! GitCommit()
     " TODO: 1. (maybe) Display Git Status and ask for confirmation
     " call GitStatus()
 
-    let l:response = confirm("Are you sure?", "y\nN", 2)
-    if l:response == 1
-        " 1a. Maybe, if the current file is marked as unstaged in any way, ask to add it?
-        if GitFileStatus() != 4
-            let l:response = confirm("Add the file?", "Y\nn", 1)
-            if l:response == 1
-                call AddFileToGit(0)
-            endif
+    " 1a. Maybe, if the current file is marked as unstaged in any way, ask to add it?
+    if GitFileStatus() != 4
+        let l:response = confirm("Add the file?", "Y\nn", 1)
+        if l:response == 1
+            call AddFileToGit(0)
         endif
-
-        " 2. Pop up a small window with for commit message
-        let s:commit_message_file = "/tmp/".expand("%").".gitcommitmsg"
-        call system("git status -sb | awk '{ print \"# \" $0 }' > ".s:commit_message_file)
-        mkview! 9
-        botright new
-        execute "edit ".s:commit_message_file
-        resize 10
-        set filetype=gitcommit
-        normal ggO
-    else
-        echo "chicken..."
     endif
+
+    " 2. Pop up a small window with for commit message
+    let s:commit_message_file = "/tmp/".expand("%").".gitcommitmsg"
+    call system("git status -sb | awk '{ print \"# \" $0 }' > ".s:commit_message_file)
+    mkview! 9
+    botright new
+    execute "edit ".s:commit_message_file
+    resize 10
+    set filetype=gitcommit
+    normal ggO
 endfunction
 function! GitCommitFinish()
-    " TODO: exit status of the window?
-    call system("sed -i '/^#/d' ".s:commit_message_file)
-    call system("git commit --file=".s:commit_message_file)
-    echomsg "Successfully committed this file"
-    call delete(s:commit_message_file)
-    silent execute "bdelete ".s:commit_message_file
-    unlet s:commit_message_file
-    redraw
+    call system("sed -i -e '/^#/d' -e '/^\\s*$/d' ".s:commit_message_file)
+    if len(readfile(s:commit_message_file)) > 0
+        " Check the size of the file. If it's empty or blank, we don't commmit
+        call system("git commit --file=".s:commit_message_file)
+        echomsg "Successfully committed this file"
+        call delete(s:commit_message_file)
+        silent execute "bdelete ".s:commit_message_file
+        unlet s:commit_message_file
+        redraw
+    else
+        echoerr "Cannot commit without a commit message"
+    endif
 endfunction
 function! Git(command)
     if a:command == "blame"
