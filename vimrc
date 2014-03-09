@@ -35,10 +35,9 @@ set wildmode=list:longest,full
 set viminfo=h,%,'50,"100,<10000,s1000,/1000,:1000 " Remembers stuff. RTFM
 set history=1000
 set undolevels=5000
-" set directory=/tmp " Location of the swap file
 set foldenable " Close folds on open
 set foldnestmax=5 " I think 5 nests is enough, thank you
-" TODO: set foldopen=?? " What movements open folds
+set foldopen=insert,jump,mark,percent,quickfix,search,tag,undo " What movements open folds
 set showmatch " Briefly jumps to matching bracket
 set incsearch " Searches as you type
 set ignorecase " I use \c enough times that this is the obvious choice
@@ -72,6 +71,7 @@ set updatecount=20 " Save buffer every 20 characters
 set scrolloff=2 " Scroll file when cursor is 2 lines from top or bottom
 set sidescrolloff=4 " Scroll file horizontally when the cursor is 4 columns from left or right
 set sidescroll=1 " Trying this out...
+set textwidth=0 " Don't want automatic text width formatting
 if $USER != "root"
     set modelines=1
 endif
@@ -883,4 +883,4 @@ augroup MiscOptions
 augroup END
 " }}}
 
-" vim: set foldmethod=marker number relativenumber formatoptions-=t:
+" vim: set foldmethod=marker number relativenumber formatoptions-=tc:
