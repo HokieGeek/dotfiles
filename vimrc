@@ -458,7 +458,7 @@ endfunction
 function! Test()
     let l:status = system("git status --porcelain | grep ".expand("%:t"))
     " let l:status = substitute(l:status, '\s*\n*$', '', '')
-    echo "'".l:status."':".match(l:status, ".*")
+    echo "'".l:status."':".strlen(l:status)
 endfunction
 function! GitFileStatus()
     let l:status = system("git status --porcelain | grep ".expand("%:t"))
@@ -466,7 +466,7 @@ function! GitFileStatus()
 
     if match(l:status, '^fatal') > -1
         let l:status_val = 0 " Not a git repo
-    elseif match(l:status, '.*') < 0
+    elseif strlen(l:status) < 0
         let l:status_val = 1 " Clean
     elseif match(l:status, '^?') > -1
         let l:status_val = 2 " Untracked
