@@ -457,12 +457,12 @@ function! GetGitBranch()
 endfunction
 function! Test()
     let l:status = system("git status --porcelain | grep ".expand("%:t"))
-    let l:status = substitute(l:status, '\s*\n*$', '', '')
+    " let l:status = substitute(l:status, '\s*\n*$', '', '')
     echo "'".l:status."':".match(l:status, ".*")
 endfunction
 function! GitFileStatus()
     let l:status = system("git status --porcelain | grep ".expand("%:t"))
-    let l:status = substitute(l:status, '\s*\n*$', '', '')
+    " let l:status = substitute(l:status, '\s*\n*$', '', '')
 
     if match(l:status, '^fatal') > -1
         let l:status_val = 0 " Not a git repo
