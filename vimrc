@@ -455,6 +455,11 @@ function! GetGitBranch()
     let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
     return " ".l:branch." "
 endfunction
+function! Test()
+    let l:status = system("git status --porcelain | grep ".expand("%:t"))
+    let l:status = substitute(l:status, '\s*\n*$', '', '')
+    echo l:status
+endfunction
 function! GitFileStatus()
     let l:status = system("git status --porcelain | grep ".expand("%:t"))
     let l:status = substitute(l:status, '\s*\n*$', '', '')
