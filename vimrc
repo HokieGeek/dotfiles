@@ -458,7 +458,7 @@ endfunction
 function! Test()
     let l:status = system("git status --porcelain | grep ".expand("%:t"))
     let l:status = substitute(l:status, '\s*\n*$', '', '')
-    echo l:status
+    echo "'".l:status."':".match(l:status, ".*")
 endfunction
 function! GitFileStatus()
     let l:status = system("git status --porcelain | grep ".expand("%:t"))
