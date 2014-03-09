@@ -129,32 +129,27 @@ syntax on
 """ Status line {
 "" Functions {
 " Git {
-function! SL_GitBranch()
-    let l:branch = system("git branch | grep '^*' | sed 's/^\*\s*//'")
-    let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
-    return " ".l:branch." "
-endfunction
 function! SL_GitBranchClean()
-    if SL_GitFileStatus() == 1
-        return SL_GitBranch()
-    else
-        return ""
-endfunction
-function! SL_GitBranchModified()
-    if SL_GitFileStatus() == 4 || SL_GitFileStatus() == 5
-        return SL_GitBranch()
-    else
-        return ""
-endfunction
-function! SL_GitBranchAdded()
-    if SL_GitFileStatus() == 3 && SL_GitFileStatus() != 4
-        return SL_GitBranch()
+    if GitFileStatus() == 1 " Clean
+        return GetGitBranch()
     else
         return ""
 endfunction
 function! SL_GitBranchUntracked()
-    if SL_GitFileStatus() == 2
-        return SL_GitBranch()
+    if GitFileStatus() == 2 " Untracked
+        return GetGitBranch()
+    else
+        return ""
+endfunction
+function! SL_GitBranchModified()
+    if GitFileStatus() == 3 " Modified
+        return GetGitBranch()
+    else
+        return ""
+endfunction
+function! SL_GitBranchStaged()
+    if GitFileStatus() == 4 " Staged and not modified
+        return GetGitBranch()
     else
         return ""
 endfunction
@@ -246,7 +241,7 @@ highlight SL_HL_FileTypeNotUnix ctermbg=52 ctermfg=233 cterm=none
 
 highlight SL_HL_GitBranch ctermbg=25 ctermfg=232 cterm=bold
 highlight SL_HL_GitModified ctermbg=25 ctermfg=88 cterm=bold
-highlight SL_HL_GitAdded ctermbg=25 ctermfg=40 cterm=bold
+highlight SL_HL_GitStaged ctermbg=25 ctermfg=40 cterm=bold
 highlight SL_HL_GitUntracked ctermbg=25 ctermfg=7 cterm=bold
 
 highlight SL_HL_CapsLockWarning ctermbg=118 ctermfg=232 cterm=bold
@@ -271,7 +266,7 @@ set statusline+=%#SL_HL_FileTypeNotUnix#%{SL_GetFiletypeNotUnix()}
 " Display git info
 set statusline+=%#SL_HL_Default#\ \ %#SL_HL_GitBranch#%{SL_GitBranchClean()}
 set statusline+=%#SL_HL_GitModified#%{SL_GitBranchModified()}
-set statusline+=%#SL_HL_GitAdded#%{SL_GitBranchAdded()}
+set statusline+=%#SL_HL_GitStaged#%{SL_GitBranchStaged()}
 set statusline+=%#SL_HL_GitUntracked#%{SL_GitBranchUntracked()}
 set statusline+=%#SL_HL_Default#
 
@@ -455,18 +450,14 @@ function! PopSynched(command)
 endfunction
 " }
 "" Git {
-function! IsCurrentFileGitStaged()
-    let l:status = system("git status --porcelain | grep ".expand("%:t"))
-    let l:status = substitute(l:status, '\s*\n*$', '', '')
-    if match(l:status, '^fatal') > -1 || match(l:status, '^ ') > -1
-        return 0
-    else
-        return 1
-    endif
+function! GetGitBranch()
+    let l:branch = system("git branch | grep '^*' | sed 's/^\*\s*//'")
+    let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
+    return " ".l:branch." "
 endfunction
 function! GitFileStatus()
     let l:status = system("git status --porcelain | grep ".expand("%:t"))
-    let l:status = substitute(substitute(l:status, '\s*\n*$', '', ''), '^\s*', '', '')
+    let l:status = substitute(l:status, '\s*\n*$', '', '')
 
     if match(l:status, '^fatal') > -1
         let l:status_val = 0 " Not a git repo
@@ -474,12 +465,10 @@ function! GitFileStatus()
         let l:status_val = 1 " Clean
     elseif match(l:status, '^?') > -1
         let l:status_val = 2 " Untracked
-    elseif match(l:status, '^AM') > -1
-        let l:status_val = 5 " Staged and Modified
-    elseif match(l:status, '^A') > -1
-        let l:status_val = 3 " Added
-    elseif match(l:status, '^M') > -1
-        let l:status_val = 4 " Modified
+    elseif match(l:status, '^.M') > -1
+        let l:status_val = 3 " Modified
+    elseif match(l:status, '^ ') < 0
+        let l:status_val = 4 " Staged
     else
         let l:status_val = -1 " foobar
     endif
@@ -560,7 +549,7 @@ function! GitCommit()
     let l:response = confirm("Commit all of the staged changes?", "y\nN", 2)
     if l:response == 1
         " 1a. Maybe, if the current file is marked as unstaged in any way, ask to add it?
-        if IsCurrentFileGitStaged() == 0
+        if GitFileStatus() != 4
             let l:response = confirm("Add the file?", "Y\nn", 1)
             if l:response == 1
                 call AddFileToGit(0)
