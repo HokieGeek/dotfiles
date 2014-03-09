@@ -523,6 +523,8 @@ endfunction
 function! AddFileToGit()
     call system("git add ".expand("%"))
     call GitStatus()
+    " silent execute "3sleep"
+    " call LoadedContentClear()
 endfunction
 function! ResetFileInGitIndex()
     call system("git reset ".expand("%"))
@@ -564,11 +566,11 @@ function! GitCommit()
 endfunction
 function! GitCommitFinish()
     " TODO: exit status of the window?
-    echomsg "git commit --file=".s:commit_message_file
-    " call system("git commit --file=".s:commit_message_file)
-    " call delete(s:commit_message_file)
-    " silent execute "bdelete ".s:commit_message_file
-    " unlet s:commit_message_file
+    " echomsg "git commit --file=".s:commit_message_file
+    call system("git commit --file=".s:commit_message_file)
+    call delete(s:commit_message_file)
+    silent execute "bdelete ".s:commit_message_file
+    unlet s:commit_message_file
 endfunction
 function! Git(command)
     if a:command == "blame"
