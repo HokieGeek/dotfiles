@@ -151,7 +151,6 @@ function! SL_GitFileStatus()
 
     return l:status_val
 endfunction
-nnoremap <F2> :echo SL_GitFileStatus()<CR>
 function! SL_GitBranch()
     let l:branch = system("git branch | grep '^*' | sed 's/^\*\s*//'")
     let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
@@ -253,7 +252,7 @@ function! IsCapsLockOn()
     endif
 endfunction
 " }
-" Highlights {
+"" Highlights {
 highlight SL_HL_Default ctermbg=233 ctermfg=249 cterm=none
 highlight SL_HL_Mode ctermbg=55 ctermfg=7 cterm=bold
 highlight SL_HL_FileNotModifiedNotReadOnly ctermbg=233 ctermfg=249 cterm=none
@@ -488,6 +487,14 @@ function! PopGitDiffPrompt()
     call inputrestore()
     call PopDiff("!git show ".l:response.":./#")
 endfunction
+function! PopGitBlame()
+    call PopSynched("!git blame --date=short #")
+    wincmd p
+    normal f)
+    execute "vertical resize ".col(".")
+    normal 0
+    wincmd p
+endfunction
 function! PopGitLog()
     if exists("g:loaded_output")
         call LoadedContentClear()
@@ -500,14 +507,6 @@ function! PopGitLog()
     resize 10
     set nomodifiable
     call cursor(line("."), 2)
-endfunction
-function! PopGitBlame()
-    call PopSynched("!git blame --date=short #")
-    wincmd p
-    normal f)
-    execute "vertical resize ".col(".")
-    normal 0
-    wincmd p
 endfunction
 function! PopGitDiffFromLog()
     call PopDiff("!git show `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'`:./#")
@@ -523,6 +522,7 @@ function! CheckoutFromGit()
 endfunction
 function! AddFileToGit()
     call system("git add ".expand("%"))
+    call GitStatus()
 endfunction
 function! ResetFileInGitIndex()
     call system("git reset ".expand("%"))
@@ -540,7 +540,29 @@ function! GitStatus()
     wincmd t
 endfunction
 function! GitCommit()
-    echo "TODO: commit"
+    " TODO: 1. (maybe) Display Git Status and ask for confirmation
+    " call GitStatus()
+
+    let l:response = confirm("Commit all of the staged changes?", "y\nN", 2)
+    if l:response == 1
+        echo "COMMITTING!"
+        " 1a. Maybe, if the current file is marked as unstaged in any way, ask to add it?
+
+        " 2. Pop up a small window with for commit message
+        " call LoadedContentClear()
+
+        mkview! 9
+        botright new
+        set filetype=gitcommit
+        let l:commit_message_file = "/tmp/".expand("%").".gitcommitmsg"
+        " silent execute "silent r ".l:commit_message_file
+        resize 10
+
+        " 3. call system("git commit --file=".l:commit_message_file)
+        delete(l:commit_message_file)
+    else
+        echo "chicken..."
+    endif
 endfunction
 function! Git(command)
     if a:command == "blame"
@@ -556,12 +578,30 @@ function! Git(command)
     elseif a:command == "status"
         call GitStatus()
     elseif a:command == "commit"
-        echo "TODO: commit"
+        call GitCommit()
     else
         echoerr "Unrecgonized git command: ".a:command
     endif
 endfunction
 " }
+function! TmuxSplitHere(vertical, size)
+    if exists("$TMUX")
+        let l:cmd = "tmux split-window -c ".expand("%:p:h")
+        if (a:vertical == 1)
+            let l:cmd = l:cmd." -h"
+        endif
+        if (a:size > 0)
+            if (a:vertical == 1)
+                let l:cmd = l:cmd." -p ".a:size
+            else
+                let l:cmd = l:cmd." -l ".a:size
+            endif
+        endif
+        call system(l:cmd)
+    else
+        echomsg "Not in a tmux session"
+    endif
+endfunction
 
 " function! ExplorerLeftPane()
     " TODO
@@ -612,7 +652,9 @@ nnoremap <silent> gw <c-w>
 nnoremap <silent> gb :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
 nnoremap <silent> gB :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
 " A scratch space. Kinda useless, I think
-nnoremap <silent> gs :botright new<bar>set buftype=nofile noswapfile modifiable<bar>res 10<cr>
+" nnoremap <silent> gs :botright new<bar>set buftype=nofile noswapfile modifiable<bar>res 10<cr>
+nnoremap <silent> gsh :<c-u>call TmuxSplitHere(0, v:count)<cr>
+nnoremap <silent> gsv :<c-u>call TmuxSplitHere(1, v:count)<cr>
 
 " TODO: nnoremap <silent> ge :ExSidebar<cr>
 
