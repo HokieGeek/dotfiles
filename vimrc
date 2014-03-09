@@ -237,6 +237,7 @@ set statusline+=%#SL_HL_PasteWarning#%{IsPaste()}%#SL_HL_Default#
 " nnoremap <silent> cow :setlocal wrap!<cr>
 " nnoremap <silent> cos :setlocal spell!<cr>
 
+" TODO: I might have messed something up here and now get some artifacts on the screen
 set statusline+=\ %#SL_HL_FileNotModifiedNotReadOnly#%{SL_GetFilenameNotModifiedNotReadOnly()}
 set statusline+=%#SL_HL_FileNotModifiedReadOnly#%{SL_GetFilenameNotModifiedReadOnly()}
 set statusline+=%#SL_HL_FileModifiedNotReadOnly#%{SL_GetFilenameModifiedNotReadOnly()}
@@ -493,9 +494,7 @@ endfunction
 function! PopGitDiffFromLog()
     call PopDiff("!git show `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'`:./#")
 endfunction
-function! CheckoutFromGit()
-    " let l:cmd = "!git checkout `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'` ./#"
-    " silent exe l:cmd
+function! CheckoutFromGitLog()
     call system("git checkout `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'` ./#")
     if exists("g:loaded_output")
         call LoadedContentClear()
@@ -615,8 +614,6 @@ endfunction
 " Will allow me to sudo a file that is open without write permissions
 cnoremap w!! %!sudo tee > /dev/null %
 command! -nargs=1 Git :execute Git(<q-args>)
-" command! ColorList :call system("tmux split-window -h -p 11 list-colors")
-command! ColorList :call system("tmux split-window -h -p 11")
 " }}}
 
 """ Abbreviations {{{
@@ -630,6 +627,7 @@ nnoremap <silent> <leader><leader> :nohlsearch<cr>
 nnoremap Y y$
 
 "" Session saving (et.al.)
+nnoremap <silent> <F8> :delete(expand("$HOME/.vim/view/*%*"))<cr>
 nnoremap <silent> <F9> :call SaveSession()<cr>
 nnoremap <silent> <leader><F9> :windo call SaveSession()<cr>
 nnoremap <silent> <F10> :call DeleteSession()<cr>
@@ -686,7 +684,7 @@ nnoremap <silent> Us :Git status<cr>
 augroup GitLog
     autocmd!
     autocmd Filetype GitLog nnoremap <buffer> <silent> <enter> :call PopGitDiffFromLog()<cr>
-    autocmd Filetype GitLog nnoremap <buffer> <silent> co :call CheckoutFromGit()<cr>
+    autocmd Filetype GitLog nnoremap <buffer> <silent> co :call CheckoutFromGitLog()<cr>
     autocmd Filetype GitLog nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<cr>
 augroup END
 
@@ -694,6 +692,7 @@ augroup END
 nnoremap <silent> pu :GundoToggle<cr>
 
 " Some (probably questionable) overrides/shortcuts
+" TODO: this doesn't work in paste mode
 inoremap jk <esc>
 inoremap kj <esc>
 inoremap df <c-n>
