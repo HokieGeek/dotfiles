@@ -1,36 +1,7 @@
 set nocompatible " Not compatible with plain vi
 
-""" Plugins {
+""" Plugins {{{
 filetype off
-
-"" Vundle {
-" TODO: bootstrap vundle into place
-" let s:bundle_dir=expand("$HOME/.vim/bundle")
-" if isdirectory(s:bundle_dir."/vundle") == 0
-    " if isdirectory(s:bundle_dir) == 0
-        " call mkdir(s:bundle_dir)
-    " endif
-    " execute "!git clone https://github.com/gmarik/vundle.git ".s:bundle_dir."/vundle"
-    " TODO: how to ensure this function is available?
-    " execute "BundleInstall"
-" endif
-
-" Set the runtime path to include Vundle and initialize
-" set rtp+=s:bundle_dir."/vundle/"
-" set runtimepath+=~/.vim/bundle/vundle/
-" call vundle#rc()
-" unlet s:bundle_dir
-
-" Let Vundle manage Vundle, required
-" Bundle 'gmarik/vundle'
-
-" All of the plugins and scripts with GitHub repos
-" Bundle 'sjl/gundo.vim'
-" Bundle 'kien/ctrlp.vim'
-" Bundle 'scrooloose/syntastic'
-" Bundle 'tpope/vim-surround'
-" Bundle 'kien/rainbow_parentheses.vim'
-" }
 
 execute pathogen#infect()
 
@@ -38,9 +9,9 @@ augroup PluginSettings
     autocmd!
     autocmd VimEnter * RainbowParenthesesToggle
 augroup END
-" }
+" }}}
 
-""" Options {
+""" Options {{{
 filetype plugin indent on
 
 set autoindent " Indents when you insert
@@ -124,11 +95,11 @@ else
     colorscheme desert
 endif
 syntax on
-" }
+" }}}
 
-""" Status line {
-"" Functions {
-" Git {
+""" Status line {{{
+"" Functions {{{
+" Git {{{
 function! SL_GitBranchClean()
     if GitFileStatus() == 1 " Clean
         return GetGitBranch()
@@ -153,8 +124,8 @@ function! SL_GitBranchStaged()
     else
         return ""
 endfunction
-" }
-" File name/Type {
+" }}}
+" File name/Type {{{
 function! SL_GetFilename()
     return " ".expand("%:t")." "
 endfunction
@@ -214,7 +185,7 @@ function! SL_GetFiletypeNotUnix()
         return ""
     endif
 endfunction
-" }
+" }}}
 function! IsCapsLockOn()
     let l:capsState = system("xset -q | grep \"Caps Lock\" | awk '{ print $2$3$4 }'")
     " return match(l:capsState, "on") > -1
@@ -224,10 +195,19 @@ function! IsCapsLockOn()
         return ''
     endif
 endfunction
-" }
-"" Highlights {
+function! IsPaste()
+    if &paste == 1
+        return ' PASTE '
+    else
+        return ''
+    endif
+endfunction
+" }}}
+"" Highlights {{{
 highlight SL_HL_Default ctermbg=233 ctermfg=249 cterm=none
 highlight SL_HL_Mode ctermbg=55 ctermfg=7 cterm=bold
+highlight SL_HL_PasteWarning ctermbg=140 ctermfg=232 cterm=bold
+
 highlight SL_HL_FileNotModifiedNotReadOnly ctermbg=233 ctermfg=249 cterm=none
 highlight SL_HL_FileNotModifiedReadOnly ctermbg=233 ctermfg=88 cterm=bold
 highlight SL_HL_FileModifiedNotReadOnly ctermbg=22 ctermfg=7 cterm=none
@@ -248,10 +228,15 @@ highlight SL_HL_CapsLockWarning ctermbg=118 ctermfg=232 cterm=bold
 
 highlight SL_HL_FileInfo ctermbg=234 ctermfg=244 cterm=none
 highlight SL_HL_FileInfoTotalLines ctermbg=234 ctermfg=239 cterm=none
-" }
+" }}}
 
 " File name, type and modified
 set statusline=%#SL_HL_mode#\ %{mode()}\ %#SL_HL_Default#
+set statusline+=%#SL_HL_PasteWarning#%{IsPaste()}%#SL_HL_Default#
+" TODO: Paste ▶
+" nnoremap <silent> cow :setlocal wrap!<cr>
+" nnoremap <silent> cos :setlocal spell!<cr>
+
 set statusline+=\ %#SL_HL_FileNotModifiedNotReadOnly#%{SL_GetFilenameNotModifiedNotReadOnly()}
 set statusline+=%#SL_HL_FileNotModifiedReadOnly#%{SL_GetFilenameNotModifiedReadOnly()}
 set statusline+=%#SL_HL_FileModifiedNotReadOnly#%{SL_GetFilenameModifiedNotReadOnly()}
@@ -286,9 +271,9 @@ set statusline+=,%c\ %P
 set statusline+=%*
 
 set laststatus=2
-" }
+" }}}
 
-""" Highlights {
+""" Highlights {{{
 highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
 highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
 
@@ -323,9 +308,9 @@ highlight Pmenu ctermbg=white ctermfg=black
 highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
 highlight PmenuSbar ctermbg=grey ctermfg=grey
 highlight PmenuThumb ctermbg=blue ctermfg=blue
-" }
+" }}}
 
-""" Notes options {
+""" Notes options {{{
 augroup Notes
     autocmd!
 
@@ -345,9 +330,9 @@ augroup Notes
         \ highlight NotesActionItem ctermbg=darkmagenta ctermfg=lightgrey cterm=underline | let m = matchadd("NotesActionItem", "@ .*$") |
         \ highlight NotesPersonCallout ctermbg=black ctermfg=blue cterm=bold | let m = matchadd("NotesPersonCallout", "\\[.*\\]")
 augroup END
-" }
+" }}}
 
-""" Sessions {
+""" Sessions {{{
 """ Some logic that allows me to create a session with the current layout
 if exists("s:session_file")
     unlet! s:session_file
@@ -379,9 +364,9 @@ function! DeleteSession()
     endif
 endfunction
 autocmd VimEnter * call LoadSession()
-" }
+" }}}
 
-""" Views {
+""" Views {{{
 if ! &diff
     func! MakeViewOnLeave()
         if exists("g:loaded_output")
@@ -394,10 +379,10 @@ if ! &diff
     autocmd BufWinLeave * call MakeViewOnLeave()
     autocmd BufWinEnter * if expand("%") != "" | silent loadview | endif
 endif
-" }
+" }}}
 
-""" Functions {
-"" Loaded content {
+""" Functions {{{
+"" Laded content {{{
 function! LoadedContentClear()
     set modifiable
     bdelete content
@@ -448,8 +433,8 @@ function! PopSynched(command)
     execute l:cline
     set modifiable
 endfunction
-" }
-"" Git {
+" }}}
+"" Git {{{
 function! GetGitBranch()
     let l:branch = system("git branch | grep '^*' | sed 's/^\*\s*//'")
     let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
@@ -600,7 +585,7 @@ function! Git(command)
         echoerr "Unrecgonized git command: ".a:command
     endif
 endfunction
-" }
+" }}}
 function! TmuxSplitHere(vertical, size)
     if exists("$TMUX")
         let l:cmd = "tmux split-window -c ".expand("%:p:h")
@@ -624,20 +609,22 @@ endfunction
     " TODO
 " endfunction
 
-" }
+" }}}
 
-""" Commands {
+""" Commands {{{
 " Will allow me to sudo a file that is open without write permissions
 cnoremap w!! %!sudo tee > /dev/null %
 command! -nargs=1 Git :execute Git(<q-args>)
-" }
+" command! ColorList :call system("tmux split-window -h -p 11 list-colors")
+command! ColorList :call system("tmux split-window -h -p 11")
+" }}}
 
-""" Abbreviations {
+""" Abbreviations {{{
 " This is ridiculously useful
 iabbrev date- <c-r>=strftime("%d/%m/%Y %H:%M:%S")<cr>
-" }
+" }}}
 
-""" Keyboard mappings {
+""" Keyboard mappings {{{
 nnoremap <leader>s :source $MYVIMRC<cr>
 nnoremap <silent> <leader><leader> :nohlsearch<cr>
 nnoremap Y y$
@@ -683,6 +670,7 @@ nnoremap <silent> cos :setlocal spell!<cr>
 nnoremap <silent> col :setlocal list!<cr>
 nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
 nnoremap <silent> cot :if &laststatus == 2<bar>set laststatus=1<bar>else<bar>set laststatus=2<bar>endif<cr>
+nnoremap <silent> cop :setlocal paste!<cr>
 
 "" Loaded content
 " Diff unsaved changes against file saved on disk
@@ -724,10 +712,10 @@ noremap <up> :echoerr "Use k instead! :-p"<cr>
 noremap <down> :echoerr "Use j instead! :-p"<cr>
 noremap <left> :echoerr "Use h instead! :-p"<cr>
 noremap <right> :echoerr "Use l instead! :-p"<cr>
-" }
+" }}}
 
-""" Commenting {
-function! SLCOtoggle() "{
+""" Commenting {{{
+function! SLCOtoggle() "{{{
     normal ma
     if getline(".") =~ '^\s*'.g:slco " Remove the comment tag it contains
         silent exe ":.s;".escape(g:slco, "[]")." *;;"
@@ -751,8 +739,8 @@ function! SLCOtoggle() "{
         endif
     endif
     nohlsearch
-endfunction "}
-function! BLKCOtoggle(isVisual) "{
+endfunction "}}}
+function! BLKCOtoggle(isVisual) "{{{
     "" Define a few variables
     let curl = line(".")
     let curc = col(".")
@@ -797,7 +785,7 @@ function! BLKCOtoggle(isVisual) "{
         endif
     endif
     call cursor(curl, curc)
-endfunction "}
+endfunction "}}}
 
 " if exists("g:slco") | unlet! slco | endif
 if exists("g:slcoE") | unlet! slcoE | endif
@@ -843,9 +831,9 @@ augroup commenting
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
         \ nnoremap <silent> fixme oFIXME: <esc><Tab>==A
 augroup END
-" }
+" }}}
 
-""" Completion {
+""" Completion {{{
 " if filereadable("??/tags")
     " autocmd FileType c,c++,cpp,h,h++,hpp set tags=./tags
     " autocmd BufwinEnter *.* echo "Loaded tags file"
@@ -868,9 +856,9 @@ augroup omni_complete
     autocmd FileType php set omnifunc=pythoncomplete#CompletePHP
     autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 augroup END
-" }
+" }}}
 
-""" Misc {
+""" Misc {{{
 augroup MiscOptions
     autocmd!
 
@@ -894,6 +882,6 @@ augroup MiscOptions
     " Automatically reload this file
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
 augroup END
-" }
+" }}}
 
-" vim: set foldmarker={,} foldmethod=marker number relativenumber formatoptions-=t:
+" vim: set foldmethod=marker number relativenumber formatoptions-=t:
