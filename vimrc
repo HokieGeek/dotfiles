@@ -466,7 +466,7 @@ function! GitFileStatus()
 
     if match(l:status, '^fatal') > -1
         let l:status_val = 0 " Not a git repo
-    elseif strlen(l:status) < 0
+    elseif strlen(l:status) == 0
         let l:status_val = 1 " Clean
     elseif match(l:status, '^?') > -1
         let l:status_val = 2 " Untracked
