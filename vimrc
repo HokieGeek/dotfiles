@@ -519,7 +519,7 @@ function! CheckoutFromGit()
     " TODO: update buffer
 endfunction
 function! AddFileToGit(display_status)
-    call system("git add ".expand("%"))
+    call silent system("git add ".expand("%"))
     echomsg "Added ".expand("%")." to the stage"
     if a:display_status == 1
         call GitStatus()
@@ -527,8 +527,12 @@ function! AddFileToGit(display_status)
         " call LoadedContentClear()
     endif
 endfunction
-function! ResetFileInGitIndex()
-    call system("git reset ".expand("%"))
+function! ResetFileInGitIndex(display_status)
+    call silent system("git reset ".expand("%"))
+    echomsg "Unstaged ".expand("%")
+    if a:display_status == 1
+        call GitStatus()
+    endif
 endfunction
 function! GitStatus()
     if exists("g:loaded_output")
