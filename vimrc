@@ -127,7 +127,12 @@ endfunction
 " }}}
 " File name/Type {{{
 function! SL_GetFilename()
-    return " ".expand("%:t")." "
+    let l:name = expand("%:t")
+    if len(l:name) > 0
+        return " ".l:name." "
+    else
+        return ""
+    endif
 endfunction
 function! SL_GetFilenameNotModifiedNotReadOnly()
     if &readonly == 0 && &modified == 0 && &modifiable == 1
@@ -439,7 +444,11 @@ endfunction
 function! GetGitBranch()
     let l:branch = system("git branch | grep '^*' | sed 's/^\*\s*//'")
     let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
-    return " ".l:branch." "
+    if match(l:branch, '^fatal') > -1
+        return ""
+    else
+        return " ".l:branch." "
+    endif
 endfunction
 function! GitFileStatus()
     let l:status = system("git status --porcelain | grep ".expand("%:t"))
