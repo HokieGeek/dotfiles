@@ -368,6 +368,10 @@ function! CheckoutFromGitLog()
         " call LoadedContentClear()
     " endif
 endfunction
+function! ShowFromGitLog()
+    let l:rev = system("echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'")
+    call PopGitShow(l:rev)
+endfunction
 function! AddFileToGit(display_status)
     call system("git add ".expand("%"))
     echomsg "Added ".expand("%")." to the stage"
