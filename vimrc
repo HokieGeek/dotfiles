@@ -272,8 +272,23 @@ function! PopSynched(command)
 endfunction
 " }}}
 "" Git {{{
+function! GetGitDirectory()
+    let l:path = expand("%:p:h")
+    while(l:path != "/")
+        if (isdirectory(l:path."/.git") != 0)
+            return l:path."/.git"
+        endif
+        let l:path = expand(l:path.":p:h")
+    endwhile
+    return ""
+endfunction
 function! GetGitBranch()
-    " TODO: This is really expensive how about we just read the file?
+    " TODO
+    " if len(g:GitDir) > 0
+        " readfile(g:GitDir."/HEAD")
+    " endif
+
+    " FIXME: This is really expensive how about we just read the file?
     let l:branch = system("git branch | grep '^*' | sed 's/^\*\s*//'")
     let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
     if match(l:branch, '^fatal') > -1
@@ -888,6 +903,7 @@ augroup MiscOptions
 
     let g:GitBranch = ''
     autocmd BufRead,BufWritePost * let g:GitBranch = GetGitBranch()
+    autocmd BufWinEnter * let g:GitDir = GetGitDirectory()
 augroup END
 " }}}
 
