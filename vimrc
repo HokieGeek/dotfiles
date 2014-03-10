@@ -97,189 +97,6 @@ endif
 syntax on
 " }}}
 
-""" Status line {{{
-"" Functions {{{
-" Git {{{
-function! SL_GitBranchClean()
-    if GitFileStatus() == 1 " Clean
-        return GetGitBranch()
-    else
-        return ""
-endfunction
-function! SL_GitBranchUntracked()
-    if GitFileStatus() == 2 " Untracked
-        return GetGitBranch()
-    else
-        return ""
-endfunction
-function! SL_GitBranchModified()
-    if GitFileStatus() == 3 " Modified
-        return GetGitBranch()
-    else
-        return ""
-endfunction
-function! SL_GitBranchStaged()
-    if GitFileStatus() == 4 " Staged and not modified
-        return GetGitBranch()
-    else
-        return ""
-endfunction
-" }}}
-" File name/Type {{{
-function! SL_GetFilename()
-    let l:name = expand("%:t")
-    if len(l:name) > 0
-        return " ".l:name." "
-    else
-        return ""
-    endif
-endfunction
-function! SL_GetFilenameNotModifiedNotReadOnly()
-    if &readonly == 0 && &modified == 0 && &modifiable == 1
-        return SL_GetFilename()
-    else
-        return ""
-    endif
-endfunction
-function! SL_GetFilenameNotModifiedReadOnly()
-    if &readonly == 1 && &modified == 0 && &modifiable == 1
-        return SL_GetFilename()
-    else
-        return ""
-    endif
-endfunction
-function! SL_GetFilenameModifiedNotReadOnly()
-    if &readonly == 0 && &modified == 1 && &modifiable == 1
-        return SL_GetFilename()
-    else
-        return ""
-    endif
-endfunction
-function! SL_GetFilenameModifiedReadOnly()
-    if &readonly == 1 && &modified == 1 && &modifiable == 1
-        return SL_GetFilename()
-    else
-        return ""
-    endif
-endfunction
-function! SL_GetFilenameNotModifiableNotReadOnly()
-    if &modifiable == 0 && &readonly == 0
-        return SL_GetFilename()
-    else
-        return ""
-    endif
-endfunction
-function! SL_GetFilenameNotModifiableReadOnly()
-    if &modifiable == 0 && &readonly == 1
-        return SL_GetFilename()
-    else
-        return ""
-    endif
-endfunction
-function! SL_GetFiletypeIsUnix()
-    if &fileformat == 'unix'
-        return &filetype
-    else
-        return ""
-    endif
-endfunction
-function! SL_GetFiletypeNotUnix()
-    if &fileformat != 'unix'
-        return &filetype
-    else
-        return ""
-    endif
-endfunction
-" }}}
-function! IsCapsLockOn()
-    let l:capsState = system("xset -q | grep \"Caps Lock\" | awk '{ print $2$3$4 }'")
-    " return match(l:capsState, "on") > -1
-    if match(l:capsState, "on") > -1
-        return ' CAPS '
-    else
-        return ''
-    endif
-endfunction
-function! IsPaste()
-    if &paste == 1
-        return ' PASTE '
-    else
-        return ''
-    endif
-endfunction
-" }}}
-"" Highlights {{{
-highlight SL_HL_Default ctermbg=233 ctermfg=249 cterm=none
-highlight SL_HL_Mode ctermbg=55 ctermfg=7 cterm=bold
-highlight SL_HL_PasteWarning ctermbg=140 ctermfg=232 cterm=bold
-
-highlight SL_HL_FileNotModifiedNotReadOnly ctermbg=233 ctermfg=249 cterm=none
-highlight SL_HL_FileNotModifiedReadOnly ctermbg=233 ctermfg=88 cterm=bold
-highlight SL_HL_FileModifiedNotReadOnly ctermbg=22 ctermfg=7 cterm=none
-highlight SL_HL_FileModifiedReadOnly ctermbg=22 ctermfg=196 cterm=bold
-
-highlight SL_HL_FileNotModifiableNotReadOnly ctermbg=88 ctermfg=232 cterm=bold
-highlight SL_HL_FileNotModifiableReadOnly ctermbg=88 ctermfg=9 cterm=bold
-
-highlight SL_HL_FileTypeIsUnix ctermbg=233 ctermfg=239 cterm=none
-highlight SL_HL_FileTypeNotUnix ctermbg=52 ctermfg=233 cterm=none
-
-highlight SL_HL_GitBranch ctermbg=25 ctermfg=232 cterm=bold
-highlight SL_HL_GitModified ctermbg=25 ctermfg=88 cterm=bold
-highlight SL_HL_GitStaged ctermbg=25 ctermfg=40 cterm=bold
-highlight SL_HL_GitUntracked ctermbg=25 ctermfg=7 cterm=bold
-
-highlight SL_HL_CapsLockWarning ctermbg=118 ctermfg=232 cterm=bold
-
-highlight SL_HL_FileInfo ctermbg=234 ctermfg=244 cterm=none
-highlight SL_HL_FileInfoTotalLines ctermbg=234 ctermfg=239 cterm=none
-" }}}
-
-" File name, type and modified
-" TODO: Wrap this in a function and then when a colorscheme gets loaded, call the function
-set statusline=%#SL_HL_mode#\ %{mode()}\ %#SL_HL_Default#
-set statusline+=%#SL_HL_PasteWarning#%{IsPaste()}%#SL_HL_Default#
-" TODO: Paste ▶
-" nnoremap <silent> cow :setlocal wrap!<cr>
-" nnoremap <silent> cos :setlocal spell!<cr>
-
-" TODO: I might have messed something up here and now get some artifacts on the screen
-set statusline+=\ %#SL_HL_FileNotModifiedNotReadOnly#%{SL_GetFilenameNotModifiedNotReadOnly()}
-set statusline+=%#SL_HL_FileNotModifiedReadOnly#%{SL_GetFilenameNotModifiedReadOnly()}
-set statusline+=%#SL_HL_FileModifiedNotReadOnly#%{SL_GetFilenameModifiedNotReadOnly()}
-set statusline+=%#SL_HL_FileModifiedReadOnly#%{SL_GetFilenameModifiedReadOnly()}
-
-set statusline+=%#SL_HL_FileNotModifiableNotReadOnly#%{SL_GetFilenameNotModifiableNotReadOnly()}
-set statusline+=%#SL_HL_FileNotModifiableReadOnly#%{SL_GetFilenameNotModifiableReadOnly()}
-
-set statusline+=%#SL_HL_FileTypeIsUnix#\ %{SL_GetFiletypeIsUnix()}
-set statusline+=%#SL_HL_FileTypeNotUnix#%{SL_GetFiletypeNotUnix()}
-
-" Display git info
-set statusline+=%#SL_HL_Default#\ \ %#SL_HL_GitBranch#%{SL_GitBranchClean()}
-set statusline+=%#SL_HL_GitModified#%{SL_GitBranchModified()}
-set statusline+=%#SL_HL_GitStaged#%{SL_GitBranchStaged()}
-set statusline+=%#SL_HL_GitUntracked#%{SL_GitBranchUntracked()}
-set statusline+=%#SL_HL_Default#
-
-" Right-justify the rest
-set statusline+=%=
-
-" Syntastic flag
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%#SL_HL_Default#
-
-set statusline+=%#SL_HL_CapsLockWarning#%{IsCapsLockOn()}%#SL_HL_Default#
-
-set statusline+=%#SL_HL_FileInfo#\ %l%#SL_HL_FileInfoTotalLines#/%L%#SL_HL_FileInfo#
-set statusline+=,%c\ %P
-
-set statusline+=%*
-
-set laststatus=2
-" }}}
-
 """ Highlights {{{
 highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
 highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
@@ -456,17 +273,18 @@ endfunction
 " }}}
 "" Git {{{
 function! GetGitBranch()
+    " TODO: This is really expensive how about we just read the file?
     let l:branch = system("git branch | grep '^*' | sed 's/^\*\s*//'")
     let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
     if match(l:branch, '^fatal') > -1
         return ""
     else
-        return " ".l:branch." "
+        return l:branch
     endif
 endfunction
 function! GitFileStatus()
     let l:status = system("git status --porcelain | grep ".expand("%:t"))
-    " TODO: This fails a tad with similar files
+    " FIXME: This fails a tad with similar files
 
     if match(l:status, '^fatal') > -1
         let l:status_val = 0 " Not a git repo
@@ -515,6 +333,11 @@ function! PopGitLog()
     set nomodifiable
     call cursor(line("."), 2)
 endfunction
+function! GetRevFromGitLog()
+    let l:rev = system("echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'")
+    let l:rev = substitute(substitute(l:rev, '\s*\n*$', '', ''), '^\s*', '', '')
+    return l:rev
+endfunction
 function! PopGitShow(rev)
     if exists("g:loaded_output")
         call LoadedContentClear()
@@ -524,22 +347,26 @@ function! PopGitShow(rev)
     call LoadContent("top", "!git show ".a:rev)
     set filetype=GitShow
     set nolist
-    resize 15
+    " resize 15
     set nomodifiable
 endfunction
 function! PopGitDiffFromLog()
-    call PopDiff("!git show `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'`:./#")
+    call PopDiff("!git show ".GetRevFromGitLog().":./".expand("#"))
+endfunction
+function! ShowFromGitLog()
+    call PopGitShow(GetRevFromGitLog())
 endfunction
 function! CheckoutFromGitLog()
-    call system("git checkout `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'` ./#")
+    " call system("git checkout `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'` ./#")
+    let l:rev = GetRevFromGitLog()
     if exists("g:loaded_output")
         call LoadedContentClear()
     endif
-    " TODO: update buffer
-endfunction
-function! ShowFromGitLog()
-    let l:rev = system("echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'")
-    call PopGitShow(l:rev)
+    GitCheckout(l:rev)
+    " call system("git checkout ".GetRevFromGitLog()."./#")
+    " if exists("g:loaded_output")
+        " call LoadedContentClear()
+    " endif
 endfunction
 function! AddFileToGit(display_status)
     call system("git add ".expand("%"))
@@ -605,6 +432,10 @@ function! GitCommitFinish()
         echoerr "Cannot commit without a commit message"
     endif
 endfunction
+function! GitCheckout(rev)
+    call system("git checkout ".a:rev." ".expand("%"))
+    " TODO: update buffer
+endfunction
 function! Git(command)
     if a:command == "blame"
         call PopGitBlame()
@@ -620,6 +451,9 @@ function! Git(command)
         call GitStatus()
     elseif a:command == "commit"
         call GitCommit()
+    elseif a:command == "checkout"
+        echo "TODO: checkout"
+        " call GitCheckout()
     else
         echoerr "Unrecgonized git command: ".a:command
     endif
@@ -752,6 +586,132 @@ noremap <up> :echoerr "Use k instead! :-p"<cr>
 noremap <down> :echoerr "Use j instead! :-p"<cr>
 noremap <left> :echoerr "Use h instead! :-p"<cr>
 noremap <right> :echoerr "Use l instead! :-p"<cr>
+" }}}
+
+""" Status line {{{
+"" Highlights {{{
+highlight SL_HL_Default ctermbg=233 ctermfg=249 cterm=none
+highlight SL_HL_Mode ctermbg=55 ctermfg=7 cterm=bold
+highlight SL_HL_PasteWarning ctermbg=140 ctermfg=232 cterm=bold
+
+highlight SL_HL_FileNotModifiedNotReadOnly ctermbg=233 ctermfg=249 cterm=none
+highlight SL_HL_FileNotModifiedReadOnly ctermbg=233 ctermfg=88 cterm=bold
+highlight SL_HL_FileModifiedNotReadOnly ctermbg=22 ctermfg=7 cterm=none
+highlight SL_HL_FileModifiedReadOnly ctermbg=22 ctermfg=196 cterm=bold
+
+highlight SL_HL_FileNotModifiableNotReadOnly ctermbg=88 ctermfg=232 cterm=bold
+highlight SL_HL_FileNotModifiableReadOnly ctermbg=88 ctermfg=9 cterm=bold
+
+highlight SL_HL_FileTypeIsUnix ctermbg=233 ctermfg=239 cterm=none
+highlight SL_HL_FileTypeNotUnix ctermbg=52 ctermfg=233 cterm=none
+
+highlight SL_HL_GitBranch ctermbg=25 ctermfg=232 cterm=bold
+highlight SL_HL_GitModified ctermbg=25 ctermfg=88 cterm=bold
+highlight SL_HL_GitStaged ctermbg=25 ctermfg=40 cterm=bold
+highlight SL_HL_GitUntracked ctermbg=25 ctermfg=7 cterm=bold
+
+highlight SL_HL_CapsLockWarning ctermbg=118 ctermfg=232 cterm=bold
+
+highlight SL_HL_FileInfo ctermbg=234 ctermfg=244 cterm=none
+highlight SL_HL_FileInfoTotalLines ctermbg=234 ctermfg=239 cterm=none
+" }}}
+
+function! GetGitStatusLine()
+    "FIXME let l:branch=GetGitBranch()
+    let l:branch=g:GitBranch
+    if len(l:branch) > 0
+        " TODO: only update the file status when the file is saved?
+        let l:status=GitFileStatus()
+        if l:status == 3 " Modified
+            let l:hl="%#SL_HL_GitModified#"
+        elseif l:status == 4 " Staged and not modified
+            let l:hl="%#SL_HL_GitStaged#"
+        elseif l:status == 2 " Untracked
+            let l:hl="%#SL_HL_GitUntracked#"
+        else
+            let l:hl="%#SL_HL_GitBranch#"
+        endif
+
+        return l:hl."\ ".l:branch."\ "
+    else
+        return ""
+    endif
+endfunction
+function! GetStatusLine()
+    let l:statusline="%#SL_HL_mode#\ %{mode()}\ %#SL_HL_Default#"
+    if &paste == 1
+        " TODO: Paste ▶
+        let l:statusline.="%#SL_HL_PasteWarning# PASTE %#SL_HL_Default#"
+    endif
+    " nnoremap <silent> cow :setlocal wrap!<cr>
+    " nnoremap <silent> cos :setlocal spell!<cr>
+
+    " File name, type and modified
+    " TODO: if filename > 0
+    let l:filename = expand("%:t")
+    if len(l:filename) > 0
+        let l:statusline.="\ "
+        if &modifiable == 1
+            if &modified == 1
+                if &readonly == 0
+                    let l:statusline.="%#SL_HL_FileModifiedNotReadOnly#"
+                else
+                    let l:statusline.="%#SL_HL_FileModifiedReadOnly#"
+                endif
+            else
+                if &readonly == 0
+                    let l:statusline.="%#SL_HL_FileNotModifiedNotReadOnly#"
+                else
+                    let l:statusline.="%#SL_HL_FileNotModifiedReadOnly#"
+                endif
+            endif
+        else
+            if &readonly == 0
+                let l:statusline.="%#SL_HL_FileNotModifiableNotReadOnly#"
+            else
+                let l:statusline.="%#SL_HL_FileNotModifiableReadOnly#"
+            endif
+        endif
+        let l:statusline.="\ ".l:filename."\ "
+    endif
+
+    if len(&filetype) > 0
+        if &fileformat == 'unix'
+            let l:statusline.="%#SL_HL_FileTypeIsUnix#"
+        else
+            let l:statusline.="%#SL_HL_FileTypeNotUnix#"
+        endif
+        let l:statusline.="\ ".&filetype."\ "
+    endif
+
+    " Display git info
+    let l:statusline.=GetGitStatusLine()
+
+    " Right-justify the rest
+    let l:statusline.="%#SL_HL_Default#"
+    let l:statusline.="%="
+
+    " Syntastic flag
+    let l:statusline.="%#warningmsg#"
+    let l:statusline.="%{SyntasticStatuslineFlag()}"
+    let l:statusline.="%#SL_HL_Default#"
+
+    " TODO: This gets expensive
+    " let l:capsState = system("xset -q | grep \"Caps Lock\" | awk '{ print $2$3$4 }'")
+    " if match(l:capsState, "on") > -1
+        " let l:statusline.="%#SL_HL_CapsLockWarning# CAPS %#SL_HL_Default#"
+    " endif
+
+    let l:statusline.="%#SL_HL_FileInfo#\ %l%#SL_HL_FileInfoTotalLines#/%L%#SL_HL_FileInfo#"
+    let l:statusline.=",%c\ %P"
+
+    let l:statusline.="%*"
+
+    return l:statusline
+endfunction
+set statusline=%!GetStatusLine()
+set laststatus=2
+
 " }}}
 
 """ Commenting {{{
@@ -921,6 +881,9 @@ augroup MiscOptions
 
     " Automatically reload this file
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
+
+    let g:GitBranch = ''
+    autocmd BufRead,BufWritePost * let g:GitBranch = GetGitBranch()
 augroup END
 " }}}
 
