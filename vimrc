@@ -252,7 +252,7 @@ set statusline+=%#SL_HL_FileModifiedReadOnly#%{SL_GetFilenameModifiedReadOnly()}
 set statusline+=%#SL_HL_FileNotModifiableNotReadOnly#%{SL_GetFilenameNotModifiableNotReadOnly()}
 set statusline+=%#SL_HL_FileNotModifiableReadOnly#%{SL_GetFilenameNotModifiableReadOnly()}
 
-set statusline+=%#SL_HL_FileTypeIsUnix#%{SL_GetFiletypeIsUnix()}
+set statusline+=%#SL_HL_FileTypeIsUnix#\ %{SL_GetFiletypeIsUnix()}
 set statusline+=%#SL_HL_FileTypeNotUnix#%{SL_GetFiletypeNotUnix()}
 
 " Display git info
@@ -298,6 +298,19 @@ augroup GitLogHighlighting
         \ highlight GitLogBranch ctermbg=none ctermfg=yellow cterm=none | let m = matchadd("GitLogBranch", "- \(.*\)") |
         \ highlight GitLogGraph ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogGraph", "^[\*\s|/\]* ") |
         \ highlight GitLogDash ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogDash", "-")
+augroup END
+
+augroup GitShowHighlighting
+    autocmd!
+    autocmd Filetype GitShow
+        \ highlight GitShowCommit ctermbg=none ctermfg=yellow cterm=none | let m = matchadd("GitShowCommit", "^commit .*$") |
+        \ highlight GitShowDiffLines ctermbg=none ctermfg=cyan cterm=none | let m = matchadd("GitShowDiffLines", "^@@ .* @@ ") |
+        \ highlight GitShowSub ctermbg=none ctermfg=red cterm=none | let m = matchadd("GitShowSub", "^-.*$") |
+        \ highlight GitShowAdd ctermbg=none ctermfg=green cterm=none | let m = matchadd("GitShowAdd", "^+.*$") |
+        \ highlight GitShowInfo1 ctermbg=none ctermfg=white cterm=bold | let m = matchadd("GitShowInfo1", "^diff --git .*") |
+        \ highlight GitShowInfo2 ctermbg=none ctermfg=white cterm=bold | let m = matchadd("GitShowInfo2", "^index .*") |
+        \ highlight GitShowInfo3 ctermbg=none ctermfg=white cterm=bold | let m = matchadd("GitShowInfo3", "^--- a.*") |
+        \ highlight GitShowInfo4 ctermbg=none ctermfg=white cterm=bold | let m = matchadd("GitShowInfo4", "^+++ b.*")
 augroup END
 
 augroup GitStatusHighlighting
@@ -389,7 +402,7 @@ endif
 " }}}
 
 """ Functions {{{
-"" Laded content {{{
+"" Loaded content {{{ 
 function! LoadedContentClear()
     set modifiable
     bdelete content
@@ -453,6 +466,7 @@ function! GetGitBranch()
 endfunction
 function! GitFileStatus()
     let l:status = system("git status --porcelain | grep ".expand("%:t"))
+    " TODO: This fails a tad with similar files
 
     if match(l:status, '^fatal') > -1
         let l:status_val = 0 " Not a git repo
@@ -501,6 +515,18 @@ function! PopGitLog()
     set nomodifiable
     call cursor(line("."), 2)
 endfunction
+function! PopGitShow(rev)
+    if exists("g:loaded_output")
+        call LoadedContentClear()
+    endif
+
+    mkview! 9
+    call LoadContent("top", "!git show ".a:rev)
+    set filetype=GitShow
+    set nolist
+    resize 15
+    set nomodifiable
+endfunction
 function! PopGitDiffFromLog()
     call PopDiff("!git show `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'`:./#")
 endfunction
@@ -510,6 +536,10 @@ function! CheckoutFromGitLog()
         call LoadedContentClear()
     endif
     " TODO: update buffer
+endfunction
+function! ShowFromGitLog()
+    let l:rev = system("echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'")
+    call PopGitShow(l:rev)
 endfunction
 function! AddFileToGit(display_status)
     call system("git add ".expand("%"))
@@ -694,7 +724,8 @@ nnoremap <silent> Us :Git status<cr>
 augroup GitLog
     autocmd!
     autocmd Filetype GitLog nnoremap <buffer> <silent> <enter> :call PopGitDiffFromLog()<cr>
-    autocmd Filetype GitLog nnoremap <buffer> <silent> co :call CheckoutFromGitLog()<cr>
+    autocmd Filetype GitLog nnoremap <buffer> <silent> c :call CheckoutFromGitLog()<cr>
+    autocmd Filetype GitLog nnoremap <buffer> <silent> s :call ShowFromGitLog()<cr>
     autocmd Filetype GitLog nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<cr>
 augroup END
 
