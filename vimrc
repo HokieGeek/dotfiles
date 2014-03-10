@@ -236,6 +236,7 @@ highlight SL_HL_FileInfoTotalLines ctermbg=234 ctermfg=239 cterm=none
 " }}}
 
 " File name, type and modified
+" TODO: Wrap this in a function and then when a colorscheme gets loaded, call the function
 set statusline=%#SL_HL_mode#\ %{mode()}\ %#SL_HL_Default#
 set statusline+=%#SL_HL_PasteWarning#%{IsPaste()}%#SL_HL_Default#
 " TODO: Paste ▶
