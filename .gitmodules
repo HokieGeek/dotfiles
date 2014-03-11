@@ -1,3 +1,3 @@
-[submodule "vim/bundles"]
-	path = vim/bundles
+[submodule "vim/bundle"]
+	path = vim/bundle
 	url = https://github.com/HokieGeek/MahVimPlugins
