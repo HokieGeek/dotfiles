@@ -6,4 +6,6 @@ xmonad.errors
 xmonad.hi
 xmonad.hs.mine
 xmonad.o
-vim/bundle
+vim/spell
+vim/view
+vim/sessions
