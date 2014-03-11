@@ -274,28 +274,34 @@ endfunction
 "" Git {{{
 function! GetGitDirectory()
     let l:path = expand("%:p:h")
-    while(l:path != "/")
+    while(l:path != "/" && len(l:path) > 0)
         if (isdirectory(l:path."/.git") != 0)
             return l:path."/.git"
         endif
-        let l:path = expand(l:path.":p:h")
+        let l:path = system("dirname ".l:path)
+        let l:path = substitute(substitute(l:path, '\s*\n*$', '', ''), '^\s*', '', '')
     endwhile
     return ""
 endfunction
+" let g:GitBranch = ''
 function! GetGitBranch()
-    " TODO
-    " if len(g:GitDir) > 0
-        " readfile(g:GitDir."/HEAD")
-    " endif
+    if len(g:GitDir) > 0
+        let l:file = readfile(g:GitDir."/HEAD")
+        let l:branch = substitute(l:file[0], 'ref: refs/heads/', '', '')
+        return l:branch
+        " echomsg l:b
+    else
+        return ""
+    endif
 
     " FIXME: This is really expensive how about we just read the file?
-    let l:branch = system("git branch | grep '^*' | sed 's/^\*\s*//'")
-    let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
-    if match(l:branch, '^fatal') > -1
-        return ""
-    else
-        return l:branch
-    endif
+    " let l:branch = system("git branch | grep '^*' | sed 's/^\*\s*//'")
+    " let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
+    " if match(l:branch, '^fatal') > -1
+        " return ""
+    " else
+        " return l:branch
+    " endif
 endfunction
 function! GitFileStatus()
     let l:status = system("git status --porcelain | grep ".expand("%:t"))
@@ -317,6 +323,11 @@ function! GitFileStatus()
 
     return l:status_val
 endfunction
+function! PopGitDiff(rev)
+    call PopDiff("!git show ".a:rev.":./#")
+    let b:git_revision = a:rev
+    " set filetype=GitDiff
+endfunction
 function! PopGitDiffPrompt()
     if exists("g:loaded_output")
         call LoadedContentClear()
@@ -325,7 +336,7 @@ function! PopGitDiffPrompt()
     call inputsave()
     let l:response = input('Commit, tag or branch: ')
     call inputrestore()
-    call PopDiff("!git show ".l:response.":./#")
+    call PopDiff(l:response)
 endfunction
 function! PopGitBlame()
     call PopSynched("!git blame --date=short #")
@@ -334,6 +345,11 @@ function! PopGitBlame()
     execute "vertical resize ".col(".")
     normal 0
     wincmd p
+endfunction
+function! GetRevFromGitBlame()
+    let l:rev = system("echo '".getline(".")."' | awk '{ print $1 }'")
+    let l:rev = substitute(substitute(l:rev, '\s*\n*$', '', ''), '^\s*', '', '')
+    return l:rev
 endfunction
 function! PopGitLog()
     if exists("g:loaded_output")
@@ -362,14 +378,19 @@ function! PopGitShow(rev)
     call LoadContent("top", "!git show ".a:rev)
     set filetype=GitShow
     set nolist
-    " resize 15
+    resize 25
     set nomodifiable
+    let b:git_revision = a:rev
 endfunction
 function! PopGitDiffFromLog()
-    call PopDiff("!git show ".GetRevFromGitLog().":./".expand("#"))
+    let l:rev = GetRevFromGitLog()
+    call PopGitDiff(l:rev)
 endfunction
 function! ShowFromGitLog()
     call PopGitShow(GetRevFromGitLog())
+endfunction
+function! ShowFromGitBuffer()
+    call PopGitShow(b:git_buffer)
 endfunction
 function! CheckoutFromGitLog()
     " call system("git checkout `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'` ./#")
@@ -383,9 +404,8 @@ function! CheckoutFromGitLog()
         " call LoadedContentClear()
     " endif
 endfunction
-function! ShowFromGitLog()
-    let l:rev = system("echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'")
-    call PopGitShow(l:rev)
+function! PopGitDiffFromBuffer()
+    call PopGitDiff(b:git_revision)
 endfunction
 function! AddFileToGit(display_status)
     call system("git add ".expand("%"))
@@ -577,9 +597,25 @@ nnoremap <silent> Us :Git status<cr>
 augroup GitLog
     autocmd!
     autocmd Filetype GitLog nnoremap <buffer> <silent> <enter> :call PopGitDiffFromLog()<cr>
-    autocmd Filetype GitLog nnoremap <buffer> <silent> c :call CheckoutFromGitLog()<cr>
-    autocmd Filetype GitLog nnoremap <buffer> <silent> s :call ShowFromGitLog()<cr>
+    autocmd Filetype GitLog nnoremap <buffer> <silent> o :call CheckoutFromGitLog()<cr>
+    autocmd Filetype GitLog nnoremap <buffer> <silent> v :call ShowFromGitLog()<cr>
     autocmd Filetype GitLog nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<cr>
+augroup END
+
+" augroup GitDiff
+    " autocmd!
+    " autocmd Filetype GitDiff nnoremap <buffer> <silent> o :call CheckoutFromGitBuffer()<cr>
+    " autocmd Filetype GitDiff nnoremap <buffer> <silent> l :Git log<cr>
+    " autocmd Filetype GitDiff nnoremap <buffer> <silent> v :call ShowFromGitBuffer()<cr>
+    " autocmd Filetype GitDiff nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<cr>
+" augroup END
+
+augroup GitShow
+    autocmd!
+    autocmd Filetype GitShow nnoremap <buffer> <silent> <enter> :call PopGitDiffFromBuffer()<cr>
+    " autocmd Filetype GitShow nnoremap <buffer> <silent> o :call CheckoutFromGitBuffer()<cr>
+    autocmd Filetype GitShow nnoremap <buffer> <silent> l :Git log<cr>
+    autocmd Filetype GitShow nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<cr>
 augroup END
 
 "" Plugins
@@ -636,8 +672,9 @@ highlight SL_HL_FileInfoTotalLines ctermbg=234 ctermfg=239 cterm=none
 " }}}
 
 function! GetGitStatusLine()
-    "FIXME let l:branch=GetGitBranch()
-    let l:branch=g:GitBranch
+    "FIXME 
+    let l:branch=GetGitBranch()
+    " let l:branch=g:GitBranch
     if len(l:branch) > 0
         " TODO: only update the file status when the file is saved?
         let l:status=GitFileStatus()
@@ -901,8 +938,6 @@ augroup MiscOptions
     " Automatically reload this file
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
-    let g:GitBranch = ''
-    autocmd BufRead,BufWritePost * let g:GitBranch = GetGitBranch()
     autocmd BufWinEnter * let g:GitDir = GetGitDirectory()
 augroup END
 " }}}
