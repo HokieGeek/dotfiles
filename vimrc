@@ -1,388 +1,10 @@
 set nocompatible " Not compatible with plain vi
 
-""" Plugins {{{
+""" Options {{{
 filetype off
 
 execute pathogen#infect()
-" }}}
 
-""" Vit {{{
-"" Loaded content {{{
-function! VitContentClear()
-    set modifiable
-    bdelete vit_content
-    diffoff
-    silent loadview 9
-    unlet! g:loaded_vit_output
-endfunction
-function! VitLoadContent(location, command)
-    let g:loaded_vit_output = 1
-    if a:location == "left"
-        topleft vnew
-    elseif a:location == "right"
-        botright vnew
-    elseif a:location == "top"
-        topleft new
-    elseif a:location == "bottom"
-        botright new
-    endif
-    set buftype=nofile
-    execute "silent read ".a:command
-    execute "silent file vit_content_".a:location
-    0d_
-endfunction
-function! VitPopDiff(command)
-    if exists("g:loaded_vit_output")
-        call VitContentClear()
-    endif
-
-    mkview! 9
-    call VitLoadContent("left", a:command)
-    wincmd l
-    silent windo diffthis
-    windo set nomodifiable
-    0
-    set modifiable syntax=off
-endfunction
-function! VitPopSynched(command)
-    if exists("g:loaded_vit_output")
-        call VitContentClear()
-    endif
-
-    mkview! 9
-    let l:cline = line(".")
-    set foldenable!
-    0
-    call VitLoadContent("left", a:command)
-    windo set scrollbind nomodifiable
-    execute l:cline
-    set modifiable
-endfunction
-" }}}
-augroup VitLogHighlighting
-    autocmd!
-    autocmd Filetype GitLog
-        \ highlight CursorLine ctermbg=darkblue ctermfg=white cterm=bold |
-        \ highlight GitLogTime ctermbg=none ctermfg=cyan cterm=none | let m = matchadd("GitLogTime", " \(.* ago\) \<") |
-        \ highlight GitLogAuthor ctermbg=none ctermfg=green cterm=none | let m = matchadd("GitLogAuthor", "\<.*\> -") |
-        \ highlight GitLogMessage ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogMessage", "-.*") |
-        \ highlight GitLogBranch ctermbg=none ctermfg=yellow cterm=none | let m = matchadd("GitLogBranch", "- \(.*\)") |
-        \ highlight GitLogGraph ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogGraph", "^[\*\s|/\]* ") |
-        \ highlight GitLogDash ctermbg=none ctermfg=lightgray cterm=none | let m = matchadd("GitLogDash", "-")
-augroup END
-
-augroup VitShowHighlighting
-    autocmd!
-    autocmd Filetype GitShow
-        \ highlight GitShowCommit ctermbg=none ctermfg=yellow cterm=none | let m = matchadd("GitShowCommit", "^commit .*$") |
-        \ highlight GitShowDiffLines ctermbg=none ctermfg=cyan cterm=none | let m = matchadd("GitShowDiffLines", "^@@ .* @@ ") |
-        \ highlight GitShowSub ctermbg=none ctermfg=red cterm=none | let m = matchadd("GitShowSub", "^-.*$") |
-        \ highlight GitShowAdd ctermbg=none ctermfg=green cterm=none | let m = matchadd("GitShowAdd", "^+.*$") |
-        \ highlight GitShowInfo1 ctermbg=none ctermfg=white cterm=bold | let m = matchadd("GitShowInfo1", "^diff --git .*") |
-        \ highlight GitShowInfo2 ctermbg=none ctermfg=white cterm=bold | let m = matchadd("GitShowInfo2", "^index .*") |
-        \ highlight GitShowInfo3 ctermbg=none ctermfg=white cterm=bold | let m = matchadd("GitShowInfo3", "^--- a.*") |
-        \ highlight GitShowInfo4 ctermbg=none ctermfg=white cterm=bold | let m = matchadd("GitShowInfo4", "^+++ b.*")
-augroup END
-
-augroup VitStatusHighlighting
-    autocmd!
-    autocmd Filetype GitStatus
-        \ highlight GitStatusColumn2 ctermbg=none ctermfg=darkred cterm=none | let m = matchadd("GitStatusColumn2", "^.. ") |
-        \ highlight GitStatusColumn1 ctermbg=none ctermfg=darkgreen cterm=none | let m = matchadd("GitStatusColumn1", "^.") |
-        \ highlight GitStatusUntracked ctermbg=none ctermfg=darkred cterm=none | let m = matchadd("GitStatusUntracked", "^\?\? ") |
-        \ highlight GitStatusBranch ctermbg=none ctermfg=darkgreen cterm=none | let m = matchadd("GitStatusBranch", "## .*") |
-        \ highlight GitStatusBranchHashes ctermbg=none ctermfg=white cterm=none | let m = matchadd("GitStatusBranchHashes", "## ")
-augroup END
-
-"" Git {{{
-function! GetGitDirectory()
-    let l:path = expand("%:p:h")
-    while(l:path != "/" && len(l:path) > 0)
-        if (isdirectory(l:path."/.git") != 0)
-            return l:path."/.git"
-        endif
-        let l:path = system("dirname ".l:path)
-        let l:path = substitute(substitute(l:path, '\s*\n*$', '', ''), '^\s*', '', '')
-    endwhile
-    return ""
-endfunction
-" let g:GitBranch = ''
-function! GetGitBranch()
-    if len(g:GitDir) > 0
-        let l:file = readfile(g:GitDir."/HEAD")
-        let l:branch = substitute(l:file[0], 'ref: refs/heads/', '', '')
-        return l:branch
-        " echomsg l:b
-    else
-        return ""
-    endif
-
-    " FIXME: This is really expensive how about we just read the file?
-    " let l:branch = system("git branch | grep '^*' | sed 's/^\*\s*//'")
-    " let l:branch = substitute(substitute(l:branch, '\s*\n*$', '', ''), '^\s*', '', '')
-    " if match(l:branch, '^fatal') > -1
-        " return ""
-    " else
-        " return l:branch
-    " endif
-endfunction
-function! GitFileStatus()
-    let l:status = system("git status --porcelain | grep ".expand("%:t"))
-    " FIXME: This fails a tad with similar files
-
-    if match(l:status, '^fatal') > -1
-        let l:status_val = 0 " Not a git repo
-    elseif strlen(l:status) == 0
-        let l:status_val = 1 " Clean
-    elseif match(l:status, '^?') > -1
-        let l:status_val = 2 " Untracked
-    elseif match(l:status, '^.M') > -1
-        let l:status_val = 3 " Modified
-    elseif match(l:status, '^ ') < 0
-        let l:status_val = 4 " Staged
-    else
-        let l:status_val = -1 " foobar
-    endif
-
-    return l:status_val
-endfunction
-function! PopGitDiff(rev)
-    call VitPopDiff("!git show ".a:rev.":./#")
-    let b:git_revision = a:rev
-    " set filetype=GitDiff
-endfunction
-function! PopGitDiffPrompt()
-    if exists("g:loaded_vit_output")
-        call VitContentClear()
-    endif
-
-    call inputsave()
-    let l:response = input('Commit, tag or branch: ')
-    call inputrestore()
-    call PopDiff(l:response)
-endfunction
-function! PopGitBlame()
-    call VitPopSynched("!git blame --date=short #")
-    wincmd p
-    normal f)
-    execute "vertical resize ".col(".")
-    normal 0
-    wincmd p
-endfunction
-function! GetRevFromGitBlame()
-    let l:rev = system("echo '".getline(".")."' | awk '{ print $1 }'")
-    let l:rev = substitute(substitute(l:rev, '\s*\n*$', '', ''), '^\s*', '', '')
-    return l:rev
-endfunction
-function! PopGitLog()
-    if exists("g:loaded_vit_output")
-        call VitContentClear()
-    endif
-
-    mkview! 9
-    call VitLoadContent("top", "!git log --graph --pretty=format:'\\%h (\\%cr) <\\%an> -\\%d \\%s' #")
-    set filetype=GitLog
-    set nolist cursorline
-    resize 10
-    set nomodifiable
-    call cursor(line("."), 2)
-endfunction
-function! GetRevFromGitLog()
-    let l:rev = system("echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'")
-    let l:rev = substitute(substitute(l:rev, '\s*\n*$', '', ''), '^\s*', '', '')
-    return l:rev
-endfunction
-function! PopGitShow(rev)
-    if exists("g:loaded_vit_output")
-        call VitContentClear()
-    endif
-
-    mkview! 9
-    call VitLoadContent("top", "!git show ".a:rev)
-    set filetype=GitShow
-    set nolist
-    resize 25
-    set nomodifiable
-    let b:git_revision = a:rev
-endfunction
-function! PopGitDiffFromLog()
-    let l:rev = GetRevFromGitLog()
-    call PopGitDiff(l:rev)
-endfunction
-function! ShowFromGitLog()
-    call PopGitShow(GetRevFromGitLog())
-endfunction
-function! ShowFromGitBuffer()
-    call PopGitShow(b:git_buffer)
-endfunction
-function! CheckoutFromGitLog()
-    " call system("git checkout `echo '".getline(".")."' | cut -d '(' -f1 | awk '{ print $NF }'` ./#")
-    let l:rev = GetRevFromGitLog()
-    if exists("g:loaded_vit_output")
-        call VitContentClear()
-    endif
-    GitCheckout(l:rev)
-    " call system("git checkout ".GetRevFromGitLog()."./#")
-    " if exists("g:loaded_output")
-        " call LoadedContentClear()
-    " endif
-endfunction
-function! PopGitDiffFromBuffer()
-    call PopGitDiff(b:git_revision)
-endfunction
-function! AddFileToGit(display_status)
-    call system("git add ".expand("%"))
-    echomsg "Added ".expand("%")." to the stage"
-    if a:display_status == 1
-        call GitStatus()
-        " silent execute "3sleep"
-        " call LoadedContentClear()
-    endif
-endfunction
-function! ResetFileInGitIndex(display_status)
-    call system("git reset ".expand("%"))
-    echomsg "Unstaged ".expand("%")
-    if a:display_status == 1
-        call GitStatus()
-    endif
-endfunction
-function! GitStatus()
-    if exists("g:loaded_vit_output")
-        call VitContentClear()
-    endif
-
-    mkview! 9
-    call LoadContent("right", "!git status -sb")
-    set filetype=GitStatus
-    vertical resize 25
-    set nolist nomodifiable
-    wincmd t
-endfunction
-function! GitCommit()
-    " TODO: 1. (maybe) Display Git Status and ask for confirmation
-    " call GitStatus()
-
-    " 1a. Maybe, if the current file is marked as unstaged in any way, ask to add it?
-    if GitFileStatus() != 4
-        let l:response = confirm("Add the file?", "Y\nn", 1)
-        if l:response == 1
-            call AddFileToGit(0)
-        endif
-    endif
-
-    " 2. Pop up a small window with for commit message
-    let s:commit_message_file = "/tmp/".expand("%").".gitcommitmsg"
-    call system("git status -sb | awk '{ print \"# \" $0 }' > ".s:commit_message_file)
-    mkview! 9
-    botright new
-    execute "edit ".s:commit_message_file
-    resize 10
-    set filetype=gitcommit
-    normal ggO
-endfunction
-function! GitCommitFinish()
-    call system("sed -i -e '/^#/d' -e '/^\\s*$/d' ".s:commit_message_file)
-    if len(readfile(s:commit_message_file)) > 0
-        " Check the size of the file. If it's empty or blank, we don't commmit
-        call system("git commit --file=".s:commit_message_file)
-        echomsg "Successfully committed this file"
-        call delete(s:commit_message_file)
-        silent execute "bdelete ".s:commit_message_file
-        unlet s:commit_message_file
-        redraw
-    else
-        echoerr "Cannot commit without a commit message"
-    endif
-endfunction
-function! GitCheckout(rev)
-    call system("git checkout ".a:rev." ".expand("%"))
-    " TODO: update buffer
-endfunction
-function! Git(command)
-    if a:command == "blame"
-        call PopGitBlame()
-    elseif a:command == "log"
-        call PopGitLog()
-    elseif a:command == "diff"
-        call PopGitDiffPrompt()
-    elseif a:command == "add"
-        call AddFileToGit(0)
-    elseif a:command == "reset"
-        call ResetFileInGitIndex(0)
-    elseif a:command == "status"
-        call GitStatus()
-    elseif a:command == "commit"
-        call GitCommit()
-    elseif a:command == "checkout"
-        echo "TODO: checkout"
-        " call GitCheckout()
-    else
-        echoerr "Unrecgonized git command: ".a:command
-    endif
-endfunction
-" }}}
-command! -nargs=1 Git :execute Git(<q-args>)
-
-" nnoremap <silent> Uu :call LoadedContentClear()<cr>
-" Diff current file with a given git revision. If no input given, diffs against head
-nnoremap <silent> Ug :Git diff<cr>
-nnoremap <silent> Ub :Git blame<cr>
-nnoremap <silent> Ul :Git log<cr>
-nnoremap <silent> Us :Git status<cr>
-
-augroup GitLog
-    autocmd!
-    autocmd Filetype GitLog nnoremap <buffer> <silent> <enter> :call PopGitDiffFromLog()<cr>
-    autocmd Filetype GitLog nnoremap <buffer> <silent> o :call CheckoutFromGitLog()<cr>
-    autocmd Filetype GitLog nnoremap <buffer> <silent> v :call ShowFromGitLog()<cr>
-    autocmd Filetype GitLog nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<cr>
-augroup END
-
-" augroup GitDiff
-    " autocmd!
-    " autocmd Filetype GitDiff nnoremap <buffer> <silent> o :call CheckoutFromGitBuffer()<cr>
-    " autocmd Filetype GitDiff nnoremap <buffer> <silent> l :Git log<cr>
-    " autocmd Filetype GitDiff nnoremap <buffer> <silent> v :call ShowFromGitBuffer()<cr>
-    " autocmd Filetype GitDiff nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<cr>
-" augroup END
-
-augroup GitShow
-    autocmd!
-    autocmd Filetype GitShow nnoremap <buffer> <silent> <enter> :call PopGitDiffFromBuffer()<cr>
-    " autocmd Filetype GitShow nnoremap <buffer> <silent> o :call CheckoutFromGitBuffer()<cr>
-    autocmd Filetype GitShow nnoremap <buffer> <silent> l :Git log<cr>
-    autocmd Filetype GitShow nnoremap <buffer> <silent> <esc> :call LoadedContentClear()<cr>
-augroup END
-
-function! GetGitStatusLine()
-    "FIXME 
-    let l:branch=GetGitBranch()
-    " let l:branch=g:GitBranch
-    if len(l:branch) > 0
-        " TODO: only update the file status when the file is saved?
-        let l:status=GitFileStatus()
-        if l:status == 3 " Modified
-            let l:hl="%#SL_HL_GitModified#"
-        elseif l:status == 4 " Staged and not modified
-            let l:hl="%#SL_HL_GitStaged#"
-        elseif l:status == 2 " Untracked
-            let l:hl="%#SL_HL_GitUntracked#"
-        else
-            let l:hl="%#SL_HL_GitBranch#"
-        endif
-
-        return l:hl."\ ".l:branch."\ "
-    else
-        return ""
-    endif
-endfunction
-
-autocmd BufWinLeave *.gitcommitmsg call GitCommitFinish()
-
-autocmd BufWinEnter * let g:GitDir = GetGitDirectory()
-" }}}
-
-""" Options {{{
 filetype plugin indent on
 
 set autoindent " Indents when you insert
@@ -484,6 +106,7 @@ highlight PmenuThumb ctermbg=blue ctermfg=blue
 " }}}
 
 """ Notes options {{{
+" TODO: Move this to syntax
 augroup Notes
     autocmd!
 
@@ -502,7 +125,7 @@ augroup Notes
         \ highlight NotesNoticeMe ctermbg=lightyellow ctermfg=black cterm=none | let m = matchadd("NotesNoticeMe", "_.*_") |
         \ highlight NotesActionItem ctermbg=darkmagenta ctermfg=lightgrey cterm=underline | let m = matchadd("NotesActionItem", "@ .*$") |
         \ highlight NotesPersonCallout ctermbg=black ctermfg=blue cterm=bold | let m = matchadd("NotesPersonCallout", "\\[.*\\]")
-augroup END
+    augroup END
 " }}}
 
 """ Sessions {{{
@@ -542,6 +165,7 @@ autocmd VimEnter * call LoadSession()
 """ Views {{{
 if ! &diff
     func! MakeViewOnLeave()
+        " TODO: split into two au's but need to ensure order
         if exists("g:loaded_output")
             call LoadedContentClear()
         endif
@@ -555,7 +179,7 @@ endif
 " }}}
 
 """ Functions {{{
-"" Loaded content {{{ 
+"" Loaded content {{{
 function! LoadedContentClear()
     set modifiable
     bdelete content
@@ -657,7 +281,6 @@ nnoremap <silent> <F12> :colorscheme solarized<bar>colorscheme badwolf<cr>
 
 "" Searching
 " Current file
-" nnoremap <silent> g/c :sp<CR>:res 15<CR>/<C-R><C-W><CR>
 nnoremap <silent> g// :<c-u>noautocmd vimgrep // % <bar> cw<left><left><left><left><left><left><left><left>
 nnoremap <silent> g/. :<c-u>noautocmd vimgrep /\<<c-r><c-w>\>/ % <bar> cw<cr>
 " All open buffers
@@ -694,7 +317,16 @@ nnoremap <silent> cop :setlocal paste!<cr>
 "" Loaded content
 " Diff unsaved changes against file saved on disk
 nnoremap <silent> Uo :call PopDiff("#")<cr>
-nnoremap <silent> Uu :call LoadedContentClear()<cr>
+function! ClearAll() " TODO: temporary
+    call LoadedContentClear()
+    call vit#ContentClear()
+endfunction
+nnoremap <silent> Uu :call ClearAll()<cr>
+" Diff current file with a given git revision. If no input given, diffs against headj
+nnoremap <silent> Ug :Git diff<cr>
+nnoremap <silent> Ub :Git blame<cr>
+nnoremap <silent> Ul :Git log<cr>
+nnoremap <silent> Us :Git status<cr>
 
 "" Plugins
 nnoremap <silent> pu :GundoToggle<cr>
@@ -703,8 +335,8 @@ nnoremap <silent> pu :GundoToggle<cr>
 " TODO: this doesn't work in paste mode
 inoremap jk <esc>
 inoremap kj <esc>
-inoremap df <c-n>
-inoremap fd <c-n>
+inoremap fs <c-n>
+inoremap sf <c-n>
 
 inoremap sd <c-x><c-l>
 inoremap cv <c-x><c-o>
