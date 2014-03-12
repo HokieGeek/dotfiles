@@ -179,58 +179,19 @@ endif
 " }}}
 
 """ Functions {{{
-"" Loaded content {{{
-function! LoadedContentClear()
-    set modifiable
-    bdelete content
-    diffoff
-    silent loadview 9
-    unlet! g:loaded_output
-endfunction
-function! LoadContent(location, command)
-    let g:loaded_output = 1
-    if a:location == "left"
-        topleft vnew
-    elseif a:location == "right"
-        botright vnew
-    elseif a:location == "top"
-        topleft new
-    elseif a:location == "bottom"
-        botright new
-    endif
-    set buftype=nofile
-    execute "silent read ".a:command
-    execute "silent file content_".a:location
-    0d_
-endfunction
-function! PopDiff(command)
-    if exists("g:loaded_output")
-        call LoadedContentClear()
-    endif
+" function! DiffOrig()
+    " mkview! 9
+    " topleft vnew
+    " set buftype=nofile bufhidden=wipe nobuflisted
+    " execute "silent read ".expand("#")
+    " 0d_
+    " wincmd l
+    " silent windo diffthis
+    " windo set nomodifiable
+    " 0
+    " set modifiable syntax=off
+" endfunction
 
-    mkview! 9
-    call LoadContent("left", a:command)
-    wincmd l
-    silent windo diffthis
-    windo set nomodifiable
-    0
-    set modifiable syntax=off
-endfunction
-function! PopSynched(command)
-    if exists("g:loaded_output")
-        call LoadedContentClear()
-    endif
-
-    mkview! 9
-    let l:cline = line(".")
-    set foldenable!
-    0
-    call LoadContent("left", a:command)
-    windo set scrollbind nomodifiable
-    execute l:cline
-    set modifiable
-endfunction
-" }}}
 function! TmuxSplitHere(vertical, size)
     if exists("$TMUX")
         let l:cmd = "tmux split-window -c ".expand("%:p:h")
@@ -272,7 +233,6 @@ nnoremap <silent> <leader><leader> :nohlsearch<cr>
 nnoremap Y y$
 
 "" Session saving (et.al.)
-nnoremap <silent> <F8> :delete(expand("$HOME/.vim/view/*%*"))<cr>
 nnoremap <silent> <F9> :call SaveSession()<cr>
 nnoremap <silent> <leader><F9> :windo call SaveSession()<cr>
 nnoremap <silent> <F10> :call DeleteSession()<cr>
@@ -316,12 +276,7 @@ nnoremap <silent> cop :setlocal paste!<cr>
 
 "" Loaded content
 " Diff unsaved changes against file saved on disk
-nnoremap <silent> Uo :call PopDiff("#")<cr>
-function! ClearAll() " TODO: temporary
-    call LoadedContentClear()
-    call vit#ContentClear()
-endfunction
-nnoremap <silent> Uu :call ClearAll()<cr>
+nnoremap <silent> Uo :call vit#PopDiff("#")<cr>
 " Diff current file with a given git revision. If no input given, diffs against headj
 nnoremap <silent> Ug :Git diff<cr>
 nnoremap <silent> Ub :Git blame<cr>
