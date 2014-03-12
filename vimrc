@@ -251,14 +251,8 @@ nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax
 nnoremap <silent> cot :if &laststatus == 2<bar>set laststatus=1<bar>else<bar>set laststatus=2<bar>endif<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
 
-"" Loaded content
-" Diff unsaved changes against file saved on disk
-nnoremap <silent> Uo :call vit#PopDiff("#")<cr>
-" Diff current file with a given git revision. If no input given, diffs against headj
-nnoremap <silent> Ug :Git diff<cr>
-nnoremap <silent> Ub :Git blame<cr>
-nnoremap <silent> Ul :Git log<cr>
-nnoremap <silent> Us :Git status<cr>
+" nnoremap <silent> Uo :call DiffOrig()<cr>
+
 
 "" Plugins
 nnoremap <silent> pu :GundoToggle<cr>
