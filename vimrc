@@ -105,29 +105,6 @@ highlight PmenuSbar ctermbg=grey ctermfg=grey
 highlight PmenuThumb ctermbg=blue ctermfg=blue
 " }}}
 
-""" Notes options {{{
-" TODO: Move this to syntax
-augroup Notes
-    autocmd!
-
-    autocmd BufRead,BufNewFile *
-        \ if &filetype == "" |
-        \   nnoremap <silent> <F5> :set filetype=notes<cr> |
-        \ endif
-    autocmd BufRead,BufNewFile *.confluence set filetype=confluencewiki spell foldmethod=manual
-    " TODO: An automatic way to fold (based on headings, for instance)
-
-    " autocmd Filetype notes
-        " \ setlocal spell |
-        " \ highlight NotesHeader ctermbg=darkblue ctermfg=grey cterm=bold,underline | let m = matchadd("NotesHeader", ">> .* <<$") |
-        " \ highlight NotesSection1 ctermbg=black ctermfg=darkgreen cterm=none | let m = matchadd("NotesSection1", "^== .*$") |
-        " \ highlight NotesSection2 ctermbg=black ctermfg=darkcyan cterm=none | let m = matchadd("NotesSection2", " == .*$") |
-        " \ highlight NotesNoticeMe ctermbg=lightyellow ctermfg=black cterm=none | let m = matchadd("NotesNoticeMe", "_.*_") |
-        " \ highlight NotesActionItem ctermbg=darkmagenta ctermfg=lightgrey cterm=underline | let m = matchadd("NotesActionItem", "@ .*$") |
-        " \ highlight NotesPersonCallout ctermbg=black ctermfg=blue cterm=bold | let m = matchadd("NotesPersonCallout", "\\[.*\\]")
-    " augroup END
-" }}}
-
 """ Sessions {{{
 """ Some logic that allows me to create a session with the current layout
 if exists("s:session_file")
@@ -306,6 +283,15 @@ noremap <up> :echoerr "Use k instead! :-p"<cr>
 noremap <down> :echoerr "Use j instead! :-p"<cr>
 noremap <left> :echoerr "Use h instead! :-p"<cr>
 noremap <right> :echoerr "Use l instead! :-p"<cr>
+
+augroup Notes
+    autocmd!
+
+    autocmd BufRead,BufNewFile *
+        \ if &filetype == "" |
+        \   nnoremap <silent> <F5> :set filetype=notes<cr> |
+        \ endif
+augroup END
 " }}}
 
 """ Status line {{{
@@ -324,11 +310,6 @@ highlight SL_HL_FileNotModifiableReadOnly ctermbg=88 ctermfg=9 cterm=bold
 
 highlight SL_HL_FileTypeIsUnix ctermbg=233 ctermfg=239 cterm=none
 highlight SL_HL_FileTypeNotUnix ctermbg=52 ctermfg=233 cterm=none
-
-highlight SL_HL_GitBranch ctermbg=25 ctermfg=232 cterm=bold
-highlight SL_HL_GitModified ctermbg=25 ctermfg=88 cterm=bold
-highlight SL_HL_GitStaged ctermbg=25 ctermfg=40 cterm=bold
-highlight SL_HL_GitUntracked ctermbg=25 ctermfg=7 cterm=bold
 
 highlight SL_HL_CapsLockWarning ctermbg=118 ctermfg=232 cterm=bold
 
@@ -383,7 +364,7 @@ function! GetStatusLine()
     endif
 
     " Display git info
-    let l:statusline.=GetGitStatusLine()
+    let l:statusline.=vit#StatusLine()
 
     " Right-justify the rest
     let l:statusline.="%#SL_HL_Default#"
@@ -577,6 +558,8 @@ augroup MiscOptions
 
     " Automatically reload this file
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
+
+    autocmd BufRead,BufNewFile *.confluence set filetype=confluencewiki spell foldmethod=manual
 augroup END
 " }}}
 
