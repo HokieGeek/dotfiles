@@ -182,24 +182,45 @@ endif
     " set modifiable syntax=off
 " endfunction
 
+"" Split the screen {{{
 function! TmuxSplitHere(vertical, size)
-    if exists("$TMUX")
-        let l:cmd = "tmux split-window -c ".expand("%:p:h")
+    let l:cmd = "tmux split-window -c ".expand("%:p:h")
+    if (a:vertical == 1)
+        let l:cmd .= " -h"
+    endif
+    if (a:size > 0)
         if (a:vertical == 1)
-            let l:cmd = l:cmd." -h"
+            let l:cmd .= " -p ".a:size
+        else
+            let l:cmd .= " -l ".a:size
         endif
-        if (a:size > 0)
-            if (a:vertical == 1)
-                let l:cmd = l:cmd." -p ".a:size
-            else
-                let l:cmd = l:cmd." -l ".a:size
-            endif
-        endif
-        call system(l:cmd)
+    endif
+    call system(l:cmd)
+endfunction
+
+function! ScreenSplitHere(vertical, size)
+    let l:screen_cmd = "screen -dr ".expand("$STY")." -X"
+
+    let l:cmd = l:screen_cmd." split ".((a:vertical == 1) ? "-v" : "")
+    let l:cmd .= " && ".l:screen_cmd." focus"
+    if (a:size > 0)
+        let l:cmd .= " && ".l:screen_cmd." resize ".a:size
+    endif
+    let l:cmd .= " && ".l:screen_cmd." chdir ".expand("%:p:h")
+    let l:cmd .= " && ".l:screen_cmd." screen"
+    call system(l:cmd)
+endfunction
+
+function! SplitHere(vertical, size)
+    if exists("$TMUX")
+        call TmuxSplitHere(a:vertical, a:size)
+    elseif exists("$TERM") && expand("$TERM") == "screen"
+        call ScreenSplitHere(a:vertical, a:size)
     else
-        echomsg "Not in a tmux session"
+        echomsg "Did not find either a tmux nor a screen session"
     endif
 endfunction
+" }}}
 
 " function! ExplorerLeftPane()
     " TODO
@@ -249,8 +270,8 @@ nnoremap <silent> gb :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
 nnoremap <silent> gB :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
 " A scratch space. Kinda useless, I think
 " nnoremap <silent> gs :botright new<bar>set buftype=nofile noswapfile modifiable<bar>res 10<cr>
-nnoremap <silent> gsh :<c-u>call TmuxSplitHere(0, v:count)<cr>
-nnoremap <silent> gsv :<c-u>call TmuxSplitHere(1, v:count)<cr>
+nnoremap <silent> gsh :<c-u>call SplitHere(0, v:count)<cr>
+nnoremap <silent> gsv :<c-u>call SplitHere(1, v:count)<cr>
 
 " TODO: nnoremap <silent> ge :ExSidebar<cr>
 
