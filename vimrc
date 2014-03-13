@@ -1,10 +1,16 @@
 set nocompatible " Not compatible with plain vi
 
-""" Options {{{
+""" Plugins {{{
 filetype off
 
-execute pathogen#infect()
+if has("vim_starting")
+    set runtimepath+=~/.vim/bundle/vim-pathogen
+endif
 
+execute pathogen#infect()
+" }}}
+
+""" Options {{{
 filetype plugin indent on
 
 set autoindent " Indents when you insert
