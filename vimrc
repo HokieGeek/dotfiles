@@ -7,6 +7,14 @@ if has("vim_starting")
     set runtimepath+=~/.vim/bundle/vim-pathogen
 endif
 
+augroup RainbowParentheses
+    autocmd!
+    autocmd VimEnter * RainbowParenthesesToggle
+    autocmd Syntax * RainbowParenthesesLoadRound
+    autocmd Syntax * RainbowParenthesesLoadSquare
+    autocmd Syntax * RainbowParenthesesLoadBraces
+augroup END
+
 execute pathogen#infect()
 " }}}
 
