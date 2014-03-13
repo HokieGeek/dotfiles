@@ -65,6 +65,11 @@ set scrolloff=2 " Scroll file when cursor is 2 lines from top or bottom
 set sidescrolloff=4 " Scroll file horizontally when the cursor is 4 columns from left or right
 set sidescroll=1 " Trying this out...
 set textwidth=0 " Don't want automatic text width formatting
+if has("win32unix")
+    set laststatus=0
+else
+    set laststatus=2
+endif
 if $USER != "root"
     set modelines=1
 endif
@@ -105,7 +110,6 @@ highlight PmenuSbar ctermbg=grey ctermfg=grey
 highlight PmenuThumb ctermbg=blue ctermfg=blue
 
 " highlight ColorColumn ctermbg=240
-" set colorcolumn=81
 " }}}
 
 """ Sessions {{{
@@ -253,9 +257,9 @@ nnoremap <silent> col :setlocal list!<cr>
 nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
 nnoremap <silent> cot :if &laststatus == 2<bar>set laststatus=1<bar>else<bar>set laststatus=2<bar>endif<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
+nnoremap <silent> coq :if &colorcolumn > 0<bar>set colorcolumn=0<bar>else<bar>set colorcolumn=81<bar>endif<cr>
 
 " nnoremap <silent> Uo :call DiffOrig()<cr>
-
 
 "" Plugins
 nnoremap <silent> pu :GundoToggle<cr>
@@ -288,228 +292,6 @@ augroup Notes
         \ if &filetype == "" |
         \   nnoremap <silent> <F5> :set filetype=notes<cr> |
         \ endif
-augroup END
-" }}}
-
-""" Status line {{{
-"" Highlights {{{
-highlight SL_HL_Default ctermbg=233 ctermfg=249 cterm=none
-highlight SL_HL_Mode ctermbg=55 ctermfg=7 cterm=bold
-highlight SL_HL_PasteWarning ctermbg=140 ctermfg=232 cterm=bold
-
-highlight SL_HL_FileNotModifiedNotReadOnly ctermbg=233 ctermfg=249 cterm=none
-highlight SL_HL_FileNotModifiedReadOnly ctermbg=233 ctermfg=88 cterm=bold
-highlight SL_HL_FileModifiedNotReadOnly ctermbg=22 ctermfg=7 cterm=none
-highlight SL_HL_FileModifiedReadOnly ctermbg=22 ctermfg=196 cterm=bold
-
-highlight SL_HL_FileNotModifiableNotReadOnly ctermbg=88 ctermfg=232 cterm=bold
-highlight SL_HL_FileNotModifiableReadOnly ctermbg=88 ctermfg=9 cterm=bold
-
-highlight SL_HL_FileTypeIsUnix ctermbg=233 ctermfg=239 cterm=none
-highlight SL_HL_FileTypeNotUnix ctermbg=52 ctermfg=233 cterm=none
-
-highlight SL_HL_CapsLockWarning ctermbg=118 ctermfg=232 cterm=bold
-
-highlight SL_HL_FileInfo ctermbg=234 ctermfg=244 cterm=none
-highlight SL_HL_FileInfoTotalLines ctermbg=234 ctermfg=239 cterm=none
-" }}}
-function! GetStatusLine()
-    let l:statusline="%#SL_HL_mode#\ %{mode()}\ %#SL_HL_Default#"
-    if &paste == 1
-        " TODO: Paste ▶
-        let l:statusline.="%#SL_HL_PasteWarning# PASTE %#SL_HL_Default#"
-    endif
-    " nnoremap <silent> cow :setlocal wrap!<cr>
-    " nnoremap <silent> cos :setlocal spell!<cr>
-
-    " File name, type and modified
-    " TODO: if filename > 0
-    let l:filename = expand("%:t")
-    if len(l:filename) > 0
-        let l:statusline.="\ "
-        if &modifiable == 1
-            if &modified == 1
-                if &readonly == 0
-                    let l:statusline.="%#SL_HL_FileModifiedNotReadOnly#"
-                else
-                    let l:statusline.="%#SL_HL_FileModifiedReadOnly#"
-                endif
-            else
-                if &readonly == 0
-                    let l:statusline.="%#SL_HL_FileNotModifiedNotReadOnly#"
-                else
-                    let l:statusline.="%#SL_HL_FileNotModifiedReadOnly#"
-                endif
-            endif
-        else
-            if &readonly == 0
-                let l:statusline.="%#SL_HL_FileNotModifiableNotReadOnly#"
-            else
-                let l:statusline.="%#SL_HL_FileNotModifiableReadOnly#"
-            endif
-        endif
-        let l:statusline.="\ ".l:filename."\ "
-    endif
-
-    if len(&filetype) > 0
-        if &fileformat == 'unix'
-            let l:statusline.="%#SL_HL_FileTypeIsUnix#"
-        else
-            let l:statusline.="%#SL_HL_FileTypeNotUnix#"
-        endif
-        let l:statusline.="\ ".&filetype."\ "
-    endif
-
-    " Display git info
-    let l:statusline.=vit#StatusLine()
-
-    " Right-justify the rest
-    let l:statusline.="%#SL_HL_Default#"
-    let l:statusline.="%="
-
-    " Syntastic flag
-    let l:statusline.="%#warningmsg#"
-    let l:statusline.="%{SyntasticStatuslineFlag()}"
-    let l:statusline.="%#SL_HL_Default#"
-
-    " TODO: This gets expensive
-    " let l:capsState = system("xset -q | grep \"Caps Lock\" | awk '{ print $2$3$4 }'")
-    " if match(l:capsState, "on") > -1
-        " let l:statusline.="%#SL_HL_CapsLockWarning# CAPS %#SL_HL_Default#"
-    " endif
-
-    let l:statusline.="%#SL_HL_FileInfo#\ %l%#SL_HL_FileInfoTotalLines#/%L%#SL_HL_FileInfo#"
-    let l:statusline.=",%c\ %P"
-
-    let l:statusline.="%*"
-
-    return l:statusline
-endfunction
-
-" We don't want to start this guy in Cygwin because SOOO SLOWWWWWW
-if has("win32unix") == 0
-    set statusline=%!GetStatusLine()
-    set laststatus=2
-endif
-
-" }}}
-
-""" Commenting {{{
-function! SLCOtoggle() "{{{
-    normal ma
-    if getline(".") =~ '^\s*'.g:slco " Remove the comment tag it contains
-        silent exe ":.s;".escape(g:slco, "[]")." *;;"
-        normal `a
-        exe "silent normal ".eval(strlen(g:slco)+1)."h"
-    else " Comment line
-        exe "normal I".g:slco." "
-        normal `a
-        exe "normal ".eval(strlen(g:slco)+1)."l"
-    endif
-
-    if exists("g:slcoE")
-        if getline(".") =~ g:slcoE.'\s*$'  " Remove the end comment tag it contains
-            silent exe ":.s; *".escape(g:slcoE, "[]").";;"
-            normal `a
-            " normal 3h
-            exe "silent normal ".eval(strlen(g:slcoE)+1)."h"
-        else " Comment line (end)
-            exe "normal ^A ".g:slcoE." "
-            normal `a
-        endif
-    endif
-    nohlsearch
-endfunction "}}}
-function! BLKCOtoggle(isVisual) "{{{
-    "" Define a few variables
-    let curl = line(".")
-    let curc = col(".")
-    let startpat = escape(g:blkcoS, "*[]\{}")
-    let endpat = escape(g:blkcoE, "*[]\{}").'\s*$'
-
-    " Search entire file 'upwards' for either a S or an E. if E or no S, then do comment
-    if match(getline("."), '^\s*'.startpat) > -1
-        let found = curl
-    else
-        if match(getline("."), endpat) > -1
-            call cursor(curl-1, 0)
-        endif
-        let found = search(startpat."\\|".endpat, "bW")
-    endif
-    " echo "found #".found.": ".getline(found)
-
-    if found > 0 && match(getline(found), endpat) == -1 " Delete existing comments
-        if a:isVisual == 0 && searchpair(startpat, '', endpat, 'W') > 0
-            normal dd
-            call cursor(found, 0)
-            normal dd
-        endif
-    else " Create new comment block
-        if a:isVisual > 0
-            call cursor(line("'<"), 0)
-            let mark=">"
-        else
-            call cursor(curl, curc)
-            let mark="a"
-        endif
-
-        let marked=line("'".mark)
-        if marked > 0
-            if marked > curl
-                exe "normal O".g:blkcoS."'".mark."o".g:blkcoE.""
-            else
-                exe "normal o".g:blkcoE."'".mark."O".g:blkcoS.""
-            endif
-        else
-            exe "normal o".g:blkcoE."kO".g:blkcoS.""
-        endif
-    endif
-    call cursor(curl, curc)
-endfunction "}}}
-
-" if exists("g:slco") | unlet! slco | endif
-if exists("g:slcoE") | unlet! slcoE | endif
-" if exists("g:blkcoS") | unlet! blkcoS | endif
-" if exists("g:blkcoE") | unlet! blkcoE | endif
-augroup commenting
-    autocmd!
-    autocmd FileType vim,vimrc let slco="\"" " vim
-    autocmd FileType sql,haskell let slco="--"    " SQL and Haskell
-    autocmd FileType ahk let slco=";"        " AutoHotkey
-    " Java/C/C++
-    autocmd FileType java,c,c++,cpp,h,h++,hpp
-        \ let slco="//" |
-        \ let blkcoS="/*" |
-        \ let blkcoE="*/"
-    " Shell/Scripts
-    autocmd FileType sh,ksh,csh,tcsh,zsh,bash,dash,pl,python,make,gdb
-        \ let slco="#"
-    " XML
-    autocmd FileType xml,html
-        \ let slco="<![CDATA[-----" |
-        \ let slcoE="-----]]>" |
-        \ let blkcoS="<![CDATA[-------------------" |
-        \ let blkcoE="-------------------]]>"
-    " LaTeX
-    autocmd FileType tex
-        \ let slco="%" |
-        \ let blkcoS="\begin{comment}" |
-        \ let blkcoE="\end{comment}"
-
-    " All Code Files
-    autocmd FileType java,c,c++,cpp,h,h++,hpp,xml
-        \ vnoremap <silent> <S-Tab> :call BLKCOtoggle(1)<cr> |
-        \ nnoremap <silent> <S-Tab> :call BLKCOtoggle(0)<cr>
-
-    autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,xml,sh,ksh,csh,tcsh,zsh,bash,dash,pl,python,vim,vimrc,ahk,tex,make,gdb
-        \ nnoremap <silent> <Tab> :call SLCOtoggle()<cr>
-    autocmd FileType sh,ksh,csh,tcsh,zsh,bash,pl,python,sql,vim,vimrc,ahk,tex,make,gdb
-        \ nnoremap <silent> <S-Tab> :'k,.call SLCOtoggle()<cr>
-
-    autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
-        \ nnoremap <silent> todo oTODO: <esc><Tab>==A
-    autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
-        \ nnoremap <silent> fixme oFIXME: <esc><Tab>==A
 augroup END
 " }}}
 
