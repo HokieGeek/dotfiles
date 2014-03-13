@@ -385,7 +385,9 @@ function! GetStatusLine()
 
     return l:statusline
 endfunction
-if has("win32") == 0 && has("win64") == 0
+
+" We don't want to start this guy in Cygwin because SOOO SLOWWWWWW
+if has("win32unix") == 0
     set statusline=%!GetStatusLine()
     set laststatus=2
 endif
