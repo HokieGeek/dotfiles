@@ -1,59 +1,92 @@
+set nocompatible " Not compatible with plain vi
+
 """ Options {{{
+filetype off
+
+execute pathogen#infect()
+
 filetype plugin indent on
 
-set nocompatible " Not compatible with plain vi
-" set autoread " Automatically loads file that has changed
 set autoindent " Indents when you insert
-" set smartindent
-set cindent " C-like indenting
 set tabstop=4 " Tab = 4 spaces. Because I'm not a savage
 set softtabstop=4
 set shiftwidth=4
 set expandtab
+set shiftround " Always indent to nearest tabstop
+set smarttab " Use shiftwidth at left margin, instead of tabstops
+set backspace=2 " Make backspace actually work, because why not?
 set title
 set noerrorbells
 set visualbell
 set ruler
 set showcmd " Shows the command being typed
+set noshowmode " Don't show -- INSERT --
+set complete-=i " Don't search includes because they are slow
 set wildmenu " Tab completion in command-line mode (:)
 set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~ " These file types are ignored when doing auto completions
-set viminfo=%,'20,"100,<1000,s100,:150,n~/.viminfo " Remembers stuff. RTFM
-set history=500
-set undolevels=500
-set directory=/tmp " Location of the swap file
-set browsedir=buffer " Open file browser in the current file's directory
-set foldenable
-" set foldclose=all " Folds will close when the cursor leaves them
-set backup " Create a backup file
+set wildmode=list:longest,full
+set viminfo=h,%,'50,"100,<10000,s1000,/1000,:1000 " Remembers stuff. RTFM
+set history=1000
+set undolevels=5000
+set foldenable " Close folds on open
+set foldnestmax=5 " I think 5 nests is enough, thank you
+set foldopen=insert,jump,mark,percent,quickfix,search,tag,undo " What movements open folds
 set showmatch " Briefly jumps to matching bracket
 set incsearch " Searches as you type
+set ignorecase " I use \c enough times that this is the obvious choice
 set smartcase " If search pattern uses upper case chars, make search case sensitive
 set wrapscan " Searches wrap around the end of the file
-" set nowrap " TEST
-" set wrapmargin=?
+set nowrap " I prefer this. I can always turn wrap on when its necessary with the mapping below
+set linebreak " Wrap lines at convenient points
 set list " Displays unprintable characters (whitespace, essentially)
-set listchars=tab:>>,trail:.,extends:#,nbsp:_ " Define what symbols to use with unprintable characters
+" Define what symbols to use with unprintable characters
+execute "set listchars=tab:>>,trail:\uB7,extends:#,nbsp:_"
 set splitright " When doing a vertical split, it puts it to the right of the current window
 set splitbelow " When doing a horizontal split, it puts it below the current window
 set diffopt+=iwhite " Vimdiff will ignore whitespace diffs
 set ttyfast " Smoother redrawing
+set lazyredraw " Don't redraw during macros
 set noscrollbind " Don't scroll windows synchronized
 set dictionary=/usr/share/dict/words
-set spellsuggest=best,10
+set spellsuggest=best,15
 set spelllang=en_us
-set modeline
-
-if has("gui_running")
-    colorscheme desert
-    set guioptions-=T " Never show the toolbar.
-    set guioptions-=m " Never show the menubar.
+set formatoptions+=n " Recognize numbered lists
+set backup " Create a backup file
+set backupdir=~/.tmp,~/tmp,/var/tmp,/tmp " Why not on .?
+set writebackup " Make a backup before overwriting a file
+set hlsearch
+set hidden " You can change buffers without saving
+set timeoutlen=400 " Let's see if this works for me
+set ttimeoutlen=100 " Escape and others a bit faster
+set noequalalways " Does not resize windows during a split or window close
+set virtualedit=block " 'Square up' visual selections
+set updatecount=20 " Save buffer every 20 characters
+set scrolloff=2 " Scroll file when cursor is 2 lines from top or bottom
+set sidescrolloff=4 " Scroll file horizontally when the cursor is 4 columns from left or right
+set sidescroll=1 " Trying this out...
+set textwidth=0 " Don't want automatic text width formatting
+if $USER != "root"
+    set modelines=1
+endif
+if exists('$TMUX')
+    set clipboard=
 else
-    colorscheme elflord
+    set clipboard=unnamed " Sync with OS clipboard
 endif
 
-" Disable syntax highlight for files larger than 50 MB
-autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
-autocmd VimLeave * windo diffoff
+" Always want it
+set t_Co=256
+if has("gui_running")
+    colorscheme solarized
+    colorscheme badwolf
+    set guioptions-=T " Never show the toolbar
+    set guioptions-=m " Never show the menubar
+    set guioptions-=r " Never show the right scrollbar
+    set guioptions-=l " Never show the left scrollbar
+    set guioptions-=b " Never show the bottom scrollbar
+else
+    colorscheme desert
+endif
 syntax on
 " }}}
 
@@ -64,26 +97,12 @@ highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
 highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
 let m = matchadd("AFP", "AFP")
 let m = matchadd("AFP", "afp")
-" }}}
 
-""" Notes options {{{
-augroup Notes
-    autocmd!
-
-    autocmd BufRead,BufNewFile *
-        \ if &filetype == "" |
-        \   nmap <silent> <F5> :set filetype=notes<CR> |
-        \ endif
-
-    autocmd Filetype notes
-        \ setlocal spell |
-        \ highlight NotesHeader ctermbg=darkblue ctermfg=grey cterm=bold,underline | let m = matchadd("NotesHeader", ">> .* <<$") |
-        \ highlight NotesSection1 ctermbg=black ctermfg=darkgreen cterm=none | let m = matchadd("NotesSection1", "^== .*$") |
-        \ highlight NotesSection2 ctermbg=black ctermfg=darkcyan cterm=none | let m = matchadd("NotesSection2", " == .*$") |
-        \ highlight NotesNoticeMe ctermbg=lightyellow ctermfg=black cterm=none | let m = matchadd("NotesNoticeMe", "_.*_") |
-        \ highlight NotesActionItem ctermbg=darkmagenta ctermfg=lightgrey cterm=underline | let m = matchadd("NotesActionItem", "@ .*$") |
-        \ highlight NotesPersonCallout ctermbg=black ctermfg=blue cterm=bold | let m = matchadd("NotesPersonCallout", "\\[.*\\]")
-augroup END
+" Make the completion menu actually visible
+highlight Pmenu ctermbg=white ctermfg=black
+highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
+highlight PmenuSbar ctermbg=grey ctermfg=grey
+highlight PmenuThumb ctermbg=blue ctermfg=blue
 " }}}
 
 """ Sessions {{{
@@ -122,57 +141,254 @@ autocmd VimEnter * call LoadSession()
 
 """ Views {{{
 if ! &diff
-    autocmd BufWinLeave * if expand("%") != "" | mkview! | endif
+    func! MakeViewOnLeave()
+        " TODO: split into two au's but need to ensure order
+        if exists("g:loaded_output")
+            call LoadedContentClear()
+        endif
+        if expand("%") != ""
+            mkview!
+        endif
+    endfun
+    autocmd BufWinLeave * call MakeViewOnLeave()
     autocmd BufWinEnter * if expand("%") != "" | silent loadview | endif
 endif
 " }}}
 
+""" Functions {{{
+" function! DiffOrig()
+    " mkview! 9
+    " topleft vnew
+    " set buftype=nofile bufhidden=wipe nobuflisted
+    " execute "silent read ".expand("#")
+    " 0d_
+    " wincmd l
+    " silent windo diffthis
+    " windo set nomodifiable
+    " 0
+    " set modifiable syntax=off
+" endfunction
+
+function! TmuxSplitHere(vertical, size)
+    if exists("$TMUX")
+        let l:cmd = "tmux split-window -c ".expand("%:p:h")
+        if (a:vertical == 1)
+            let l:cmd = l:cmd." -h"
+        endif
+        if (a:size > 0)
+            if (a:vertical == 1)
+                let l:cmd = l:cmd." -p ".a:size
+            else
+                let l:cmd = l:cmd." -l ".a:size
+            endif
+        endif
+        call system(l:cmd)
+    else
+        echomsg "Not in a tmux session"
+    endif
+endfunction
+
+" function! ExplorerLeftPane()
+    " TODO
+" endfunction
+
+" }}}
+
 """ Commands {{{
-func! DiffWithCMedOriginal()
-    exe "mkview! 9"
-    exe "topleft vnew | set bt=nofile"
-
-    " TODO: determine if currently in git or hg repo
-
-    " if GIT
-    exe "silent r !git show HEAD:#"
-
-    exe "0d_ | silent windo diffthis"
-endfun
-command! Dorig mkview! 9 | topleft vnew | set bt=nofile | r # | 0d_ | windo diffthis
-command! Dcm call DiffWithCMedOriginal()
-command! Dclr silent only | diffoff | silent loadview 9
 " Will allow me to sudo a file that is open without write permissions
-cmap w!! %!sudo tee > /dev/null %
+cnoremap w!! %!sudo tee > /dev/null %
+" }}}
+
+""" Abbreviations {{{
+" This is ridiculously useful
+iabbrev date- <c-r>=strftime("%d/%m/%Y %H:%M:%S")<cr>
 " }}}
 
 """ Keyboard mappings {{{
-nmap <Leader>s :source $MYVIMRC<CR>
-nmap <silent> <Leader><Leader> :nohlsearch<CR>
-nmap <silent> <Leader>] :sp<CR>:res 15<CR>/<C-R><C-W><CR>
-nmap <silent> <F6> :setlocal spell!<CR>
-nmap <silent> <F7> :call SaveSession()<CR>
-nmap <silent> <S-F7> :call LoadSession()<CR>
-nmap <silent> <C-F7> :windo call SaveSession()<CR>
-nmap <silent> <Leader><F7> :call DeleteSession()<CR>
-nmap <silent> <F8> :bnext<CR>
-nmap <silent> <S-F8> :bprevious<CR>
-nmap <silent> <F9> :set cursorline! number! relativenumber!<CR>
-nmap <silent> <C-F9> :set cursorline!<CR>
-nmap <silent> <S-F9> :set number! relativenumber!<CR>
-" <F11> is too often taken by the terminal's FULLSCREEN handler
-nmap <silent> <F12> :if ! &diff<CR>Dcm<CR>else<CR>Dclr<CR>endif<CR>
-nmap <silent> <S-F12> :if ! &diff<CR>Dorig<CR>else<CR>Dclr<CR>endif<CR><CR>
+nnoremap <leader>s :source $MYVIMRC<cr>
+nnoremap <silent> <leader><leader> :nohlsearch<cr>
+nnoremap Y y$
+
+"" Session saving (et.al.)
+nnoremap <silent> <F9> :call SaveSession()<cr>
+nnoremap <silent> <leader><F9> :windo call SaveSession()<cr>
+nnoremap <silent> <F10> :call DeleteSession()<cr>
+nnoremap <silent> <leader><F10> :call LoadSession()<cr>
+nnoremap <silent> <F12> :colorscheme solarized<bar>colorscheme badwolf<cr>
+
+"" Searching
+" Current file
+nnoremap <silent> g// :<c-u>noautocmd vimgrep // % <bar> cw<left><left><left><left><left><left><left><left>
+nnoremap <silent> g/. :<c-u>noautocmd vimgrep /\<<c-r><c-w>\>/ % <bar> cw<cr>
+" All open buffers
+nnoremap <silent> g\\ :cex [] <bar> bufdo vimgrepadd //g % <bar> cw<left><left><left><left><left><left><left><left><left>
+nnoremap <silent> g\. :cex [] <bar> bufdo vimgrepadd /<c-r><c-w>/g % <bar> cw<cr>
+nnoremap <silent> g\p :CtrlPBuffer<cr>
+" All files in current directory and down
+nnoremap <silent> g/\ :<c-u>noautocmd vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left><left>
+nnoremap <silent> g/, :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cw<cr>
+nnoremap <silent> g/p :CtrlP<cr>
+
+" Ctrl+W is a horrible window control whatsit
+nnoremap <silent> gw <c-w>
+" This version of the buffer navigation keywords might be a bit more useful than the last
+nnoremap <silent> gb :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
+nnoremap <silent> gB :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
+" A scratch space. Kinda useless, I think
+" nnoremap <silent> gs :botright new<bar>set buftype=nofile noswapfile modifiable<bar>res 10<cr>
+nnoremap <silent> gsh :<c-u>call TmuxSplitHere(0, v:count)<cr>
+nnoremap <silent> gsv :<c-u>call TmuxSplitHere(1, v:count)<cr>
+
+" TODO: nnoremap <silent> ge :ExSidebar<cr>
+
+"" Configuration
+nnoremap <silent> con :setlocal number! relativenumber!<cr>
+nnoremap <silent> coc :setlocal cursorline!<cr>
+nnoremap <silent> cow :setlocal wrap!<cr>
+nnoremap <silent> cos :setlocal spell!<cr>
+nnoremap <silent> col :setlocal list!<cr>
+nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
+nnoremap <silent> cot :if &laststatus == 2<bar>set laststatus=1<bar>else<bar>set laststatus=2<bar>endif<cr>
+nnoremap <silent> cop :setlocal paste!<cr>
+
+" nnoremap <silent> Uo :call DiffOrig()<cr>
+
+
+"" Plugins
+nnoremap <silent> pu :GundoToggle<cr>
+
+" Some (probably questionable) overrides/shortcuts
+" TODO: this doesn't work in paste mode
+inoremap jk <esc>
+inoremap kj <esc>
+inoremap fs <c-n>
+inoremap sf <c-n>
+
+inoremap sd <c-x><c-l>
+inoremap cv <c-x><c-o>
+
+nnoremap ZZ :wqa<cr>
+nnoremap ZQ :qa!<cr>
+nnoremap <space> :
+vnoremap <space> :
 
 "" I feel like being a pain in the ass
-noremap <Up> :echoerr "Use k instead! :-p"<CR>
-noremap <Down> :echoerr "Use j instead! :-p"<CR>
-noremap <Left> :echoerr "Use h instead! :-p"<CR>
-noremap <Right> :echoerr "Use l instead! :-p"<CR>
+noremap <up> :echoerr "Use k instead! :-p"<cr>
+noremap <down> :echoerr "Use j instead! :-p"<cr>
+noremap <left> :echoerr "Use h instead! :-p"<cr>
+noremap <right> :echoerr "Use l instead! :-p"<cr>
+
+augroup Notes
+    autocmd!
+
+    autocmd BufRead,BufNewFile *
+        \ if &filetype == "" |
+        \   nnoremap <silent> <F5> :set filetype=notes<cr> |
+        \ endif
+augroup END
+" }}}
+
+""" Status line {{{
+"" Highlights {{{
+highlight SL_HL_Default ctermbg=233 ctermfg=249 cterm=none
+highlight SL_HL_Mode ctermbg=55 ctermfg=7 cterm=bold
+highlight SL_HL_PasteWarning ctermbg=140 ctermfg=232 cterm=bold
+
+highlight SL_HL_FileNotModifiedNotReadOnly ctermbg=233 ctermfg=249 cterm=none
+highlight SL_HL_FileNotModifiedReadOnly ctermbg=233 ctermfg=88 cterm=bold
+highlight SL_HL_FileModifiedNotReadOnly ctermbg=22 ctermfg=7 cterm=none
+highlight SL_HL_FileModifiedReadOnly ctermbg=22 ctermfg=196 cterm=bold
+
+highlight SL_HL_FileNotModifiableNotReadOnly ctermbg=88 ctermfg=232 cterm=bold
+highlight SL_HL_FileNotModifiableReadOnly ctermbg=88 ctermfg=9 cterm=bold
+
+highlight SL_HL_FileTypeIsUnix ctermbg=233 ctermfg=239 cterm=none
+highlight SL_HL_FileTypeNotUnix ctermbg=52 ctermfg=233 cterm=none
+
+highlight SL_HL_CapsLockWarning ctermbg=118 ctermfg=232 cterm=bold
+
+highlight SL_HL_FileInfo ctermbg=234 ctermfg=244 cterm=none
+highlight SL_HL_FileInfoTotalLines ctermbg=234 ctermfg=239 cterm=none
+" }}}
+function! GetStatusLine()
+    let l:statusline="%#SL_HL_mode#\ %{mode()}\ %#SL_HL_Default#"
+    if &paste == 1
+        " TODO: Paste ▶
+        let l:statusline.="%#SL_HL_PasteWarning# PASTE %#SL_HL_Default#"
+    endif
+    " nnoremap <silent> cow :setlocal wrap!<cr>
+    " nnoremap <silent> cos :setlocal spell!<cr>
+
+    " File name, type and modified
+    " TODO: if filename > 0
+    let l:filename = expand("%:t")
+    if len(l:filename) > 0
+        let l:statusline.="\ "
+        if &modifiable == 1
+            if &modified == 1
+                if &readonly == 0
+                    let l:statusline.="%#SL_HL_FileModifiedNotReadOnly#"
+                else
+                    let l:statusline.="%#SL_HL_FileModifiedReadOnly#"
+                endif
+            else
+                if &readonly == 0
+                    let l:statusline.="%#SL_HL_FileNotModifiedNotReadOnly#"
+                else
+                    let l:statusline.="%#SL_HL_FileNotModifiedReadOnly#"
+                endif
+            endif
+        else
+            if &readonly == 0
+                let l:statusline.="%#SL_HL_FileNotModifiableNotReadOnly#"
+            else
+                let l:statusline.="%#SL_HL_FileNotModifiableReadOnly#"
+            endif
+        endif
+        let l:statusline.="\ ".l:filename."\ "
+    endif
+
+    if len(&filetype) > 0
+        if &fileformat == 'unix'
+            let l:statusline.="%#SL_HL_FileTypeIsUnix#"
+        else
+            let l:statusline.="%#SL_HL_FileTypeNotUnix#"
+        endif
+        let l:statusline.="\ ".&filetype."\ "
+    endif
+
+    " Display git info
+    let l:statusline.=vit#StatusLine()
+
+    " Right-justify the rest
+    let l:statusline.="%#SL_HL_Default#"
+    let l:statusline.="%="
+
+    " Syntastic flag
+    let l:statusline.="%#warningmsg#"
+    let l:statusline.="%{SyntasticStatuslineFlag()}"
+    let l:statusline.="%#SL_HL_Default#"
+
+    " TODO: This gets expensive
+    " let l:capsState = system("xset -q | grep \"Caps Lock\" | awk '{ print $2$3$4 }'")
+    " if match(l:capsState, "on") > -1
+        " let l:statusline.="%#SL_HL_CapsLockWarning# CAPS %#SL_HL_Default#"
+    " endif
+
+    let l:statusline.="%#SL_HL_FileInfo#\ %l%#SL_HL_FileInfoTotalLines#/%L%#SL_HL_FileInfo#"
+    let l:statusline.=",%c\ %P"
+
+    let l:statusline.="%*"
+
+    return l:statusline
+endfunction
+set statusline=%!GetStatusLine()
+set laststatus=2
+
 " }}}
 
 """ Commenting {{{
-function! SLCOtoggle()
+function! SLCOtoggle() "{{{
     normal ma
     if getline(".") =~ '^\s*'.g:slco " Remove the comment tag it contains
         silent exe ":.s;".escape(g:slco, "[]")." *;;"
@@ -196,8 +412,8 @@ function! SLCOtoggle()
         endif
     endif
     nohlsearch
-endfunction
-function! BLKCOtoggle(isVisual)
+endfunction "}}}
+function! BLKCOtoggle(isVisual) "{{{
     "" Define a few variables
     let curl = line(".")
     let curc = col(".")
@@ -242,7 +458,7 @@ function! BLKCOtoggle(isVisual)
         endif
     endif
     call cursor(curl, curc)
-endfunction
+endfunction "}}}
 
 " if exists("g:slco") | unlet! slco | endif
 if exists("g:slcoE") | unlet! slcoE | endif
@@ -275,17 +491,18 @@ augroup commenting
 
     " All Code Files
     autocmd FileType java,c,c++,cpp,h,h++,hpp,xml
-        \ vmap <silent> <S-Tab> :call BLKCOtoggle(1)<CR> |
-        \ nmap <silent> <S-Tab> :call BLKCOtoggle(0)<CR>
+        \ vnoremap <silent> <S-Tab> :call BLKCOtoggle(1)<cr> |
+        \ nnoremap <silent> <S-Tab> :call BLKCOtoggle(0)<cr>
 
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,xml,sh,ksh,csh,tcsh,zsh,bash,dash,pl,python,vim,vimrc,ahk,tex,make,gdb
-        \ map <silent> <Tab> :call SLCOtoggle()<CR>
+        \ nnoremap <silent> <Tab> :call SLCOtoggle()<cr>
     autocmd FileType sh,ksh,csh,tcsh,zsh,bash,pl,python,sql,vim,vimrc,ahk,tex,make,gdb
-        \ nmap <silent> <S-Tab> :'k,.call SLCOtoggle()<CR>
+        \ nnoremap <silent> <S-Tab> :'k,.call SLCOtoggle()<cr>
 
     autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
-        \ map <silent> todo oTODO: <ESC><Tab>==A |
-        \ map <silent> fixme oFIXME: <ESC><Tab>==A
+        \ nnoremap <silent> todo oTODO: <esc><Tab>==A
+    autocmd FileType java,c,c++,cpp,h,h++,hpp,sql,sh,ksh,csh,tcsh,zsh,bash,pl,vim,vimrc
+        \ nnoremap <silent> fixme oFIXME: <esc><Tab>==A
 augroup END
 " }}}
 
@@ -295,9 +512,9 @@ augroup END
     " autocmd BufwinEnter *.* echo "Loaded tags file"
 
     " Map some keys to access these
-    " nmap <silent> <C-\> :tab split<CR>:exec("tag ".expand("<cword>"))<CR>
+    " nnoremap <silent> <C-\> :tab split<cr>:execute("tag ".expand("<cword>"))<cr>
 " else
-    " nmap <silent> <C-\> :echoerr "No tags file loaded"<CR>
+    " nnoremap <silent> <C-\> :echoerr "No tags file loaded"<cr>
 " endif
 
 "" Use <C-X><C-O> to access these
@@ -314,4 +531,32 @@ augroup omni_complete
 augroup END
 " }}}
 
-" vim: set foldmethod=marker:
+""" Misc {{{
+augroup MiscOptions
+    autocmd!
+
+    "" Stop asking about simultaneous edits. 
+    "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
+    " TODO: This isn't working (not setting as readonly. Should also be not modifiable, I think)
+    " autocmd SwapExists * let v:swapchoice = 'o'
+    " autocmd SwapExists * echoerr 'Duplicate edit session (readonly)'
+
+    " Turns on spell check when typing out long git commit messages
+    autocmd FileType gitcommit setlocal spell
+    autocmd BufNewFile,BufRead *.md set filetype=markdown
+    autocmd FileType markdown setlocal spell
+
+    " Disable syntax highlight for files larger than 50 MB
+    autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
+
+    " Turn off diffing
+    autocmd VimLeave * windo diffoff
+
+    " Automatically reload this file
+    autocmd BufWritePost $MYVIMRC source $MYVIMRC
+
+    autocmd BufRead,BufNewFile *.confluence set filetype=confluencewiki spell foldmethod=manual
+augroup END
+" }}}
+
+" vim: set foldmethod=marker number relativenumber formatoptions-=tc:

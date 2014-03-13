@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# TODO: figure out a way to switch workspaces externally
+
+montage -mode concatenate -tile x1 <IMGS> <TARGET>

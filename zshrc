@@ -1,5 +1,7 @@
 # The following lines were added by compinstall
 
+[[ -z "$TMUX" ]] && exec tmux
+
 zstyle ':completion:*' completer _complete _ignored
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle :compinstall filename '/home/andres/.zshrc'

@@ -3,6 +3,7 @@
 ## Helpers {{{
 alias psgrep='ps -ef --cols 300 | grep -v grep | grep'
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/$\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias tattach='tmux attach-session -t'
 ## }}}
 
 ## Mine {{{
@@ -13,6 +14,7 @@ alias rn42='minicom rn42'
 
 ## Random {{{
 alias roll='echo $((RANDOM%7))'
+alias broadcast='script -qf | tee >(nc -kl 5000)'
 ## }}}
 
 ## Development {{{
@@ -60,3 +62,5 @@ alias xemacs='emacs'
 alias :q='exit'
 alias ..='cd ..'
 ## }}}
+
+# vim: set foldmethod=marker:

@@ -56,7 +56,7 @@ prompt_gitInfo() {
 prompt_repoInfo() {
     `git status >/dev/null 2>&1` && prompt_gitInfo
     `hg status >/dev/null 2>&1` && prompt_mercurialInfo
-    `cvs status >/dev/null 2>&1` && prompt_cvsInfo
+    #`cvs status >/dev/null 2>&1` && prompt_cvsInfo
 }
 
 prompt_jobs() {
@@ -87,6 +87,7 @@ setopt prompt_subst
 local lastRet="%(?,,%{$fg[red]%}∙%{$reset_color%})" # U+2639 - ☹
 
 # U+256D - ╭ ; U+2570 - ╰ ; U+2500 - ─
+# E2 95 AD ; E2 95 B0 ; E2 94 80
 PROMPT='%{$fg[black]%}╭%{$reset_color%}${lastRet} $(prompt_host)$(prompt_pwd)$(prompt_repoInfo)
 %{$fg[black]%}╰─%{$reset_color%}$(prompt_jobs) '
 RPROMPT='$(prompt_battery)'
