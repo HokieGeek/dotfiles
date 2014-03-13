@@ -103,6 +103,9 @@ highlight Pmenu ctermbg=white ctermfg=black
 highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
 highlight PmenuSbar ctermbg=grey ctermfg=grey
 highlight PmenuThumb ctermbg=blue ctermfg=blue
+
+" highlight ColorColumn ctermbg=240
+" set colorcolumn=81
 " }}}
 
 """ Sessions {{{
