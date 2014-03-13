@@ -385,8 +385,10 @@ function! GetStatusLine()
 
     return l:statusline
 endfunction
-set statusline=%!GetStatusLine()
-set laststatus=2
+if has("win32") == 0 && has("win64") == 0
+    set statusline=%!GetStatusLine()
+    set laststatus=2
+endif
 
 " }}}
 
