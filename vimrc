@@ -123,7 +123,7 @@ highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
 highlight PmenuSbar ctermbg=grey ctermfg=grey
 highlight PmenuThumb ctermbg=blue ctermfg=blue
 
-" highlight ColorColumn ctermbg=240
+highlight ColorColumn ctermbg=240
 " }}}
 
 """ Sessions {{{
@@ -290,9 +290,9 @@ nnoremap <silent> cow :setlocal wrap!<cr>
 nnoremap <silent> cos :setlocal spell!<cr>
 nnoremap <silent> col :setlocal list!<cr>
 nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
-nnoremap <silent> cot :if &laststatus == 2<bar>set laststatus=1<bar>else<bar>set laststatus=2<bar>endif<cr>
+nnoremap <silent> cot :if &laststatus == 2<bar>setlocal laststatus=1<bar>else<bar>setlocal laststatus=2<bar>endif<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
-nnoremap <silent> coq :if &colorcolumn > 0<bar>set colorcolumn=0<bar>else<bar>set colorcolumn=81<bar>endif<cr>
+nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<bar>setlocal colorcolumn=81<bar>endif<cr>
 
 " nnoremap <silent> Uo :call DiffOrig()<cr>
 
