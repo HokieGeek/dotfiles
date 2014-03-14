@@ -42,6 +42,7 @@ set wildmode=list:longest,full
 set viminfo=h,%,'50,"100,<10000,s1000,/1000,:1000 " Remembers stuff. RTFM
 set history=1000
 set undolevels=5000
+set undofile " Create an undo file so you can undo even after closing a file
 set foldenable " Close folds on open
 set foldnestmax=5 " I think 5 nests is enough, thank you
 set foldopen=insert,jump,mark,percent,quickfix,search,tag,undo " What movements open folds
@@ -247,6 +248,8 @@ iabbrev date- <c-r>=strftime("%d/%m/%Y %H:%M:%S")<cr>
 nnoremap <leader>s :source $MYVIMRC<cr>
 nnoremap <silent> <leader><leader> :nohlsearch<cr>
 nnoremap Y y$
+nnoremap / /\v
+vnoremap / /\v
 
 "" Session saving (et.al.)
 nnoremap <silent> <F9> :call SaveSession()<cr>
@@ -271,10 +274,11 @@ nnoremap <silent> gw <c-w>
 " This version of the buffer navigation keywords might be a bit more useful than the last
 nnoremap <silent> gb :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
 nnoremap <silent> gB :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
-" A scratch space. Kinda useless, I think
-" nnoremap <silent> gs :botright new<bar>set buftype=nofile noswapfile modifiable<bar>res 10<cr>
+" Split the term
 nnoremap <silent> gsh :<c-u>call SplitHere(0, v:count)<cr>
 nnoremap <silent> gsv :<c-u>call SplitHere(1, v:count)<cr>
+" A scratch space. Kinda useless, I think
+nnoremap <silent> gc :botright new<bar>set buftype=nofile noswapfile modifiable<bar>res 10<cr>
 
 " TODO: nnoremap <silent> ge :ExSidebar<cr>
 
@@ -299,10 +303,10 @@ nnoremap <silent> pb :CtrlPBuffer<cr>
 
 " Some (probably questionable) overrides/shortcuts
 " FIXME: this doesn't work in paste mode
-inoremap jk <esc>
-inoremap kj <esc>
-inoremap fs <c-n>
-inoremap sf <c-n>
+inoremap jj <esc>
+" inoremap kj <esc>
+inoremap ff <c-n>
+" inoremap sf <c-n>
 
 inoremap sd <c-x><c-l>
 inoremap cv <c-x><c-o>
