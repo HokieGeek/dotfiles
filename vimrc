@@ -79,7 +79,7 @@ set scrolloff=2 " Scroll file when cursor is 2 lines from top or bottom
 set sidescrolloff=4 " Scroll file horizontally when the cursor is 4 columns from left or right
 set sidescroll=1 " Trying this out...
 set textwidth=0 " Don't want automatic text width formatting
-if has("win32unix")
+if has("win32unix") || has("win32") || has("win64")
     set laststatus=0
 else
     set laststatus=2
@@ -128,13 +128,14 @@ highlight ColorColumn ctermbg=240
 
 """ Sessions {{{
 """ Some logic that allows me to create a session with the current layout
-if exists("s:session_file")
-    unlet! s:session_file
+if exists("b:session_file")
+    unlet! b:session_file
 endif
-autocmd BufWinEnter * let s:session_file = $HOME."/.vim/sessions/".expand("%:t").".session"
+" TODO: env var / function that retrieves the .vim dir?
+autocmd BufWinEnter * let b:session_file = $HOME."/.vim/sessions/".expand("%:t").".session"
 function! SaveSession()
-    exe "mksession! ".s:session_file
-    if filereadable(s:session_file)
+    execute "mksession! ".b:session_file
+    if filereadable(b:session_file)
         redraw
         echo "Saved session"
     else
@@ -142,16 +143,16 @@ function! SaveSession()
     endif
 endfunction
 function! LoadSession()
-    if filereadable(s:session_file)
-        exe "source ".s:session_file
+    if filereadable(b:session_file)
+        execute "source ".b:session_file
         syntax on
         redraw
         echo "Loaded saved session"
     endif
 endfunction
 function! DeleteSession()
-    if filereadable(s:session_file)
-        call delete(s:session_file)
+    if filereadable(b:session_file)
+        call delete(b:session_file)
         echo "Deleted session"
     else
         echo "No session found"
@@ -197,11 +198,7 @@ function! TmuxSplitHere(vertical, size)
         let l:cmd .= " -h"
     endif
     if (a:size > 0)
-        if (a:vertical == 1)
-            let l:cmd .= " -p ".a:size
-        else
-            let l:cmd .= " -l ".a:size
-        endif
+        let l:cmd .= ((a:vertical == 1) ? " -p " : " -l ").a:size
     endif
     call system(l:cmd)
 endfunction
@@ -225,7 +222,7 @@ function! SplitHere(vertical, size)
     elseif exists("$TERM") && expand("$TERM") == "screen"
         call ScreenSplitHere(a:vertical, a:size)
     else
-        echomsg "Did not find either a tmux nor a screen session"
+        echomsg "Did not find neither a tmux nor a screen session"
     endif
 endfunction
 " }}}
@@ -265,11 +262,9 @@ nnoremap <silent> g/. :<c-u>noautocmd vimgrep /\<<c-r><c-w>\>/ % <bar> cw<cr>
 " All open buffers
 nnoremap <silent> g\\ :cex [] <bar> bufdo vimgrepadd //g % <bar> cw<left><left><left><left><left><left><left><left><left>
 nnoremap <silent> g\. :cex [] <bar> bufdo vimgrepadd /<c-r><c-w>/g % <bar> cw<cr>
-nnoremap <silent> g\p :CtrlPBuffer<cr>
 " All files in current directory and down
 nnoremap <silent> g/\ :<c-u>noautocmd vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left><left>
 nnoremap <silent> g/, :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cw<cr>
-nnoremap <silent> g/p :CtrlP<cr>
 
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
@@ -298,9 +293,12 @@ nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<b
 
 "" Plugins
 nnoremap <silent> pu :GundoToggle<cr>
+nnoremap <silent> pf :CtrlP<cr>
+nnoremap <silent> pb :CtrlPBuffer<cr>
+
 
 " Some (probably questionable) overrides/shortcuts
-" TODO: this doesn't work in paste mode
+" FIXME: this doesn't work in paste mode
 inoremap jk <esc>
 inoremap kj <esc>
 inoremap fs <c-n>
@@ -320,14 +318,14 @@ noremap <down> :echoerr "Use j instead! :-p"<cr>
 noremap <left> :echoerr "Use h instead! :-p"<cr>
 noremap <right> :echoerr "Use l instead! :-p"<cr>
 
-augroup Notes
-    autocmd!
+" augroup Notes
+    " autocmd!
 
-    autocmd BufRead,BufNewFile *
-        \ if &filetype == "" |
-        \   nnoremap <silent> <F5> :set filetype=notes<cr> |
-        \ endif
-augroup END
+    " autocmd BufRead,BufNewFile *
+        " \ if &filetype == "" |
+        " \   nnoremap <silent> <F5> :set filetype=notes<cr> |
+        " \ endif
+" augroup END
 " }}}
 
 """ Completion {{{
@@ -383,4 +381,4 @@ augroup MiscOptions
 augroup END
 " }}}
 
-" vim: set foldmethod=marker number relativenumber formatoptions-=tc:
+" vim: set foldmarker={{{,}}} foldmethod=marker number relativenumber formatoptions-=tc:
