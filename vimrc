@@ -7,14 +7,6 @@ if has("vim_starting")
     set runtimepath+=~/.vim/bundle/vim-pathogen
 endif
 
-augroup RainbowParentheses
-    autocmd!
-    autocmd VimEnter * RainbowParenthesesToggle
-    autocmd Syntax * RainbowParenthesesLoadRound
-    autocmd Syntax * RainbowParenthesesLoadSquare
-    autocmd Syntax * RainbowParenthesesLoadBraces
-augroup END
-
 execute pathogen#infect()
 " }}}
 
@@ -248,8 +240,6 @@ iabbrev date- <c-r>=strftime("%d/%m/%Y %H:%M:%S")<cr>
 nnoremap <leader>s :source $MYVIMRC<cr>
 nnoremap <silent> <leader><leader> :nohlsearch<cr>
 nnoremap Y y$
-nnoremap / /\v
-vnoremap / /\v
 
 "" Session saving (et.al.)
 nnoremap <silent> <F9> :call SaveSession()<cr>
@@ -279,6 +269,9 @@ nnoremap <silent> gsh :<c-u>call SplitHere(0, v:count)<cr>
 nnoremap <silent> gsv :<c-u>call SplitHere(1, v:count)<cr>
 " A scratch space. Kinda useless, I think
 nnoremap <silent> gc :botright new<bar>set buftype=nofile noswapfile modifiable<bar>res 10<cr>
+" How is this not tied to a mapping already?
+nnoremap <silent> c, :cprevious<cr>
+nnoremap <silent> c. :cnext<cr>
 
 " TODO: nnoremap <silent> ge :ExSidebar<cr>
 
@@ -292,6 +285,7 @@ nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax
 nnoremap <silent> cot :if &laststatus == 2<bar>setlocal laststatus=1<bar>else<bar>setlocal laststatus=2<bar>endif<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
 nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<bar>setlocal colorcolumn=81<bar>endif<cr>
+nnoremap <silent> cob :if &background == "dark"<bar>setlocal background=light<bar>else<bar>setlocal background=dark<bar>endif<cr>
 
 " nnoremap <silent> Uo :call DiffOrig()<cr>
 
@@ -299,12 +293,13 @@ nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<b
 nnoremap <silent> pu :GundoToggle<cr>
 nnoremap <silent> pf :CtrlP<cr>
 nnoremap <silent> pb :CtrlPBuffer<cr>
-
+nnoremap <silent> pr :RainbowParenthesesToggle<cr>
 
 " Some (probably questionable) overrides/shortcuts
 " FIXME: this doesn't work in paste mode
 inoremap jj <esc>
-" inoremap kj <esc>
+inoremap jk <esc>
+inoremap kj <esc>
 inoremap ff <c-n>
 " inoremap sf <c-n>
 
