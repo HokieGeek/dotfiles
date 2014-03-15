@@ -224,6 +224,16 @@ function! SplitHere(vertical, size)
         echomsg "Did not find neither a tmux nor a screen session"
     endif
 endfunction
+" find files and populate the quickfix list (http://vim.wikia.com/wiki/VimTip799)
+" fun! FindFiles(filename)
+  " let error_file = tempname()
+  " silent exe '!find . -name "'.a:filename.'" | xargs file | sed "s/:/:1:/" > '.error_file
+  " set errorformat=%f:%l:%m
+  " exe "cfile ". error_file
+  " copen
+  " call delete(error_file)
+" endfun
+" command! -nargs=1 FindFile call FindFiles(<q-args>)
 " }}}
 
 " function! ExplorerLeftPane()
@@ -265,16 +275,19 @@ nnoremap <silent> g\. :cex [] <bar> bufdo vimgrepadd /<c-r><c-w>/g % <bar> cw<cr
 nnoremap <silent> g/\ :<c-u>noautocmd vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left><left>
 nnoremap <silent> g/, :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cw<cr>
 
+" A scratch space. Kinda useless, I think
+nnoremap <silent> gc :botright new<bar>set buftype=nofile noswapfile modifiable<bar>res 10<cr>
+" Split the term
+nnoremap <silent> gsh :<c-u>call SplitHere(0, v:count)<cr>
+nnoremap <silent> gsv :<c-u>call SplitHere(1, v:count)<cr>
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
 " This version of the buffer navigation keywords might be a bit more useful than the last
 nnoremap <silent> gb :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
 nnoremap <silent> gB :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
-" Split the term
-nnoremap <silent> gsh :<c-u>call SplitHere(0, v:count)<cr>
-nnoremap <silent> gsv :<c-u>call SplitHere(1, v:count)<cr>
-" A scratch space. Kinda useless, I think
-nnoremap <silent> gc :botright new<bar>set buftype=nofile noswapfile modifiable<bar>res 10<cr>
+" Argument nav
+nnoremap <silent> ga :next<cr>
+nnoremap <silent> gA :previous<cr>
 " How is this not tied to a mapping already?
 nnoremap <silent> c, :cprevious<cr>
 nnoremap <silent> c. :cnext<cr>
