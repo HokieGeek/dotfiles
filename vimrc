@@ -127,28 +127,34 @@ endif
 " TODO: env var / function that retrieves the .vim dir?
 autocmd BufWinEnter * let b:session_file = $HOME."/.vim/sessions/".expand("%:t").".session"
 function! SaveSession()
-    execute "mksession! ".b:session_file
-    if filereadable(b:session_file)
-        redraw
-        echo "Saved session"
-    else
-        echoerr "Error saving session"
+    if exists("b:session_file")
+        execute "mksession! ".b:session_file
+        if filereadable(b:session_file)
+            redraw
+            echo "Saved session"
+        else
+            echoerr "Error saving session"
+        endif
     endif
 endfunction
 function! LoadSession()
-    if filereadable(b:session_file)
-        execute "source ".b:session_file
-        syntax on
-        redraw
-        echo "Loaded saved session"
+    if exists("b:session_file")
+        if filereadable(b:session_file)
+            execute "source ".b:session_file
+            syntax on
+            redraw
+            echo "Loaded saved session"
+        endif
     endif
 endfunction
 function! DeleteSession()
-    if filereadable(b:session_file)
-        call delete(b:session_file)
-        echo "Deleted session"
-    else
-        echo "No session found"
+    if exists("b:session_file")
+        if filereadable(b:session_file)
+            call delete(b:session_file)
+            echo "Deleted session"
+        else
+            echo "No session found"
+        endif
     endif
 endfunction
 autocmd VimEnter * call LoadSession()
