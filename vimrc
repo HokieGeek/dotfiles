@@ -107,8 +107,8 @@ highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
 highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
 
 highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
-let m = matchadd("AFP", "AFP")
-let m = matchadd("AFP", "afp")
+call matchadd("AFP", "AFP")
+call matchadd("AFP", "afp")
 
 " Make the completion menu actually visible
 highlight Pmenu ctermbg=white ctermfg=black
@@ -125,7 +125,15 @@ if exists("b:session_file")
     unlet! b:session_file
 endif
 " TODO: env var / function that retrieves the .vim dir?
-autocmd BufWinEnter * let b:session_file = $HOME."/.vim/sessions/".expand("%:t").".session"
+function! InitiateSession()
+    let l:sessions_dir = $HOME."/.vim/sessions"
+    if isdirectory(l:sessions_dir) == 1
+        call system("mkdir ".l:sessions_dir)
+    endif
+    let b:session_file = l:sessions_dir."/".expand("%:t").".session"
+    unlet! l:sessions_dir
+endfunction
+autocmd BufWinEnter * call InitiateSession()
 function! SaveSession()
     if exists("b:session_file")
         execute "mksession! ".b:session_file
@@ -276,21 +284,26 @@ nnoremap <silent> g/\ :<c-u>noautocmd vimgrep // ** <bar> cw<left><left><left><l
 nnoremap <silent> g/, :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cw<cr>
 
 " A scratch space. Kinda useless, I think
-nnoremap <silent> gc :botright new<bar>set buftype=nofile noswapfile modifiable<bar>res 10<cr>
-" Split the term
+nnoremap <silent> gc :botright new<bar>set buftype=nofile bufhidden=wipe nobuflisted noswapfile modifiable<bar>res 10<cr>
+"" Split the term
 nnoremap <silent> gsh :<c-u>call SplitHere(0, v:count)<cr>
 nnoremap <silent> gsv :<c-u>call SplitHere(1, v:count)<cr>
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
+
+"" How are these not tied to a mapping already?
 " This version of the buffer navigation keywords might be a bit more useful than the last
 nnoremap <silent> gb :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
 nnoremap <silent> gB :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
-" Argument nav
+" Argument
 nnoremap <silent> ga :next<cr>
 nnoremap <silent> gA :previous<cr>
-" How is this not tied to a mapping already?
-nnoremap <silent> c, :cprevious<cr>
-nnoremap <silent> c. :cnext<cr>
+" Quickfix
+nnoremap <silent> gc :cnext<cr>
+cnoremap <silent> gC :cprevious<cr>
+" Location
+nnoremap <silent> gl :lnext<cr>
+nnoremap <silent> gL :lprevious<cr>
 
 " TODO: nnoremap <silent> ge :ExSidebar<cr>
 
@@ -314,16 +327,25 @@ nnoremap <silent> pf :CtrlP<cr>
 nnoremap <silent> pb :CtrlPBuffer<cr>
 nnoremap <silent> pr :RainbowParenthesesToggle<cr>
 
-" Some (probably questionable) overrides/shortcuts
+"" Some (probably questionable) overrides/shortcuts
 " FIXME: this doesn't work in paste mode
 inoremap jj <esc>
 inoremap jk <esc>
 inoremap kj <esc>
-inoremap ff <c-n>
-" inoremap sf <c-n>
 
+"" Completion
+" word
+inoremap fg <c-x><c-n>
+inoremap fG <c-x><c-p>
+" line
 inoremap sd <c-x><c-l>
+" omni
 inoremap cv <c-x><c-o>
+" filename
+" inoremap ?? <c-x><c-f>
+" dictionary
+" inoremap ?? <c-x><c-k>
+
 
 nnoremap ZZ :wqa<cr>
 nnoremap ZQ :qa!<cr>
