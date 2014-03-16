@@ -72,6 +72,7 @@ set scrolloff=2 " Scroll file when cursor is 2 lines from top or bottom
 set sidescrolloff=4 " Scroll file horizontally when the cursor is 4 columns from left or right
 set sidescroll=1 " Trying this out...
 set textwidth=0 " Don't want automatic text width formatting
+set number relativenumber " I always turn these on
 if has("win32unix") || has("win32") || has("win64")
     set laststatus=0
 else
