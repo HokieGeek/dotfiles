@@ -141,7 +141,9 @@ function! SaveSession()
             redraw
             echo "Saved session"
         else
-            echoerr "Error saving session"
+            echohl WarningMsg
+            echomsg "Error saving session"
+            echohl None
         endif
     endif
 endfunction
