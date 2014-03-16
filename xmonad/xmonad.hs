@@ -209,4 +209,4 @@ main = do
             } `additionalKeys` myKeys
 --}}}
 
--- vim: set foldmethod=marker:
+-- vim: set foldmethod=marker number relativenumber:

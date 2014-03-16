@@ -296,17 +296,25 @@ nnoremap <silent> gw <c-w>
 
 "" How are these not tied to a mapping already?
 " This version of the buffer navigation keywords might be a bit more useful than the last
-nnoremap <silent> gb :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
-nnoremap <silent> gB :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
+nnoremap <silent> ]b :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
+nnoremap <silent> [b :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
+nnoremap <silent> ]B :blast<cr>
+nnoremap <silent> [B :bfirst<cr>
 " Argument
-nnoremap <silent> ga :next<cr>
-nnoremap <silent> gA :previous<cr>
+nnoremap <silent> ]a :next<cr>
+nnoremap <silent> [a :previous<cr>
+nnoremap <silent> ]A :last<cr>
+nnoremap <silent> [A :first<cr>
 " Quickfix
-nnoremap <silent> gc :cnext<cr>
-cnoremap <silent> gC :cprevious<cr>
+nnoremap <silent> ]q :cnext<cr>
+nnoremap <silent> [q :cprevious<cr>
+nnoremap <silent> ]Q :clast<cr>
+nnoremap <silent> [Q :cfirst<cr>
 " Location
-nnoremap <silent> gl :lnext<cr>
-nnoremap <silent> gL :lprevious<cr>
+nnoremap <silent> ]l :lnext<cr>
+nnoremap <silent> [l :lprevious<cr>
+nnoremap <silent> ]L :llast<cr>
+nnoremap <silent> [L :lfirst<cr>
 
 " TODO: nnoremap <silent> ge :ExSidebar<cr>
 
