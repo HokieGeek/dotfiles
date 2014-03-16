@@ -284,7 +284,7 @@ nnoremap <silent> g/\ :<c-u>noautocmd vimgrep // ** <bar> cw<left><left><left><l
 nnoremap <silent> g/, :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cw<cr>
 
 " A scratch space. Kinda useless, I think
-nnoremap <silent> gc :botright new<bar>set buftype=nofile bufhidden=wipe nobuflisted noswapfile modifiable<bar>res 10<cr>
+nnoremap <silent> gh :botright new<bar>set buftype=nofile bufhidden=wipe nobuflisted noswapfile modifiable<bar>res 10<cr>
 "" Split the term
 nnoremap <silent> gsh :<c-u>call SplitHere(0, v:count)<cr>
 nnoremap <silent> gsv :<c-u>call SplitHere(1, v:count)<cr>
