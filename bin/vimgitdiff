@@ -34,7 +34,7 @@ vim -f -R -M -d "${merged_local}" "${merged_remote}" \
     -c ":tabedit $QLOCAL | silent file LOCAL" \
     -c ":vertical diffsplit $QREMOTE | silent file REMOTE" \
     -c ":diffsplit $QBASE | silent file BASE" \
-    -c ":wincmd K | res 10 | wincmd j" \
+    -c ":wincmd K | resize 10 | wincmd j" \
     -c ":tabfirst"
 
 retval=$?
