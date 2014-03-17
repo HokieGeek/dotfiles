@@ -92,13 +92,14 @@ set t_Co=256
 if has("gui_running")
     colorscheme solarized
     colorscheme badwolf
-    set guioptions-=T " Never show the toolbar
-    set guioptions-=m " Never show the menubar
-    set guioptions-=r " Never show the right scrollbar
-    set guioptions-=l " Never show the left scrollbar
-    set guioptions-=b " Never show the bottom scrollbar
+    " Never show the toolbar, menubar, right, left and bottom scrollbars
+    set guioptions-=T guioptions-=m guioptions-=r guioptions-=l guioptions-=b
 else
-    colorscheme desert
+    try
+        colorscheme ir_black
+    catch /E185:/
+        colorscheme desert
+    endtry
 endif
 syntax on
 " }}}
@@ -247,6 +248,29 @@ endfunction
 " command! -nargs=1 FindFile call FindFiles(<q-args>)
 " }}}
 
+function! CycleColorScheme()
+    " TODO: support for paired schemes (solarized with badwolf)
+    if exists("g:my_schemes") == 0
+        let g:my_schemes = split(glob(expand("$HOME/.vim/colors")."/*"), '\n')
+        let g:my_schemes = map(g:my_schemes, 'fnamemodify(v:val, ":t:r")')
+    endif
+    if exists("g:my_current_scheme") > 0
+        let l:idx = index(g:my_schemes, g:my_current_scheme)
+    elseif exists("g:colors_name") > 0
+        let l:idx = index(g:my_schemes, g:colors_name)
+    else
+        let l:idx = -1
+    endif
+    let l:idx += 1
+    if l:idx > len(g:my_schemes)-1
+        let l:idx = 0
+    endif
+    syntax reset
+    let g:my_current_scheme = g:my_schemes[l:idx]
+    execute "colorscheme ".g:my_current_scheme
+    echomsg "Switched to colorscheme: [".l:idx."]".g:my_current_scheme
+endfunction
+
 " function! ExplorerLeftPane()
     " TODO
 " endfunction
@@ -273,8 +297,9 @@ nnoremap <silent> <F9> :call SaveSession()<cr>
 nnoremap <silent> <leader><F9> :windo call SaveSession()<cr>
 nnoremap <silent> <F10> :call DeleteSession()<cr>
 nnoremap <silent> <leader><F10> :call LoadSession()<cr>
-nnoremap <silent> <F12> :colorscheme mustang<cr>
-nnoremap <silent> <S-F12> :colorscheme solarized<bar>colorscheme badwolf<cr>
+nnoremap <silent> <F8> :call CycleColorScheme()<cr>
+nnoremap <silent> <F12> :colorscheme herald<cr>
+nnoremap <silent> <leader><F12> :colorscheme solarized<bar>colorscheme badwolf<cr>
 
 "" Searching
 " Current file
@@ -352,8 +377,8 @@ inoremap kj <esc>
 
 "" Completion
 " word
-inoremap fg <c-x><c-n>
-inoremap fG <c-x><c-p>
+inoremap fg <c-n>
+inoremap fG <c-p>
 " line
 inoremap sd <c-x><c-l>
 " omni
