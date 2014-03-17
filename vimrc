@@ -273,7 +273,8 @@ nnoremap <silent> <F9> :call SaveSession()<cr>
 nnoremap <silent> <leader><F9> :windo call SaveSession()<cr>
 nnoremap <silent> <F10> :call DeleteSession()<cr>
 nnoremap <silent> <leader><F10> :call LoadSession()<cr>
-nnoremap <silent> <F12> :colorscheme solarized<bar>colorscheme badwolf<cr>
+nnoremap <silent> <F12> :colorscheme mustang<cr>
+nnoremap <silent> <S-F12> :colorscheme solarized<bar>colorscheme badwolf<cr>
 
 "" Searching
 " Current file
@@ -333,6 +334,7 @@ nnoremap <silent> cot :if &laststatus == 2<bar>setlocal laststatus=1<bar>else<ba
 nnoremap <silent> cop :setlocal paste!<cr>
 nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<bar>setlocal colorcolumn=81<bar>endif<cr>
 nnoremap <silent> cob :if &background == "dark"<bar>setlocal background=light<bar>else<bar>setlocal background=dark<bar>endif<cr>
+nnoremap <silent> coh :setlocal hlsearch!<cr>
 
 " nnoremap <silent> Uo :call DiffOrig()<cr>
 
