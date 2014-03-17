@@ -296,11 +296,15 @@ nnoremap <silent> gw <c-w>
 
 "" How are these not tied to a mapping already?
 " This version of the buffer navigation keywords might be a bit more useful than the last
+nnoremap <silent> gb ]b
+nnoremap <silent> gB [b
 nnoremap <silent> ]b :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
 nnoremap <silent> [b :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
 nnoremap <silent> ]B :blast<cr>
 nnoremap <silent> [B :bfirst<cr>
 " Argument
+nnoremap <silent> ga ]a
+nnoremap <silent> gA [a
 nnoremap <silent> ]a :next<cr>
 nnoremap <silent> [a :previous<cr>
 nnoremap <silent> ]A :last<cr>
