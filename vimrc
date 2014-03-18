@@ -90,10 +90,15 @@ endif
 " Always want it
 set t_Co=256
 if has("gui_running")
-    colorscheme solarized
-    colorscheme badwolf
+    try
+        colorscheme solarized
+        colorscheme badwolf
+    catch /E185:/
+        colorscheme murphy
+    endtry
     " Never show the toolbar, menubar, right, left and bottom scrollbars
     set guioptions-=T guioptions-=m guioptions-=r guioptions-=l guioptions-=b
+    set guioptions+=c " Use console dialogs instead of popup dialogs
 else
     try
         colorscheme ir_black
@@ -371,18 +376,17 @@ nnoremap <silent> pr :RainbowParenthesesToggle<cr>
 
 "" Some (probably questionable) overrides/shortcuts
 " FIXME: this doesn't work in paste mode
-inoremap jj <esc>
 inoremap jk <esc>
 inoremap kj <esc>
 
 "" Completion
 " word
-inoremap fg <c-n>
-inoremap fG <c-p>
+inoremap jj <c-n>
+inoremap JJ <c-p>
 " line
-inoremap sd <c-x><c-l>
+inoremap kk <c-x><c-l>
 " omni
-inoremap cv <c-x><c-o>
+inoremap KK <c-x><c-o>
 " filename
 " inoremap ?? <c-x><c-f>
 " dictionary
