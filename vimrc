@@ -4,7 +4,11 @@ set nocompatible " Not compatible with plain vi
 filetype off
 
 if has("vim_starting")
-    set runtimepath+=~/.vim/bundle/vim-pathogen
+    if isdirectory(expand("$HOME/.vim"))
+        set runtimepath+=$HOME/.vim/bundle/vim-pathogen
+    elseif isdirectory(expand("$HOME/vimfiles"))
+        set runtimepath+=$HOME/vimfiles/bundle/vim-pathogen
+    endif
 endif
 
 execute pathogen#infect()
@@ -72,8 +76,10 @@ set scrolloff=2 " Scroll file when cursor is 2 lines from top or bottom
 set sidescrolloff=4 " Scroll file horizontally when the cursor is 4 columns from left or right
 set sidescroll=1 " Trying this out...
 set textwidth=0 " Don't want automatic text width formatting
-set number relativenumber " I always turn these on
-if has("win32unix") || has("win32") || has("win64")
+if exists("&relativenumber")
+    set number relativenumber " I always turn these on
+endif
+if has("win32unix") " Cygwin can't handle it
     set laststatus=0
 else
     set laststatus=2
@@ -289,7 +295,9 @@ cnoremap w!! %!sudo tee > /dev/null %
 
 """ Abbreviations {{{
 " This is ridiculously useful
-iabbrev date- <c-r>=strftime("%d/%m/%Y %H:%M:%S")<cr>
+iabbrev datet- <c-r>=strftime("%d/%m/%Y %H:%M:%S")<cr>
+iabbrev date- <c-r>=strftime("%d/%m/%Y")<cr>
+iabbrev time- <c-r>=strftime("%H:%M:%S")<cr>
 " }}}
 
 """ Keyboard mappings {{{
