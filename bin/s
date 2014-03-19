@@ -11,7 +11,6 @@ usage() {
     {
     [ $# -gt 0 ] && echo -e "${1}\n"
     echo "USAGE: `basename $0` [-g|-a|-f] [-i] <EXPRESSION>"
-    # echo "USAGE: `basename $0` [-g|-a|-f] <EXPRESSION> [<FILENAMES>]"
     echo ""
     more << USAGE_INFO
        DEFAULT - Does a recursive, case-sensitive grep on
@@ -25,28 +24,11 @@ USAGE_INFO
     } >&2
 }
 
-# Variables
-MAX_RESULTS_TO_OPEN=30
-RESULT_TYPE_GREP="g"
-RESULT_TYPE_FILE="f"
-RESULT_TYPE_ARCHIVE="a"
-DELIM=":"
-AR_ARCHIVEDELIM=">>>>>>"
-
-inputMode="DEFAULT"
-children=""
-numResults=0
-ar_lastfound=""
 expression=""
 searchType="UNIVERSAL"
 caseInsensitive=0
 CIOpt_grep=""
 CIOpt_find=""
-results=/tmp/searchResults.tmp.$$
-status=/tmp/searchStatus.tmp.$$
-ar_extract=/tmp/searchARExtract.tmp.$$
-vi_script=/tmp/searchAllOpen.tmp.$$
-log=/tmp/s_log
 # Determine which instance of vi to use	
 [ -x "`which vim 2>/dev/null`" ] && v=vim || v=vi
 
@@ -72,64 +54,6 @@ if [ -z "${expression}" ]; then
     usage "No search expression provided"
     exit 1
 fi
-
-openResult() {
-    # Retrieve the record
-    r=`sed -n ${1}'p' ${results}`
-    resultType=`echo $r | cut -d${DELIM} -f1`
-    r=`echo $r | sed -e "s;^${resultType}${DELIM};;"`
-
-    # Parse out the file name from the record
-    case $searchType in
-    GREP_ALL|FILE_NAMES)
-        f=`echo $r | cut -d${DELIM} -f1`
-        [ "$searchType" != "FILE_NAMES" ] && p=`echo $r | cut -d${DELIM} -f2`
-        [ ! -f "$f" ] && return
-        ;;
-    AR_CONTENTS)
-        ar=`echo $r | cut -d${DELIM} -f1`
-        f=`echo $r | cut -d${DELIM} -f2`
-        ;;
-    esac
-
-    # Open the file
-    case ${searchType} in
-    GREP_ALL)
-        ${v} +${p} -c "set cursorline" -c "set number" -c "hi CursorLine ctermbg=red ctermfg=white cterm=none" $f
-        ;;
-    AR_CONTENTS)
-        # Create the extract directory, navigate to it, and remember where we are
-        curr=`pwd`
-        [ ! -d "${ar_extract}" ] && mkdir -p "${ar_extract}"
-        cd "${ar_extract}"
-        ar=`echo $ar | sed 's;^\./;;'`
-
-        doArAction "${curr}/${ar}" "EXTRACT" "${f}" 2>&1 >/dev/null
-        sleep 0.125
-        [ ! -f "${ar_extract}/${f}" ] && return
-        $v "${ar_extract}/${f}"
-
-        # Return us back to where we were
-        cd "${curr}"
-        ;;
-    FILE_NAMES) ${v} ${f} ;;
-    esac
-}
-
-clearInput() {
-    # Rep 1: Moves the cursor back # of chars
-    # Rep 2: Replaces the chars with spaces
-    # Rep 3: Moves the cursor back # of chars
-    rep=0
-    while [ $rep -lt 3 ]; do
-        c=$1
-        while [ $c -gt 0 ]; do
-            [ $rep -eq 1 ] && echo -n " " || echo -n ""
-            c=`expr $c - 1`
-        done
-        rep=`expr $rep + 1`
-    done
-}
 
 doArAction() {
     ar=$1; shift
@@ -159,84 +83,26 @@ doArAction() {
     ${cmd} "${ar}" "${args}"
 }
 
-grepArchive() {
-    #TODO: Don't need this header when there are no hits without replicating the search each time!
-    [ `doArAction "$@" "LIST" | egrep -c ${CIOpt_grep} "${expression}"` -le 0 ] && return
-    echo -e "${RESULT_TYPE_ARCHIVE}${DELIM}\E[33m${AR_ARCHIVEDELIM} ${@}\E[0m"
-    doArAction "$@" "LIST" | egrep ${CIOpt_grep} "${expression}" | awk "{ print \"${RESULT_TYPE_ARCHIVE}${DELIM}${@}${DELIM}\"\$0 }"
-
-    # hits=`doArAction "$@" "LIST" | egrep ${CIOpt_grep} "${expression}"`
-    # [ `echo $hits | wc -l` -le 0 ] && return
-    # echo -e "${RESULT_TYPE_ARCHIVE}${DELIM}\E[33m${AR_ARCHIVEDELIM} ${@}\E[0m"
-    # echo $hits | awk "{ print \"${RESULT_TYPE_ARCHIVE}${DELIM}${@}${DELIM}\"\$0 }"
-}
-
 ## Perform the search
-touch $results
-(
-echo "SEARCHING" > $status
 case $searchType in
-UNIVERSAL)
-    for f in `find . ! -name "." ! -name ".." -print`; do
-        # Check if the filename matches
-        # echo $f | egrep ${CIOpt_grep} "${expression}" | awk "{ print \"${RESULT_TYPE_FILE}${DELIM}\"\$0 }"
-
+# UNIVERSAL)
+    # for f in `find . ! -name "." ! -name ".." -print`; do
         # Check if the file contents match
-        # egrep -nI ${CIOpt_grep} "${expression}" ${f} | sed "s;\\\s*;;" | awk "{ print \"${RESULT_TYPE_GREP}${DELIM}${f}${DELIM}\"\$0 }"
-        egrep -nI ${CIOpt_grep} "${expression}" ${f} | sed "s;\\\s*;;" | awk "{ print \"${f}${DELIM}\"\$0 }"
-        # egrep -nI ${CIOpt_grep} "${expression}" ${f} | sed "s;\\\s*;;"
+        # egrep -nI ${CIOpt_grep} "${expression}" ${f} | sed "s;\\\s*;;" | awk "{ print \"${f}${DELIM}\"\$0 }"
 
         # Check if archive contents list matches
-        [ `echo $f | egrep -ci "(jar|tar|tgz|bz|gz|zip)$"` -gt 0 ] && grepArchive "${f}"
-    done
-    ;;
+        # [ `echo $f | egrep -ci "(jar|tar|tgz|bz|gz|zip)$"` -gt 0 ] && grepArchive "${f}"
+    # done
+    # ;;
 GREP_ALL)
-    # egrep -rnI ${CIOpt_grep} "${expression}" * | sed "s;\\\s*;;" |  awk "{ print \"${RESULT_TYPE_GREP}${DELIM}\"\$0 }"
-    egrep -rnI ${CIOpt_grep} "${expression}" * | sed "s;\\\s*;;"
+    exec ${v} -c "noautocmd vimgrep /${expression}/ **" -c "cw"
     ;;
-FILE_NAMES)
-    find . -${CIOpt_find}name "*${expression}*" -print | awk "{ print \"${RESULT_TYPE_FILE}${DELIM}\"\$0 }"
-    ;;
-AR_CONTENTS)
-    for a in `find . -print | egrep -i "(jar|tar|tgz|bz|gz|zip)$"`; do
-        grepArchive "${a}"
-    done
-    ;;
-esac 2>/dev/null > $results
-echo "COMPLETED" > $status
-) &
-children="$children $!"
-
-# Output message as search occurs
-throbber_chars=("/" "-" "\\" "|")
-throbber_pos=-1
-srchMsg="Searching  |"
-echo -n $srchMsg
-while [ ! -f "$status" -o "`cat $status`" != "COMPLETED" ]; do
-    if [ `cat $results | wc -l` -gt 0 ]; then # Output results as soon as we have any
-        sleep 0.125
-        break;
-    elif [ ! -f "$status" -o "`cat $status`" == "SEARCHING" ]; then
-        throbber_pos=`expr $(expr $throbber_pos + 1) % 3`
-        echo -n "${throbber_chars[$throbber_pos]}"
-        sleep 0.0625
-    fi
-done
-clearInput ${#srchMsg}
-
-## If there is only one result, display it
-numResults=`cat $results | wc -l`
-if [ $numResults -le 1 -a -f $status -a "`cat $status`" == "COMPLETED" ]; then
-    if [ $numResults -gt 0 -a "$searchType" != "AR_CONTENTS" ] ; then
-        set -o noglob
-        echo "Opening: "`sed -n -e '1p' $results | sed -e "s/^[a-z]${DELIM}//"`
-        set +o noglob
-        openResult 1
-    else
-        echo "No results found."
-    fi
-    exit 0
-fi
-
-## Display the results and parse the commands
-exec ${v} -c "cfile ${results}" -c "copen"
+# FILE_NAMES)
+    # find . -${CIOpt_find}name "*${expression}*" -print | awk "{ print \"${RESULT_TYPE_FILE}${DELIM}\"\$0 }"
+    # ;;
+# AR_CONTENTS)
+    # for a in `find . -print | egrep -i "(jar|tar|tgz|bz|gz|zip)$"`; do
+        # grepArchive "${a}"
+    # done
+    # ;;
+esac
