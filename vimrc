@@ -3,15 +3,20 @@ set nocompatible " Not compatible with plain vi
 """ Plugins {{{
 filetype off
 
+let g:have_plugins = 0
 if has("vim_starting")
-    if isdirectory(expand("$HOME/.vim"))
+    if isdirectory(expand("$HOME/.vim/bundle/vim-pathogen"))
         set runtimepath+=$HOME/.vim/bundle/vim-pathogen
-    elseif isdirectory(expand("$HOME/vimfiles"))
+        let g:have_plugins = 1
+    elseif isdirectory(expand("$HOME/vimfiles/bundle/vim-pathogen"))
         set runtimepath+=$HOME/vimfiles/bundle/vim-pathogen
+        let g:have_plugins = 1
     endif
 endif
 
-execute pathogen#infect()
+if g:have_plugins
+    execute pathogen#infect()
+endif
 " }}}
 
 """ Options {{{
@@ -38,7 +43,9 @@ set wildmode=list:longest,full
 set viminfo=h,%,'50,"100,<10000,s1000,/1000,:1000 " Remembers stuff. RTFM
 set history=1000
 set undolevels=5000
-set undofile " Create an undo file so you can undo even after closing a file
+if exists("&undofile")
+    set undofile " Create an undo file so you can undo even after closing a file
+endif
 set foldenable " Close folds on open
 set foldnestmax=5 " I think 5 nests is enough, thank you
 set foldopen=insert,jump,mark,percent,quickfix,search,tag,undo " What movements open folds
@@ -95,9 +102,9 @@ endif
 
 " Always want it
 set t_Co=256
+set background=dark
 if has("gui_running")
     try
-        colorscheme solarized
         colorscheme badwolf
     catch /E185:/
         colorscheme murphy
@@ -120,8 +127,12 @@ highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
 highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
 
 highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
-call matchadd("AFP", "AFP")
-call matchadd("AFP", "afp")
+if exists("&matchadd")
+    call matchadd("AFP", "AFP")
+    call matchadd("AFP", "afp")
+else
+    match AFP /\cAFP/
+endif
 
 " Make the completion menu actually visible
 highlight Pmenu ctermbg=white ctermfg=black
@@ -129,7 +140,9 @@ highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
 highlight PmenuSbar ctermbg=grey ctermfg=grey
 highlight PmenuThumb ctermbg=blue ctermfg=blue
 
-highlight ColorColumn ctermbg=240
+if exists("&ColorColumn")
+    highlight ColorColumn ctermbg=240
+endif
 " }}}
 
 """ Sessions {{{
@@ -260,7 +273,6 @@ endfunction
 " }}}
 
 function! CycleColorScheme()
-    " TODO: support for paired schemes (solarized with badwolf)
     if exists("g:my_schemes") == 0
         let g:my_schemes = split(glob(expand("$HOME/.vim/colors")."/*"), '\n')
         let g:my_schemes = map(g:my_schemes, 'fnamemodify(v:val, ":t:r")')
@@ -278,8 +290,10 @@ function! CycleColorScheme()
     endif
     syntax reset
     let g:my_current_scheme = g:my_schemes[l:idx]
+    set background=dark
     execute "colorscheme ".g:my_current_scheme
-    echomsg "Switched to colorscheme: [".l:idx."]".g:my_current_scheme
+    " echomsg "Switched to colorscheme: [".l:idx."]".g:my_current_scheme
+    execute "colorscheme"
 endfunction
 
 " function! ExplorerLeftPane()
@@ -300,6 +314,18 @@ iabbrev date- <c-r>=strftime("%d/%m/%Y")<cr>
 iabbrev time- <c-r>=strftime("%H:%M:%S")<cr>
 " }}}
 
+""" Searching configuration {{{
+if executable('ag')
+    set grepprg=ag\ --nogroup\ --nocolor
+    if g:have_plugins
+        let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+        let g:ctrlp_use_caching = 0
+    endif
+elseif executable('ack')
+    set grepprg=ack
+endif
+" }}}
+
 """ Keyboard mappings {{{
 nnoremap <leader>s :source $MYVIMRC<cr>
 nnoremap <silent> <leader><leader> :nohlsearch<cr>
@@ -310,9 +336,7 @@ nnoremap <silent> <F9> :call SaveSession()<cr>
 nnoremap <silent> <leader><F9> :windo call SaveSession()<cr>
 nnoremap <silent> <F10> :call DeleteSession()<cr>
 nnoremap <silent> <leader><F10> :call LoadSession()<cr>
-nnoremap <silent> <F8> :call CycleColorScheme()<cr>
-nnoremap <silent> <F12> :colorscheme herald<cr>
-nnoremap <silent> <leader><F12> :colorscheme solarized<bar>colorscheme badwolf<cr>
+nnoremap <silent> <F12> :call CycleColorScheme()<cr>
 
 "" Searching
 " Current file
@@ -370,17 +394,21 @@ nnoremap <silent> col :setlocal list!<cr>
 nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
 nnoremap <silent> cot :if &laststatus == 2<bar>setlocal laststatus=1<bar>else<bar>setlocal laststatus=2<bar>endif<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
-nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<bar>setlocal colorcolumn=81<bar>endif<cr>
 nnoremap <silent> cob :if &background == "dark"<bar>setlocal background=light<bar>else<bar>setlocal background=dark<bar>endif<cr>
 nnoremap <silent> coh :setlocal hlsearch!<cr>
+if exists("&ColorColumn")
+    nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<bar>setlocal colorcolumn=81<bar>endif<cr>
+endif
 
 " nnoremap <silent> Uo :call DiffOrig()<cr>
 
 "" Plugins
-nnoremap <silent> pu :GundoToggle<cr>
-nnoremap <silent> pf :CtrlP<cr>
-nnoremap <silent> pb :CtrlPBuffer<cr>
-nnoremap <silent> pr :RainbowParenthesesToggle<cr>
+if g:have_plugins
+    nnoremap <silent> pu :GundoToggle<cr>
+    nnoremap <silent> pf :CtrlP<cr>
+    nnoremap <silent> pb :CtrlPBuffer<cr>
+    nnoremap <silent> pr :RainbowParenthesesToggle<cr>
+endif
 
 "" Some (probably questionable) overrides/shortcuts
 " FIXME: this doesn't work in paste mode
