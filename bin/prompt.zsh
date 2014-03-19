@@ -12,7 +12,7 @@ prompt_cvsInfo() {
 }
 
 prompt_mercurialInfo() {
-    info=" %{$fg_bold[cyan]%}"
+    info=" %{$fg_bold[yellow]%}"
 
     # Determine the branch
     branch=`hg branch`
@@ -28,7 +28,7 @@ prompt_mercurialInfo() {
 }
 
 prompt_gitInfo() {
-    info=" %{$fg_bold[yellow]%}"
+    info=" %{$fg_bold[cyan]%}"
 
     # Determine the branch
     branch=`git branch | grep "^*" | sed "s/^\*\s*//"`
