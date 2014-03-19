@@ -140,8 +140,8 @@ highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
 highlight PmenuSbar ctermbg=grey ctermfg=grey
 highlight PmenuThumb ctermbg=blue ctermfg=blue
 
-if exists("&ColorColumn")
-    highlight ColorColumn ctermbg=240
+if exists("&colorcolumn")
+    highlight ColorColumn guibg=#C0C0C0 ctermbg=234
 endif
 " }}}
 
@@ -228,7 +228,10 @@ endif
 
 "" Split the screen {{{
 function! TmuxSplitHere(vertical, size)
-    let l:cmd = "tmux split-window -c ".expand("%:p:h")
+    let l:cmd = "tmux split-window"
+    " if tmux -V > 1.4
+        let l:cmd .= " -c ".expand("%:p:h")
+    " endif
     if (a:vertical == 1)
         let l:cmd .= " -h"
     endif
@@ -292,8 +295,8 @@ function! CycleColorScheme()
     let g:my_current_scheme = g:my_schemes[l:idx]
     set background=dark
     execute "colorscheme ".g:my_current_scheme
-    " echomsg "Switched to colorscheme: [".l:idx."]".g:my_current_scheme
-    execute "colorscheme"
+    echomsg "Switched to colorscheme: ".g:my_current_scheme
+    " execute "colorscheme"
 endfunction
 
 " function! ExplorerLeftPane()
@@ -354,6 +357,7 @@ nnoremap <silent> gh :botright new<bar>set buftype=nofile bufhidden=wipe nobufli
 "" Split the term
 nnoremap <silent> gsh :<c-u>call SplitHere(0, v:count)<cr>
 nnoremap <silent> gsv :<c-u>call SplitHere(1, v:count)<cr>
+
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
 
@@ -396,7 +400,7 @@ nnoremap <silent> cot :if &laststatus == 2<bar>setlocal laststatus=1<bar>else<ba
 nnoremap <silent> cop :setlocal paste!<cr>
 nnoremap <silent> cob :if &background == "dark"<bar>setlocal background=light<bar>else<bar>setlocal background=dark<bar>endif<cr>
 nnoremap <silent> coh :setlocal hlsearch!<cr>
-if exists("&ColorColumn")
+if exists("&colorcolumn")
     nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<bar>setlocal colorcolumn=81<bar>endif<cr>
 endif
 
@@ -503,4 +507,4 @@ augroup MiscOptions
 augroup END
 " }}}
 
-" vim: set foldmarker={{{,}}} foldmethod=marker number relativenumber formatoptions-=tc:
+" vim: set foldmarker={{{,}}} foldmethod=marker formatoptions-=tc:
