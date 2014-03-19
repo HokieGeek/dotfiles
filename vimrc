@@ -123,26 +123,36 @@ syntax on
 " }}}
 
 """ Highlights {{{
-highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
-highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
+function! SetMyHighlights()
+    " echomsg "SetMyHighlights()"
+    " highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
+    highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
 
-highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
-try
-    call matchadd("AFP", "AFP")
-    call matchadd("AFP", "afp")
-catch /E117:/
-    match AFP /\cAFP/
-endtry
+    highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
+    try
+        call matchadd("AFP", "AFP")
+        call matchadd("AFP", "afp")
+    catch /E117:/
+        match AFP /\cAFP/
+    endtry
 
-" Make the completion menu actually visible
-highlight Pmenu ctermbg=white ctermfg=black
-highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
-highlight PmenuSbar ctermbg=grey ctermfg=grey
-highlight PmenuThumb ctermbg=blue ctermfg=blue
+    " Make the completion menu actually visible
+    highlight Pmenu ctermbg=white ctermfg=black
+    highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
+    highlight PmenuSbar ctermbg=grey ctermfg=grey
+    highlight PmenuThumb ctermbg=blue ctermfg=blue
 
-if exists("&colorcolumn")
-    highlight ColorColumn guibg=#C0C0C0 ctermbg=234
-endif
+    if exists("&colorcolumn")
+        highlight ColorColumn guibg=#C0C0C0 ctermbg=234
+    endif
+
+endfunction
+call SetMyHighlights()
+augroup MiscOptions
+    autocmd!
+
+    autocmd ColorScheme * call SetMyHighlights()
+augroup END
 " }}}
 
 """ Sessions {{{
@@ -491,8 +501,11 @@ augroup MiscOptions
 
     " Turns on spell check when typing out long git commit messages
     autocmd FileType gitcommit setlocal spell
+
     autocmd BufNewFile,BufRead *.md set filetype=markdown
     autocmd FileType markdown setlocal spell
+
+    autocmd BufNewFile,BufRead *.conkyrc set filetype=conkyrc
 
     " Disable syntax highlight for files larger than 50 MB
     autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
