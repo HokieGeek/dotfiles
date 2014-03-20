@@ -474,19 +474,6 @@ noremap <right> :echoerr "Use l instead! :-p"<cr>
 " else
     " nnoremap <silent> <C-\> :echoerr "No tags file loaded"<cr>
 " endif
-
-"" Use <C-X><C-O> to access these
-augroup omni_complete
-    autocmd!
-    autocmd FileType c,c++,cpp,h,h++,hpp set omnifunc=ccomplete#Complete
-    autocmd FileType java set omnifunc=javacomplete#Complete
-    autocmd FileType python set omnifunc=pythoncomplete#Complete
-    autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
-    autocmd FileType css set omnifunc=csscomplete#CompleteCSS
-    autocmd FileType html set omnifunc=htmlcomplete#CompleteTags
-    autocmd FileType php set omnifunc=pythoncomplete#CompletePHP
-    autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
-augroup END
 " }}}
 
 """ Misc {{{
