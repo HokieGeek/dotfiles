@@ -8,6 +8,7 @@ My personal linux config files
 ``` sh
 git clone https://github.com/HokieGeek/dotfiles
 cd dotfiles
+git submodule update --init --recursive
 ./setup.sh
 ```
 
