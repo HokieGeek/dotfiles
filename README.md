@@ -2,7 +2,7 @@ dotfiles
 ========
 My personal linux config files
 
-![](https://www.dropbox.com/s/uitldoy20rudaot/ss.png)
+![](https://dl.dropboxusercontent.com/u/6524/ss.png)
 
 ## Installation
 ``` sh
@@ -23,7 +23,7 @@ No scrollbar and transparent
 Simple statusbar that just shows currently open terminals and an identifier for the current pane
 
 ### shell prompts
-Both *bash* and *zsh* prompts display git and mercurial repo information
+Both **bash** and **zsh** prompts display git and mercurial repo information
 
 ### xmonad
 A fairly basic setup with custom key bindings and use of the GS menu
