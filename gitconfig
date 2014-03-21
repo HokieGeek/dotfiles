@@ -26,3 +26,4 @@
     dt = difftool -y
 [core]
     eol = lf
+	excludesfile = /home/andres/.gitignore
