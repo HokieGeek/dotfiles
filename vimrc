@@ -335,7 +335,7 @@ if executable('ag')
         let g:ctrlp_use_caching = 0
     endif
 elseif executable('ack')
-    set grepprg=ack
+    set grepprg=ack\ --nogroup\ ---nocolor
 endif
 " }}}
 
