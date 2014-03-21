@@ -95,7 +95,7 @@ case $searchType in
     # done
     # ;;
 GREP_ALL)
-    exec ${v} -c "noautocmd vimgrep /${expression}/ **" -c "cw"
+    exec ${v} -c "noautocmd grep ${expression}" -c "cw" -c "resize 30"
     ;;
 # FILE_NAMES)
     # find . -${CIOpt_find}name "*${expression}*" -print | awk "{ print \"${RESULT_TYPE_FILE}${DELIM}\"\$0 }"

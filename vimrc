@@ -334,8 +334,10 @@ if executable('ag')
         let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
         let g:ctrlp_use_caching = 0
     endif
+    let g:use_external_grep = 1
 elseif executable('ack')
     set grepprg=ack\ --nogroup\ ---nocolor
+    let g:use_external_grep = 1
 endif
 " }}}
 
@@ -352,15 +354,29 @@ nnoremap <silent> <leader><F10> :call LoadSession()<cr>
 nnoremap <silent> <F12> :call CycleColorScheme()<cr>
 
 "" Searching
-" Current file
-nnoremap <silent> g// :<c-u>noautocmd vimgrep // % <bar> cw<left><left><left><left><left><left><left><left>
-nnoremap <silent> g/. :<c-u>noautocmd vimgrep /\<<c-r><c-w>\>/ % <bar> cw<cr>
-" All open buffers
-nnoremap <silent> g\\ :cex [] <bar> bufdo vimgrepadd //g % <bar> cw<left><left><left><left><left><left><left><left><left>
-nnoremap <silent> g\. :cex [] <bar> bufdo vimgrepadd /<c-r><c-w>/g % <bar> cw<cr>
-" All files in current directory and down
-nnoremap <silent> g/\ :<c-u>noautocmd vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left><left>
-nnoremap <silent> g/, :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cw<cr>
+let g:use_external_grep = 1
+" TODO: just set grepprg to internal?
+if exists("g:use_external_grep")
+    " Current file
+    nnoremap <silent> g// :<c-u>noautocmd grep  <bar> cw<left><left><left><left><left>
+    nnoremap <silent> g/. :<c-u>noautocmd grep '\<<c-r><c-w>\>' <bar> cw<cr>
+    " All open buffers
+    nnoremap <silent> g\\ :cexpr [] <bar> bufdo grepadd //g % <bar> cw<left><left><left><left><left><left><left><left><left>
+    nnoremap <silent> g\. :cexpr [] <bar> bufdo grepadd <c-r><c-w> <bar> cw<cr>
+    " All files in current directory and down
+    nnoremap <silent> g/\ :<c-u>noautocmd grep  <bar> cw<left><left><left><left><left>
+    nnoremap <silent> g/, :<c-u>noautocmd grep <c-r><c-w> <bar> cw<cr>
+else
+    " Current file
+    nnoremap <silent> g// :<c-u>noautocmd vimgrep // % <bar> cw<left><left><left><left><left><left><left><left>
+    nnoremap <silent> g/. :<c-u>noautocmd vimgrep /\<<c-r><c-w>\>/ % <bar> cw<cr>
+    " All open buffers
+    nnoremap <silent> g\\ :cexpr [] <bar> bufdo vimgrepadd //g % <bar> cw<left><left><left><left><left><left><left><left><left>
+    nnoremap <silent> g\. :cexpr [] <bar> bufdo vimgrepadd /<c-r><c-w>/g % <bar> cw<cr>
+    " All files in current directory and down
+    nnoremap <silent> g/\ :<c-u>noautocmd vimgrep // ** <bar> cw<left><left><left><left><left><left><left><left><left>
+    nnoremap <silent> g/, :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cw<cr>
+endif
 
 " A scratch space. Kinda useless, I think
 nnoremap <silent> gh :botright new<bar>set buftype=nofile bufhidden=wipe nobuflisted noswapfile modifiable<bar>res 10<cr>
