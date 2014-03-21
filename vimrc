@@ -338,6 +338,8 @@ if executable('ag')
 elseif executable('ack')
     set grepprg=ack\ --nogroup\ ---nocolor
     let g:use_external_grep = 1
+elseif executable('grep')
+    set grepprg=grep\ -rnIH
 " else
 " TODO: just set grepprg to internal?
 endif

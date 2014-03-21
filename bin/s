@@ -1,22 +1,14 @@
 #!/bin/bash
 
-# TODO:
-#   - Having to wait for the io buffer to catch up is really becoming a problem
-#   - Implement a "quick" option which skips writing to file (formatted without line nums)
-#   - Allow for filenames for default command
-#   - Maybe implement paging (h/l)
-#   - Might want to consider nav (j/k) along with paging
-
 usage() {
     {
     [ $# -gt 0 ] && echo -e "${1}\n"
-    echo "USAGE: `basename $0` [-g|-a|-f] [-i] <EXPRESSION>"
+    echo "USAGE: `basename $0` [-g|-f] [-i] <EXPRESSION>"
     echo ""
     more << USAGE_INFO
        DEFAULT - Does a recursive, case-sensitive grep on
                 all files matching file names, contents and archives
        -g      - Greps the contents of all of the files in the directory (recursive)
-       -a      - Searches the content list of archives (tar,jar,zip) for matching paths
        -f      - Searches for file and directory names (recursive)
 
        -i      - Makes any search case-insensitive
@@ -25,10 +17,10 @@ USAGE_INFO
 }
 
 expression=""
-searchType="UNIVERSAL"
+searchType="GREP_ALL"
 caseInsensitive=0
 CIOpt_grep=""
-CIOpt_find=""
+# CIOpt_find=""
 # Determine which instance of vi to use	
 [ -x "`which vim 2>/dev/null`" ] && v=vim || v=vi
 
@@ -36,8 +28,7 @@ CIOpt_find=""
 # Parse the arguments
 while [ $# -gt 0 ]; do
     case $1 in
-    -a) searchType="AR_CONTENTS";;
-    -f) searchType="FILE_NAMES";;
+    # -f) searchType="FILE_NAMES";;
     -g) searchType="GREP_ALL";;
     -i) caseInsensitive=1;;
     *) expression="${expression} $1";;
@@ -55,54 +46,28 @@ if [ -z "${expression}" ]; then
     exit 1
 fi
 
-doArAction() {
-    ar=$1; shift
-    action=$1; shift
-    [ $# -gt 0 ] && args="$@" || args=""
-
-    case $action in
-    EXTRACT)
-        case "${ar}" in
-        *jar) cmd="jar -xvf";;
-        *tar) cmd="tar -xvf";; # Have to deal with bzipped and bz.tar/gz.tar name
-        *tgz) cmd="tar -xvzf";;
-        *zip) cmd="unzip";;
-        esac
-        ;;
-    LIST)
-        case "${ar}" in
-        *jar) cmd="jar -tf";;
-        # *bz2|*gz|*tar|*tgz) ;;
-        *tar) cmd="tar -tf";; # Have to deal with bzipped and bz.tar/gz.tar name
-        *tgz) cmd="tar -tzf";;
-        *zip) cmd="unzip -l";;
-        esac
-        ;;
-    esac
-
-    ${cmd} "${ar}" "${args}"
+grepAll() {
+    if [ -x "`which ag 2>/dev/null`" ]; then
+        grepprg="ag\\ --nogroup\\ --nocolor"
+    elif [ -x "`which ack 2>/dev/null`" ]; then
+        grepprg="ack\\ --nogroup\\ --nocolor"
+    else
+        grepprg="grep\\ -rnIH"
+    fi
+    exec ${v} -c "set grepprg=${grepprg}" \
+              -c "set foldlevel=99" \
+              -c "set cursorline" \
+              -c "noautocmd silent grep ${CIOpt_grep} ${expression} *" \
+              -c "cwindow" \
+              -c "set nocursorline"
+              # -c "resize 30"
 }
+
 
 ## Perform the search
 case $searchType in
-# UNIVERSAL)
-    # for f in `find . ! -name "." ! -name ".." -print`; do
-        # Check if the file contents match
-        # egrep -nI ${CIOpt_grep} "${expression}" ${f} | sed "s;\\\s*;;" | awk "{ print \"${f}${DELIM}\"\$0 }"
-
-        # Check if archive contents list matches
-        # [ `echo $f | egrep -ci "(jar|tar|tgz|bz|gz|zip)$"` -gt 0 ] && grepArchive "${f}"
-    # done
-    # ;;
-GREP_ALL)
-    exec ${v} -c "noautocmd grep ${expression}" -c "cw" -c "resize 30"
-    ;;
+GREP_ALL) grepAll ;;
 # FILE_NAMES)
     # find . -${CIOpt_find}name "*${expression}*" -print | awk "{ print \"${RESULT_TYPE_FILE}${DELIM}\"\$0 }"
-    # ;;
-# AR_CONTENTS)
-    # for a in `find . -print | egrep -i "(jar|tar|tgz|bz|gz|zip)$"`; do
-        # grepArchive "${a}"
-    # done
     # ;;
 esac
