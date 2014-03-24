@@ -57,12 +57,10 @@ grepAll() {
     exec ${v} -c "set grepprg=${grepprg}" \
               -c "set foldlevel=99" \
               -c "set cursorline" \
-              -c "noautocmd silent grep ${CIOpt_grep} ${expression} *" \
+              -c "silent grep ${CIOpt_grep} ${expression} *" \
               -c "cwindow" \
               -c "set nocursorline"
-              # -c "resize 30"
 }
-
 
 ## Perform the search
 case $searchType in

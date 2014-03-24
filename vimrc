@@ -359,7 +359,7 @@ nnoremap <silent> <F12> :call CycleColorScheme()<cr>
 
 "" Searching
 " Current file
-nnoremap <silent> g// :<c-u>noautocmd vimgrep // % <bar> cwindow<left><left><left><left><left><left><left><left>
+nnoremap <silent> g// :<c-u>noautocmd vimgrep // % <bar> cwindow<left><left><left><left><left><left><left><left><left><left><left><left><left>
 nnoremap <silent> g/. :<c-u>noautocmd vimgrep /\<<c-r><c-w>\>/ % <bar> cwindow<cr>
 " All open buffers
 nnoremap <silent> g/\ :cexpr [] <bar> bufdo vimgrepadd //g % <bar> cwindow<left><left><left><left><left><left><left><left><left>
@@ -500,9 +500,10 @@ augroup MiscOptions
 
     "" Stop asking about simultaneous edits. 
     "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
-    " TODO: This isn't working (not setting as readonly. Should also be not modifiable, I think)
-    " autocmd SwapExists * let v:swapchoice = 'o'
-    " autocmd SwapExists * echoerr 'Duplicate edit session (readonly)'
+    autocmd SwapExists * let v:swapchoice = 'o'
+    autocmd SwapExists * echohl WarningMsg
+    autocmd SwapExists * echomsg 'Duplicate edit session (readonly)'
+    autocmd SwapExists * echohl None
 
     " Turns on spell check when typing out long git commit messages
     autocmd FileType gitcommit setlocal spell
