@@ -223,19 +223,6 @@ endif
 " }}}
 
 """ Functions {{{
-" function! DiffOrig()
-    " mkview! 9
-    " topleft vnew
-    " set buftype=nofile bufhidden=wipe nobuflisted
-    " execute "silent read ".expand("#")
-    " 0d_
-    " wincmd l
-    " silent windo diffthis
-    " windo set nomodifiable
-    " 0
-    " set modifiable syntax=off
-" endfunction
-
 "" Split the screen {{{
 function! TmuxSplitHere(vertical, size)
     let l:cmd = "tmux split-window"
@@ -306,13 +293,7 @@ function! CycleColorScheme()
     set background=dark
     execute "colorscheme ".g:my_current_scheme
     echomsg "Switched to colorscheme: ".g:my_current_scheme
-    " execute "colorscheme"
 endfunction
-
-" function! ExplorerLeftPane()
-    " TODO
-" endfunction
-
 " }}}
 
 """ Commands {{{
@@ -391,31 +372,25 @@ nnoremap <silent> gw <c-w>
 
 "" How are these not tied to a mapping already?
 " This version of the buffer navigation keywords might be a bit more useful than the last
-nmap <silent> gb ]b
-nmap <silent> gB [b
 nnoremap <silent> ]b :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
 nnoremap <silent> [b :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
 nnoremap <silent> ]B :blast<cr>
 nnoremap <silent> [B :bfirst<cr>
 " Argument
-nmap <silent> ga ]a
-nmap <silent> gA [a
-nnoremap <silent> ]a :next<cr>
-nnoremap <silent> [a :previous<cr>
+nnoremap <silent> ]a :<c-u>execute(v:count.'next')<cr>
+nnoremap <silent> [a :<c-u>execute(v:count.'previous')<cr>
 nnoremap <silent> ]A :last<cr>
 nnoremap <silent> [A :first<cr>
 " Quickfix
-nnoremap <silent> ]q :cnext<cr>
-nnoremap <silent> [q :cprevious<cr>
+nnoremap <silent> ]q :<c-u>execute(v:count.'cnext')<cr>
+nnoremap <silent> [q :<c-u>execute(v:count.'cprevious')<cr>
 nnoremap <silent> ]Q :clast<cr>
 nnoremap <silent> [Q :cfirst<cr>
 " Location
-nnoremap <silent> ]l :lnext<cr>
-nnoremap <silent> [l :lprevious<cr>
+nnoremap <silent> ]l :<c-u>execute(v:count.'lnext')<cr>
+nnoremap <silent> [l :<c-u>execute(v:count.'lprevious')<cr>
 nnoremap <silent> ]L :llast<cr>
 nnoremap <silent> [L :lfirst<cr>
-
-" TODO: nnoremap <silent> ge :ExSidebar<cr>
 
 "" Configuration
 nnoremap <silent> con :setlocal number! relativenumber!<cr>
@@ -440,6 +415,7 @@ if g:have_plugins
     nnoremap <silent> pf :CtrlP<cr>
     nnoremap <silent> pb :CtrlPBuffer<cr>
     nnoremap <silent> pr :RainbowParenthesesToggle<cr>
+    nnoremap <silent> pt :TlistToggle<cr>
 endif
 
 "" Some (probably questionable) overrides/shortcuts
@@ -483,15 +459,14 @@ noremap <right> :echoerr "Use l instead! :-p"<cr>
 " }}}
 
 """ Completion {{{
-" if filereadable("??/tags")
-    " autocmd FileType c,c++,cpp,h,h++,hpp set tags=./tags
-    " autocmd BufwinEnter *.* echo "Loaded tags file"
+if filereadable(expand("$BUILD_CTAG_FILE"))
+    autocmd FileType c,c++,cpp,h,h++,hpp,java execute "set tags=./tags,".expand("$BUILD_CTAG_FILE")."'"
 
     " Map some keys to access these
-    " nnoremap <silent> <C-\> :tab split<cr>:execute("tag ".expand("<cword>"))<cr>
-" else
-    " nnoremap <silent> <C-\> :echoerr "No tags file loaded"<cr>
-" endif
+    nnoremap <silent> <leader>t :tab split<cr>:execute("tag ".expand("<cword>"))<cr>
+else
+    nnoremap <silent> <leader>t :echoerr "No tags file loaded"<cr>
+endif
 " }}}
 
 """ Misc {{{
