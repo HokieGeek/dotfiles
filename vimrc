@@ -128,6 +128,7 @@ function! SetMyHighlights()
     " highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
     highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
 
+    " I like being able to spot my comments quickly
     highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
     try
         call matchadd("AFP", "AFP")
@@ -145,14 +146,7 @@ function! SetMyHighlights()
     if exists("&colorcolumn")
         highlight ColorColumn guibg=#C0C0C0 ctermbg=234
     endif
-
 endfunction
-call SetMyHighlights()
-augroup MiscOptions
-    autocmd!
-
-    autocmd ColorScheme * call SetMyHighlights()
-augroup END
 " }}}
 
 """ Sessions {{{
@@ -327,7 +321,6 @@ endif
 " }}}
 
 """ Keyboard mappings {{{
-nnoremap <leader>s :source $MYVIMRC<cr>
 nnoremap <silent> <leader><leader> :nohlsearch<cr>
 nnoremap Y y$
 
@@ -345,18 +338,11 @@ nnoremap <silent> g/. :<c-u>noautocmd vimgrep /\<<c-r><c-w>\>/ % <bar> cwindow<c
 " All open buffers
 nnoremap <silent> g/\ :cexpr [] <bar> bufdo vimgrepadd //g % <bar> cwindow<left><left><left><left><left><left><left><left><left>
 nnoremap <silent> g/, :cexpr [] <bar> bufdo vimgrepadd /<c-r><c-w>/g % <bar> cwindow<cr>
+" All files in current directory and down
 if exists("g:use_external_grep")
-    " Current file
-    " nnoremap <silent> g// :<c-u>noautocmd lgrep  % <bar> lwindow<left><left><left><left><left><left><left>
-    " nnoremap <silent> g/. :<c-u>noautocmd grep '\<<c-r><c-w>\>' <bar> cwindow<cr>
-    " All open buffers
-    " nnoremap <silent> g/\ :cexpr [] <bar> bufdo grepadd  <bar> cinwdow<left><left><left><left><left>
-    " nnoremap <silent> g/, :cexpr [] <bar> bufdo grepadd <c-r><c-w> <bar> cinwdow<cr>
-    " All files in current directory and down
     nnoremap <silent> g\\ :<c-u>noautocmd grep  <bar> cinwdow<left><left><left><left><left>
     nnoremap <silent> g\. :<c-u>noautocmd grep <c-r><c-w> <bar> cinwdow<cr>
 else
-    " All files in current directory and down
     nnoremap <silent> g\\ :<c-u>noautocmd vimgrep // ** <bar> cinwdow<left><left><left><left><left><left><left><left><left>
     nnoremap <silent> g\. :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cinwdow<cr>
 endif
@@ -407,15 +393,12 @@ if exists("&colorcolumn")
     nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<bar>setlocal colorcolumn=81<bar>endif<cr>
 endif
 
-" nnoremap <silent> Uo :call DiffOrig()<cr>
-
 "" Plugins
 if g:have_plugins
-    nnoremap <silent> pu :GundoToggle<cr>
-    nnoremap <silent> pf :CtrlP<cr>
-    nnoremap <silent> pb :CtrlPBuffer<cr>
-    nnoremap <silent> pr :RainbowParenthesesToggle<cr>
-    nnoremap <silent> pt :TlistToggle<cr>
+    nnoremap <silent> <leader>f :CtrlP<cr>
+    nnoremap <silent> <leader>b :CtrlPBuffer<cr>
+    nnoremap <silent> <leader>r :RainbowParenthesesToggle<cr>
+    nnoremap <silent> <leader>t :TlistToggle<cr>
 endif
 
 "" Some (probably questionable) overrides/shortcuts
@@ -447,15 +430,6 @@ noremap <up> :echoerr "Use k instead! :-p"<cr>
 noremap <down> :echoerr "Use j instead! :-p"<cr>
 noremap <left> :echoerr "Use h instead! :-p"<cr>
 noremap <right> :echoerr "Use l instead! :-p"<cr>
-
-" augroup Notes
-    " autocmd!
-
-    " autocmd BufRead,BufNewFile *
-        " \ if &filetype == "" |
-        " \   nnoremap <silent> <F5> :set filetype=notes<cr> |
-        " \ endif
-" augroup END
 " }}}
 
 """ Completion {{{
@@ -463,9 +437,9 @@ if filereadable(expand("$BUILD_CTAG_FILE"))
     autocmd FileType c,c++,cpp,h,h++,hpp,java execute "set tags=./tags,".expand("$BUILD_CTAG_FILE")."'"
 
     " Map some keys to access these
-    nnoremap <silent> <leader>t :tab split<cr>:execute("tag ".expand("<cword>"))<cr>
+    nnoremap <silent> <leader>c :tab split<cr>:execute("tag ".expand("<cword>"))<cr>
 else
-    nnoremap <silent> <leader>t :echoerr "No tags file loaded"<cr>
+    nnoremap <silent> <leader>c :echoerr "No tags file loaded"<cr>
 endif
 " }}}
 
@@ -473,20 +447,21 @@ endif
 augroup MiscOptions
     autocmd!
 
-    "" Stop asking about simultaneous edits. 
+    autocmd VimEnter,ColorScheme * call SetMyHighlights()
+
+    " Turns on spell check when typing out long git commit messages
+    autocmd BufNewFile,BufRead *.md set filetype=markdown
+    autocmd BufNewFile,BufRead *.confluence set filetype=confluencewiki spell foldmethod=manual
+    autocmd BufNewFile,BufRead *.conkyrc set filetype=conkyrc
+    autocmd FileType gitcommit setlocal spell
+    autocmd FileType markdown setlocal spell
+
+    "" Stop asking about simultaneous edits.
     "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
     autocmd SwapExists * let v:swapchoice = 'o'
     autocmd SwapExists * echohl WarningMsg
     autocmd SwapExists * echomsg 'Duplicate edit session (readonly)'
     autocmd SwapExists * echohl None
-
-    " Turns on spell check when typing out long git commit messages
-    autocmd FileType gitcommit setlocal spell
-
-    autocmd BufNewFile,BufRead *.md set filetype=markdown
-    autocmd FileType markdown setlocal spell
-
-    autocmd BufNewFile,BufRead *.conkyrc set filetype=conkyrc
 
     " Disable syntax highlight for files larger than 50 MB
     autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
@@ -496,8 +471,6 @@ augroup MiscOptions
 
     " Automatically reload this file
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
-
-    autocmd BufRead,BufNewFile *.confluence set filetype=confluencewiki spell foldmethod=manual
 augroup END
 " }}}
 
