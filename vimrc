@@ -16,6 +16,7 @@ endif
 
 if g:have_plugins
     execute pathogen#infect()
+    let g:goldenview__enable_at_startup = 0
 endif
 " }}}
 
