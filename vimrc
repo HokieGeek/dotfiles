@@ -399,6 +399,8 @@ if g:have_plugins
     nnoremap <silent> <leader>b :CtrlPBuffer<cr>
     nnoremap <silent> <leader>r :RainbowParenthesesToggle<cr>
     nnoremap <silent> <leader>t :TlistToggle<cr>
+    map <leader>] <Plug>(expand_region_expand)
+    map <leader>[ <Plug>(expand_region_shrink)
 endif
 
 "" Some (probably questionable) overrides/shortcuts
