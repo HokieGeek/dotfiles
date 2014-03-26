@@ -266,8 +266,28 @@ endfunction
 " endfun
 " command! -nargs=1 FindFile call FindFiles(<q-args>)
 " }}}
-
-function! CycleColorScheme()
+"" Buffers {{{
+function! RemoveNonArgBuffers()
+    for buf_num in range(1, bufnr('$'))
+        " let l:buf_name = fnamemodify(bufname(buf_num), ":p")
+        let l:buf_name = bufname(buf_num)
+        let l:is_arg = index(argv(), l:buf_name)
+        if l:is_arg == -1
+            execute "bdelete ".buf_num
+        endif
+    endfor
+endfunction
+function! AddBufferToArgsList(...)
+    if a:0 > 0
+        for buf_arg in a:000
+            execute "argadd ".buf_arg
+        endfor
+    else
+        execute "argadd ".expand("%")
+    endif
+endfunction
+" }}}
+function! CycleColorScheme() " {{{
     if exists("g:my_schemes") == 0
         let g:my_schemes = split(glob(expand("$HOME/.vim/colors")."/*"), '\n')
         let g:my_schemes = map(g:my_schemes, 'fnamemodify(v:val, ":t:r")')
@@ -290,10 +310,13 @@ function! CycleColorScheme()
     echomsg "Switched to colorscheme: ".g:my_current_scheme
 endfunction
 " }}}
+" }}}
 
 """ Commands {{{
 " Will allow me to sudo a file that is open without write permissions
 cnoremap w!! %!sudo tee > /dev/null %
+command! ArgsOnly :call RemoveNonArgBuffers()
+command! -nargs=* ArgsAdd :call AddBufferToArgsList(<f-args>)
 " }}}
 
 """ Abbreviations {{{
@@ -356,6 +379,13 @@ nnoremap <silent> gsv :<c-u>call SplitHere(1, v:count)<cr>
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
 
+"" Plugins
+if g:have_plugins
+    nnoremap <silent> <leader>f :CtrlP<cr>
+    nnoremap <silent> <leader>b :CtrlPBuffer<cr>
+    nnoremap <silent> <leader>T :TlistToggle<cr>
+endif
+
 "" How are these not tied to a mapping already?
 nnoremap <silent> ]b :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
 nnoremap <silent> [b :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
@@ -379,6 +409,7 @@ nnoremap <silent> [L :lfirst<cr>
 
 "" Configuration
 nnoremap <silent> con :setlocal number!<bar>if exists("&relativenumber")<bar>setlocal relativenumber!<bar>endif<cr>
+nnoremap <silent> coN :setlocal relativenumber!<cr>
 nnoremap <silent> coc :setlocal cursorline!<cr>
 nnoremap <silent> cow :setlocal wrap!<cr>
 nnoremap <silent> cos :setlocal spell!<cr>
@@ -387,20 +418,10 @@ nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax
 nnoremap <silent> cot :if &laststatus == 2<bar>setlocal laststatus=1<bar>else<bar>setlocal laststatus=2<bar>endif<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
 nnoremap <silent> cob :if &background == "dark"<bar>setlocal background=light<bar>else<bar>setlocal background=dark<bar>endif<cr>
-nnoremap <silent> coh :nolsearch<cr>
+nnoremap <silent> coh :nohlsearch<cr>
 nnoremap <silent> coH :setlocal hlsearch!<cr>
 if exists("&colorcolumn")
     nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<bar>setlocal colorcolumn=81<bar>endif<cr>
-endif
-
-"" Plugins
-if g:have_plugins
-    nnoremap <silent> <leader>f :CtrlP<cr>
-    nnoremap <silent> <leader>b :CtrlPBuffer<cr>
-    nnoremap <silent> <leader>r :RainbowParenthesesToggle<cr>
-    nnoremap <silent> <leader>t :TlistToggle<cr>
-    map <leader>] <Plug>(expand_region_expand)
-    map <leader>[ <Plug>(expand_region_shrink)
 endif
 
 "" Some (probably questionable) overrides/shortcuts
@@ -432,17 +453,6 @@ noremap <up> :echoerr "Use k instead! :-p"<cr>
 noremap <down> :echoerr "Use j instead! :-p"<cr>
 noremap <left> :echoerr "Use h instead! :-p"<cr>
 noremap <right> :echoerr "Use l instead! :-p"<cr>
-" }}}
-
-""" Completion {{{
-if filereadable(expand("$BUILD_CTAG_FILE"))
-    autocmd FileType c,c++,cpp,h,h++,hpp,java execute "set tags=./tags,".expand("$BUILD_CTAG_FILE")."'"
-
-    " Map some keys to access these
-    nnoremap <silent> <leader>c :tab split<cr>:execute("tag ".expand("<cword>"))<cr>
-else
-    nnoremap <silent> <leader>c :echoerr "No tags file loaded"<cr>
-endif
 " }}}
 
 """ Misc {{{
