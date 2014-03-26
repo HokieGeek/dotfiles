@@ -268,8 +268,7 @@ endfunction
 " }}}
 "" Buffers {{{
 function! RemoveNonArgBuffers()
-    let l:listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
-    let l:not_args = filter(l:listed, 'index(argv(), bufname(v:val)) == -1')
+    let l:not_args = filter(range(1, bufnr('$')), 'buflisted(v:val) && index(argv(), bufname(v:val)) == -1')
     if len(l:not_args) > 0
         execute "bdelete! ".join(l:not_args, ' ')
     endif
