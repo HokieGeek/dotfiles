@@ -268,14 +268,11 @@ endfunction
 " }}}
 "" Buffers {{{
 function! RemoveNonArgBuffers()
-    for buf_num in range(1, bufnr('$'))
-        " let l:buf_name = fnamemodify(bufname(buf_num), ":p")
-        let l:buf_name = bufname(buf_num)
-        let l:is_arg = index(argv(), l:buf_name)
-        if l:is_arg == -1
-            execute "bdelete ".buf_num
-        endif
-    endfor
+    let l:listed = filter(range(1, bufnr('$')), 'buflisted(v:val)')
+    let l:not_args = filter(l:listed, 'index(argv(), bufname(v:val)) == -1')
+    if len(l:not_args) > 0
+        execute "bdelete! ".join(l:not_args, ' ')
+    endif
 endfunction
 function! AddBufferToArgsList(...)
     if a:0 > 0
@@ -439,9 +436,9 @@ vnoremap <space> :
 "" Completion
 " word
 inoremap jj <c-n>
-inoremap JJ <c-p>
+inoremap kk <c-p>
 " line
-inoremap kk <c-x><c-l>
+inoremap JJ <c-x><c-l>
 " filename
 inoremap FF <c-x><c-f>
 " dictionary
