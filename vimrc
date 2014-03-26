@@ -320,9 +320,9 @@ command! -nargs=* ArgsAdd :call AddBufferToArgsList(<f-args>)
 " }}}
 
 """ Abbreviations {{{
-" This is ridiculously useful
-iabbrev datet- <c-r>=strftime("%d/%m/%Y %H:%M:%S")<cr>
-iabbrev date- <c-r>=strftime("%d/%m/%Y")<cr>
+" This is ridiculously useful, particularly when taking notes
+iabbrev datet- <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr>
+iabbrev date- <c-r>=strftime("%Y-%m-%d")<cr>
 iabbrev time- <c-r>=strftime("%H:%M:%S")<cr>
 " }}}
 
@@ -381,8 +381,8 @@ nnoremap <silent> gw <c-w>
 
 "" Plugins
 if g:have_plugins
-    nnoremap <silent> <leader>f :CtrlP<cr>
-    nnoremap <silent> <leader>b :CtrlPBuffer<cr>
+    nnoremap <silent> gp :CtrlP<cr>
+    nnoremap <silent> gb :CtrlPBuffer<cr>
     nnoremap <silent> <leader>T :TlistToggle<cr>
 endif
 
@@ -409,25 +409,32 @@ nnoremap <silent> [L :lfirst<cr>
 
 "" Configuration
 nnoremap <silent> con :setlocal number!<bar>if exists("&relativenumber")<bar>setlocal relativenumber!<bar>endif<cr>
-nnoremap <silent> coN :setlocal relativenumber!<cr>
+if exists("&relativenumber")
+    nnoremap <silent> coN :setlocal relativenumber!<cr>
+endif
 nnoremap <silent> coc :setlocal cursorline!<cr>
+if exists("&colorcolumn")
+    nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<bar>setlocal colorcolumn=81<bar>endif<cr>
+endif
 nnoremap <silent> cow :setlocal wrap!<cr>
 nnoremap <silent> cos :setlocal spell!<cr>
 nnoremap <silent> col :setlocal list!<cr>
 nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
 nnoremap <silent> cot :if &laststatus == 2<bar>setlocal laststatus=1<bar>else<bar>setlocal laststatus=2<bar>endif<cr>
-nnoremap <silent> cop :setlocal paste!<cr>
-nnoremap <silent> cob :if &background == "dark"<bar>setlocal background=light<bar>else<bar>setlocal background=dark<bar>endif<cr>
+" nnoremap <silent> cob :if &background == "dark"<bar>setlocal background=light<bar>else<bar>setlocal background=dark<bar>endif<cr>
 nnoremap <silent> coh :nohlsearch<cr>
 nnoremap <silent> coH :setlocal hlsearch!<cr>
-if exists("&colorcolumn")
-    nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<bar>setlocal colorcolumn=81<bar>endif<cr>
-endif
+nnoremap <silent> cop :setlocal paste!<cr>
 
 "" Some (probably questionable) overrides/shortcuts
 " FIXME: this doesn't work in paste mode
 inoremap jk <esc>
 inoremap kj <esc>
+
+nnoremap ZZ :wqa<cr>
+nnoremap ZQ :qa!<cr>
+nnoremap <space> :
+vnoremap <space> :
 
 "" Completion
 " word
@@ -435,18 +442,14 @@ inoremap jj <c-n>
 inoremap JJ <c-p>
 " line
 inoremap kk <c-x><c-l>
+" filename
+inoremap FF <c-x><c-f>
+" dictionary
+inoremap DD <c-x><c-k>
+" user
+inoremap UU <c-x><c-u>
 " omni
 inoremap KK <c-x><c-o>
-" filename
-" inoremap ?? <c-x><c-f>
-" dictionary
-" inoremap ?? <c-x><c-k>
-
-
-nnoremap ZZ :wqa<cr>
-nnoremap ZQ :qa!<cr>
-nnoremap <space> :
-vnoremap <space> :
 
 "" I feel like being a pain in the ass
 noremap <up> :echoerr "Use k instead! :-p"<cr>
@@ -461,12 +464,12 @@ augroup MiscOptions
 
     autocmd VimEnter,ColorScheme * call SetMyHighlights()
 
-    " Turns on spell check when typing out long git commit messages
+    " Filetype recognition
     autocmd BufNewFile,BufRead *.md set filetype=markdown
     autocmd BufNewFile,BufRead *.confluence set filetype=confluencewiki spell foldmethod=manual
     autocmd BufNewFile,BufRead *.conkyrc set filetype=conkyrc
-    autocmd FileType gitcommit setlocal spell
     autocmd FileType markdown setlocal spell
+    autocmd FileType gitcommit setlocal spell
 
     "" Stop asking about simultaneous edits.
     "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
@@ -478,7 +481,7 @@ augroup MiscOptions
     " Disable syntax highlight for files larger than 50 MB
     autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
 
-    " Turn off diffing
+    " Turn off diffing when exiting
     autocmd VimLeave * windo diffoff
 
     " Automatically reload this file
