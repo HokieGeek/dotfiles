@@ -322,7 +322,6 @@ endif
 " }}}
 
 """ Keyboard mappings {{{
-nnoremap <silent> <leader><leader> :nohlsearch<cr>
 nnoremap Y y$
 
 "" Session saving (et.al.)
@@ -334,18 +333,18 @@ nnoremap <silent> <F12> :call CycleColorScheme()<cr>
 
 "" Searching
 " Current file
-nnoremap <silent> g// :<c-u>noautocmd vimgrep // % <bar> cwindow<left><left><left><left><left><left><left><left><left><left><left><left><left>
-nnoremap <silent> g/. :<c-u>noautocmd vimgrep /\<<c-r><c-w>\>/ % <bar> cwindow<cr>
+nnoremap <silent> \\ :<c-u>vimgrep // % <bar> cwindow<left><left><left><left><left><left><left><left><left><left><left><left><left>
+nnoremap <silent> \. :<c-u>vimgrep /\<<c-r><c-w>\>/ % <bar> cwindow<cr>
 " All open buffers
-nnoremap <silent> g/\ :cexpr [] <bar> bufdo vimgrepadd //g % <bar> cwindow<left><left><left><left><left><left><left><left><left>
-nnoremap <silent> g/, :cexpr [] <bar> bufdo vimgrepadd /<c-r><c-w>/g % <bar> cwindow<cr>
+nnoremap <silent> g\\ :cexpr [] <bar> bufdo vimgrepadd //g % <bar> cwindow<left><left><left><left><left><left><left><left><left><left><left><left><left><left>
+nnoremap <silent> g\. :cexpr [] <bar> bufdo vimgrepadd /<c-r><c-w>/g % <bar> cwindow<cr>
 " All files in current directory and down
 if exists("g:use_external_grep")
-    nnoremap <silent> g\\ :<c-u>noautocmd grep  <bar> cinwdow<left><left><left><left><left>
-    nnoremap <silent> g\. :<c-u>noautocmd grep <c-r><c-w> <bar> cinwdow<cr>
+    nnoremap <silent> \/ :<c-u>silent grep  <bar> cwindow<left><left><left><left><left><left><left><left><left><left>
+    nnoremap <silent> \, :<c-u>silent grep <c-r><c-w> <bar> cwindow<cr>
 else
-    nnoremap <silent> g\\ :<c-u>noautocmd vimgrep // ** <bar> cinwdow<left><left><left><left><left><left><left><left><left>
-    nnoremap <silent> g\. :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cinwdow<cr>
+    nnoremap <silent> \/ :<c-u>noautocmd vimgrep // ** <bar> cwindow<left><left><left><left><left><left><left><left><left>
+    nnoremap <silent> \, :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cwindow<cr>
 endif
 
 " A scratch space. Kinda useless, I think
@@ -358,7 +357,6 @@ nnoremap <silent> gsv :<c-u>call SplitHere(1, v:count)<cr>
 nnoremap <silent> gw <c-w>
 
 "" How are these not tied to a mapping already?
-" This version of the buffer navigation keywords might be a bit more useful than the last
 nnoremap <silent> ]b :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
 nnoremap <silent> [b :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
 nnoremap <silent> ]B :blast<cr>
@@ -380,7 +378,7 @@ nnoremap <silent> ]L :llast<cr>
 nnoremap <silent> [L :lfirst<cr>
 
 "" Configuration
-nnoremap <silent> con :setlocal number! relativenumber!<cr>
+nnoremap <silent> con :setlocal number!<bar>if exists("&relativenumber")<bar>setlocal relativenumber!<bar>endif<cr>
 nnoremap <silent> coc :setlocal cursorline!<cr>
 nnoremap <silent> cow :setlocal wrap!<cr>
 nnoremap <silent> cos :setlocal spell!<cr>
@@ -389,7 +387,8 @@ nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax
 nnoremap <silent> cot :if &laststatus == 2<bar>setlocal laststatus=1<bar>else<bar>setlocal laststatus=2<bar>endif<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
 nnoremap <silent> cob :if &background == "dark"<bar>setlocal background=light<bar>else<bar>setlocal background=dark<bar>endif<cr>
-nnoremap <silent> coh :setlocal hlsearch!<cr>
+nnoremap <silent> coh :nolsearch<cr>
+nnoremap <silent> coH :setlocal hlsearch!<cr>
 if exists("&colorcolumn")
     nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<bar>setlocal colorcolumn=81<bar>endif<cr>
 endif
