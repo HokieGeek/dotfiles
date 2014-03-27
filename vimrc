@@ -387,7 +387,7 @@ nnoremap <silent> gc <c-]>
 if g:have_plugins
     nnoremap <silent> gp :CtrlP<cr>
     nnoremap <silent> gb :CtrlPBuffer<cr>
-    nnoremap <silent> gC :TlistToggle<cr>
+    nnoremap <silent> go :TlistToggle<cr>
 endif
 
 "" How are these not tied to a mapping already?
