@@ -16,7 +16,6 @@ endif
 
 if g:have_plugins
     execute pathogen#infect()
-    let g:goldenview__enable_at_startup = 0
 endif
 " }}}
 
@@ -261,25 +260,41 @@ endfunction
   " silent exe '!find . -name "'.a:filename.'" | xargs file | sed "s/:/:1:/" > '.error_file
   " set errorformat=%f:%l:%m
   " exe "cfile ". error_file
-  " copen
-  " call delete(error_file)
+  " cwindow
 " endfun
-" command! -nargs=1 FindFile call FindFiles(<q-args>)
+" command! -nargs=1 Find call FindFiles(<q-args>)
 " }}}
-"" Buffers {{{
+"" Arguments and Buffers {{{
 function! RemoveNonArgBuffers()
     let l:not_args = filter(range(1, bufnr('$')), 'buflisted(v:val) && index(argv(), bufname(v:val)) == -1')
     if len(l:not_args) > 0
         execute "bdelete! ".join(l:not_args, ' ')
     endif
 endfunction
-function! AddBufferToArgsList(...)
+function! ArgumentsToggle(...)
     if a:0 > 0
-        for buf_arg in a:000
-            execute "argadd ".buf_arg
-        endfor
+        let l:listed = filter(a:000, 'buflisted(v:val)')
+        let l:args = filter(l:listed, 'index(argv(), bufname(v:val)) != -1')
+        let l:not_args = filter(l:listed, 'index(argv(), bufname(v:val)) == -1')
+        if len(l:not_args) > 0
+            execute "argadd ".join(l:not_args, ' ')
+        endif
+        if len(l:args) > 0
+            execute "argdelete ".join(l:args, ' ')
+        endif
     else
-        execute "argadd ".expand("%")
+        if index(argv(), bufname("%")) == -1
+            execute "argadd %"
+        else
+            execute "argdelete %"
+        endif
+    endif
+    execute "args"
+endfunction
+function! DeleteAllBuffersOtherThanCurrent()
+    let l:all_others = filter(range(1, bufnr('$')), 'buflisted(v:val) && v:val != bufnr("%")')
+    if len(l:all_others) > 0
+        execute "bdelete! ".join(l:all_others, ' ')
     endif
 endfunction
 " }}}
@@ -312,7 +327,8 @@ endfunction
 " Will allow me to sudo a file that is open without write permissions
 cnoremap w!! %!sudo tee > /dev/null %
 command! ArgsOnly :call RemoveNonArgBuffers()
-command! -nargs=* ArgsAdd :call AddBufferToArgsList(<f-args>)
+command! Only :call DeleteAllBuffersOtherThanCurrent()
+command! -nargs=* -complete=buffer ArgsToggle :call ArgumentsToggle(<f-args>)
 " }}}
 
 """ Abbreviations {{{
@@ -320,6 +336,7 @@ command! -nargs=* ArgsAdd :call AddBufferToArgsList(<f-args>)
 iabbrev datet- <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr>
 iabbrev date- <c-r>=strftime("%Y-%m-%d")<cr>
 iabbrev time- <c-r>=strftime("%H:%M:%S")<cr>
+iabbrev afp]] [AFP]<cr>
 " }}}
 
 """ Searching configuration {{{
@@ -349,6 +366,7 @@ nnoremap <silent> <leader><F9> :windo call SaveSession()<cr>
 nnoremap <silent> <F10> :call DeleteSession()<cr>
 nnoremap <silent> <leader><F10> :call LoadSession()<cr>
 nnoremap <silent> <F12> :call CycleColorScheme()<cr>
+nnoremap <silent> <leader><F12> :colorscheme herald<cr>
 
 "" Searching
 " Current file
@@ -374,12 +392,14 @@ nnoremap <silent> gsv :<c-u>call SplitHere(1, v:count)<cr>
 
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
+nnoremap <silent> ga :call ArgumentsToggle()<cr>
+nnoremap <silent> gc <c-]>
 
 "" Plugins
 if g:have_plugins
     nnoremap <silent> gp :CtrlP<cr>
     nnoremap <silent> gb :CtrlPBuffer<cr>
-    nnoremap <silent> <leader>T :TlistToggle<cr>
+    nnoremap <silent> gC :TlistToggle<cr>
 endif
 
 "" How are these not tied to a mapping already?
@@ -417,7 +437,7 @@ nnoremap <silent> cos :setlocal spell!<cr>
 nnoremap <silent> col :setlocal list!<cr>
 nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
 nnoremap <silent> cot :if &laststatus == 2<bar>setlocal laststatus=1<bar>else<bar>setlocal laststatus=2<bar>endif<cr>
-" nnoremap <silent> cob :if &background == "dark"<bar>setlocal background=light<bar>else<bar>setlocal background=dark<bar>endif<cr>
+nnoremap <silent> cob :if &background == "dark"<bar>setlocal background=light<bar>else<bar>setlocal background=dark<bar>endif<cr>
 nnoremap <silent> coh :nohlsearch<cr>
 nnoremap <silent> coH :setlocal hlsearch!<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
