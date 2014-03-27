@@ -154,7 +154,6 @@ endfunction
 if exists("b:session_file")
     unlet! b:session_file
 endif
-" TODO: env var / function that retrieves the .vim dir?
 function! InitiateSession()
     let l:sessions_dir = $HOME."/.vim/sessions"
     if isdirectory(l:sessions_dir) == 1
@@ -202,16 +201,7 @@ autocmd VimEnter * call LoadSession()
 
 """ Views {{{
 if ! &diff
-    func! MakeViewOnLeave()
-        " TODO: split into two au's but need to ensure order
-        if exists("g:loaded_output")
-            call LoadedContentClear()
-        endif
-        if expand("%") != ""
-            mkview!
-        endif
-    endfun
-    autocmd BufWinLeave * call MakeViewOnLeave()
+    autocmd BufWinLeave * if expand("%") != "" | mkview! | endif
     autocmd BufWinEnter * if expand("%") != "" | silent loadview | endif
 endif
 " }}}
@@ -254,15 +244,6 @@ function! SplitHere(vertical, size)
         echomsg "Did not find neither a tmux nor a screen session"
     endif
 endfunction
-" find files and populate the quickfix list (http://vim.wikia.com/wiki/VimTip799)
-" fun! FindFiles(filename)
-  " let error_file = tempname()
-  " silent exe '!find . -name "'.a:filename.'" | xargs file | sed "s/:/:1:/" > '.error_file
-  " set errorformat=%f:%l:%m
-  " exe "cfile ". error_file
-  " cwindow
-" endfun
-" command! -nargs=1 Find call FindFiles(<q-args>)
 " }}}
 "" Arguments and Buffers {{{
 function! RemoveNonArgBuffers()
@@ -289,7 +270,7 @@ function! ArgumentsToggle(...)
             execute "argdelete %"
         endif
     endif
-    execute "args"
+    " execute "args"
 endfunction
 function! DeleteAllBuffersOtherThanCurrent()
     let l:all_others = filter(range(1, bufnr('$')), 'buflisted(v:val) && v:val != bufnr("%")')
@@ -321,6 +302,15 @@ function! CycleColorScheme() " {{{
     echomsg "Switched to colorscheme: ".g:my_current_scheme
 endfunction
 " }}}
+" find files and populate the quickfix list (http://vim.wikia.com/wiki/VimTip799)
+" function! FindFiles(filename)
+  " let error_file = tempname()
+  " silent exe '!find . -name "'.a:filename.'" | xargs file | sed "s/:/:1:/" > '.error_file
+  " set errorformat=%f:%l:%m
+  " exe "cfile ". error_file
+  " cwindow
+" endfunction
+" command! -nargs=1 Find call FindFiles(<q-args>)
 " }}}
 
 """ Commands {{{
@@ -352,8 +342,6 @@ elseif executable('ack')
     let g:use_external_grep = 1
 elseif executable('grep')
     set grepprg=grep\ -rnIH
-" else
-" TODO: just set grepprg to internal?
 endif
 " }}}
 
@@ -422,6 +410,11 @@ nnoremap <silent> ]l :<c-u>execute(v:count.'lnext')<cr>
 nnoremap <silent> [l :<c-u>execute(v:count.'lprevious')<cr>
 nnoremap <silent> ]L :llast<cr>
 nnoremap <silent> [L :lfirst<cr>
+" Tags
+nnoremap <silent> ]t :<c-u>execute(v:count.'tnext')<cr>
+nnoremap <silent> [t :<c-u>execute(v:count.'tprevious')<cr>
+nnoremap <silent> ]T :tlast<cr>
+nnoremap <silent> [T :tfirst<cr>
 
 "" Configuration
 nnoremap <silent> con :setlocal number!<bar>if exists("&relativenumber")<bar>setlocal relativenumber!<bar>endif<cr>
@@ -443,7 +436,6 @@ nnoremap <silent> coH :setlocal hlsearch!<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
 
 "" Some (probably questionable) overrides/shortcuts
-" FIXME: this doesn't work in paste mode
 inoremap jk <esc>
 inoremap kj <esc>
 
@@ -466,6 +458,8 @@ inoremap DD <c-x><c-k>
 inoremap UU <c-x><c-u>
 " omni
 inoremap KK <c-x><c-o>
+" tag
+inoremap TT <c-x><c-]>
 
 "" I feel like being a pain in the ass
 noremap <up> :echoerr "Use k instead! :-p"<cr>
