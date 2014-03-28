@@ -149,136 +149,7 @@ function! SetMyHighlights()
 endfunction
 " }}}
 
-""" Sessions {{{
-""" Some logic that allows me to create a session with the current layout
-if exists("b:session_file")
-    unlet! b:session_file
-endif
-function! InitiateSession()
-    let l:sessions_dir = $HOME."/.vim/sessions"
-    if isdirectory(l:sessions_dir) == 1
-        call system("mkdir ".l:sessions_dir)
-    endif
-    let b:session_file = l:sessions_dir."/".expand("%:t").".session"
-    unlet! l:sessions_dir
-endfunction
-autocmd BufWinEnter * call InitiateSession()
-function! SaveSession()
-    if exists("b:session_file")
-        execute "mksession! ".b:session_file
-        if filereadable(b:session_file)
-            redraw
-            echo "Saved session"
-        else
-            echohl WarningMsg
-            echomsg "Error saving session"
-            echohl None
-        endif
-    endif
-endfunction
-function! LoadSession()
-    if exists("b:session_file")
-        if filereadable(b:session_file)
-            execute "source ".b:session_file
-            syntax on
-            redraw
-            echo "Loaded saved session"
-        endif
-    endif
-endfunction
-function! DeleteSession()
-    if exists("b:session_file")
-        if filereadable(b:session_file)
-            call delete(b:session_file)
-            echo "Deleted session"
-        else
-            echo "No session found"
-        endif
-    endif
-endfunction
-autocmd VimEnter * call LoadSession()
-" }}}
-
-""" Views {{{
-if ! &diff
-    autocmd BufWinLeave * if expand("%") != "" | mkview! | endif
-    autocmd BufWinEnter * if expand("%") != "" | silent loadview | endif
-endif
-" }}}
-
 """ Functions {{{
-"" Split the screen {{{
-function! TmuxSplitHere(vertical, size)
-    let l:cmd = "tmux split-window"
-    " if tmux -V > 1.4
-        let l:cmd .= " -c ".expand("%:p:h")
-    " endif
-    if (a:vertical == 1)
-        let l:cmd .= " -h"
-    endif
-    if (a:size > 0)
-        let l:cmd .= ((a:vertical == 1) ? " -p " : " -l ").a:size
-    endif
-    call system(l:cmd)
-endfunction
-
-function! ScreenSplitHere(vertical, size)
-    let l:screen_cmd = "screen -dr ".expand("$STY")." -X"
-
-    let l:cmd = l:screen_cmd." split ".((a:vertical == 1) ? "-v" : "")
-    let l:cmd .= " && ".l:screen_cmd." focus"
-    if (a:size > 0)
-        let l:cmd .= " && ".l:screen_cmd." resize ".a:size
-    endif
-    let l:cmd .= " && ".l:screen_cmd." chdir ".expand("%:p:h")
-    let l:cmd .= " && ".l:screen_cmd." screen"
-    call system(l:cmd)
-endfunction
-
-function! SplitHere(vertical, size)
-    if exists("$TMUX")
-        call TmuxSplitHere(a:vertical, a:size)
-    elseif exists("$TERM") && expand("$TERM") == "screen"
-        call ScreenSplitHere(a:vertical, a:size)
-    else
-        echomsg "Did not find neither a tmux nor a screen session"
-    endif
-endfunction
-" }}}
-"" Arguments and Buffers {{{
-function! RemoveNonArgBuffers()
-    let l:not_args = filter(range(1, bufnr('$')), 'buflisted(v:val) && index(argv(), bufname(v:val)) == -1')
-    if len(l:not_args) > 0
-        execute "bdelete! ".join(l:not_args, ' ')
-    endif
-endfunction
-function! ArgumentsToggle(...)
-    if a:0 > 0
-        let l:listed = filter(a:000, 'buflisted(v:val)')
-        let l:args = filter(l:listed, 'index(argv(), bufname(v:val)) != -1')
-        let l:not_args = filter(l:listed, 'index(argv(), bufname(v:val)) == -1')
-        if len(l:not_args) > 0
-            execute "argadd ".join(l:not_args, ' ')
-        endif
-        if len(l:args) > 0
-            execute "argdelete ".join(l:args, ' ')
-        endif
-    else
-        if index(argv(), bufname("%")) == -1
-            execute "argadd %"
-        else
-            execute "argdelete %"
-        endif
-    endif
-    " execute "args"
-endfunction
-function! DeleteAllBuffersOtherThanCurrent()
-    let l:all_others = filter(range(1, bufnr('$')), 'buflisted(v:val) && v:val != bufnr("%")')
-    if len(l:all_others) > 0
-        execute "bdelete! ".join(l:all_others, ' ')
-    endif
-endfunction
-" }}}
 function! CycleColorScheme() " {{{
     if exists("g:my_schemes") == 0
         let g:my_schemes = split(glob(expand("$HOME/.vim/colors")."/*"), '\n')
@@ -316,9 +187,6 @@ endfunction
 """ Commands {{{
 " Will allow me to sudo a file that is open without write permissions
 cnoremap w!! %!sudo tee > /dev/null %
-command! ArgsOnly :call RemoveNonArgBuffers()
-command! Only :call DeleteAllBuffersOtherThanCurrent()
-command! -nargs=* -complete=buffer ArgsToggle :call ArgumentsToggle(<f-args>)
 " }}}
 
 """ Abbreviations {{{
@@ -349,10 +217,11 @@ endif
 nnoremap Y y$
 
 "" Session saving (et.al.)
-nnoremap <silent> <F9> :call SaveSession()<cr>
-nnoremap <silent> <leader><F9> :windo call SaveSession()<cr>
-nnoremap <silent> <F10> :call DeleteSession()<cr>
-nnoremap <silent> <leader><F10> :call LoadSession()<cr>
+nnoremap <silent> <F9> :call sessioner#save()<cr>
+nnoremap <silent> <leader><F9> :windo call sessioner#save()<cr>
+nnoremap <silent> <F10> :call sessioner#delete()<cr>
+nnoremap <silent> <leader><F10> :call sessioner#load()<cr>
+
 nnoremap <silent> <F12> :call CycleColorScheme()<cr>
 nnoremap <silent> <leader><F12> :colorscheme herald<cr>
 
@@ -375,12 +244,12 @@ endif
 " A scratch space. Kinda useless, I think
 nnoremap <silent> gh :botright new<bar>set buftype=nofile bufhidden=wipe nobuflisted noswapfile modifiable<bar>res 10<cr>
 "" Split the term
-nnoremap <silent> gsh :<c-u>call SplitHere(0, v:count)<cr>
-nnoremap <silent> gsv :<c-u>call SplitHere(1, v:count)<cr>
+nnoremap <silent> gsh :Split<cr>
+nnoremap <silent> gsv :Vsplit<cr>
 
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
-nnoremap <silent> ga :call ArgumentsToggle()<cr>
+nnoremap <silent> ga :ArgsToggle<cr>
 nnoremap <silent> gc <c-]>
 
 "" Plugins
@@ -496,6 +365,14 @@ augroup MiscOptions
 
     " Automatically reload this file
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
+
+    "" Views {{{
+    if ! &diff
+        autocmd BufWinLeave * if expand("%") != "" | mkview! | endif
+        autocmd BufWinEnter * if expand("%") != "" | silent loadview | endif
+    endif
+" }}}
+
 augroup END
 " }}}
 
