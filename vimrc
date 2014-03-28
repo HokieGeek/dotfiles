@@ -87,8 +87,9 @@ set scrolloff=2 " Scroll file when cursor is 2 lines from top or bottom
 set sidescrolloff=4 " Scroll file horizontally when the cursor is 4 columns from left or right
 set sidescroll=1 " Trying this out...
 set textwidth=0 " Don't want automatic text width formatting
+set number " I always turn these on
 if exists("&relativenumber")
-    set number relativenumber " I always turn these on
+    set relativenumber
 endif
 if has("win32unix") " Cygwin can't handle it
     set laststatus=0
@@ -128,7 +129,7 @@ syntax on
 
 """ Functions {{{
 function! MyHighlights() " {{{
-    " highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
+    highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
     highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
 
     " I like being able to spot my comments quickly
@@ -276,13 +277,15 @@ nnoremap <silent> [T :tfirst<cr>
 " }}}
 
 "" Configuration " {{{
-nnoremap <silent> con :setlocal number!<bar>if exists("&relativenumber")<bar>setlocal relativenumber!<bar>endif<cr>
 if exists("&relativenumber")
-    nnoremap <silent> coN :setlocal relativenumber!<cr>
+    nnoremap <silent> con :setlocal relativenumber!<cr>
+    nnoremap <silent> coN :setlocal number!<bar>if exists("&relativenumber")<bar>setlocal relativenumber!<bar>endif<cr>
+else
+    nnoremap <silent> con :setlocal number!<cr>
 endif
 nnoremap <silent> coc :setlocal cursorline!<cr>
 if exists("&colorcolumn")
-    nnoremap <silent> coq :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<bar>setlocal colorcolumn=81<bar>endif<cr>
+    nnoremap <silent> coC :if &colorcolumn > 0<bar>setlocal colorcolumn=0<bar>else<bar>setlocal colorcolumn=81<bar>endif<cr>
 endif
 nnoremap <silent> cow :setlocal wrap!<cr>
 nnoremap <silent> cos :setlocal spell!<cr>
