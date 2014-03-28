@@ -123,6 +123,52 @@ syntax on
 " }}}
 
 """ Functions {{{
+function! MyHighlights() " {{{
+    " highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
+    highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
+
+    " I like being able to spot my comments quickly
+    highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
+    try
+        call matchadd("AFP", "AFP")
+        call matchadd("AFP", "afp")
+    catch /E117:/
+        match AFP /\cAFP/
+    endtry
+
+    " Make the completion menu actually visible
+    highlight Pmenu ctermbg=white ctermfg=black
+    highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
+    highlight PmenuSbar ctermbg=grey ctermfg=grey
+    highlight PmenuThumb ctermbg=blue ctermfg=blue
+
+    if exists("&colorcolumn")
+        highlight ColorColumn guibg=#C0C0C0 ctermbg=234
+    endif
+endfunction " }}}
+
+function! CycleColorScheme() " {{{
+    if exists("g:my_schemes") == 0
+        let g:my_schemes = split(glob(expand("$HOME/.vim/colors")."/*"), '\n')
+        let g:my_schemes = map(g:my_schemes, 'fnamemodify(v:val, ":t:r")')
+    endif
+    if exists("g:my_current_scheme") > 0
+        let l:idx = index(g:my_schemes, g:my_current_scheme)
+    elseif exists("g:colors_name") > 0
+        let l:idx = index(g:my_schemes, g:colors_name)
+    else
+        let l:idx = -1
+    endif
+    let l:idx += 1
+    if l:idx > len(g:my_schemes)-1
+        let l:idx = 0
+    endif
+    syntax reset
+    let g:my_current_scheme = g:my_schemes[l:idx]
+    set background=dark
+    execute "colorscheme ".g:my_current_scheme
+    echomsg "Switched to colorscheme: ".g:my_current_scheme
+endfunction " }}}
 " find files and populate the quickfix list (http://vim.wikia.com/wiki/VimTip799)
 " function! FindFiles(filename)
   " let error_file = tempname()
@@ -170,7 +216,7 @@ nnoremap <silent> <leader><F9> :windo call sessioner#save()<cr>
 nnoremap <silent> <F10> :call sessioner#delete()<cr>
 nnoremap <silent> <leader><F10> :call sessioner#load()<cr>
 
-nnoremap <silent> <F12> :NextColorScheme<cr>
+nnoremap <silent> <F12> :call CycleColorScheme()<cr>
 nnoremap <silent> <leader><F12> :colorscheme herald<cr>
 " }}}
 
@@ -299,6 +345,8 @@ noremap <right> :echoerr "Use l instead! :-p"<cr>
 """ Misc {{{
 augroup MiscOptions
     autocmd!
+
+    autocmd VimEnter,ColorScheme * call MyHighlights()
 
     " Filetype recognition
     autocmd BufNewFile,BufRead *.md set filetype=markdown
