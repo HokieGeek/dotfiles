@@ -122,57 +122,7 @@ endif
 syntax on
 " }}}
 
-""" Highlights {{{
-function! SetMyHighlights()
-    " echomsg "SetMyHighlights()"
-    " highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
-    highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
-
-    " I like being able to spot my comments quickly
-    highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
-    try
-        call matchadd("AFP", "AFP")
-        call matchadd("AFP", "afp")
-    catch /E117:/
-        match AFP /\cAFP/
-    endtry
-
-    " Make the completion menu actually visible
-    highlight Pmenu ctermbg=white ctermfg=black
-    highlight PmenuSel ctermbg=blue ctermfg=white cterm=bold
-    highlight PmenuSbar ctermbg=grey ctermfg=grey
-    highlight PmenuThumb ctermbg=blue ctermfg=blue
-
-    if exists("&colorcolumn")
-        highlight ColorColumn guibg=#C0C0C0 ctermbg=234
-    endif
-endfunction
-" }}}
-
 """ Functions {{{
-function! CycleColorScheme() " {{{
-    if exists("g:my_schemes") == 0
-        let g:my_schemes = split(glob(expand("$HOME/.vim/colors")."/*"), '\n')
-        let g:my_schemes = map(g:my_schemes, 'fnamemodify(v:val, ":t:r")')
-    endif
-    if exists("g:my_current_scheme") > 0
-        let l:idx = index(g:my_schemes, g:my_current_scheme)
-    elseif exists("g:colors_name") > 0
-        let l:idx = index(g:my_schemes, g:colors_name)
-    else
-        let l:idx = -1
-    endif
-    let l:idx += 1
-    if l:idx > len(g:my_schemes)-1
-        let l:idx = 0
-    endif
-    syntax reset
-    let g:my_current_scheme = g:my_schemes[l:idx]
-    set background=dark
-    execute "colorscheme ".g:my_current_scheme
-    echomsg "Switched to colorscheme: ".g:my_current_scheme
-endfunction
-" }}}
 " find files and populate the quickfix list (http://vim.wikia.com/wiki/VimTip799)
 " function! FindFiles(filename)
   " let error_file = tempname()
@@ -214,18 +164,17 @@ endif
 " }}}
 
 """ Keyboard mappings {{{
-nnoremap Y y$
-
-"" Session saving (et.al.)
+"" Session saving (et.al.) " {{{
 nnoremap <silent> <F9> :call sessioner#save()<cr>
 nnoremap <silent> <leader><F9> :windo call sessioner#save()<cr>
 nnoremap <silent> <F10> :call sessioner#delete()<cr>
 nnoremap <silent> <leader><F10> :call sessioner#load()<cr>
 
-nnoremap <silent> <F12> :call CycleColorScheme()<cr>
+nnoremap <silent> <F12> :NextColorScheme<cr>
 nnoremap <silent> <leader><F12> :colorscheme herald<cr>
+" }}}
 
-"" Searching
+"" Searching " {{{
 " Current file
 nnoremap <silent> \\ :<c-u>vimgrep // % <bar> cwindow<left><left><left><left><left><left><left><left><left><left><left><left><left>
 nnoremap <silent> \. :<c-u>vimgrep /\<<c-r><c-w>\>/ % <bar> cwindow<cr>
@@ -240,10 +189,12 @@ else
     nnoremap <silent> \/ :<c-u>noautocmd vimgrep // ** <bar> cwindow<left><left><left><left><left><left><left><left><left>
     nnoremap <silent> \, :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cwindow<cr>
 endif
+" }}}
 
+"" Some user stuff " {{{
 " A scratch space. Kinda useless, I think
 nnoremap <silent> gh :botright new<bar>set buftype=nofile bufhidden=wipe nobuflisted noswapfile modifiable<bar>res 10<cr>
-"" Split the term
+" Split the term
 nnoremap <silent> gsh :Split<cr>
 nnoremap <silent> gsv :Vsplit<cr>
 
@@ -258,8 +209,9 @@ if g:have_plugins
     nnoremap <silent> gb :CtrlPBuffer<cr>
     nnoremap <silent> go :TlistToggle<cr>
 endif
+" }}}
 
-"" How are these not tied to a mapping already?
+"" How are these not tied to a mapping already? " {{{
 nnoremap <silent> ]b :<c-u>execute(v:count ? 'b '.v:count : 'bnext')<cr>
 nnoremap <silent> [b :<c-u>execute(v:count ? 'b '.v:count : 'bprevious')<cr>
 nnoremap <silent> ]B :blast<cr>
@@ -284,8 +236,9 @@ nnoremap <silent> ]t :<c-u>execute(v:count.'tnext')<cr>
 nnoremap <silent> [t :<c-u>execute(v:count.'tprevious')<cr>
 nnoremap <silent> ]T :tlast<cr>
 nnoremap <silent> [T :tfirst<cr>
+" }}}
 
-"" Configuration
+"" Configuration " {{{
 nnoremap <silent> con :setlocal number!<bar>if exists("&relativenumber")<bar>setlocal relativenumber!<bar>endif<cr>
 if exists("&relativenumber")
     nnoremap <silent> coN :setlocal relativenumber!<cr>
@@ -303,8 +256,9 @@ nnoremap <silent> cob :if &background == "dark"<bar>setlocal background=light<ba
 nnoremap <silent> coh :nohlsearch<cr>
 nnoremap <silent> coH :setlocal hlsearch!<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
+" }}}
 
-"" Some (probably questionable) overrides/shortcuts
+"" Some (probably questionable) overrides/shortcuts " {{{
 inoremap jk <esc>
 inoremap kj <esc>
 
@@ -313,7 +267,10 @@ nnoremap ZQ :qa!<cr>
 nnoremap <space> :
 vnoremap <space> :
 
-"" Completion
+nnoremap Y y$
+" }}}
+
+"" Completion " {{{
 " word
 inoremap jj <c-n>
 inoremap kk <c-p>
@@ -329,19 +286,19 @@ inoremap UU <c-x><c-u>
 inoremap KK <c-x><c-o>
 " tag
 inoremap TT <c-x><c-]>
+" }}}
 
-"" I feel like being a pain in the ass
+"" I feel like being a pain in the ass " {{{
 noremap <up> :echoerr "Use k instead! :-p"<cr>
 noremap <down> :echoerr "Use j instead! :-p"<cr>
 noremap <left> :echoerr "Use h instead! :-p"<cr>
 noremap <right> :echoerr "Use l instead! :-p"<cr>
 " }}}
+" }}}
 
 """ Misc {{{
 augroup MiscOptions
     autocmd!
-
-    autocmd VimEnter,ColorScheme * call SetMyHighlights()
 
     " Filetype recognition
     autocmd BufNewFile,BufRead *.md set filetype=markdown
