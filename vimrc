@@ -185,7 +185,8 @@ cnoremap w!! %!sudo tee > /dev/null %
 iabbrev datet- <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr>
 iabbrev date- <c-r>=strftime("%Y-%m-%d")<cr>
 iabbrev time- <c-r>=strftime("%H:%M:%S")<cr>
-iabbrev afp]] [AFP]<cr>
+
+iabbrev afp]] [AFP]
 " }}}
 
 """ Searching configuration {{{
