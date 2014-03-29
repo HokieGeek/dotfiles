@@ -19,8 +19,8 @@ USAGE_INFO
 expression=""
 searchType="GREP_ALL"
 caseInsensitive=0
-CIOpt_grep=""
-# CIOpt_find=""
+opt_ci_grep=""
+# opt_ci_find=""
 # Determine which instance of vi to use	
 [ -x "`which vim 2>/dev/null`" ] && v=vim || v=vi
 
@@ -37,8 +37,8 @@ while [ $# -gt 0 ]; do
 done
 
 if [ $caseInsensitive -gt 0 ]; then
-    CIOpt_grep="-i"
-    CIOpt_find="i"
+    opt_ci_grep="-i"
+    opt_ci_find="i"
 fi
 expression=`echo $expression | sed -e 's/^\s\*//g' -e 's/\s\*$//g'` # Trim
 if [ -z "${expression}" ]; then
@@ -48,16 +48,23 @@ fi
 
 grepAll() {
     if [ -x "`which ag 2>/dev/null`" ]; then
-        grepprg="ag\\ --nogroup\\ --nocolor"
+        grepprg="ag\\ --nogroup\\ --nocolor\\ --column"
+        grepformat="%f:%l:%c:%m"
+        glob=""
     elif [ -x "`which ack 2>/dev/null`" ]; then
-        grepprg="ack\\ --nogroup\\ --nocolor"
+        grepprg="ack\\ --nogroup\\ --nocolor\\ --column"
+        grepformat="%f:%l:%c:%m"
+        glob=""
     else
         grepprg="grep\\ -rnIH"
+        grepformat="%f:%l:%m"
+        glob="*"
     fi
     exec ${v} -c "set grepprg=${grepprg}" \
+              -c "set grepformat=${grepformat}" \
               -c "set foldlevel=99" \
               -c "set cursorline" \
-              -c "silent grep ${CIOpt_grep} ${expression} *" \
+              -c "silent grep ${opt_ci_grep} ${expression} ${glob}" \
               -c "cwindow" \
               -c "set nocursorline"
 }

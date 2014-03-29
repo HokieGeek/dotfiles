@@ -195,14 +195,16 @@ iabbrev afp]] [AFP]<cr>
 
 """ Searching configuration {{{
 if executable('ag')
-    set grepprg=ag\ --nogroup\ --nocolor
+    set grepprg=ag\ --nogroup\ --nocolor\ --column
+    set grepformat="%f:%l:%c:%m"
     if g:have_plugins
         let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
         let g:ctrlp_use_caching = 0
     endif
     let g:use_external_grep = 1
 elseif executable('ack')
-    set grepprg=ack\ --nogroup\ ---nocolor
+    set grepprg=ack\ --nogroup\ ---nocolor\ --column
+    set grepformat="%f:%l:%c:%m"
     let g:use_external_grep = 1
 elseif executable('grep')
     set grepprg=grep\ -rnIH
@@ -251,7 +253,6 @@ nnoremap <silent> gc <c-]>
 
 "" Plugins
 if g:have_plugins
-    nnoremap <silent> gp :CtrlP<cr>
     nnoremap <silent> gb :CtrlPBuffer<cr>
     nnoremap <silent> go :TlistToggle<cr>
 endif
