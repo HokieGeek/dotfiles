@@ -147,7 +147,7 @@ function! MyHighlights() " {{{
     endif
 endfunction " }}}
 function! CycleColorScheme() " {{{
-    if exists("g:my_schemes") == 0
+    if !exists("g:my_schemes")
         let g:my_schemes = split(glob(expand("$HOME/.vim/colors")."/*"), '\n')
         let g:my_schemes = map(g:my_schemes, 'fnamemodify(v:val, ":t:r")')
     endif
