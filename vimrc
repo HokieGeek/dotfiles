@@ -146,7 +146,6 @@ function! MyHighlights() " {{{
         highlight ColorColumn guibg=#C0C0C0 ctermbg=234
     endif
 endfunction " }}}
-
 function! CycleColorScheme() " {{{
     if exists("g:my_schemes") == 0
         let g:my_schemes = split(glob(expand("$HOME/.vim/colors")."/*"), '\n')
@@ -169,20 +168,51 @@ function! CycleColorScheme() " {{{
     execute "colorscheme ".g:my_current_scheme
     echomsg "Switched to colorscheme: ".g:my_current_scheme
 endfunction " }}}
-" find files and populate the quickfix list (http://vim.wikia.com/wiki/VimTip799)
-" function! FindFiles(filename)
-  " let error_file = tempname()
-  " silent exe '!find . -name "'.a:filename.'" | xargs file | sed "s/:/:1:/" > '.error_file
-  " set errorformat=%f:%l:%m
-  " exe "cfile ". error_file
-  " cwindow
-" endfunction
-" command! -nargs=1 Find call FindFiles(<q-args>)
+function! Find(...) " {{{
+    if a:0 == 1
+        let l:loc = "."
+        let l:name = a:1
+    elseif a:0 == 2
+        let l:loc = a:1
+        let l:name = a:2
+    else
+        echohl WarningMsg
+        echomsg "Too many arguments. USAGE: Find [LOCATION] [FILE]"
+        echohl None
+        return
+    endif
+
+    if !exists(l:name)
+        let l:files_list = tempname()
+        call system("find ".l:loc." -name '".l:name."' | xargs file | sed 's/:/:1:/' > ".l:files_list)
+        let l:ef=&errorformat
+        set errorformat=%f:%l:%m
+        execute "cfile ".l:files_list
+        execute "set errorformat=".l:ef
+        cwindow
+    endif
+endfunction " }}}
+function! Chmod(...) " {{{
+    let l:op = a:1
+    let l:file = (a:0 > 1) ? bufname(a:2) : expand("%")
+    call system("chmod ".l:op." ".l:file)
+    if a:0 == 1
+        edit
+    endif
+endfunction " }}}
+function! Remove(...) " {{{
+    let l:file = (a:0 > 0) ? bufname(a:1) : expand("%")
+    execute "bdelete! ".l:file
+    call delete(fnamemodify(l:file, ":p"))
+endfunction " }}}
 " }}}
 
 """ Commands {{{
 " Will allow me to sudo a file that is open without write permissions
 cnoremap w!! %!sudo tee > /dev/null %
+command! -bar -complete=file -nargs=+ Find call Find(<f-args>)
+command! -bar -complete=buffer -nargs=+ Chmod call Chmod(<f-args>)
+command! -bar -complete=buffer -nargs=? Rm call Remove(<f-args>)
 " }}}
 
 """ Abbreviations {{{
@@ -372,13 +402,21 @@ augroup MiscOptions
     " Automatically reload this file
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
-    "" Views {{{
     if ! &diff
         autocmd BufWinLeave * if expand("%") != "" | mkview! | endif
         autocmd BufWinEnter * if expand("%") != "" | silent loadview | endif
     endif
-" }}}
 
+    " Stole this straight out of tpope/vim-eunuch and modified it a bit
+    autocmd BufNewFile * let b:brand_new_file = 1
+    autocmd BufWritePost,FileWritePost *
+        \ if exists('b:brand_new_file') |
+        \   if getline(1) =~ '^#!' && executable('chmod') == 1 |
+        \       silent! execute '!chmod +x "<afile>"' |
+        \       edit |
+        \   endif |
+        \   unlet! b:brand_new_file |
+        \ endif
 augroup END
 " }}}
 
