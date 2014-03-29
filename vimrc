@@ -168,51 +168,11 @@ function! CycleColorScheme() " {{{
     execute "colorscheme ".g:my_current_scheme
     echomsg "Switched to colorscheme: ".g:my_current_scheme
 endfunction " }}}
-function! Find(...) " {{{
-    if a:0 == 1
-        let l:loc = "."
-        let l:name = a:1
-    elseif a:0 == 2
-        let l:loc = a:1
-        let l:name = a:2
-    else
-        echohl WarningMsg
-        echomsg "Too many arguments. USAGE: Find [LOCATION] [FILE]"
-        echohl None
-        return
-    endif
-
-    if !exists(l:name)
-        let l:files_list = tempname()
-        call system("find ".l:loc." -name '".l:name."' | xargs file | sed 's/:/:1:/' > ".l:files_list)
-        let l:ef=&errorformat
-        set errorformat=%f:%l:%m
-        execute "cfile ".l:files_list
-        execute "set errorformat=".l:ef
-        cwindow
-    endif
-endfunction " }}}
-function! Chmod(...) " {{{
-    let l:op = a:1
-    let l:file = (a:0 > 1) ? bufname(a:2) : expand("%")
-    call system("chmod ".l:op." ".l:file)
-    if a:0 == 1
-        edit
-    endif
-endfunction " }}}
-function! Remove(...) " {{{
-    let l:file = (a:0 > 0) ? bufname(a:1) : expand("%")
-    execute "bdelete! ".l:file
-    call delete(fnamemodify(l:file, ":p"))
-endfunction " }}}
 " }}}
 
 """ Commands {{{
 " Will allow me to sudo a file that is open without write permissions
 cnoremap w!! %!sudo tee > /dev/null %
-command! -bar -complete=file -nargs=+ Find call Find(<f-args>)
-command! -bar -complete=buffer -nargs=+ Chmod call Chmod(<f-args>)
-command! -bar -complete=buffer -nargs=? Rm call Remove(<f-args>)
 " }}}
 
 """ Abbreviations {{{
