@@ -1,21 +1,21 @@
 set nocompatible " Not compatible with plain vi
 
+if isdirectory("$HOME/vimfiles")
+    let g:dot_vim_dir = "$HOME/vimfiles"
+elseif isdirectory("$HOME/.vim.afp")
+    let g:dot_vim_dir = "$HOME/.vim.afp"
+else
+    let g:dot_vim_dir = "$HOME/.vim"
+endif
+
 """ Plugins {{{
 filetype off
 
 let g:have_plugins = 0
-if has("vim_starting")
-    if isdirectory(expand("$HOME/.vim/bundle/vim-pathogen"))
-        set runtimepath+=$HOME/.vim/bundle/vim-pathogen
-        let g:have_plugins = 1
-    elseif isdirectory(expand("$HOME/vimfiles/bundle/vim-pathogen"))
-        set runtimepath+=$HOME/vimfiles/bundle/vim-pathogen
-        let g:have_plugins = 1
-    endif
-endif
-
-if g:have_plugins
+if has("vim_starting") && isdirectory(expand(g:dot_vim_dir."/bundle/vim-pathogen"))
+    execute "set runtimepath+=".g:dot_vim_dir."/bundle/vim-pathogen"
     execute pathogen#infect()
+    let g:have_plugins = 1
 endif
 " }}}
 
@@ -187,10 +187,6 @@ iabbrev afp]] [AFP]<cr>
 if executable('ag')
     set grepprg=ag\ --nogroup\ --nocolor\ --column
     set grepformat="%f:%l:%c:%m"
-    if g:have_plugins
-        let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-        let g:ctrlp_use_caching = 0
-    endif
     let g:use_external_grep = 1
 elseif executable('ack')
     set grepprg=ack\ --nogroup\ ---nocolor\ --column
@@ -345,6 +341,7 @@ augroup MiscOptions
     autocmd BufNewFile,BufRead *.conkyrc set filetype=conkyrc
     autocmd FileType markdown setlocal spell
     autocmd FileType gitcommit setlocal spell
+    autocmd Filetype make setlocal noexpandtab
 
     "" Stop asking about simultaneous edits.
     "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
@@ -356,18 +353,18 @@ augroup MiscOptions
     " Disable syntax highlight for files larger than 50 MB
     autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
 
-    " Turn off diffing when exiting
-    autocmd VimLeave * windo diffoff
-
     " Automatically reload this file
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
+
+    " Turn off diffing when exiting
+    autocmd VimLeave * windo diffoff
 
     if ! &diff
         autocmd BufWinLeave * if expand("%") != "" | mkview! | endif
         autocmd BufWinEnter * if expand("%") != "" | silent loadview | endif
     endif
 
-    " Stole this straight out of tpope/vim-eunuch and modified it a bit
+    " Stole this straight out of tpope/vim-eunuch (and modified it a bit)
     autocmd BufNewFile * let b:brand_new_file = 1
     autocmd BufWritePost,FileWritePost *
         \ if exists('b:brand_new_file') |
