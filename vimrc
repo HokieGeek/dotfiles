@@ -1,11 +1,11 @@
 set nocompatible " Not compatible with plain vi
 
-if isdirectory("$HOME/vimfiles")
-    let g:dot_vim_dir = "$HOME/vimfiles"
-elseif isdirectory("$HOME/.vim.afp")
-    let g:dot_vim_dir = "$HOME/.vim.afp"
+if isdirectory(expand("$HOME/vimfiles"))
+    let g:dot_vim_dir = expand("$HOME/vimfiles")
+elseif isdirectory(expand("$HOME/.vim.afp"))
+    let g:dot_vim_dir = expand("$HOME/.vim.afp")
 else
-    let g:dot_vim_dir = "$HOME/.vim"
+    let g:dot_vim_dir = expand("$HOME/.vim")
 endif
 
 """ Plugins {{{
@@ -153,7 +153,7 @@ function! MyHighlights() " {{{
 endfunction " }}}
 function! CycleColorScheme() " {{{
     if !exists("g:my_schemes")
-        let g:my_schemes = split(glob(expand("$HOME/.vim/colors")."/*"), '\n')
+        let g:my_schemes = split(glob(expand(g:dot_vim_dir."/colors")."/*"), '\n')
         let g:my_schemes = map(g:my_schemes, 'fnamemodify(v:val, ":t:r")')
     endif
     if exists("g:my_current_scheme") > 0
@@ -292,8 +292,9 @@ nnoremap <silent> cow :setlocal wrap!<cr>
 nnoremap <silent> cos :setlocal spell!<cr>
 nnoremap <silent> col :setlocal list!<cr>
 nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
-nnoremap <silent> cot :if &laststatus == 2<bar>setlocal laststatus=1<bar>else<bar>setlocal laststatus=2<bar>endif<cr>
-nnoremap <silent> cob :if &background == "dark"<bar>setlocal background=light<bar>else<bar>setlocal background=dark<bar>endif<cr>
+nnoremap <silent> cot :let &laststatus = (&laststatus == 2 ? 1 : 2)<cr>
+nnoremap <silent> cob :let &background = (&background == "dark" ? "light" : "dark")<cr>
+" nnoremap <silent> cob :let &background = (&background == "dark" ? "light" : "dark")<bar>execute "colorscheme ".g:my_current_scheme<cr>
 nnoremap <silent> coh :nohlsearch<cr>
 nnoremap <silent> coH :setlocal hlsearch!<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
@@ -330,10 +331,11 @@ inoremap TT <c-x><c-]>
 " }}}
 
 "" I feel like being a pain in the ass " {{{
-noremap <up> :echoerr "Use k instead! :-p"<cr>
-noremap <down> :echoerr "Use j instead! :-p"<cr>
 noremap <left> :echoerr "Use h instead! :-p"<cr>
 noremap <right> :echoerr "Use l instead! :-p"<cr>
+noremap <up> :echoerr "Use k instead! :-p"<cr>
+noremap <down> :echoerr "Use j instead! :-p"<cr>
+" noremap <down> ggdG:x<cr>
 " }}}
 " }}}
 
