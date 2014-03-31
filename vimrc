@@ -17,6 +17,10 @@ if has("vim_starting") && isdirectory(expand(g:dot_vim_dir."/bundle/vim-pathogen
     execute pathogen#infect()
     let g:have_plugins = 1
 endif
+
+if g:have_plugins
+    let g:syntastic_javascript_checkers = ['jslint']
+endif
 " }}}
 
 """ Options {{{
@@ -341,7 +345,7 @@ augroup MiscOptions
     autocmd BufNewFile,BufRead *.conkyrc set filetype=conkyrc
     autocmd FileType markdown setlocal spell
     autocmd FileType gitcommit setlocal spell
-    autocmd Filetype make setlocal noexpandtab
+    autocmd Filetype make setlocal noexpandtab nolist
 
     "" Stop asking about simultaneous edits.
     "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
