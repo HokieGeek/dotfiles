@@ -310,6 +310,7 @@ nnoremap <space> :
 vnoremap <space> :
 
 nnoremap Y y$
+nnoremap n nzz
 " }}}
 
 "" Completion " {{{
