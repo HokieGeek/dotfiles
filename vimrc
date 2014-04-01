@@ -189,20 +189,6 @@ iabbrev time- <c-r>=strftime("%H:%M:%S")<cr>
 iabbrev afp]] [AFP]
 " }}}
 
-""" Searching configuration {{{
-if executable('ag')
-    set grepprg=ag\ --nogroup\ --nocolor\ --column
-    set grepformat="%f:%l:%c:%m"
-    let g:use_external_grep = 1
-elseif executable('ack')
-    set grepprg=ack\ --nogroup\ ---nocolor\ --column
-    set grepformat="%f:%l:%c:%m"
-    let g:use_external_grep = 1
-elseif executable('grep')
-    set grepprg=grep\ -rnIH
-endif
-" }}}
-
 """ Keyboard mappings {{{
 "" Session saving (et.al.) " {{{
 nnoremap <silent> <F9> :call sessioner#save()<cr>
@@ -212,23 +198,6 @@ nnoremap <silent> <leader><F10> :call sessioner#load()<cr>
 
 nnoremap <silent> <F12> :call CycleColorScheme()<cr>
 nnoremap <silent> <leader><F12> :colorscheme herald<cr>
-" }}}
-
-"" Searching " {{{
-" Current file
-nnoremap <silent> \\ :<c-u>vimgrep // % <bar> cwindow<left><left><left><left><left><left><left><left><left><left><left><left><left>
-nnoremap <silent> \. :<c-u>vimgrep /\<<c-r><c-w>\>/ % <bar> cwindow<cr>
-" All open buffers
-nnoremap <silent> g\\ :cexpr [] <bar> bufdo vimgrepadd //g % <bar> cwindow<left><left><left><left><left><left><left><left><left><left><left><left><left><left>
-nnoremap <silent> g\. :cexpr [] <bar> bufdo vimgrepadd /<c-r><c-w>/g % <bar> cwindow<cr>
-" All files in current directory and down
-if exists("g:use_external_grep")
-    nnoremap <silent> \/ :<c-u>silent grep  <bar> cwindow<left><left><left><left><left><left><left><left><left><left>
-    nnoremap <silent> \, :<c-u>silent grep <c-r><c-w> <bar> cwindow<cr>
-else
-    nnoremap <silent> \/ :<c-u>noautocmd vimgrep // ** <bar> cwindow<left><left><left><left><left><left><left><left><left>
-    nnoremap <silent> \, :<c-u>noautocmd vimgrep /<c-r><c-w>/ ** <bar> cwindow<cr>
-endif
 " }}}
 
 "" Some user stuff " {{{
@@ -245,8 +214,16 @@ nnoremap <silent> gc <c-]>
 
 "" Plugins
 if g:have_plugins
+    nnoremap <silent> gp :CtrlP<cr>
     nnoremap <silent> gb :CtrlPBuffer<cr>
     nnoremap <silent> go :TlistToggle<cr>
+
+    " Search current file
+    nnoremap <silent> \\ :Grep 
+    " Search all open buffers
+    nnoremap <silent> g\ :Grep -b 
+    " Search all files in current directory and down
+    nnoremap <silent> g/ :Grep -a 
 endif
 " }}}
 
