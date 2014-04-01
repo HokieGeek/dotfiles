@@ -175,11 +175,6 @@ function! CycleColorScheme() " {{{
 endfunction " }}}
 " }}}
 
-""" Commands {{{
-" Will allow me to sudo a file that is open without write permissions
-cnoremap w!! %!sudo tee > /dev/null %
-" }}}
-
 """ Abbreviations {{{
 " This is ridiculously useful, particularly when taking notes
 iabbrev datet- <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr>
@@ -344,7 +339,7 @@ augroup MiscOptions
     " Automatically reload this file
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
-    " Turn off diffing when exiting
+    " Turn off diffing when exiting otherwise the view stuff below won't work well
     autocmd VimLeave * windo diffoff
 
     if ! &diff
