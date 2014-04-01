@@ -14,11 +14,11 @@ filetype off
 let g:have_plugins = 0
 if has("vim_starting") && isdirectory(expand(g:dot_vim_dir."/bundle/vim-pathogen"))
     execute "set runtimepath+=".g:dot_vim_dir."/bundle/vim-pathogen"
-    execute pathogen#infect()
     let g:have_plugins = 1
 endif
 
 if g:have_plugins
+    execute pathogen#infect()
     let g:syntastic_javascript_checkers = ['jslint']
 endif
 " }}}
