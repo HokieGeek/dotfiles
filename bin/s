@@ -6,9 +6,7 @@ usage() {
     echo "USAGE: `basename $0` [-g|-f] [-i] <EXPRESSION>"
     echo ""
     more << USAGE_INFO
-       DEFAULT - Does a recursive, case-sensitive grep on
-                all files matching file names, contents and archives
-       -g      - Greps the contents of all of the files in the directory (recursive)
+       -g      - [DEFAULT] Greps the contents of all of the files in the directory (recursive)
        -f      - Searches for file and directory names (recursive)
 
        -i      - Makes any search case-insensitive
@@ -17,62 +15,62 @@ USAGE_INFO
 }
 
 expression=""
-searchType="GREP_ALL"
+searchType="GREP"
 caseInsensitive=0
-opt_ci_grep=""
-# opt_ci_find=""
-# Determine which instance of vi to use	
-[ -x "`which vim 2>/dev/null`" ] && v=vim || v=vi
-
 
 # Parse the arguments
 while [ $# -gt 0 ]; do
     case $1 in
-    # -f) searchType="FILE_NAMES";;
-    -g) searchType="GREP_ALL";;
-    -i) caseInsensitive=1;;
+    -f) searchType="FILES";;
+    -g) searchType="GREP";;
+    -i) caseInsensitive=1 ;;
     *) expression="${expression} $1";;
     esac
     shift
 done
 
-if [ $caseInsensitive -gt 0 ]; then
-    opt_ci_grep="-i"
-    opt_ci_find="i"
-fi
 expression=`echo $expression | sed -e 's/^\s\*//g' -e 's/\s\*$//g'` # Trim
 if [ -z "${expression}" ]; then
     usage "No search expression provided"
     exit 1
 fi
 
-grepAll() {
+doGrep() {
+    grepformat="%f:%l:%c:%m"
+    glob=""
     if [ -x "`which ag 2>/dev/null`" ]; then
         grepprg="ag\\ --nogroup\\ --nocolor\\ --column"
-        grepformat="%f:%l:%c:%m"
-        glob=""
     elif [ -x "`which ack 2>/dev/null`" ]; then
         grepprg="ack\\ --nogroup\\ --nocolor\\ --column"
-        grepformat="%f:%l:%c:%m"
-        glob=""
     else
         grepprg="grep\\ -rnIH"
         grepformat="%f:%l:%m"
         glob="*"
     fi
-    exec ${v} -c "set grepprg=${grepprg}" \
-              -c "set grepformat=${grepformat}" \
-              -c "set foldlevel=99" \
-              -c "set cursorline" \
-              -c "silent grep ${opt_ci_grep} ${expression} ${glob}" \
-              -c "cwindow" \
-              -c "set nocursorline"
+    [ $caseInsensitive -gt 0 ] && opt_ci="-i" || opt_ci=""
+    exec vim -c "set grepprg=${grepprg}" \
+             -c "set grepformat=${grepformat}" \
+             -c "set foldlevel=99" \
+             -c "set cursorline" \
+             -c "silent grep ${opt_ci} ${expression} ${glob}" \
+             -c "if empty(getqflist())|qa|else|if len(getqflist()) > 1|copen|endif|endif" \
+             -c "set nocursorline"
+}
+
+doFind() {
+    [ $caseInsensitive -gt 0 ] && opt_ci="i" || opt_ci=""
+    results=/tmp/s.results.$$
+    find . -${opt_ci}name "*${expression}*" -print | xargs file | sed 's/:/:1:/' > ${results}
+    if [ -f "${results}" -a `cat ${results} | wc -l` -gt 0 ]; then
+        exec vim -c "cfile ${results}" \
+                 -c "set errorformat=%f:%l:%m" \
+                 -c "if len(getqflist()) > 1|cwindow|endif" \
+                 -c "call delete('${results}')"
+    fi
 }
 
 ## Perform the search
 case $searchType in
-GREP_ALL) grepAll ;;
-# FILE_NAMES)
-    # find . -${CIOpt_find}name "*${expression}*" -print | awk "{ print \"${RESULT_TYPE_FILE}${DELIM}\"\$0 }"
-    # ;;
+GREP) doGrep ;;
+FILES) doFind ;;
 esac
