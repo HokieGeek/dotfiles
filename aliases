@@ -1,18 +1,13 @@
 #!/bin/bash
 
-## Helpers {{{
-alias psgrep='ps -ef --cols 300 | grep -v grep | grep'
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/$\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-alias tattach='tmux attach-session -t'
-## }}}
-
-## Mine {{{
+## Random {{{
 alias vi='vim'
 alias buspirate='minicom buspirate'
 alias rn42='minicom rn42'
-## }}}
 
-## Random {{{
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/$\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias tattach='tmux attach-session -t'
+
 alias roll='echo $((RANDOM%7))'
 alias broadcast='script -qf | tee >(nc -kl 5000)'
 ## }}}
@@ -21,26 +16,28 @@ alias broadcast='script -qf | tee >(nc -kl 5000)'
 alias make='make -j`expr $NUM_PROCESSORS + 1`'
 alias scons='scons -j`expr $NUM_PROCESSORS + 1`'
 alias scont='scons -j`expr $NUM_PROCESSORS + 1` -c'
-alias mymake='$HOME/.bin/mybuild make -j`expr $NUM_PROCESSORS + 1`'
-alias myscons='$HOME/.bin/mybuild scons -j`expr $NUM_PROCESSORS + 1`'
 alias klean='make clean && make'
-alias myklean='mymake clean && mymake'
 alias cant='ant clean && ant'
 
-#alias gtrack='git ???? --set-to-upstream=origin/`get branch` `get branch`'
+gtrack() {
+    [ $# -eq 1 ] && {
+        server='origin'
+        branch=$1
+    } || {
+        server=$1
+        branch=$2
+    }
+    git branch --set-to-upstream=${remote}/${branch} ${branch}
+}
+#alias gtrack='git branch --set-to-upstream=origin/`get branch` `get branch`'
 alias gp='git pull'
-alias smgp='gp && git submodule foreach "git pull"'
-
-alias eclipse='$HOME/eclipse/eclipse -vm $JAVA_HOME/bin'
-alias netbeans='$HOME/netbeans-6.8/bin/netbeans'
+alias smgp='gp && git submodule foreach --recursive "git pull"'
 ## }}}
 
 ## S-based aliases {{{
 alias g='$HOME/.bin/s -g'
 alias gi='$HOME/.bin/s -g -i'
 alias f='$HOME/.bin/s -f'
-# alias fi='$HOME/.bin/s -f -i'
-alias sa='$HOME/.bin/s -a'
 alias todo='g "(FIXME|TODO)"'
 ## }}}
 
@@ -60,7 +57,7 @@ alias du='$HOME/.bin/du_color'
 alias emacs='echo "Correcting typos in command..."; sleep 1s; gvim'
 alias xemacs='emacs'
 alias :q='exit'
-alias ..='cd ..'
+alias :qa='exit'
 ## }}}
 
 # vim: set foldmethod=marker:
