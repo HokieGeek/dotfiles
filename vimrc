@@ -18,6 +18,9 @@ if has("vim_starting") && isdirectory(expand(g:dot_vim_dir."/bundle/vim-pathogen
 endif
 
 if g:have_plugins
+    if has("win32unix") || has("win32") || has("win64") " Cygwin and windows can't handle it
+        let g:que__vcs_section_enabled = 0
+    endif
     execute pathogen#infect()
     let g:syntastic_javascript_checkers = ['jslint']
 endif
@@ -87,17 +90,11 @@ set scrolloff=2 " Scroll file when cursor is 2 lines from top or bottom
 set sidescrolloff=4 " Scroll file horizontally when the cursor is 4 columns from left or right
 set sidescroll=1 " Trying this out...
 set textwidth=0 " Don't want automatic text width formatting
+set modelines=1
+set laststatus=2 " Cygwin can't handle it
 set number " I always turn these on
 if exists("&relativenumber")
     set relativenumber
-endif
-if has("win32unix") " Cygwin can't handle it
-    set laststatus=0
-else
-    set laststatus=2
-endif
-if $USER != "root"
-    set modelines=1
 endif
 if exists('$TMUX')
     set clipboard=
@@ -300,7 +297,7 @@ inoremap UU <c-x><c-u>
 " omni
 inoremap KK <c-x><c-o>
 " tag
-inoremap TT <c-x><c-]>
+" inoremap TT <c-x><c-]>
 " }}}
 
 "" I feel like being a pain in the ass " {{{
