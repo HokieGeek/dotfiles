@@ -325,10 +325,10 @@ augroup MiscOptions
 
     "" Stop asking about simultaneous edits.
     "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
-    autocmd SwapExists * let v:swapchoice = 'o'
-    autocmd SwapExists * echohl WarningMsg
-    autocmd SwapExists * echomsg 'Duplicate edit session (readonly)'
-    autocmd SwapExists * echohl None
+    autocmd SwapExists * let v:swapchoice = 'o' |
+                         \ echohl WarningMsg |
+                         \ echomsg 'Duplicate edit session (readonly)' |
+                         \ echohl None |
 
     " Disable syntax highlight for files larger than 50 MB
     autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
@@ -356,7 +356,7 @@ augroup MiscOptions
         \ endif
 
     " Disable cursorline when in insert mode cause I don't really need that
-    autocmd InsertEnter * let b:last_cursorline=&cursorline|set nocursorline
+    autocmd InsertEnter * let b:last_cursorline=&cursorline | set nocursorline
     autocmd InsertLeave * execute "let &cursorline=".b:last_cursorline
 
     autocmd Filetype qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
