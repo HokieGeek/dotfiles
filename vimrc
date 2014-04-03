@@ -358,6 +358,10 @@ augroup MiscOptions
     " Disable cursorline when in insert mode cause I don't really need that
     autocmd InsertEnter * let b:last_cursorline=&cursorline|set nocursorline
     autocmd InsertLeave * execute "let &cursorline=".b:last_cursorline
+
+    if exists("&relativenumber")
+        autocmd BufReadPost quickfix setlocal norelativenumber number
+    endif
 augroup END
 " }}}
 
