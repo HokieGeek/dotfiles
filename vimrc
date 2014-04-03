@@ -359,9 +359,7 @@ augroup MiscOptions
     autocmd InsertEnter * let b:last_cursorline=&cursorline|set nocursorline
     autocmd InsertLeave * execute "let &cursorline=".b:last_cursorline
 
-    if exists("&relativenumber")
-        autocmd BufReadPost quickfix setlocal norelativenumber number
-    endif
+    autocmd Filetype qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
 augroup END
 " }}}
 
