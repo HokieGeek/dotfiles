@@ -30,7 +30,7 @@ sed -e '/^=======$/,/^>>>>>>> /d' -e '/<<<<<<< /d' "${MERGED}" > "${merged_local
 
 # Kick off vim
 vim -f -R -M -d "${merged_local}" "${merged_remote}" \
-    -c ":wincmd t | setlocal noreadonly modifiable" \
+    -c ":wincmd t | setlocal noreadonly modifiable write" \
     -c ":tabedit $QLOCAL | silent file LOCAL" \
     -c ":vertical diffsplit $QREMOTE | silent file REMOTE" \
     -c ":diffsplit $QBASE | silent file BASE" \

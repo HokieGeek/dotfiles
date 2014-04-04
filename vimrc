@@ -45,7 +45,7 @@ set showcmd " Shows the command being typed
 set noshowmode " Don't show -- INSERT --
 set complete-=i " Don't search includes because they are slow
 set wildmenu " Tab completion in command-line mode (:)
-set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~ " These file types are ignored when doing auto completions
+set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~,tags " These file types are ignored when doing auto completions
 set wildmode=list:longest,full
 set viminfo=h,%,'50,"100,<10000,s1000,/1000,:1000 " Remembers stuff. RTFM
 set history=1000
@@ -91,15 +91,17 @@ set sidescrolloff=4 " Scroll file horizontally when the cursor is 4 columns from
 set sidescroll=1 " Trying this out...
 set textwidth=0 " Don't want automatic text width formatting
 set modelines=1
-set laststatus=2 " Cygwin can't handle it
+set display=lastline
 set number " I always turn these on
 if exists("&relativenumber")
     set relativenumber
 endif
-if exists('$TMUX')
-    set clipboard=
-else
-    set clipboard=unnamed " Sync with OS clipboard
+execute "set laststatus=".(has("win32unix") ? 0 :2)
+execute "set clipboard=".(exists('$TMUX') ? "" : "unnamed")
+" set shell=bash
+" set shellpipe=2>&1\|tee
+if has("win32") || has("win64") || has("win32unix")
+    set shellslash
 endif
 
 " Always want it
@@ -126,7 +128,7 @@ syntax on
 
 """ Functions {{{
 function! MyHighlights() " {{{
-    highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
+    " highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
     highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
 
     " I like being able to spot my comments quickly
@@ -172,6 +174,10 @@ function! CycleColorScheme() " {{{
 endfunction " }}}
 " }}}
 
+""" Commands {{{
+command! -bar Scratch :botright new<bar>set buftype=nofile bufhidden=wipe nobuflisted noswapfile modifiable<bar>res 10<cr>
+" }}}
+
 """ Abbreviations {{{
 " This is ridiculously useful, particularly when taking notes
 iabbrev datet- <c-r>=strftime("%Y-%m-%d %H:%M:%S")<cr>
@@ -194,7 +200,8 @@ nnoremap <silent> <leader><F12> :colorscheme herald<cr>
 
 "" Some user stuff " {{{
 " A scratch space. Kinda useless, I think
-nnoremap <silent> gh :botright new<bar>set buftype=nofile bufhidden=wipe nobuflisted noswapfile modifiable<bar>res 10<cr>
+nnoremap <silent> gh :Scratch<cr>
+" nnoremap <silent> =" :Scratch<bar>put<bar>0d_<cr>
 " Split the term
 nnoremap <silent> gsh :Split<cr>
 nnoremap <silent> gsv :Vsplit<cr>
@@ -207,7 +214,6 @@ nnoremap <silent> gc <c-]>
 "" Plugins
 if g:have_plugins
     nnoremap <silent> gp :CtrlP<cr>
-    nnoremap <silent> gb :CtrlPBuffer<cr>
     nnoremap <silent> go :TlistToggle<cr>
 
     " Search current file
@@ -240,10 +246,10 @@ nnoremap <silent> [l :<c-u>execute(v:count.'lprevious')<cr>
 nnoremap <silent> ]L :llast<cr>
 nnoremap <silent> [L :lfirst<cr>
 " Tags
-nnoremap <silent> ]t :<c-u>execute(v:count.'tnext')<cr>
-nnoremap <silent> [t :<c-u>execute(v:count.'tprevious')<cr>
-nnoremap <silent> ]T :tlast<cr>
-nnoremap <silent> [T :tfirst<cr>
+" nnoremap <silent> ]t :<c-u>execute(v:count.'tnext')<cr>
+" nnoremap <silent> [t :<c-u>execute(v:count.'tprevious')<cr>
+" nnoremap <silent> ]T :tlast<cr>
+" nnoremap <silent> [T :tfirst<cr>
 " }}}
 
 "" Configuration " {{{
@@ -326,11 +332,11 @@ augroup MiscOptions
     "" Stop asking about simultaneous edits.
     "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
     autocmd SwapExists * let v:swapchoice = 'o' |
-                         \ echohl WarningMsg |
-                         \ echomsg 'Duplicate edit session (readonly)' |
-                         \ echohl None |
+                       \ echohl WarningMsg |
+                       \ echomsg 'Duplicate edit session (readonly)' |
+                       \ echohl None |
 
-    " Disable syntax highlight for files larger than 50 MB
+    " Disable syntax highlight for files larger than 50 MB (taken from vim tips site)
     autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
 
     " Automatically reload this file
@@ -339,10 +345,10 @@ augroup MiscOptions
     " Turn off diffing when exiting otherwise the view stuff below won't work well
     autocmd VimLeave * windo diffoff
 
-    if ! &diff
-        autocmd BufWinLeave * if expand("%") != "" | mkview! | endif
-        autocmd BufWinEnter * if expand("%") != "" | silent loadview | endif
-    endif
+    " if ! &diff
+        " autocmd BufWinLeave * if expand("%") != "" | mkview! | endif
+        " autocmd BufWinEnter * if expand("%") != "" | silent loadview | endif
+    " endif
 
     " Stole this straight out of tpope/vim-eunuch (and modified it a bit)
     autocmd BufNewFile * let b:brand_new_file = 1

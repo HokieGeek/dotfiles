@@ -8,7 +8,7 @@
     interactive = auto
     status = auto
 [merge]
-    tool = gvimdiff
+	tool = vimgitdiff
 [diff]
     # external = git_diff_wrapper
     tool = gvimdiff
@@ -27,3 +27,7 @@
 [core]
     eol = lf
 	excludesfile = ~/.gitignore
+[mergetool "vimgitdiff"]
+	cmd = vimgitdiff $BASE $LOCAL $REMOTE $MERGED
+	trustExitCode = true
+	keepBackup = false
