@@ -72,7 +72,9 @@ set diffopt+=iwhite " Vimdiff will ignore whitespace diffs
 set ttyfast " Smoother redrawing
 set lazyredraw " Don't redraw during macros
 set noscrollbind " Don't scroll windows synchronized
-set dictionary=/usr/share/dict/words
+if filereadable("/usr/share/dict/words")
+    set dictionary=/usr/share/dict/words
+endif
 set spellsuggest=best,15
 set spelllang=en_us
 set formatoptions+=n " Recognize numbered lists
@@ -96,7 +98,7 @@ set number " I always turn these on
 if exists("&relativenumber")
     set relativenumber
 endif
-execute "set laststatus=".(has("win32unix") ? 0 :2)
+execute "set laststatus=".(has("win32unix") ? 0 : 2)
 execute "set clipboard=".(exists('$TMUX') ? "" : "unnamed")
 " set shell=bash
 " set shellpipe=2>&1\|tee
