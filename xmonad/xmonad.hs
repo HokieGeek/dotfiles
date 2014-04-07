@@ -27,6 +27,9 @@ import XMonad.Layout.ResizableTile
 import XMonad.Util.Run
 import XMonad.Util.EZConfig
 
+import XMonad.Actions.DynamicWorkspaces
+import XMonad.Actions.CopyWindow(copy)
+
 import qualified XMonad.StackSet as W
 -- }}}
 
@@ -38,21 +41,22 @@ myTerminal = "urxvtc"
 
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
+-- myWorkspaces = ["1","2","3","4","5","6","7","8","9","0"]
+-- myWorkspaceKeys = [xK_1..xK_9]
 
 myAppGSMenu = [ ("Chromium", "chromium")
               , ("Terminal", myTerminal)
-              , ("Ranger", rangerExec)
+              , ("VLC", "vlc")
               , ("Skype", "skype")
               , ("gVim", "gvim")
               , ("Eclipse", "eclipse")
               , ("MPC", myTerminal ++ " -e ncmpcpp")
-              , ("VLC", "vlc")
+              , ("Ranger", rangerExec)
               , ("Gimp", "gimp")
               , ("Irssi", myTerminal ++ " -e irssi")
               , ("Alsa Mixer", myTerminal ++ " -e alsamixer")
               , ("VirtualBox", "virtualbox")
               , ("Steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
-              , ("VASSAL", "vassal")
               , ("Deluge", "deluge")
               -- , ("minicom", myTerminal ++ " -e minicom") -- specific menu for the two configs
               ]
@@ -177,7 +181,13 @@ myKeys =
             -- PrintScreen
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
+
+            , ((modm, xK_t), addWorkspace "t")
+            -- , ((modm, xK_n), addWorkspace ???)
+            -- , ((modm .|. shiftMask, xK_BackSpace), removeEmptyWorkspace)
             ]
+            -- ++
+            -- zip (zip (repeat (modm)) myWorkspaceKeys) (map (withNthWorkspace W.greedyView) [0..])
             ++
             [((m .|. modm, k), windows $ f i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys
