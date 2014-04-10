@@ -182,7 +182,7 @@ myKeys =
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
 
-            , ((modm, xK_t), addWorkspace "t")
+            , ((modm, xK_y), addWorkspace "t")
             -- , ((modm, xK_n), addWorkspace ???)
             -- , ((modm .|. shiftMask, xK_BackSpace), removeEmptyWorkspace)
             ]
