@@ -32,6 +32,10 @@ gtrack() {
 #alias gtrack='git branch --set-to-upstream=origin/`get branch` `get branch`'
 alias gp='git pull'
 alias smgp='gp && git submodule foreach --recursive "git pull"'
+
+vrofile() {
+    vim --cmd 'profile start /tmp/vim.profile' --cmd 'profile func *' $* && vi /tmp/vim.profile +/SORTED
+}
 ## }}}
 
 ## S-based aliases {{{

@@ -26,7 +26,7 @@ trap 'rm -rf ${merged_remote} ${merged_local}' SIGINT SIGTERM EXIT
 
 # Create the merged files
 sed -e '/^<<<<<<< /,/^=======$/d' -e '/^>>>>>>> /d' "${MERGED}" > "${merged_remote}"
-sed -e '/^=======$/,/^>>>>>>> /d' -e '/<<<<<<< /d' "${MERGED}" > "${merged_local}"
+sed -e '/^=======$/,/^>>>>>>> /d' -e '/^<<<<<<< /d' "${MERGED}" > "${merged_local}"
 
 # Kick off vim
 vim -f -R -M -d "${merged_local}" "${merged_remote}" \
