@@ -1,11 +1,13 @@
 set nocompatible " Not compatible with plain vi
 
-if isdirectory(expand("$HOME/vimfiles"))
-    let g:dot_vim_dir = expand("$HOME/vimfiles")
-elseif isdirectory(expand("$HOME/.vim.afp"))
-    let g:dot_vim_dir = expand("$HOME/.vim.afp")
-else
-    let g:dot_vim_dir = expand("$HOME/.vim")
+if !exists("g:dot_vim_dir")
+    if isdirectory(expand("$HOME/vimfiles"))
+        let g:dot_vim_dir = expand("$HOME/vimfiles")
+    elseif isdirectory(expand("$HOME/.vim.afp"))
+        let g:dot_vim_dir = expand("$HOME/.vim.afp")
+    else
+        let g:dot_vim_dir = expand("$HOME/.vim")
+    endif
 endif
 
 """ Plugins {{{
@@ -13,7 +15,7 @@ filetype off
 
 let g:have_plugins = 0
 if has("vim_starting") && isdirectory(expand(g:dot_vim_dir."/bundle/vim-pathogen"))
-    execute "set runtimepath+=".g:dot_vim_dir."/bundle/vim-pathogen"
+    execute "set runtimepath+=".g:dot_vim_dir.",".g:dot_vim_dir."/bundle/vim-pathogen"
     let g:have_plugins = 1
 endif
 
