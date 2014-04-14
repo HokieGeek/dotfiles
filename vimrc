@@ -220,11 +220,11 @@ if g:have_plugins
     nnoremap <silent> go :TlistToggle<cr>
 
     " Search current file
-    nnoremap <silent> \\ :Grep 
+    nnoremap <silent> \\ :Grep<space>
     " Search all open buffers
-    nnoremap <silent> g\ :Grep -b 
+    nnoremap <silent> g\ :Grep -b<space>
     " Search all files in current directory and down
-    nnoremap <silent> g/ :Grep -a 
+    nnoremap <silent> g/ :Grep -a<space>
 endif
 " }}}
 
