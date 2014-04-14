@@ -217,7 +217,6 @@ nnoremap <silent> gc <c-]>
 
 "" Plugins
 if g:have_plugins
-    nnoremap <silent> gp :CtrlP<cr>
     nnoremap <silent> go :TlistToggle<cr>
 
     " Search current file
