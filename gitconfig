@@ -24,6 +24,7 @@
     diff = diff --patience
     df = diff --ext-diff --patience
     dt = difftool -y
+    chg = commit --author='HokieGeek'
 [core]
     eol = lf
 	excludesfile = ~/.gitignore
