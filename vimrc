@@ -12,7 +12,12 @@ endif
 
 """ Plugins {{{
 filetype off
+filetype plugin indent off
 
+"" Add the Go plugins and such to the path
+set runtimepath+=$GOROOT/misc/vim
+
+"" Add the pathogen path to the rtp
 let g:have_plugins = 0
 if has("vim_starting") && isdirectory(expand(g:dot_vim_dir."/bundle/vim-pathogen"))
     execute "set runtimepath+=".g:dot_vim_dir.",".g:dot_vim_dir."/bundle/vim-pathogen"
@@ -26,11 +31,11 @@ if g:have_plugins
     execute pathogen#infect()
     let g:syntastic_javascript_checkers = ['jslint']
 endif
+
+filetype plugin indent on
 " }}}
 
 """ Options {{{
-filetype plugin indent on
-
 set autoindent " Indents when you insert
 set tabstop=4 " Tab = 4 spaces. Because I'm not a savage
 set softtabstop=4
@@ -319,19 +324,33 @@ noremap <down> :echoerr "Use j instead! :-p"<cr>
 " }}}
 
 """ Misc {{{
-augroup MiscOptions
+augroup FiletypeOptions
     autocmd!
 
-    autocmd VimEnter,ColorScheme * call MyHighlights()
-
-    " Filetype recognition
-    autocmd BufNewFile,BufRead *.md set filetype=markdown
     autocmd BufNewFile,BufRead *.confluence set filetype=confluencewiki spell foldmethod=manual
     autocmd BufNewFile,BufRead *.conkyrc set filetype=conkyrc
     autocmd FileType markdown setlocal spell
     autocmd FileType gitcommit setlocal spell
     autocmd Filetype make setlocal noexpandtab nolist
-    " autocmd Filetype vim colorscheme herald
+    autocmd Filetype vim colorscheme herald
+    autocmd Filetype qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
+augroup END
+
+augroup HighlightingOptions
+    autocmd!
+
+    autocmd VimEnter,ColorScheme * call MyHighlights()
+
+    " Disable syntax highlight for files larger than 50 MB (taken from vim tips site)
+    autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
+
+    " Disable cursorline when in insert mode cause I don't really need that
+    autocmd InsertEnter * let b:last_cursorline=&cursorline | set nocursorline
+    autocmd InsertLeave * execute "let &cursorline=".b:last_cursorline
+augroup END
+
+augroup MiscOptions
+    autocmd!
 
     "" Stop asking about simultaneous edits.
     "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
@@ -339,9 +358,6 @@ augroup MiscOptions
                        \ echohl WarningMsg |
                        \ echomsg 'Duplicate edit session (readonly)' |
                        \ echohl None |
-
-    " Disable syntax highlight for files larger than 50 MB (taken from vim tips site)
-    autocmd BufWinEnter * if line2byte(line("$") + 1) > 50000000 | syntax clear | endif
 
     " Automatically reload this file
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
@@ -364,12 +380,6 @@ augroup MiscOptions
         \   endif |
         \   unlet! b:brand_new_file |
         \ endif
-
-    " Disable cursorline when in insert mode cause I don't really need that
-    autocmd InsertEnter * let b:last_cursorline=&cursorline | set nocursorline
-    autocmd InsertLeave * execute "let &cursorline=".b:last_cursorline
-
-    autocmd Filetype qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
 augroup END
 " }}}
 
