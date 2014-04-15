@@ -331,6 +331,7 @@ augroup MiscOptions
     autocmd FileType markdown setlocal spell
     autocmd FileType gitcommit setlocal spell
     autocmd Filetype make setlocal noexpandtab nolist
+    autocmd Filetype vim colorscheme herald
 
     "" Stop asking about simultaneous edits.
     "" Copied from Damian Conway's lecture "More Instantly Better Vim" at OSCON 2013
