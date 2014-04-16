@@ -10,4 +10,4 @@ cd vim/bundle
 git fetch --all
 git pull origin master
 ./update.sh --mine
-./update.sh --theirs
+# ./update.sh --theirs
