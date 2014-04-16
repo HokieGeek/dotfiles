@@ -29,7 +29,6 @@ gtrack() {
     }
     git branch --set-to-upstream=${remote}/${branch} ${branch}
 }
-#alias gtrack='git branch --set-to-upstream=origin/`get branch` `get branch`'
 alias gp='git pull'
 alias smgp='gp && git submodule foreach --recursive "git pull"'
 
@@ -39,10 +38,11 @@ vrofile() {
 ## }}}
 
 ## S-based aliases {{{
-alias g='$HOME/.bin/s -g'
-alias gi='$HOME/.bin/s -g -i'
-alias f='$HOME/.bin/s -f'
-alias todo='g "(FIXME|TODO)"'
+alias g='s -g'
+alias gi='s -g -i'
+alias f='s -f'
+# alias todo='g "(FIXME|TODO)"'
+alias todo='g TODO'
 ## }}}
 
 ## Color aliases {{{
@@ -54,7 +54,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
-alias du='$HOME/.bin/du_color'
+alias du='du_color'
 ## }}}
 
 ## Typo fixing {{{
