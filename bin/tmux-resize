@@ -1,0 +1,12 @@
+#!/bin/sh
+
+session_name=`tmux display-mesage -p #{session_name}`
+session_id=`echo ${session_name} | sed -e 's/^\[\(.*\)\].*/\1/'`
+
+height=`tmux list-panes -t ${session_id} | sed -e 's/.*\[\([0-9]*x[0-9]*\)\].*/\1/' -e 's/[0-9]*x\([0-9]*\)/\1/' | sort -nr | head -1`
+width=`tmux list-panes -t ${session_id} | sed -e 's/.*\[\([0-9]*x[0-9]*\)\].*/\1/' -e 's/\([0-9]*\)x[0-9]*/\1/' | sed 'N;s/\n/+/g' | bc`
+double_width=`echo ${width}*2 | bc`
+
+tmux detach-client
+echo "${session_id}" > /tmp/tmux-recover-session
+urxvtc -geometry ${double_width}"x"${height}

@@ -377,6 +377,7 @@ augroup MiscOptions
         \   if getline(1) =~ '^#!' && executable('chmod') == 1 |
         \       silent! execute '!chmod +x "<afile>"' |
         \       edit |
+        \       set filetype=sh |
         \   endif |
         \   unlet! b:brand_new_file |
         \ endif
