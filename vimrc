@@ -3,8 +3,6 @@ set nocompatible " Not compatible with plain vi
 if !exists("g:dot_vim_dir")
     if isdirectory(expand("$HOME/vimfiles"))
         let g:dot_vim_dir = expand("$HOME/vimfiles")
-    elseif isdirectory(expand("$HOME/.vim.afp"))
-        let g:dot_vim_dir = expand("$HOME/.vim.afp")
     else
         let g:dot_vim_dir = expand("$HOME/.vim")
     endif
