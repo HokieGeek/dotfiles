@@ -139,11 +139,11 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 myKeys =
             [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), spawn "dmenu_run")
-            -- , ((modm .|. shiftMask, xK_a), spawn "gmrun") -- Is there a point to this?
             , ((modm, xK_e), spawn rangerExec)
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((0, xF86XK_Sleep), spawn "sudo /usr/sbin/pm-suspend")
             , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
+            , (((modm .|. shiftMask), xK_t), spawn "xinput -disable 'ELAN Touchscreen'")
             -- GridSelect
             , ((modm, xK_z), mySpawnSelected myAppGSMenu)
             , (((modm .|. shiftMask), xK_z), goToSelected defaultGSConfig)
@@ -159,6 +159,7 @@ myKeys =
             , ((modm, xK_n), moveTo Next EmptyWS)
             , (((modm .|. mod1Mask .|. shiftMask), xK_j), toggleWS)
             -- Window helpers
+            , (((modm .|. shiftMask), xK_m), nextMatch History (return True))
             , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
             , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink)
             , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand)
@@ -167,9 +168,8 @@ myKeys =
             -- , ((modm, xK_less), withFocused (keysResizeWindow (-10,-10) (1,1)))
             -- , ((modm, xK_greater), withFocused (keysResizeWindow (10,10) (1,1)))
             -- , ((modm, xK_c), focusTest $ windows W.peek)
-            , ((modm, xK_c), focusTest)
+            -- , ((modm, xK_c), focusTest)
             -- , ((modm, xK_m), windows W.focusMaster)
-            , (((modm .|. shiftMask), xK_m), nextMatch History (return True))
             -- Backlight
             , (((modm .|. controlMask .|. shiftMask), xK_Left), spawn "xbacklight -inc 20")
             , (((modm .|. controlMask .|. shiftMask), xK_Right), spawn "xbacklight -dec 20")
