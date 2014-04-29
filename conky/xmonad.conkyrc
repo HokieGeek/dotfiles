@@ -9,6 +9,17 @@ update_interval 1
 #${texeci 1 pactl list sinks | grep "Volume: 0" | cut -d " " -f4 }  \
 #${if_match ${texeci 1 pactl list sinks | grep Mute | grep -c "yes"} >= 1}\
 
+## Unicode battery
+#${if_match ${battery_percent} >= 98}██${else}\
+#${if_match ${battery_percent} >= 88}▇▇${else}\
+#${if_match ${battery_percent} >= 75}▆▆${else}\
+#${if_match ${battery_percent} >= 63}▅▅${else}\
+#${if_match ${battery_percent} >= 50}▄▄${else}\
+#${if_match ${battery_percent} >= 38}▃▃${else}\
+#${if_match ${battery_percent} >= 25}▂▂\
+#${else}▁▁\
+#${endif}\${endif}\${endif}\${endif}\${endif}\${endif}\${endif}\
+
 TEXT
 ${wireless_essid wlp4s0} \
 ^fg(\#9F0AC4)${wireless_link_bar 20,10 wlp4s0}^fg(\#FFFFFF) \
@@ -35,9 +46,10 @@ ${endif}\
 ${texeci 1 amixer get Master | tail -1 | cut -d'[' -f2 | cut -d']' -f1}  \
 ^fg(\#FFFFFF) \
 ${time %a}, ^fg(\#9F0AC4)${time %d}^fg(\#FFFFFF) ^fg(\#737373)${time %b}^fg(\#FFFFFF) \
-^fg(\#9F0AC4)${time %H:%M}^fg(\#FFFFFF) \
+^fg(\#9F0AC4)${time %H%M}^fg(\#FFFFFF) \
 ^fg(\#3A3A3A)(${uptime})^fg(\#FFFFFF)  \
 ^fg(\#9F0AC4)\
 ${if_match ${battery_percent} < 50}^fg(\#FFCC00)${endif}\
 ${if_match ${battery_percent} < 20}^fg(\#FF0000)${endif}\
-${battery_bar}^fg(\#FFFFFF)
+${battery_bar}\
+^fg(\#FFFFFF)

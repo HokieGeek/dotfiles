@@ -3,7 +3,7 @@
 intf=$1
 
 # iw dev ${intf} scan | egrep "[SSID|RSN|WPA]:"
-cat /tmp/devs | egrep "(SSID|RSN|WPA|capability):" | \
+cat ./devs | egrep "(SSID|RSN|WPA|capability):" | \
     sed -e 's/\(SSID:\s.*\)/\1/g' -e 's/^\s*\(RSN\):.*$/WPA2/' -e 's/^\s*\(WPA\):.*$/\1/' \
         -e 's/\s*capability: .* Privacy.*$/WEP/' -e 's/\s*capability: .*$/NONE/'
 

@@ -109,16 +109,25 @@ myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
                                             >> fadeInactiveLogHook 0.5
                                             >> updatePointer (Relative 1 1)
 
+
 myDzen h = defaultPP
     {
-        ppCurrent           =   dzenColor "#9f0ac4" "#1B1D1E" . pad
-      , ppVisible           =   dzenColor "white" "#1B1D1E" . pad
-      , ppHidden            =   dzenColor "white" "#1B1D1E" . pad
-      , ppHiddenNoWindows   =   dzenColor "#7b7b7b" "#1B1D1E" . pad
-      , ppUrgent            =   dzenColor "#ff0000" "#1B1D1E" . pad
+        ppCurrent           =   dzenColor "#9f0ac4" "#1B1D1E" . pad . dzenWorkspaceSymbol
+      , ppVisible           =   dzenColor "white" "#1B1D1E" . pad . dzenWorkspaceSymbol
+      , ppHidden            =   dzenColor "white" "#1B1D1E" . pad . dzenWorkspaceSymbol
+      , ppHiddenNoWindows   =   dzenColor "#363636" "#1B1D1E" . pad . dzenWorkspaceSymbol
+      , ppUrgent            =   dzenColor "#ff0000" "#1B1D1E" . pad . dzenWorkspaceSymbol
+      , ppLayout            =   (\x -> "")
+      , ppTitle             =   (\x -> "")
+      , ppSep               =   ""
       , ppWsSep             =   ""
       , ppOutput            =   hPutStrLn h
     }
+
+dzenWorkspaceSymbol :: WorkspaceId -> String
+dzenWorkspaceSymbol x = "■"
+-- dzenWorkspaceSymbol x = "●"
+-- dzenWorkspaceSymbol x = x
 -- }}}
 -- Layout{{{
 incDelta = 3/100
@@ -152,15 +161,12 @@ myKeys =
             -- Workspace helpers
             , (((modm .|. mod1Mask), xK_k), prevWS)
             , (((modm .|. mod1Mask), xK_j), nextWS)
-            -- , (((controlMask .|. mod1Mask), xK_Left), prevWS)
-            -- , (((controlMask .|. mod1Mask), xK_Right), nextWS)
             , (((modm .|. mod1Mask), xK_l), moveTo Next NonEmptyWS)
             , (((modm .|. mod1Mask), xK_h), moveTo Prev NonEmptyWS)
             , ((modm, xK_n), moveTo Next EmptyWS)
-            -- , (((modm .|. mod1Mask .|. shiftMask), xK_j), toggleWS)
-            , ((modm , xK_BackSpace), toggleWS)
+            , ((modm, xK_BackSpace), toggleWS)
             -- Window helpers
-            -- , (((modm .|. shiftMask), xK_m), nextMatch History (return True))
+            , (((modm .|. shiftMask), xK_BackSpace), nextMatch History (return True))
             , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
             , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink)
             , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand)
@@ -168,9 +174,7 @@ myKeys =
             , (((modm .|. controlMask), xK_k), rotSlavesUp)
             -- , ((modm, xK_less), withFocused (keysResizeWindow (-10,-10) (1,1)))
             -- , ((modm, xK_greater), withFocused (keysResizeWindow (10,10) (1,1)))
-            -- , ((modm, xK_c), focusTest $ windows W.peek)
             -- , ((modm, xK_c), focusTest)
-            -- , ((modm, xK_m), windows W.focusMaster)
             -- Backlight
             , (((modm .|. controlMask .|. shiftMask), xK_Left), spawn "xbacklight -inc 20")
             , (((modm .|. controlMask .|. shiftMask), xK_Right), spawn "xbacklight -dec 20")
@@ -183,9 +187,8 @@ myKeys =
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
 
-            , ((modm, xK_y), addWorkspace "t")
-            -- , ((modm, xK_n), addWorkspace ???)
-            -- , ((modm .|. shiftMask, xK_BackSpace), removeEmptyWorkspace)
+            , ((modm, xK_y), addWorkspace "y")
+            , ((modm, xK_Delete), removeEmptyWorkspace)
             ]
             -- ++
             -- zip (zip (repeat (modm)) myWorkspaceKeys) (map (withNthWorkspace W.greedyView) [0..])
@@ -200,7 +203,7 @@ myKeys =
 
 -- Main {{{
 compmgr = "xcompmgr"
-workspaceStatusBar = "sleep 3s; dzen2 -fn '-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*' -x '1440' -y '0' -h '16' -w '220' -fg '#FFFFFF' -bg '#1B1D1E'"
+workspaceStatusBar = "sleep 3s; dzen2 -fn '-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*' -x '1440' -y '0' -h '16' -w '220' -fg '#FFFFFF' -bg '#1B1D1E' -ta l"
 conkyStatusBar = "conky -c ~/.conky/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -fn '-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*'"
 main = do
         compMgrStart <- spawn compmgr
