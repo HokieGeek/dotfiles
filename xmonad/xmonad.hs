@@ -125,6 +125,7 @@ myDzen h = defaultPP
     }
 
 dzenWorkspaceSymbol :: WorkspaceId -> String
+-- dzenWorkspaceSymbol x = "^i($HOME/.xmonad/imgs/workspace.xbm)"
 dzenWorkspaceSymbol x = "■"
 -- dzenWorkspaceSymbol x = "●"
 -- dzenWorkspaceSymbol x = x
