@@ -54,13 +54,21 @@ ${time %a}, ^fg(\#9F0AC4)${time %d}^fg(\#FFFFFF) ^fg(\#737373)${time %b}^fg(\#FF
 ^fg(\#9F0AC4)\
 ${if_match ${battery_percent} < 50}^fg(\#FFCC00)${endif}\
 ${if_match ${battery_percent} < 20}^fg(\#FF0000)${endif}\
-${if_match ${battery_percent} >= 95}^i($HOME/.conky/imgs/battery_100.xbm)${else}\
+${if_match ${battery_percent} >= 99}^i($HOME/.conky/imgs/battery_100.xbm)${else}\
+${if_match ${battery_percent} >= 94}^i($HOME/.conky/imgs/battery_94.xbm)${else}\
 ${if_match ${battery_percent} >= 88}^i($HOME/.conky/imgs/battery_88.xbm)${else}\
+${if_match ${battery_percent} >= 82}^i($HOME/.conky/imgs/battery_82.xbm)${else}\
 ${if_match ${battery_percent} >= 75}^i($HOME/.conky/imgs/battery_75.xbm)${else}\
+${if_match ${battery_percent} >= 69}^i($HOME/.conky/imgs/battery_69.xbm)${else}\
 ${if_match ${battery_percent} >= 63}^i($HOME/.conky/imgs/battery_63.xbm)${else}\
+${if_match ${battery_percent} >= 56}^i($HOME/.conky/imgs/battery_56.xbm)${else}\
 ${if_match ${battery_percent} >= 50}^i($HOME/.conky/imgs/battery_50.xbm)${else}\
+${if_match ${battery_percent} >= 44}^i($HOME/.conky/imgs/battery_44.xbm)${else}\
 ${if_match ${battery_percent} >= 38}^i($HOME/.conky/imgs/battery_38.xbm)${else}\
+${if_match ${battery_percent} >= 31}^i($HOME/.conky/imgs/battery_31.xbm)${else}\
 ${if_match ${battery_percent} >= 25}^i($HOME/.conky/imgs/battery_25.xbm)${else}\
-${if_match ${battery_percent} >= 12}^i($HOME/.conky/imgs/battery_12.xbm)\
+${if_match ${battery_percent} >= 19}^i($HOME/.conky/imgs/battery_19.xbm)${else}\
+${if_match ${battery_percent} >= 12}^i($HOME/.conky/imgs/battery_12.xbm)${else}\
+${if_match ${battery_percent} >= 6}^i($HOME/.conky/imgs/battery_6.xbm)\
 ${else}^i($HOME/.conky/imgs/battery_0.xbm)\
-${endif}${endif}${endif}${endif}${endif}${endif}${endif}${endif}
+${endif}${endif}${endif}${endif}${endif}${endif}${endif}${endif}${endif}${endif}${endif}${endif}${endif}${endif}${endif}${endif}
