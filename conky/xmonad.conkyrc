@@ -22,7 +22,13 @@ update_interval 1
 
 TEXT
 ${wireless_essid wlp4s0} \
-^fg(\#9F0AC4)${wireless_link_bar 20,10 wlp4s0}^fg(\#FFFFFF) \
+^fg(\#9F0AC4)\
+${if_match ${wireless_link_qual_perc wlp4s0} >= 95}^i($HOME/.conky/imgs/wifi_100.xbm)${else}\
+${if_match ${wireless_link_qual_perc wlp4s0} >= 75}^i($HOME/.conky/imgs/wifi_75.xbm)${else}\
+${if_match ${wireless_link_qual_perc wlp4s0} >= 50}^i($HOME/.conky/imgs/wifi_50.xbm)${else}\
+^i($HOME/.conky/imgs/wifi_25.xbm)\
+${endif}${endif}${endif} \
+^fg(\#FFFFFF)\
 ^fg(\#606060)${addr wlp4s0} (${exec wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \< -f -1 | awk '{ print $1 }'})^fg(\#FFFFFF)    \
 ^fg(\#606060)^i($HOME/.conky/imgs/cpu.xbm)^fg(\#FFFFFF) \
 ${if_match ${cpu cpu1} >= 85}^fg(\#FF0000)${endif}\
