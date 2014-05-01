@@ -4,19 +4,20 @@ out_to_x no
 # Update interval in seconds
 update_interval 1
 
-# If headphones are plugged in, display those, otherwise display regular?
-#^i($HOME/.conky/imgs/phones.xbm)\
-#${texeci 1 pactl list sinks | grep "Volume: 0" | cut -d " " -f4 }  \
-#${if_match ${texeci 1 pactl list sinks | grep Mute | grep -c "yes"} >= 1}\
+#${acpitemp}deg C \
 
-#${battery_bar}\
-
-#${if_match ${wireless_essid wlp4s0} == "off"}\
-#^fg(\#FF0000)^i($HOME/.conky/imgs/wifi_100.xbm) No connection^fg(\#FFFFFF)\
-#${else}\
-#${endif}\
+#${if_match ${cpu cpu1} >= 85}^fg(\#FF0000)${endif}\
+#${if_match ${cpu cpu1} < 10} ${endif}${cpu cpu1}%^fg(\#FFFFFF) \
+#${if_match ${cpu cpu2} >= 85}^fg(\#FF0000)${endif}\
+#${if_match ${cpu cpu2} < 10} ${endif}${cpu cpu2}%^fg(\#FFFFFF) \
+#${if_match ${cpu cpu3} >= 85}^fg(\#FF0000)${endif}\
+#${if_match ${cpu cpu3} < 10} ${endif}${cpu cpu3}%^fg(\#FFFFFF) \
+#${if_match ${cpu cpu4} >= 85}^fg(\#FF0000)${endif}\
+#${if_match ${cpu cpu4} < 10} ${endif}${cpu cpu4}%^fg(\#FFFFFF) \
+#${execp $HOME/.conky/bin/cpuinfo.py} \
 
 TEXT
+${if_up wlp4s0} \
 ${wireless_essid wlp4s0} \
 ^fg(\#9F0AC4)\
 ${if_match ${wireless_link_qual_perc wlp4s0} >= 95}^i($HOME/.conky/imgs/wifi_100.xbm)${else}\
@@ -27,6 +28,7 @@ ${endif}${endif}${endif} \
 ^fg(\#FFFFFF)\
 ^fg(\#606060)${addr wlp4s0} (${exec wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \< -f -1 | awk '{ print $1 }'})^fg(\#FFFFFF)\
     \
+${endif}\
 ^fg(\#606060)^i($HOME/.conky/imgs/cpu.xbm)^fg(\#FFFFFF) \
 ${if_match ${cpu cpu1} >= 85}^fg(\#FF0000)${endif}\
 ${if_match ${cpu cpu1} < 10} ${endif}${cpu cpu1}%^fg(\#FFFFFF) \
