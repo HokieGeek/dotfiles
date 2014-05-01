@@ -31,6 +31,7 @@ import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.CopyWindow(copy)
 
 import qualified XMonad.StackSet as W
+import qualified Data.Map as M
 -- }}}
 
 -- Local Variables {{{
@@ -123,12 +124,9 @@ myDzen h = defaultPP
       , ppWsSep             =   ""
       , ppOutput            =   hPutStrLn h
     }
-
-dzenWorkspaceSymbol :: WorkspaceId -> String
--- dzenWorkspaceSymbol x = "^i($HOME/.xmonad/imgs/workspace.xbm)"
-dzenWorkspaceSymbol x = "■"
--- dzenWorkspaceSymbol x = "●"
--- dzenWorkspaceSymbol x = x
+    where
+        dzenWorkspaceSymbol x = "^i(/home/andres/.xmonad/imgs/workspace.xbm)"
+        -- dzenWorkspaceSymbol x = "^i(\\$HOME/.xmonad/imgs/workspace.xbm)"
 -- }}}
 -- Layout{{{
 incDelta = 3/100
@@ -147,18 +145,18 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 
 -- Keybindings {{{
 myKeys =
+-- myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
             [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), spawn "dmenu_run")
-            , ((modm, xK_e), spawn rangerExec)
+            -- , ((modm, xK_e), spawn rangerExec)
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((0, xF86XK_Sleep), spawn "sudo /usr/sbin/pm-suspend")
             , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
             , (((modm .|. shiftMask), xK_t), spawn "xinput -disable 'ELAN Touchscreen'")
             -- GridSelect
-            , ((modm, xK_z), mySpawnSelected myAppGSMenu)
-            , (((modm .|. shiftMask), xK_z), goToSelected defaultGSConfig)
-            , ((modm, xK_x), gridselectWorkspace defaultGSConfig W.greedyView)
-            , (((modm .|. shiftMask), xK_x), gridselectWorkspace defaultGSConfig (\ws -> W.greedyView ws . W.shift ws))
+            , (((modm .|. shiftMask), xK_a), mySpawnSelected myAppGSMenu)
+            , ((modm, xK_z), goToSelected defaultGSConfig)
+            , (((modm .|. shiftMask), xK_z), gridselectWorkspace defaultGSConfig (\ws -> W.greedyView ws . W.shift ws))
             -- Workspace helpers
             , (((modm .|. mod1Mask), xK_k), prevWS)
             , (((modm .|. mod1Mask), xK_j), nextWS)
@@ -173,9 +171,6 @@ myKeys =
             , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand)
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
             , (((modm .|. controlMask), xK_k), rotSlavesUp)
-            -- , ((modm, xK_less), withFocused (keysResizeWindow (-10,-10) (1,1)))
-            -- , ((modm, xK_greater), withFocused (keysResizeWindow (10,10) (1,1)))
-            -- , ((modm, xK_c), focusTest)
             -- Backlight
             , (((modm .|. controlMask .|. shiftMask), xK_Left), spawn "xbacklight -inc 20")
             , (((modm .|. controlMask .|. shiftMask), xK_Right), spawn "xbacklight -dec 20")
@@ -193,6 +188,8 @@ myKeys =
             ]
             -- ++
             -- zip (zip (repeat (modm)) myWorkspaceKeys) (map (withNthWorkspace W.greedyView) [0..])
+                -- | (i, k) <- zip myWorkspaces myWorkspaceKeys
+                -- | (i, k) <- zip (XMonad.workspaces conf) myWorkspaceKeys
             ++
             [((m .|. modm, k), windows $ f i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys
@@ -204,11 +201,11 @@ myKeys =
 
 -- Main {{{
 compmgr = "xcompmgr"
-workspaceStatusBar = "sleep 3s; dzen2 -fn '-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*' -x '1440' -y '0' -h '16' -w '220' -fg '#FFFFFF' -bg '#1B1D1E' -ta l"
-conkyStatusBar = "conky -c ~/.conky/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -fn '-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*'"
+workspaceStatusBar = "sleep 3s; dzen2 -fn '-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*' -x '1440' -y '0' -h '16' -w '280' -fg '#FFFFFF' -bg '#1B1D1E' -ta l"
+conkyStatusBar = "conky -b -c ~/.conky/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -fn '-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*'"
 main = do
         compMgrStart <- spawn compmgr
-        dzenLeftBar <- spawnPipe workspaceStatusBar
+        dzenLeftBar  <- spawnPipe workspaceStatusBar
         dzenRightBar <- spawnPipe conkyStatusBar
         xmonad $ withUrgencyHook dzenUrgencyHook { args = ["-bg", "#9F0AC4", "-xs", "1"] }
                $ defaultConfig
@@ -221,7 +218,9 @@ main = do
             , layoutHook = myLayoutHook
             , logHook = myLogHook dzenLeftBar
             , handleEventHook = myHandleEventHook
-            } `additionalKeys` myKeys
+            -- , keys = myKeys
+            }
+            `additionalKeys` myKeys
 --}}}
 
 -- vim: set foldmethod=marker number relativenumber:
