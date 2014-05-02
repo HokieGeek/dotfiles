@@ -39,11 +39,12 @@ rangerExec = "export EDITOR=vim; " ++ myTerminal ++ " -e ranger"
 
 modm = mod4Mask
 myTerminal = "urxvtc"
+colorForeground="#9F0AC4"
+colorBackground="#1B1D1E"
+font = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
--- myWorkspaces = ["1","2","3","4","5","6","7","8","9","0"]
--- myWorkspaceKeys = [xK_1..xK_9]
 
 myAppGSMenu = [ ("Chromium", "chromium")
               , ("Terminal", myTerminal)
@@ -110,14 +111,13 @@ myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
                                             >> fadeInactiveLogHook 0.5
                                             >> updatePointer (Relative 1 1)
 
-
 myDzen h = defaultPP
     {
-        ppCurrent           =   dzenColor "#9f0ac4" "#1B1D1E" . pad . dzenWorkspaceSymbol
-      , ppVisible           =   dzenColor "white" "#1B1D1E" . pad . dzenWorkspaceSymbol
-      , ppHidden            =   dzenColor "white" "#1B1D1E" . pad . dzenWorkspaceSymbol
-      , ppHiddenNoWindows   =   dzenColor "#363636" "#1B1D1E" . pad . dzenWorkspaceSymbol
-      , ppUrgent            =   dzenColor "#ff0000" "#1B1D1E" . pad . dzenWorkspaceSymbol
+        ppCurrent           =   dzenColor colorForeground colorBackground . pad . dzenWorkspaceSymbol
+      , ppVisible           =   dzenColor "white" colorBackground . pad . dzenWorkspaceSymbol
+      , ppHidden            =   dzenColor "white" colorBackground . pad . dzenWorkspaceSymbol
+      , ppHiddenNoWindows   =   dzenColor "#363636" colorBackground . pad . dzenWorkspaceSymbol
+      , ppUrgent            =   dzenColor "#ff0000" colorBackground . pad . dzenWorkspaceSymbol
       , ppLayout            =   (\x -> "")
       , ppTitle             =   (\x -> "")
       , ppSep               =   ""
@@ -125,8 +125,12 @@ myDzen h = defaultPP
       , ppOutput            =   hPutStrLn h
     }
     where
+        -- dzenWorkspaceSymbol x
+            -- | useWorkspaceName = x
+            -- | otherwise = "^i(/home/andres/.xmonad/imgs/workspace.xbm)"
         dzenWorkspaceSymbol x = "^i(/home/andres/.xmonad/imgs/workspace.xbm)"
-        -- dzenWorkspaceSymbol x = "^i(\\$HOME/.xmonad/imgs/workspace.xbm)"
+        -- dzenWorkspaceSymbol x = "^i(\\\\$HOME/.xmonad/imgs/workspace.xbm)"
+-- useWorkspaceName = False
 -- }}}
 -- Layout{{{
 incDelta = 3/100
@@ -152,11 +156,11 @@ myKeys =
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((0, xF86XK_Sleep), spawn "sudo /usr/sbin/pm-suspend")
             , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
-            , (((modm .|. shiftMask), xK_t), spawn "xinput -disable 'ELAN Touchscreen'")
+            , ((0, xK_F1), spawn "xinput -disable 'ELAN Touchscreen'")
             -- GridSelect
-            , (((modm .|. shiftMask), xK_a), mySpawnSelected myAppGSMenu)
-            , ((modm, xK_z), goToSelected defaultGSConfig)
-            , (((modm .|. shiftMask), xK_z), gridselectWorkspace defaultGSConfig (\ws -> W.greedyView ws . W.shift ws))
+            , ((modm, xK_z), mySpawnSelected myAppGSMenu)
+            , ((modm, xK_x), goToSelected defaultGSConfig)
+            , (((modm .|. shiftMask), xK_x), gridselectWorkspace defaultGSConfig (\ws -> W.greedyView ws . W.shift ws))
             -- Workspace helpers
             , (((modm .|. mod1Mask), xK_k), prevWS)
             , (((modm .|. mod1Mask), xK_j), nextWS)
@@ -167,8 +171,8 @@ myKeys =
             -- Window helpers
             , (((modm .|. shiftMask), xK_BackSpace), nextMatch History (return True))
             , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
-            , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink)
-            , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand)
+            , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- shrink the focused window
+            , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the focused window
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
             , (((modm .|. controlMask), xK_k), rotSlavesUp)
             -- Backlight
@@ -185,8 +189,10 @@ myKeys =
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
 
-            , ((modm, xK_y), addWorkspace "y")
-            , ((modm, xK_Delete), removeEmptyWorkspace)
+            , ((0, xK_F10), addWorkspace "y")
+            , ((shiftMask, xK_F10), removeEmptyWorkspace)
+            -- , ((0, xK_F3), useWorkspaceName = True)
+            -- , ((0, xK_F4), useWorkspaceName = False)
             ]
             -- ++
             -- zip (zip (repeat (modm)) myWorkspaceKeys) (map (withNthWorkspace W.greedyView) [0..])
@@ -203,8 +209,8 @@ myKeys =
 
 -- Main {{{
 compmgr = "xcompmgr"
-workspaceStatusBar = "sleep 3s; dzen2 -fn '-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*' -x '1440' -y '0' -h '16' -w '280' -fg '#FFFFFF' -bg '#1B1D1E' -ta l"
-conkyStatusBar = "conky -b -c ~/.conky/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -fn '-*-terminus-medium-r-*-*-12-*-*-*-*-*-*-*'"
+workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ font ++ "' -x '1440' -y '0' -h '16' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
+conkyStatusBar = "~/.conky/statusbar.py --color-fg '" ++ colorForeground ++ "' > /tmp/xmonad.conkyrc && conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '" ++ colorBackground ++ "' -fg '#FFFFFF' -fn '" ++ font ++ "'"
 main = do
         compMgrStart <- spawn compmgr
         dzenLeftBar  <- spawnPipe workspaceStatusBar
