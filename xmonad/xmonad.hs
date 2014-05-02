@@ -69,22 +69,6 @@ myAppGSMenu = [ ("Chromium", "chromium")
 mySpawnSelected :: [(String, String)] -> X()
 mySpawnSelected lst = gridselect conf lst >>= flip whenJust spawn
     where conf = defaultGSConfig
-
-focusTest :: X()
--- focusTest = spawn "xmessage 'testing'"
-focusTest = windows W.focusMaster
-    -- where curr = windows W.index !! 0
--- focusTest = spawn "xmessage 'test'"
--- focusTest = spawn "xmessage '" ++ (windows W.peek) ++ "'"
--- focusTest windows W.peek == windows W.index !! 0 = spawn "xmessage 'testing'"
--- focusTest Eq windows W.peek windows W.index !! 0 = spawn "xmessage 'testing'"
-            -- nextMatch History (return True)
--- focusTest = spawn msg
---     where msg = "xmessage '" ++ myTerminal ++ "'"
-    -- where currentWin = W.index W.current
--- W.current.stack
-            -- , ((modm, xK_m), windows W.focusMaster)
-            -- , (((modm .|. shiftMask), xK_m), nextMatch History (return True))
 -- }}}
 
 -- Hooks {{{
