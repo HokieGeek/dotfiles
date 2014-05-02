@@ -222,7 +222,7 @@ main = do
         compMgrStart <- spawn compmgr
         dzenLeftBar  <- spawnPipe workspaceStatusBar
         dzenRightBar <- spawnPipe conkyStatusBar
-        xmonad $ withUrgencyHook dzenUrgencyHook { args = ["-bg", "#9F0AC4", "-xs", "1"] }
+        xmonad $ withUrgencyHook dzenUrgencyHook { args = ["-bg", colorForeground, "-xs", "1"] }
                $ defaultConfig
             { workspaces = myWorkspaces
             , terminal = myTerminal
