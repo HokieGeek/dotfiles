@@ -301,7 +301,7 @@ inoremap kk <c-p>
 " line
 inoremap JJ <c-x><c-l>
 " filename
-inoremap FF <c-x><c-f>
+" inoremap FF <c-x><c-f>
 " dictionary
 inoremap DD <c-x><c-k>
 " user
@@ -372,10 +372,12 @@ augroup MiscOptions
     autocmd BufNewFile * let b:brand_new_file = 1
     autocmd BufWritePost,FileWritePost *
         \ if exists('b:brand_new_file') |
-        \   if getline(1) =~ '^#!' && executable('chmod') == 1 |
+        \   if getline(1) =~? '^#!' && executable('chmod') == 1 |
         \       silent! execute '!chmod +x "<afile>"' |
         \       edit |
-        \       set filetype=sh |
+        \       if getline(1) !~? 'python' |
+        \           set filetype=sh |
+        \       endif |
         \   endif |
         \   unlet! b:brand_new_file |
         \ endif
