@@ -176,24 +176,31 @@ myKeys =
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
             , (((modm .|. controlMask), xK_k), rotSlavesUp)
             -- Backlight
-            , (((modm .|. controlMask .|. shiftMask), xK_Left), spawn "xbacklight -inc 20")
-            , (((modm .|. controlMask .|. shiftMask), xK_Right), spawn "xbacklight -dec 20")
+            , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight -inc 20")
+            , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -dec 20")
             -- Volume
             , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3+")
             , ((shiftMask, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 100")
             , ((0, xF86XK_AudioLowerVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3-")
             , ((shiftMask, xF86XK_AudioLowerVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 30")
             , ((0, xF86XK_AudioMute), spawn "amixer -q set Master toggle; amixer -q set Speaker toggle; amixer -q set Headphone toggle")
-            , ((modm, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer"))
+            , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer"))
             -- PrintScreen
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
+            -- Media
+            -- ((0, xF86XK_AudioPlay), spawn "mcpd ???")
+            -- ((0, xF86XK_AudioStop), spawn "mcpd ???")
+            -- ((0, xF86XK_AudioPrev), spawn "mcpd ???")
+            -- ((0, xF86XK_AudioNext), spawn "mcpd ???")
 
             , ((0, xK_F10), addWorkspace "y")
             , ((shiftMask, xK_F10), removeEmptyWorkspace)
             -- , ((0, xK_F3), useWorkspaceName = True)
             -- , ((0, xK_F4), useWorkspaceName = False)
             ]
+            -- (keysym 0xff67, Menu)
+            -- ((0, xF86XK_Display), spawn "???")
             -- ++
             -- zip (zip (repeat (modm)) myWorkspaceKeys) (map (withNthWorkspace W.greedyView) [0..])
                 -- | (i, k) <- zip myWorkspaces myWorkspaceKeys
