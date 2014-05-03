@@ -1,4 +1,6 @@
 -- Imports {{{
+import Data.IORef
+
 import Control.Monad(liftM2)
 
 import Graphics.X11.ExtraTypes.XF86
@@ -39,8 +41,8 @@ rangerExec = "export EDITOR=vim; " ++ myTerminal ++ " -e ranger"
 
 modm = mod4Mask
 myTerminal = "urxvtc"
-colorForeground="#9F0AC4"
-colorBackground="#1B1D1E"
+colorForeground = "#9F0AC4"
+colorBackground = "#1B1D1E"
 font = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
@@ -69,6 +71,9 @@ myAppGSMenu = [ ("Chromium", "chromium")
 mySpawnSelected :: [(String, String)] -> X()
 mySpawnSelected lst = gridselect conf lst >>= flip whenJust spawn
     where conf = defaultGSConfig
+
+toggle :: IORef Bool -> IO()
+toggle v = readIORef v >>= \v' -> (writeIORef v) (not v')
 -- }}}
 
 -- Hooks {{{
@@ -77,11 +82,10 @@ myManageHook = composeAll
     [ isFullscreen --> doFullFloat
     , className =? "Xmessage"   --> doCenterFloat
     , className =? "Gimp"       --> viewShift "-"
-    -- , [ className =? a --> doFloat <+> doShift "=" | a <- vassalClassnames ]
-    -- , [ appName =? b --> doFloat <+> viewShift "1" | b <- floatingInOne ]
     , className =? "VASSAL-launch-ModuleManager"  --> doFloat <+> doShift "="
     , className =? "VASSAL-launch-Player" --> doFloat <+> doShift "="
-    , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "1" -- Hangouts
+    -- , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "1" -- Hangouts
+    , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat -- Hangouts
     , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> viewShift "1" -- Google Keep
     ] <+> manageDocks
     where
@@ -109,12 +113,11 @@ myDzen h = defaultPP
       , ppOutput            =   hPutStrLn h
     }
     where
-        -- dzenWorkspaceSymbol x
-            -- | useWorkspaceName = x
+        -- getDzenWorkspaceSymbol wsname id
+            -- | wsname = id
             -- | otherwise = "^i(/home/andres/.xmonad/imgs/workspace.xbm)"
+        -- dzenWorkspaceSymbol id = readIORef useWorkspaceName >>= \uwn' -> getDzenWorkspaceSymbol uwn' id
         dzenWorkspaceSymbol x = "^i(/home/andres/.xmonad/imgs/workspace.xbm)"
-        -- dzenWorkspaceSymbol x = "^i(\\\\$HOME/.xmonad/imgs/workspace.xbm)"
--- useWorkspaceName = False
 -- }}}
 -- Layout{{{
 incDelta = 3/100
@@ -132,9 +135,7 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 -- }}}
 
 -- Keybindings {{{
-myKeys =
--- myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
-            [ ((modm, xK_q), spawn "~/.xmonad/restart")
+myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), spawn "dmenu_run")
             -- , ((modm, xK_e), spawn rangerExec)
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
@@ -148,15 +149,17 @@ myKeys =
             -- Workspace helpers
             , (((modm .|. mod1Mask), xK_k), prevWS)
             , (((modm .|. mod1Mask), xK_j), nextWS)
-            , (((modm .|. mod1Mask), xK_l), moveTo Next NonEmptyWS)
-            , (((modm .|. mod1Mask), xK_h), moveTo Prev NonEmptyWS)
-            , ((modm, xK_n), moveTo Next EmptyWS)
+            , (((modm .|. shiftMask), xK_k), moveTo Prev NonEmptyWS)
+            , (((modm .|. shiftMask), xK_j), moveTo Next NonEmptyWS)
             , ((modm, xK_BackSpace), toggleWS)
+            , ((modm, xK_n), moveTo Next EmptyWS)
+            , (((modm .|. shiftMask), xK_n), moveTo Next EmptyWS <+> spawn "chromium")
+            , (((modm .|. controlMask), xK_n), moveTo Next EmptyWS <+> spawn myTerminal)
             -- Window helpers
             , (((modm .|. shiftMask), xK_BackSpace), nextMatch History (return True))
-            , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
-            , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- shrink the focused window
-            , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the focused window
+            -- , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
+            , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- shrink the master area
+            , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the master area
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
             , (((modm .|. controlMask), xK_k), rotSlavesUp)
             -- Backlight
@@ -178,17 +181,16 @@ myKeys =
             -- ((0, xF86XK_AudioPrev), spawn "mcpd ???")
             -- ((0, xF86XK_AudioNext), spawn "mcpd ???")
 
-            , ((0, xK_F10), addWorkspace "y")
-            , ((shiftMask, xK_F10), removeEmptyWorkspace)
-            -- , ((0, xK_F3), useWorkspaceName = True)
-            -- , ((0, xK_F4), useWorkspaceName = False)
+
+            -- , ((0, xK_F4), modify (onTerminator not))
+            -- , ((modMask, xK_w), gets useTerminator >>= spawnLynxWith . terminalName)
+
+            -- , ((0, xK_F10), addWorkspace "y")
+            -- , ((shiftMask, xK_F10), removeEmptyWorkspace)
+            -- , ((0, xK_F2), toggle useWorkspaceName)
             ]
             -- (keysym 0xff67, Menu)
             -- ((0, xF86XK_Display), spawn "???")
-            -- ++
-            -- zip (zip (repeat (modm)) myWorkspaceKeys) (map (withNthWorkspace W.greedyView) [0..])
-                -- | (i, k) <- zip myWorkspaces myWorkspaceKeys
-                -- | (i, k) <- zip (XMonad.workspaces conf) myWorkspaceKeys
             ++
             [((m .|. modm, k), windows $ f i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys
@@ -203,6 +205,7 @@ compmgr = "xcompmgr"
 workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ font ++ "' -x '1440' -y '0' -h '16' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
 conkyStatusBar = "~/.conky/statusbar.py --color-fg '" ++ colorForeground ++ "' > /tmp/xmonad.conkyrc && conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '" ++ colorBackground ++ "' -fg '#FFFFFF' -fn '" ++ font ++ "'"
 main = do
+        -- useWorkspaceName <- newIORef False
         compMgrStart <- spawn compmgr
         dzenLeftBar  <- spawnPipe workspaceStatusBar
         dzenRightBar <- spawnPipe conkyStatusBar
@@ -217,9 +220,9 @@ main = do
             , layoutHook = myLayoutHook
             , logHook = myLogHook dzenLeftBar
             , handleEventHook = myHandleEventHook
-            -- , keys = myKeys
             }
             `additionalKeys` myKeys
+            -- `additionalKeys` (myKeys ++ [((0, xK_F2), toggle useWorkspaceName)])
 --}}}
 
 -- vim: set foldmethod=marker number relativenumber:
