@@ -21,6 +21,13 @@ def handleSigTERM():
 ## Variables
 colorschemeFgHex = "\\{}".format(args["color_fg"])
 imagesDir = "$HOME/.conky/imgs"
+colorschemeGreyHex = "\\#606060"
+colorschemeDimHex = "\\#3A3A3A"
+colorschemeDarkHex = "\\#282828"
+colorschemeWhiteHex = "\\#FFFFFF"
+colorschemeRedHex = "\\#FF0000"
+colorschemeGreenHex = "\\#006400"
+colorschemeYellowHex = "\\#FFCC00"
 if args["filename"]:
     conkyFile = args["filename"]
 else:
@@ -56,50 +63,73 @@ for interface in [intf.decode("utf-8") for intf in interfaces]:
         f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 50}}^i({}/wifi_50.xbm)${{else}}\\\n".format(interface, imagesDir))
         f.write("^i({}/wifi_25.xbm)\\\n".format(imagesDir))
         f.write("${endif}${endif}${endif} \\\n")
-        # f.write("^fg(\\#FFFFFF) \\\n")
-    # elif interface[0] == "e":
-        #TODO: f.write("^i({}/ethernet.xbm)\\\n".format(imagesDir))
-        #TODO: f.write("^fg(\\#006400)^i(DOWN) ${{downspeed {}}}^fg(\\#FFFFFF) \\\n".format(interface))
-        #TODO: f.write("^fg(\\#FF0000)^i(UP) ${{upspeed {}}}^fg(\\#FFFFFF) \\\n".format(interface))
-    f.write("^fg(\\#606060)${{addr {}}}^fg(\\#FFFFFF) \\\n".format(interface))
+    elif interface[0] == "e":
+        f.write("^fg({})\\\n".format(colorschemeFgHex))
+        f.write("^i({}/ethernet.xbm)\\\n".format(imagesDir))
+    f.write("^fg({})${{addr {}}}^fg({}) \\\n".format(colorschemeGreyHex, interface, colorschemeWhiteHex))
     f.write("${endif}\\\n")
 
 # Lastly, output the external IP
-f.write("^fg(\\#606060)(${exec wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \\< -f -1 | awk '{ print $1 }'})^fg(\\#FFFFFF)")
-f.write("    \\\n")
+f.write("^fg({})".format(colorschemeGreyHex))
+f.write("(${exec wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \\< -f -1 | awk '{ print $1 }'})")
+# f.write(" \\\n")
+# f.write("^fg({})^i({}/net_down.xbm) ${{downspeed {}}} \\\n".format(colorschemeGreenHex, imagesDir, interface))
+# f.write("^fg({})^i({}/net_up.xbm) ${{upspeed {}}} \\\n".format(colorschemeRedHex, imagesDir, interface))
+f.write("   \\\n")
+
+## Machine info
+f.write("^fg({})${{nodename}} ^fg({})|^fg({}) ${{kernel}}\\\n".format(colorschemeDimHex, colorschemeDarkHex, colorschemeDimHex))
+f.write("   \\\n")
 
 ## CPU & RAM
 # CPU
-f.write("^fg(\\#606060)^i({}/cpu.xbm)^fg(\\#FFFFFF) \\\n".format(imagesDir))
+f.write("^fg({})^i({}/cpu.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
 numCpus = subprocess.check_output("grep -c 'processor' /proc/cpuinfo", shell=True).strip().decode("utf-8")
 for cpu in range(1,int(numCpus)+1):
-    f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg(\\#FF0000)${{endif}}\\\n".format(cpu))
-    f.write("${{if_match ${{cpu cpu{}}} < 10}} ${{endif}}${{cpu cpu{}}}%^fg(\\#FFFFFF) \\\n".format(cpu, cpu))
+    f.write("^fg({})\\\n".format(colorschemeWhiteHex))
+    f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg({})${{endif}}\\\n".format(cpu, colorschemeRedHex))
+    f.write("${{if_match ${{cpu cpu{}}} < 10}} ^fg({})${{endif}}${{cpu cpu{}}}% \\\n".format(cpu, colorschemeDimHex, cpu))
 # RAM
-f.write("^fg(\\#737373)^i({}/mem.xbm)^fg(\\#FFFFFF) \\\n".format(imagesDir))
-f.write("${if_match ${memperc} >= 85}^fg(\\#FF0000)${endif}${memperc}%   \\\n")
+f.write("^fg({})^i({}/mem.xbm)^fg({}) \\\n".format(colorschemeGreyHex, imagesDir, colorschemeWhiteHex))
+f.write("${{if_match ${{memperc}} < 30}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
+f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
+f.write("${memperc}%  \\\n")
+# TEMP
+tempVar = "${hwmon temp 1}"
+f.write("^fg({})^i({}/temp.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
+f.write("^fg({})\\\n".format(colorschemeWhiteHex))
+f.write("${{if_match {} <= 65}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeDimHex))
+f.write("${{if_match {} >= 80}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeRedHex))
+f.write("{}°".format(tempVar))
+f.write("   \\\n")
 
 ## MEDIA
 f.write("^fg({})\\\n".format(colorschemeFgHex))
 f.write("${if_match ${texeci 1 amixer get Master | grep Mono: | grep -c '\[off\]'} >= 1}\\\n")
 f.write("^i({}/spkr_02.xbm)\\\n".format(imagesDir))
-f.write("^fg(\#3A3A3A) \\\n")
+f.write("^fg({}) \\\n".format(colorschemeDimHex))
 f.write("${else}\\\n")
 f.write("^i({}/spkr_01.xbm)\\\n".format(imagesDir))
-f.write("^fg(\#FFFFFF) \\\n")
+f.write("^fg({})".format(colorschemeWhiteHex))
 f.write("${endif}\\\n")
-f.write("${texeci 1 amixer get Master | tail -1 | cut -d'[' -f2 | cut -d']' -f1}  \\\n")
-f.write("^fg(\#FFFFFF) \\\n")
+f.write(" ${texeci 1 amixer get Master | tail -1 | cut -d'[' -f2 | cut -d']' -f1}\\\n")
+f.write("    \\\n")
 
 ## TIME
-f.write("${{time %a}}, ^fg({})${{time %d}}^fg(\#FFFFFF) ^fg(\#737373)${{time %b}}^fg(\#FFFFFF) \\\n".format(colorschemeFgHex))
-f.write("^fg({})${{time %H%M}}^fg(\#FFFFFF) \\\n".format(colorschemeFgHex))
-f.write("^fg(\#3A3A3A)(${uptime})^fg(\#FFFFFF)  \\\n")
+f.write("^fg({})".format(colorschemeWhiteHex))
+f.write("${{time %a}} ^fg({})${{time %d}} ^fg({})${{time %b}} \\\n".format(colorschemeFgHex, colorschemeGreyHex))
+f.write("^fg({})${{time %H%M}}^fg({}) \\\n".format(colorschemeFgHex, colorschemeWhiteHex))
+f.write("^fg({})(${{uptime}})^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
+f.write("  \\\n")
 
 ## BATTERY
+# f.write("${battery}\\\n")
 f.write("^fg({})\\\n".format(colorschemeFgHex))
-f.write("${if_match ${battery_percent} < 50}^fg(\\#FFCC00)${endif}\\\n")
-f.write("${if_match ${battery_percent} < 20}^fg(\\#FF0000)${endif}\\\n")
+# f.write("${if_match ${battery} != 'discharging'}\\\n")
+# f.write("${{if_match ${{battery_percent}} >= 90}}^fg({})${{endif}}\\\n".format(colorschemeDarkHex))
+# f.write("${endif}\\\n")
+f.write("${{if_match ${{battery_percent}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeYellowHex))
+f.write("${{if_match ${{battery_percent}} < 20}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
 batterySteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
 for i in batterySteps:
     f.write("${{if_match ${{battery_percent}} >= {}}}^i({}/battery_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))

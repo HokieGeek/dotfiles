@@ -42,6 +42,7 @@ rangerExec = "export EDITOR=vim; " ++ myTerminal ++ " -e ranger"
 modm = mod4Mask
 myTerminal = "urxvtc"
 colorForeground = "#9F0AC4"
+colorDimmed = "#9F0AC4"
 colorBackground = "#1B1D1E"
 font = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 
@@ -71,9 +72,6 @@ myAppGSMenu = [ ("Chromium", "chromium")
 mySpawnSelected :: [(String, String)] -> X()
 mySpawnSelected lst = gridselect conf lst >>= flip whenJust spawn
     where conf = defaultGSConfig
-
-toggle :: IORef Bool -> IO()
-toggle v = readIORef v >>= \v' -> (writeIORef v) (not v')
 -- }}}
 
 -- Hooks {{{
@@ -84,15 +82,11 @@ myManageHook = composeAll
     , className =? "Gimp"       --> viewShift "-"
     , className =? "VASSAL-launch-ModuleManager"  --> doFloat <+> doShift "="
     , className =? "VASSAL-launch-Player" --> doFloat <+> doShift "="
-    -- , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat <+> viewShift "1" -- Hangouts
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat -- Hangouts
     , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> viewShift "1" -- Google Keep
     ] <+> manageDocks
     where
         viewShift = doF . liftM2 (.) W.greedyView W.shift
-        -- vassalClassnames = ["VASSAL-launch-ModuleManager", "VASSAL-launch-Player"]
-        -- floatingInOne = ["crx_nckgahadagoaajjgafhacjanaoiihapd",  -- Hangouts
-                         -- "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki"] -- Google Keep
 -- }}}
 -- Log {{{
 myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
@@ -113,10 +107,6 @@ myDzen h = defaultPP
       , ppOutput            =   hPutStrLn h
     }
     where
-        -- getDzenWorkspaceSymbol wsname id
-            -- | wsname = id
-            -- | otherwise = "^i(/home/andres/.xmonad/imgs/workspace.xbm)"
-        -- dzenWorkspaceSymbol id = readIORef useWorkspaceName >>= \uwn' -> getDzenWorkspaceSymbol uwn' id
         dzenWorkspaceSymbol x = "^i(/home/andres/.xmonad/imgs/workspace.xbm)"
 -- }}}
 -- Layout{{{
@@ -137,7 +127,6 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 -- Keybindings {{{
 myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), spawn "dmenu_run")
-            -- , ((modm, xK_e), spawn rangerExec)
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((0, xF86XK_Sleep), spawn "sudo /usr/sbin/pm-suspend")
             , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
@@ -157,7 +146,6 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , (((modm .|. controlMask), xK_n), moveTo Next EmptyWS <+> spawn myTerminal)
             -- Window helpers
             , (((modm .|. shiftMask), xK_BackSpace), nextMatch History (return True))
-            -- , (((modm .|. mod1Mask), xK_space), windows W.swapMaster)
             , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- shrink the master area
             , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the master area
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
@@ -176,21 +164,15 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
             -- Media
-            -- ((0, xF86XK_AudioPlay), spawn "mcpd ???")
-            -- ((0, xF86XK_AudioStop), spawn "mcpd ???")
-            -- ((0, xF86XK_AudioPrev), spawn "mcpd ???")
-            -- ((0, xF86XK_AudioNext), spawn "mcpd ???")
+            , ((shiftMask, xF86XK_AudioPlay), spawn "chromium --new-window https://play.google.com/music/listen#/ap/queue")
+            , ((controlMask, xF86XK_AudioPlay), spawn "chromium --new-window http://pandora.com")
+            -- ((0, xF86XK_AudioStop), spawn "???")
+            -- ((0, xF86XK_AudioPrev), spawn "???")
+            -- ((0, xF86XK_AudioNext), spawn "???")
 
-
-            -- , ((0, xK_F4), modify (onTerminator not))
-            -- , ((modMask, xK_w), gets useTerminator >>= spawnLynxWith . terminalName)
-
-            -- , ((0, xK_F10), addWorkspace "y")
-            -- , ((shiftMask, xK_F10), removeEmptyWorkspace)
-            -- , ((0, xK_F2), toggle useWorkspaceName)
+            -- , ((modm, xK_F10), addWorkspace "y")
+            -- , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
             ]
-            -- (keysym 0xff67, Menu)
-            -- ((0, xF86XK_Display), spawn "???")
             ++
             [((m .|. modm, k), windows $ f i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys
@@ -202,10 +184,9 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
 
 -- Main {{{
 compmgr = "xcompmgr"
-workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ font ++ "' -x '1440' -y '0' -h '16' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
+workspaceStatusBar = "sleep 3s; dzen2 -fn '" ++ font ++ "' -x '1440' -y '0' -h '16' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
 conkyStatusBar = "~/.conky/statusbar.py --color-fg '" ++ colorForeground ++ "' > /tmp/xmonad.conkyrc && conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '" ++ colorBackground ++ "' -fg '#FFFFFF' -fn '" ++ font ++ "'"
 main = do
-        -- useWorkspaceName <- newIORef False
         compMgrStart <- spawn compmgr
         dzenLeftBar  <- spawnPipe workspaceStatusBar
         dzenRightBar <- spawnPipe conkyStatusBar
@@ -222,7 +203,6 @@ main = do
             , handleEventHook = myHandleEventHook
             }
             `additionalKeys` myKeys
-            -- `additionalKeys` (myKeys ++ [((0, xK_F2), toggle useWorkspaceName)])
 --}}}
 
 -- vim: set foldmethod=marker number relativenumber:
