@@ -87,8 +87,10 @@ f.write("^fg({})^i({}/cpu.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
 numCpus = subprocess.check_output("grep -c 'processor' /proc/cpuinfo", shell=True).strip().decode("utf-8")
 for cpu in range(1,int(numCpus)+1):
     f.write("^fg({})\\\n".format(colorschemeWhiteHex))
+    # f.write("${{if_match ${{cpu cpu{}}} < 100}} ${{endif}}".format(cpu))
     f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg({})${{endif}}\\\n".format(cpu, colorschemeRedHex))
-    f.write("${{if_match ${{cpu cpu{}}} < 10}} ^fg({})${{endif}}${{cpu cpu{}}}% \\\n".format(cpu, colorschemeDimHex, cpu))
+    f.write("${{if_match ${{cpu cpu{}}} < 10}} ^fg({})${{endif}}\\\n".format(cpu, colorschemeDimHex))
+    f.write("${{cpu cpu{}}}% \\\n".format(cpu))
 # RAM
 f.write("^fg({})^i({}/mem.xbm)^fg({}) \\\n".format(colorschemeGreyHex, imagesDir, colorschemeWhiteHex))
 f.write("${{if_match ${{memperc}} < 30}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
