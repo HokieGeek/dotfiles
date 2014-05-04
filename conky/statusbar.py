@@ -47,7 +47,7 @@ f.write("\nTEXT\n")
 ## Machine info
 f.write("^fg({})${{nodename}}\\\n".format(colorschemeGreyHex))
 # TODO: if arch linux:
-f.write(" ^fg({})^i({}/arch.xbm) \\\n".format(colorschemeDarkHex, imagesDir))
+f.write(" ^fg({})^i({}/arch.xbm) \\\n".format(colorschemeDimHex, imagesDir))
 # else:
 #   f.write(" ^fg({})| \\\n".format(colorschemeDarkHex))
 f.write("^fg({})${{kernel}}\\\n".format(colorschemeGreyHex))
@@ -65,6 +65,7 @@ tempFile.close()
 for interface in [intf.decode("utf-8") for intf in interfaces]:
     f.write("${{if_up {}}}^fg({})\\\n".format(interface, colorschemeWhiteHex))
     if interface[0] == "w":
+        # f.write("Steve Taylor's Guest Network \\\n")
         f.write("${{wireless_essid {}}} \\\n".format(interface))
         f.write("^fg({})\\\n".format(colorschemeFgHex))
         f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 95}}^i({}/wifi_100.xbm)${{else}}\\\n".format(interface, imagesDir))
