@@ -51,18 +51,18 @@ myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
 myAppGSMenu = [ ("Chromium", "chromium")
               , ("Terminal", myTerminal)
-              , ("VLC", "vlc")
+              , ("Irssi", myTerminal ++ " -e irssi")
+              , ("Gimp", "gimp")
               , ("Skype", "skype")
-              , ("gVim", "gvim")
               , ("Eclipse", "eclipse")
               , ("MPC", myTerminal ++ " -e ncmpcpp")
-              , ("Ranger", rangerExec)
-              , ("Gimp", "gimp")
-              , ("Irssi", myTerminal ++ " -e irssi")
-              , ("Alsa Mixer", myTerminal ++ " -e alsamixer")
               , ("VirtualBox", "virtualbox")
+              , ("Ranger", rangerExec)
+              , ("VLC", "vlc")
+              , ("Alsa Mixer", myTerminal ++ " -e alsamixer")
+              , ("gVim", "gvim")
               , ("Steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
-              , ("Deluge", "deluge")
+              -- , ("Deluge", "deluge")
               -- , ("minicom", myTerminal ++ " -e minicom") -- specific menu for the two configs
               ]
 --}}}
