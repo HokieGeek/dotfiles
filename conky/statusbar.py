@@ -44,6 +44,15 @@ f.write("# Update interval in seconds\n")
 f.write("update_interval 1\n")
 f.write("\nTEXT\n")
 
+## Machine info
+f.write("^fg({})${{nodename}}\\\n".format(colorschemeGreyHex))
+# TODO: if arch linux:
+f.write(" ^fg({})^i({}/arch.xbm) \\\n".format(colorschemeDarkHex, imagesDir))
+# else:
+#   f.write(" ^fg({})| \\\n".format(colorschemeDarkHex))
+f.write("^fg({})${{kernel}}\\\n".format(colorschemeGreyHex))
+f.write("   \\\n")
+
 ## NETWORK
 # Retrieve interfaces
 tempFile = tempfile.NamedTemporaryFile()
@@ -54,7 +63,7 @@ tempFile.close()
 # For each interface, generate conky output
 # for interface in interfaces:
 for interface in [intf.decode("utf-8") for intf in interfaces]:
-    f.write("${{if_up {}}}\\\n".format(interface))
+    f.write("${{if_up {}}}^fg({})\\\n".format(interface, colorschemeWhiteHex))
     if interface[0] == "w":
         f.write("${{wireless_essid {}}} \\\n".format(interface))
         f.write("^fg({})\\\n".format(colorschemeFgHex))
@@ -72,13 +81,11 @@ for interface in [intf.decode("utf-8") for intf in interfaces]:
 # Lastly, output the external IP
 f.write("^fg({})".format(colorschemeGreyHex))
 f.write("(${exec wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \\< -f -1 | awk '{ print $1 }'})")
-# f.write(" \\\n")
-# f.write("^fg({})^i({}/net_down.xbm) ${{downspeed {}}} \\\n".format(colorschemeGreenHex, imagesDir, interface))
-# f.write("^fg({})^i({}/net_up.xbm) ${{upspeed {}}} \\\n".format(colorschemeRedHex, imagesDir, interface))
-f.write("   \\\n")
-
-## Machine info
-f.write("^fg({})${{nodename}} ^fg({})|^fg({}) ${{kernel}}\\\n".format(colorschemeDimHex, colorschemeDarkHex, colorschemeDimHex))
+f.write(" \\\n")
+f.write("^fg({})${{if_match ${{downspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
+f.write("^i({}/net_down.xbm)\\\n".format(imagesDir))
+f.write("^fg({})${{if_match ${{upspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
+f.write("^i({}/net_up.xbm)\\\n".format(imagesDir))
 f.write("   \\\n")
 
 ## CPU & RAM
@@ -92,26 +99,46 @@ for cpu in range(1,int(numCpus)+1):
     f.write("${{if_match ${{cpu cpu{}}} < 10}} ^fg({})${{endif}}\\\n".format(cpu, colorschemeDimHex))
     f.write("${{cpu cpu{}}}% \\\n".format(cpu))
 # RAM
+# f.write("${if_match ${memperc} >= 50}\\\n")
+# f.write("^fg({})^i({}/mem.xbm)^fg({}) \\\n".format(colorschemeGreyHex, imagesDir, colorschemeWhiteHex))
+# f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
+# f.write("${memperc}%  \\\n")
+# f.write("${endif}\\\n")
 f.write("^fg({})^i({}/mem.xbm)^fg({}) \\\n".format(colorschemeGreyHex, imagesDir, colorschemeWhiteHex))
-f.write("${{if_match ${{memperc}} < 30}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
+f.write("${{if_match ${{memperc}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
 f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
 f.write("${memperc}%  \\\n")
 # TEMP
 tempVar = "${hwmon temp 1}"
+# f.write("${{if_match {} > 65}}\\\n".format(tempVar))
+# f.write("^fg({})^i({}/temp.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
+# f.write("^fg({})\\\n".format(colorschemeWhiteHex))
+# f.write("${{if_match {} >= 80}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeRedHex))
+# f.write("{}°".format(tempVar))
+# f.write("${endif}\\\n")
 f.write("^fg({})^i({}/temp.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
 f.write("^fg({})\\\n".format(colorschemeWhiteHex))
-f.write("${{if_match {} <= 65}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeDimHex))
+f.write("${{if_match {} <= 60}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeDimHex))
 f.write("${{if_match {} >= 80}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeRedHex))
 f.write("{}°".format(tempVar))
+# DISK
+# f.write("${if_match ${fs_used_perc /} > 80}\\\n")
+# f.write("${else}\\\n")
+# f.write("${endif}\\\n")
+# f.write("${if_match ${fs_used_perc /home} > 80}\\\n")
+# f.write("${else}\\\n")
+# f.write("${endif}\\\n")
+# f.write(" ^fg({})^i({}/diskette.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
 f.write("   \\\n")
 
 ## MEDIA
 f.write("^fg({})\\\n".format(colorschemeFgHex))
+# TODO: if headphones are plugged in, then use plug.xbm and the headphones level
 f.write("${if_match ${texeci 1 amixer get Master | grep Mono: | grep -c '\[off\]'} >= 1}\\\n")
-f.write("^i({}/spkr_02.xbm)\\\n".format(imagesDir))
-f.write("^fg({}) \\\n".format(colorschemeDimHex))
+f.write("^i({}/spkr_02.xbm)".format(imagesDir))
+f.write("^fg({})".format(colorschemeDimHex))
 f.write("${else}\\\n")
-f.write("^i({}/spkr_01.xbm)\\\n".format(imagesDir))
+f.write("^i({}/spkr_01.xbm)".format(imagesDir))
 f.write("^fg({})".format(colorschemeWhiteHex))
 f.write("${endif}\\\n")
 f.write(" ${texeci 1 amixer get Master | tail -1 | cut -d'[' -f2 | cut -d']' -f1}\\\n")
@@ -121,15 +148,13 @@ f.write("    \\\n")
 f.write("^fg({})".format(colorschemeWhiteHex))
 f.write("${{time %a}} ^fg({})${{time %d}} ^fg({})${{time %b}} \\\n".format(colorschemeFgHex, colorschemeGreyHex))
 f.write("^fg({})${{time %H%M}}^fg({}) \\\n".format(colorschemeFgHex, colorschemeWhiteHex))
-f.write("^fg({})(${{uptime}})^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
+# f.write("^fg({})(${{uptime}})^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
+f.write(" ^fg({})${{uptime}}^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
 f.write("  \\\n")
 
 ## BATTERY
-# f.write("${battery}\\\n")
-f.write("^fg({})\\\n".format(colorschemeFgHex))
-# f.write("${if_match ${battery} != 'discharging'}\\\n")
-# f.write("${{if_match ${{battery_percent}} >= 90}}^fg({})${{endif}}\\\n".format(colorschemeDarkHex))
-# f.write("${endif}\\\n")
+f.write("^fg({})\\\n".format(colorschemeDarkHex))
+f.write("${{if_match ${{battery_percent}} < 99}}^fg({})${{endif}}\\\n".format(colorschemeFgHex))
 f.write("${{if_match ${{battery_percent}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeYellowHex))
 f.write("${{if_match ${{battery_percent}} < 20}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
 batterySteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]

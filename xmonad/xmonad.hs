@@ -188,8 +188,8 @@ workspaceStatusBar = "sleep 3s; dzen2 -fn '" ++ font ++ "' -x '1440' -y '0' -h '
 conkyStatusBar = "~/.conky/statusbar.py --color-fg '" ++ colorForeground ++ "' > /tmp/xmonad.conkyrc && conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '" ++ colorBackground ++ "' -fg '#FFFFFF' -fn '" ++ font ++ "'"
 main = do
         compMgrStart <- spawn compmgr
+        dzenRightBar <- spawn conkyStatusBar
         dzenLeftBar  <- spawnPipe workspaceStatusBar
-        dzenRightBar <- spawnPipe conkyStatusBar
         xmonad $ withUrgencyHook dzenUrgencyHook { args = ["-bg", colorForeground, "-xs", "1"] }
                $ defaultConfig
             { workspaces = myWorkspaces
