@@ -39,6 +39,8 @@ import qualified Data.Map as M
 -- Local Variables {{{
 rangerExec = "export EDITOR=vim; " ++ myTerminal ++ " -e ranger"
 
+unmuteAllChannels = "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; "
+
 modm = mod4Mask
 myTerminal = "urxvtc"
 colorForeground = "#9F0AC4"
@@ -155,10 +157,10 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight -inc 20")
             , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -dec 20")
             -- Volume
-            , ((0, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3+")
-            , ((shiftMask, xF86XK_AudioRaiseVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 100")
-            , ((0, xF86XK_AudioLowerVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 3-")
-            , ((shiftMask, xF86XK_AudioLowerVolume), spawn "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; amixer -q set Master playback 30")
+            , ((0, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer -q set Master playback 3+"))
+            , ((shiftMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer -q set Master playback 100"))
+            , ((0, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer -q set Master playback 3-"))
+            , ((shiftMask, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer -q set Master playback 30"))
             , ((0, xF86XK_AudioMute), spawn "amixer -q set Master toggle; amixer -q set Speaker toggle; amixer -q set Headphone toggle")
             , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer"))
             -- PrintScreen
