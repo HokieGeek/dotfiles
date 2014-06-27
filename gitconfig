@@ -25,6 +25,8 @@
     df = diff --ext-diff --patience
     dt = difftool -y
     chg = commit --author='HokieGeek'
+    branch-sort = !$HOME/.bin/git-sorted-branches
+    sublog = !$HOME/.bin/git-submodules-log
 [core]
     eol = lf
 	excludesfile = ~/.gitignore
