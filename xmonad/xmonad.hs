@@ -52,7 +52,7 @@ myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
 myAppGSMenu = [ ("Chromium", "chromium")
-              , ("Terminal", myTerminal)
+              , ("Netflix", "netflix-desktop")
               , ("Irssi", myTerminal ++ " -e irssi")
               , ("Gimp", "gimp")
               , ("Skype", "skype")
@@ -63,10 +63,12 @@ myAppGSMenu = [ ("Chromium", "chromium")
               , ("VLC", "vlc")
               , ("Alsa Mixer", myTerminal ++ " -e alsamixer")
               , ("gVim", "gvim")
-              , ("Steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
+              , ("PlayOnLinux", "/usr/bin/playonlinux")
+              -- , ("Steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
               -- , ("Deluge", "deluge")
               -- , ("minicom", myTerminal ++ " -e minicom") -- specific menu for the two configs
               ]
+-- gamesMenu = [ 
 --}}}
 
 -- Local Methods {{{
@@ -189,6 +191,10 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
 compmgr = "xcompmgr"
 workspaceStatusBar = "sleep 3s; dzen2 -fn '" ++ font ++ "' -x '1440' -y '0' -h '16' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
 conkyStatusBar = "~/.conky/statusbar.py --color-fg '" ++ colorForeground ++ "' > /tmp/xmonad.conkyrc && conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '" ++ colorBackground ++ "' -fg '#FFFFFF' -fn '" ++ font ++ "'"
+-- conkyStatusBar = "conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '" ++ colorBackground ++ "' -fg '#FFFFFF' -fn '" ++ font ++ "'"
+-- conkyStatusBar = "conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -fn '-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*'"
+-- conkyStatusBar = "/tmp/sb.sh"
+-- ~/.conky/statusbar.py --color-fg '#9F0AC4' > /tmp/xmonad.conkyrc && conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -fn '-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*'
 main = do
         compMgrStart <- spawn compmgr
         dzenRightBar <- spawn conkyStatusBar
