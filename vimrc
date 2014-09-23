@@ -137,6 +137,7 @@ syntax on
 function! MyHighlights() " {{{
     " highlight CursorLine ctermbg=yellow ctermfg=black cterm=none
     highlight SpecialKey ctermbg=black ctermfg=lightgrey cterm=none
+    highlight Folded ctermbg=black ctermfg=darkgrey cterm=none
 
     " I like being able to spot my comments quickly
     highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
@@ -279,6 +280,8 @@ nnoremap <silent> cob :let &background = (&background == "dark" ? "light" : "dar
 nnoremap <silent> coh :nohlsearch<cr>
 nnoremap <silent> coH :setlocal hlsearch!<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
+nnoremap <silent> cof :setlocal foldenable!<cr>
+nnoremap <silent> coF :setlocal foldmethod=syntax<cr>
 " }}}
 
 "" Some (probably questionable) overrides/shortcuts " {{{
