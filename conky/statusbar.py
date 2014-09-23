@@ -110,18 +110,12 @@ f.write("${{if_match ${{memperc}} < 50}}^fg({})${{endif}}\\\n".format(colorschem
 f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
 f.write("${memperc}%  \\\n")
 # TEMP
-tempVar = "${hwmon temp 1}"
-# f.write("${{if_match {} > 65}}\\\n".format(tempVar))
+# tempVar = "${hwmon temp 1}"
 # f.write("^fg({})^i({}/temp.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
 # f.write("^fg({})\\\n".format(colorschemeWhiteHex))
+# f.write("${{if_match {} <= 60}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeDimHex))
 # f.write("${{if_match {} >= 80}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeRedHex))
 # f.write("{}°".format(tempVar))
-# f.write("${endif}\\\n")
-f.write("^fg({})^i({}/temp.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
-f.write("^fg({})\\\n".format(colorschemeWhiteHex))
-f.write("${{if_match {} <= 60}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeDimHex))
-f.write("${{if_match {} >= 80}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeRedHex))
-f.write("{}°".format(tempVar))
 # DISK
 # f.write("${if_match ${fs_used_perc /} > 80}\\\n")
 # f.write("${else}\\\n")
@@ -130,7 +124,7 @@ f.write("{}°".format(tempVar))
 # f.write("${else}\\\n")
 # f.write("${endif}\\\n")
 # f.write(" ^fg({})^i({}/diskette.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
-f.write("   \\\n")
+# f.write("   \\\n")
 
 ## MEDIA
 f.write("^fg({})\\\n".format(colorschemeFgHex))

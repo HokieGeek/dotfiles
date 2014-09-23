@@ -43,6 +43,7 @@ unmuteAllChannels = "amixer -q set Master unmute ; amixer -q set Speaker unmute 
 
 modm = mod4Mask
 myTerminal = "urxvtc"
+myBrowser = "chromium-dev"
 colorForeground = "#9F0AC4"
 colorDimmed = "#9F0AC4"
 colorBackground = "#1B1D1E"
@@ -51,7 +52,7 @@ font = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
-myAppGSMenu = [ ("Chromium", "chromium")
+myAppGSMenu = [ ("Chromium", myBrowser)
               , ("Netflix", "netflix-desktop")
               , ("Irssi", myTerminal ++ " -e irssi")
               , ("Gimp", "gimp")
@@ -64,11 +65,12 @@ myAppGSMenu = [ ("Chromium", "chromium")
               , ("Alsa Mixer", myTerminal ++ " -e alsamixer")
               , ("gVim", "gvim")
               , ("PlayOnLinux", "/usr/bin/playonlinux")
+              , ("Boardspace", "firefox http://boardspace.net/cgi-bin/login.cgi?pname=HokieGeek&language=English")
               -- , ("Steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
               -- , ("Deluge", "deluge")
               -- , ("minicom", myTerminal ++ " -e minicom") -- specific menu for the two configs
               ]
--- gamesMenu = [ 
+-- gamesMenu = [
 --}}}
 
 -- Local Methods {{{
@@ -134,7 +136,6 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((0, xF86XK_Sleep), spawn "sudo /usr/sbin/pm-suspend")
             , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
-            , ((0, xK_F1), spawn "xinput -disable 'ELAN Touchscreen'")
             -- GridSelect
             , ((modm, xK_z), mySpawnSelected myAppGSMenu)
             , ((modm, xK_x), goToSelected defaultGSConfig)
@@ -147,7 +148,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_BackSpace), toggleWS)
             , ((modm, xK_n), moveTo Next EmptyWS)
             , (((modm .|. shiftMask), xK_n), shiftTo Next EmptyWS)
-            , (((modm .|. mod1Mask), xK_n), moveTo Next EmptyWS <+> spawn "chromium")
+            , (((modm .|. mod1Mask), xK_n), moveTo Next EmptyWS <+> spawn "chromium-dev")
             , (((modm .|. controlMask), xK_n), moveTo Next EmptyWS <+> spawn myTerminal)
             -- Window helpers
             , (((modm .|. shiftMask), xK_BackSpace), nextMatch History (return True))
@@ -169,8 +170,8 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
             -- Media
-            , ((shiftMask, xF86XK_AudioPlay), spawn "chromium --new-window https://play.google.com/music/listen#/ap/queue")
-            , ((controlMask, xF86XK_AudioPlay), spawn "chromium --new-window http://pandora.com")
+            , ((shiftMask, xF86XK_AudioPlay), spawn "chromium-dev --new-window https://play.google.com/music/listen#/ap/queue")
+            , ((controlMask, xF86XK_AudioPlay), spawn "chromium-dev --new-window http://pandora.com")
             -- ((0, xF86XK_AudioStop), spawn "???")
             -- ((0, xF86XK_AudioPrev), spawn "???")
             -- ((0, xF86XK_AudioNext), spawn "???")

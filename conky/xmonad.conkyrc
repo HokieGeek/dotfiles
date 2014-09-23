@@ -5,15 +5,15 @@ out_to_x no
 update_interval 1
 
 TEXT
-${if_up wlp4s0}\
-${wireless_essid wlp4s0} \
+${if_up wlp3s0}\
+${wireless_essid wlp3s0} \
 ^fg(\#9F0AC4)\
-${if_match ${wireless_link_qual_perc wlp4s0} >= 95}^i($HOME/.conky/imgs/wifi_100.xbm)${else}\
-${if_match ${wireless_link_qual_perc wlp4s0} >= 75}^i($HOME/.conky/imgs/wifi_75.xbm)${else}\
-${if_match ${wireless_link_qual_perc wlp4s0} >= 50}^i($HOME/.conky/imgs/wifi_50.xbm)${else}\
+${if_match ${wireless_link_qual_perc wlp3s0} >= 95}^i($HOME/.conky/imgs/wifi_100.xbm)${else}\
+${if_match ${wireless_link_qual_perc wlp3s0} >= 75}^i($HOME/.conky/imgs/wifi_75.xbm)${else}\
+${if_match ${wireless_link_qual_perc wlp3s0} >= 50}^i($HOME/.conky/imgs/wifi_50.xbm)${else}\
 ^i($HOME/.conky/imgs/wifi_25.xbm)\
 ${endif}${endif}${endif} \
-^fg(\#606060)${addr wlp4s0}^fg(\#FFFFFF) \
+^fg(\#606060)${addr wlp3s0}^fg(\#FFFFFF) \
 ${endif}\
 ^fg(\#606060)(${exec wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \< -f -1 | awk '{ print $1 }'})^fg(\#FFFFFF)    \
 ^fg(\#606060)^i($HOME/.conky/imgs/cpu.xbm)^fg(\#FFFFFF) \
