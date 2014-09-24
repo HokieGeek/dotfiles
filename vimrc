@@ -86,6 +86,7 @@ set formatoptions+=n " Recognize numbered lists
 set backup " Create a backup file
 set backupdir=~/.tmp,~/tmp,/var/tmp,/tmp " Why not on .?
 set writebackup " Make a backup before overwriting a file
+set autoread " Reloads a file that has been changed externally
 set hlsearch
 set hidden " You can change buffers without saving
 set timeoutlen=400 " Let's see if this works for me
@@ -277,11 +278,13 @@ nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax
 nnoremap <silent> cot :let &laststatus = (&laststatus == 2 ? 1 : 2)<cr>
 nnoremap <silent> cob :let &background = (&background == "dark" ? "light" : "dark")<cr>
 " nnoremap <silent> cob :let &background = (&background == "dark" ? "light" : "dark")<bar>execute "colorscheme ".g:my_current_scheme<cr>
-nnoremap <silent> coh :nohlsearch<cr>
-nnoremap <silent> coH :setlocal hlsearch!<cr>
+nnoremap <silent> coH :nohlsearch<cr>
+nnoremap <silent> coh :setlocal hlsearch!<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
 nnoremap <silent> cof :setlocal foldenable!<cr>
-nnoremap <silent> coF :setlocal foldmethod=syntax<cr>
+nnoremap <silent> coF   :setlocal foldmethod=syntax<cr>
+nnoremap <silent> coFF  :setlocal foldmethod=manual<cr>
+nnoremap <silent> coFFF :setlocal foldmethod=marker<cr>
 " }}}
 
 "" Some (probably questionable) overrides/shortcuts " {{{
