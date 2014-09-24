@@ -43,7 +43,8 @@ unmuteAllChannels = "amixer -q set Master unmute ; amixer -q set Speaker unmute 
 
 modm = mod4Mask
 myTerminal = "urxvtc"
-myBrowser = "chromium-dev"
+-- myBrowser = "chromium-dev"
+myBrowser = "google-chrome-stable"
 colorForeground = "#9F0AC4"
 colorDimmed = "#9F0AC4"
 colorBackground = "#1B1D1E"
@@ -52,20 +53,22 @@ font = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
-myAppGSMenu = [ ("Chromium", myBrowser)
-              , ("Netflix", "netflix-desktop")
+myAppGSMenu = [ ("Chrome", myBrowser)
+              -- , ("Netflix", "netflix-desktop")
+              , ("Netflix", myBrowser ++ " http://netflix.com")
               , ("Irssi", myTerminal ++ " -e irssi")
               , ("Gimp", "gimp")
               , ("Skype", "skype")
               , ("Eclipse", "eclipse")
               , ("MPC", myTerminal ++ " -e ncmpcpp")
               , ("VirtualBox", "virtualbox")
-              , ("Ranger", rangerExec)
+              -- , ("Ranger", rangerExec)
+              , ("Boardspace", myBrowser ++ " http://boardspace.net/cgi-bin/login.cgi?pname=HokieGeek&language=English")
               , ("VLC", "vlc")
               , ("Alsa Mixer", myTerminal ++ " -e alsamixer")
               , ("gVim", "gvim")
               , ("PlayOnLinux", "/usr/bin/playonlinux")
-              , ("Boardspace", "firefox http://boardspace.net/cgi-bin/login.cgi?pname=HokieGeek&language=English")
+              -- , ("Boardspace", "firefox http://boardspace.net/cgi-bin/login.cgi?pname=HokieGeek&language=English")
               -- , ("Steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
               -- , ("Deluge", "deluge")
               -- , ("minicom", myTerminal ++ " -e minicom") -- specific menu for the two configs
