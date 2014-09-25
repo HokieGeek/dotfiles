@@ -281,10 +281,10 @@ nnoremap <silent> cob :let &background = (&background == "dark" ? "light" : "dar
 nnoremap <silent> coH :nohlsearch<cr>
 nnoremap <silent> coh :setlocal hlsearch!<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
-nnoremap <silent> cof :setlocal foldenable!<cr>
-nnoremap <silent> coF   :setlocal foldmethod=syntax<cr>
-nnoremap <silent> coFF  :setlocal foldmethod=manual<cr>
-nnoremap <silent> coFFF :setlocal foldmethod=marker<cr>
+nnoremap <silent> coF :setlocal foldenable!<cr>
+nnoremap <silent> cof   :setlocal foldenable foldmethod=syntax<bar>echomsg &foldmethod<cr>
+nnoremap <silent> coff  :setlocal foldenable foldmethod=manual<bar>echomsg &foldmethod<cr>
+nnoremap <silent> cofff :setlocal foldenable foldmethod=marker<bar>echomsg &foldmethod<cr>
 " }}}
 
 "" Some (probably questionable) overrides/shortcuts " {{{
