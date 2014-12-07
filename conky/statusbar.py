@@ -4,11 +4,20 @@ import tempfile
 import os
 import signal
 import argparse
+import sys
 
 ## Handle the arguments
+f=open('/tmp/statusbar.py.out', 'w+')
+f.write(" ".join(sys.argv))
+
 parser = argparse.ArgumentParser(description='Create a conky config')
-parser.add_argument('--color-fg', default="#E8E8E8", help="The hex value of a color to use (default: #E8E8E8)", metavar="#000000")
-parser.add_argument('--filename', help="Instead of outputting to stdout, store in the named file", metavar="FILE")
+parser.add_argument('--color-fg',
+                    default="#E8E8E8",
+                    help="The hex value of a color to use (default: #E8E8E8)",
+                    metavar="#000000")
+parser.add_argument('--filename',
+                    help="Instead of outputting to stdout, store in the named file",
+                    metavar="FILE")
 args = vars(parser.parse_args())
 
 ## Setup cleanup
