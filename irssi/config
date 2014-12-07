@@ -17,7 +17,7 @@ chatnets = {
   fn = {
     type = "IRC";
     nick = "HokieGeek";
-    autosendcmd = "/msg NickServ identify ouvertme";
+    autosendcmd = "/msg NickServ identify ouvert";
   };
 };
 channels = (
