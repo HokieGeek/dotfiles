@@ -196,12 +196,10 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
 
 -- Main {{{
 compmgr = "xcompmgr"
-workspaceStatusBar = "sleep 3s; dzen2 -fn '" ++ font ++ "' -x '1440' -y '0' -h '16' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
-conkyStatusBar = "~/.conky/statusbar.py --color-fg '" ++ colorForeground ++ "' > /tmp/xmonad.conkyrc && conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '" ++ colorBackground ++ "' -fg '#FFFFFF' -fn '" ++ font ++ "'"
--- conkyStatusBar = "conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '" ++ colorBackground ++ "' -fg '#FFFFFF' -fn '" ++ font ++ "'"
--- conkyStatusBar = "conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -fn '-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*'"
--- conkyStatusBar = "/tmp/sb.sh"
--- ~/.conky/statusbar.py --color-fg '#9F0AC4' > /tmp/xmonad.conkyrc && conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '2732' -w '1366' -h '16' -ta 'r' -bg '#1B1D1E' -fg '#FFFFFF' -fn '-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*'
+barheight = "16"
+screenwidth_cmd = "xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1"
+workspaceStatusBar = "sleep 3s; dzen2 -fn '" ++ font ++ "' -x '0' -y '0' -h '" ++ barheight ++ "' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
+conkyStatusBar = "~/.conky/statusbar.py --color-fg '" ++ colorForeground ++ "' > /tmp/xmonad.conkyrc && conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '0' -w `" ++ screenwidth_cmd ++ "` -h '" ++ barheight ++ "' -ta 'r' -bg '" ++ colorBackground ++ "' -fg '#FFFFFF' -fn '" ++ font ++ "'"
 main = do
         compMgrStart <- spawn compmgr
         dzenRightBar <- spawn conkyStatusBar
