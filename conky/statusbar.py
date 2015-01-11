@@ -73,12 +73,10 @@ tempFile.close()
 # For each interface, generate conky output
 # for interface in interfaces:
 for interface in [intf.decode("utf-8") for intf in interfaces]:
-    # f.write("${{if_up {}}}^fg({})\\\n".format(interface, colorschemeWhiteHex))
     f.write("${{if_up {}}}^fg({})\\\n".format(interface, colorschemeFgHex))
     if interface[0] == "w":
         # f.write("Steve Taylor's Guest Network \\\n")
         f.write("${{wireless_essid {}}} \\\n".format(interface))
-        # f.write("^fg({})\\\n".format(colorschemeFgHex))
         f.write("^fg({})\\\n".format(colorschemeWhiteHex))
         f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 95}}^i({}/wifi_100.xbm)${{else}}\\\n".format(interface, imagesDir))
         f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 75}}^i({}/wifi_75.xbm)${{else}}\\\n".format(interface, imagesDir))
@@ -116,24 +114,6 @@ f.write("${{if_match ${{memperc}} < 50}}^fg({})${{endif}}\\\n".format(colorschem
 f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
 f.write("${memperc}%")
 f.write(sectionSpacing)
-# TEMP
-# tempVar = "${hwmon temp 0}"
-# tempVar = "${acpitemp}"
-# f.write("^fg({})^i({}/temp.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
-# f.write("^fg({})\\\n".format(colorschemeWhiteHex))
-# f.write("${{if_match {} <= 60}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeDimHex))
-# f.write("${{if_match {} >= 80}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeRedHex))
-# f.write("{}°".format(tempVar))
-# f.write(" \\\n")
-# DISK
-# f.write("${if_match ${fs_used_perc /} > 80}\\\n")
-# f.write("${else}\\\n")
-# f.write("${endif}\\\n")
-# f.write("${if_match ${fs_used_perc /home} > 80}\\\n")
-# f.write("${else}\\\n")
-# f.write("${endif}\\\n")
-# f.write(" ^fg({})^i({}/diskette.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
-# f.write("   \\\n")
 
 ## MEDIA
 f.write("^fg({})\\\n".format(colorschemeFgHex))
