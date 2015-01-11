@@ -42,6 +42,7 @@ if args["filename"]:
 else:
     conkyFile = tempfile.NamedTemporaryFile('w', delete = False).name
     signal.signal(signal.SIGTERM, handleSigTERM)
+sectionSpacing = "     \\\n"
 
 f = open(conkyFile, 'w')
 
@@ -60,7 +61,7 @@ f.write(" ^fg({})^i({}/arch.xbm) \\\n".format(colorschemeDimHex, imagesDir))
 # else:
 #   f.write(" ^fg({})| \\\n".format(colorschemeDarkHex))
 f.write("^fg({})${{kernel}}\\\n".format(colorschemeGreyHex))
-f.write("   \\\n")
+f.write(sectionSpacing)
 
 ## NETWORK
 # Retrieve interfaces
@@ -72,11 +73,13 @@ tempFile.close()
 # For each interface, generate conky output
 # for interface in interfaces:
 for interface in [intf.decode("utf-8") for intf in interfaces]:
-    f.write("${{if_up {}}}^fg({})\\\n".format(interface, colorschemeWhiteHex))
+    # f.write("${{if_up {}}}^fg({})\\\n".format(interface, colorschemeWhiteHex))
+    f.write("${{if_up {}}}^fg({})\\\n".format(interface, colorschemeFgHex))
     if interface[0] == "w":
         # f.write("Steve Taylor's Guest Network \\\n")
         f.write("${{wireless_essid {}}} \\\n".format(interface))
-        f.write("^fg({})\\\n".format(colorschemeFgHex))
+        # f.write("^fg({})\\\n".format(colorschemeFgHex))
+        f.write("^fg({})\\\n".format(colorschemeWhiteHex))
         f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 95}}^i({}/wifi_100.xbm)${{else}}\\\n".format(interface, imagesDir))
         f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 75}}^i({}/wifi_75.xbm)${{else}}\\\n".format(interface, imagesDir))
         f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 50}}^i({}/wifi_50.xbm)${{else}}\\\n".format(interface, imagesDir))
@@ -96,7 +99,7 @@ f.write("^fg({})${{if_match ${{downspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".for
 f.write("^i({}/net_down.xbm)\\\n".format(imagesDir))
 f.write("^fg({})${{if_match ${{upspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
 f.write("^i({}/net_up.xbm)\\\n".format(imagesDir))
-f.write("   \\\n")
+f.write(sectionSpacing)
 
 ## CPU & RAM
 # CPU
@@ -104,27 +107,24 @@ f.write("^fg({})^i({}/cpu.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
 numCpus = subprocess.check_output("grep -c 'processor' /proc/cpuinfo", shell=True).strip().decode("utf-8")
 for cpu in range(1,int(numCpus)+1):
     f.write("^fg({})\\\n".format(colorschemeWhiteHex))
-    # f.write("${{if_match ${{cpu cpu{}}} < 100}} ${{endif}}".format(cpu))
     f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg({})${{endif}}\\\n".format(cpu, colorschemeRedHex))
     f.write("${{if_match ${{cpu cpu{}}} < 10}} ^fg({})${{endif}}\\\n".format(cpu, colorschemeDimHex))
     f.write("${{cpu cpu{}}}% \\\n".format(cpu))
 # RAM
-# f.write("${if_match ${memperc} >= 50}\\\n")
-# f.write("^fg({})^i({}/mem.xbm)^fg({}) \\\n".format(colorschemeGreyHex, imagesDir, colorschemeWhiteHex))
-# f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
-# f.write("${memperc}%  \\\n")
-# f.write("${endif}\\\n")
-f.write("^fg({})^i({}/mem.xbm)^fg({}) \\\n".format(colorschemeGreyHex, imagesDir, colorschemeWhiteHex))
+f.write(" ^fg({})^i({}/mem.xbm)^fg({}) \\\n".format(colorschemeGreyHex, imagesDir, colorschemeWhiteHex))
 f.write("${{if_match ${{memperc}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
 f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
-f.write("${memperc}%  \\\n")
+f.write("${memperc}%")
+f.write(sectionSpacing)
 # TEMP
-# tempVar = "${hwmon temp 1}"
+# tempVar = "${hwmon temp 0}"
+# tempVar = "${acpitemp}"
 # f.write("^fg({})^i({}/temp.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
 # f.write("^fg({})\\\n".format(colorschemeWhiteHex))
 # f.write("${{if_match {} <= 60}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeDimHex))
 # f.write("${{if_match {} >= 80}}^fg({})${{endif}}\\\n".format(tempVar, colorschemeRedHex))
 # f.write("{}°".format(tempVar))
+# f.write(" \\\n")
 # DISK
 # f.write("${if_match ${fs_used_perc /} > 80}\\\n")
 # f.write("${else}\\\n")
@@ -143,18 +143,17 @@ f.write("^i({}/spkr_02.xbm)".format(imagesDir))
 f.write("^fg({})".format(colorschemeDimHex))
 f.write("${else}\\\n")
 f.write("^i({}/spkr_01.xbm)".format(imagesDir))
-f.write("^fg({})".format(colorschemeWhiteHex))
+f.write("^fg({})".format(colorschemeGreyHex))
 f.write("${endif}\\\n")
 f.write(" ${texeci 1 amixer get Master | tail -1 | cut -d'[' -f2 | cut -d']' -f1}\\\n")
-f.write("    \\\n")
+f.write("   \\\n")
 
 ## TIME
-f.write("^fg({})".format(colorschemeWhiteHex))
-f.write("${{time %a}} ^fg({})${{time %d}} ^fg({})${{time %b}} \\\n".format(colorschemeFgHex, colorschemeGreyHex))
-f.write("^fg({})${{time %H%M}}^fg({}) \\\n".format(colorschemeFgHex, colorschemeWhiteHex))
-# f.write("^fg({})(${{uptime}})^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
+f.write("^fg({})".format(colorschemeGreyHex))
+f.write("${{time %a}} ^fg({})${{time %d}} ^fg({})${{time %b}} \\\n".format(colorschemeFgHex, colorschemeDimHex))
+f.write("^fg({})${{time %H%M}}^fg({}) \\\n".format(colorschemeWhiteHex, colorschemeWhiteHex))
 f.write(" ^fg({})${{uptime}}^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
-f.write("  \\\n")
+f.write("   \\\n")
 
 ## BATTERY
 f.write("^fg({})\\\n".format(colorschemeDarkHex))
