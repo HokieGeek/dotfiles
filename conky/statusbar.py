@@ -28,6 +28,7 @@ def handleSigTERM():
     cleanup()
 
 ## Variables
+useTextStats = False
 colorschemeFgHex = "\\{}".format(args["color_fg"])
 imagesDir = "$HOME/.conky/imgs"
 colorschemeGreyHex = "\\#606060"
@@ -57,7 +58,12 @@ f.write("\nTEXT\n")
 ## Machine info
 f.write("^fg({})${{nodename}}\\\n".format(colorschemeGreyHex))
 # TODO: if arch linux:
-f.write(" ^fg({})^i({}/arch.xbm) \\\n".format(colorschemeDimHex, imagesDir))
+# f.write("${if_match ${texeci 10 /usr/bin/checkupdates | wc -l} > 0}\\\n")
+# f.write(" ^fg({})${endif}".format(colorschemeDimHex))
+f.write(" ^fg({})".format(colorschemeDimHex))
+# f.write(" ^fg({})${{else}}^fg({})${endif}".format(colorschemeFgHex, colorschemeDimHex))
+f.write("^i({}/arch.xbm) \\\n".format(imagesDir))
+# f.write(" ^fg({})^i({}/arch.xbm) \\\n".format(colorschemeDimHex, imagesDir))
 # else:
 #   f.write(" ^fg({})| \\\n".format(colorschemeDarkHex))
 f.write("^fg({})${{kernel}}\\\n".format(colorschemeGreyHex))
@@ -91,7 +97,7 @@ for interface in [intf.decode("utf-8") for intf in interfaces]:
 
 # Lastly, output the external IP
 f.write("^fg({})".format(colorschemeGreyHex))
-f.write("(${exec wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \\< -f -1 | awk '{ print $1 }'})")
+f.write("(${texeci 3 wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \\< -f -1 | awk '{ print $1 }'})")
 f.write(" \\\n")
 f.write("^fg({})${{if_match ${{downspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
 f.write("^i({}/net_down.xbm)\\\n".format(imagesDir))
@@ -101,24 +107,39 @@ f.write(sectionSpacing)
 
 ## CPU & RAM
 # CPU
-f.write("^fg({})^i({}/cpu.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
 numCpus = subprocess.check_output("grep -c 'processor' /proc/cpuinfo", shell=True).strip().decode("utf-8")
-for cpu in range(1,int(numCpus)+1):
-    f.write("^fg({})\\\n".format(colorschemeWhiteHex))
-    f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg({})${{endif}}\\\n".format(cpu, colorschemeRedHex))
-    f.write("${{if_match ${{cpu cpu{}}} < 10}} ^fg({})${{endif}}\\\n".format(cpu, colorschemeDimHex))
-    f.write("${{cpu cpu{}}}% \\\n".format(cpu))
-# RAM
-f.write(" ^fg({})^i({}/mem.xbm)^fg({}) \\\n".format(colorschemeGreyHex, imagesDir, colorschemeWhiteHex))
-f.write("${{if_match ${{memperc}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
-f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
-f.write("${memperc}%")
+if (useTextStats):
+    f.write("^fg({})^i({}/cpu.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
+    for cpu in range(1,int(numCpus)+1):
+        f.write("^fg({})\\\n".format(colorschemeWhiteHex))
+        f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg({})${{endif}}\\\n".format(cpu, colorschemeRedHex))
+        f.write("${{if_match ${{cpu cpu{}}} < 10}} ^fg({})${{endif}}\\\n".format(cpu, colorschemeDimHex))
+        f.write("${{cpu cpu{}}}% \\\n".format(cpu))
+    # RAM
+    f.write(" ^fg({})^i({}/mem.xbm)^fg({}) \\\n".format(colorschemeGreyHex, imagesDir, colorschemeWhiteHex))
+    f.write("${{if_match ${{memperc}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
+    f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
+    f.write("${memperc}%")
+else:
+    for cpu in range(1,int(numCpus)+1):
+        f.write("^fg({})\\\n".format(colorschemeDimHex))
+        f.write("${{if_match ${{cpu cpu{}}} > 50}}^fg({})${{endif}}\\\n".format(cpu, colorschemeGreyHex))
+        f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg({})${{endif}}\\\n".format(cpu, colorschemeRedHex))
+        f.write("${{if_match ${{cpu cpu{}}} < 10}}^fg({})${{endif}}\\\n".format(cpu, colorschemeDarkHex))
+        f.write("^i({}/cpu.xbm) \\\n".format(imagesDir))
+    # RAM
+    f.write("^fg({})\\\n".format(colorschemeGreyHex))
+    f.write("${{if_match ${{memperc}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
+    f.write("${{if_match ${{memperc}} < 25}}^fg({})${{endif}}\\\n".format(colorschemeDarkHex))
+    f.write("${{if_match ${{memperc}} >= 70}}^fg({})${{endif}}\\\n".format(colorschemeWhiteHex))
+    f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
+    f.write("  ^i({}/mem.xbm)\\\n".format(imagesDir))
 f.write(sectionSpacing)
 
 ## MEDIA
 f.write("^fg({})\\\n".format(colorschemeFgHex))
 # TODO: if headphones are plugged in, then use plug.xbm and the headphones level
-f.write("${if_match ${texeci 1 amixer get Master | grep Mono: | grep -c '\[off\]'} >= 1}\\\n")
+f.write("${if_match ${texeci 2 amixer get Master | grep Mono: | grep -c '\[off\]'} >= 1}\\\n")
 f.write("^i({}/spkr_02.xbm)".format(imagesDir))
 f.write("^fg({})".format(colorschemeDimHex))
 f.write("${else}\\\n")
@@ -133,7 +154,8 @@ f.write("^fg({})".format(colorschemeGreyHex))
 f.write("${{time %a}} ^fg({})${{time %d}} ^fg({})${{time %b}} \\\n".format(colorschemeFgHex, colorschemeDimHex))
 f.write("^fg({})${{time %H%M}}^fg({}) \\\n".format(colorschemeWhiteHex, colorschemeWhiteHex))
 f.write(" ^fg({})${{uptime}}^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
-f.write("   \\\n")
+# f.write("   \\\n")
+f.write(sectionSpacing)
 
 ## BATTERY
 f.write("^fg({})\\\n".format(colorschemeDarkHex))
