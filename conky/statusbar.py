@@ -28,7 +28,7 @@ def handleSigTERM():
     cleanup()
 
 ## Variables
-useTextStats = False
+infoFirehose = False
 colorschemeFgHex = "\\{}".format(args["color_fg"])
 imagesDir = "$HOME/.conky/imgs"
 colorschemeGreyHex = "\\#606060"
@@ -108,7 +108,7 @@ f.write(sectionSpacing)
 ## CPU & RAM
 # CPU
 numCpus = subprocess.check_output("grep -c 'processor' /proc/cpuinfo", shell=True).strip().decode("utf-8")
-if (useTextStats):
+if (infoFirehose):
     f.write("^fg({})^i({}/cpu.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
     for cpu in range(1,int(numCpus)+1):
         f.write("^fg({})\\\n".format(colorschemeWhiteHex))
@@ -152,8 +152,9 @@ f.write("   \\\n")
 ## TIME
 f.write("^fg({})".format(colorschemeGreyHex))
 f.write("${{time %a}} ^fg({})${{time %d}} ^fg({})${{time %b}} \\\n".format(colorschemeFgHex, colorschemeDimHex))
-f.write("^fg({})${{time %H%M}}^fg({}) \\\n".format(colorschemeWhiteHex, colorschemeWhiteHex))
-f.write(" ^fg({})${{uptime}}^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
+f.write("^fg({})${{time %H%M}}^fg({})\\\n".format(colorschemeWhiteHex, colorschemeWhiteHex))
+if (infoFirehose):
+    f.write("  ^fg({})${{uptime}}^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
 # f.write("   \\\n")
 f.write(sectionSpacing)
 
