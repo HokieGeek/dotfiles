@@ -56,16 +56,22 @@ f.write("update_interval 1\n")
 f.write("\nTEXT\n")
 
 ## Machine info
+distro = "arch"
+updateCheckInterval = "600"
 f.write("^fg({})${{nodename}}\\\n".format(colorschemeGreyHex))
-# TODO: if arch linux:
-# f.write("${if_match ${texeci 10 /usr/bin/checkupdates | wc -l} > 0}\\\n")
-# f.write(" ^fg({})${endif}".format(colorschemeDimHex))
-f.write(" ^fg({})".format(colorschemeDimHex))
-# f.write(" ^fg({})${{else}}^fg({})${endif}".format(colorschemeFgHex, colorschemeDimHex))
-f.write("^i({}/arch.xbm) \\\n".format(imagesDir))
-# f.write(" ^fg({})^i({}/arch.xbm) \\\n".format(colorschemeDimHex, imagesDir))
+if distro == "arch":
+    f.write("${if_match ${texeci 10 /usr/bin/checkupdates | wc -l} > 0}\\\n")
+    # f.write("${if_match ${texeci {} /usr/bin/checkupdates | wc -l} > 0}\\\n".format(updateCheckInterval))
 # else:
-#   f.write(" ^fg({})| \\\n".format(colorschemeDarkHex))
+    # something
+f.write("^fg({})".format(colorschemeFgHex))
+f.write("${else}\\\n")
+f.write("^fg({})".format(colorschemeDimHex))
+f.write("${endif}\\\n")
+if distro == "arch":
+    f.write(" ^i({}/arch.xbm) \\\n".format(imagesDir))
+else:
+    f.write(" | \\\n")
 f.write("^fg({})${{kernel}}\\\n".format(colorschemeGreyHex))
 f.write(sectionSpacing)
 
