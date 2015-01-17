@@ -85,7 +85,7 @@ tempFile.close()
 # For each interface, generate conky output
 # for interface in interfaces:
 for interface in [intf.decode("utf-8") for intf in interfaces]:
-    f.write("${{if_up {}}}^fg({})\\\n".format(interface, colorschemeFgHex))
+    f.write("  ${{if_up {}}}^fg({})\\\n".format(interface, colorschemeFgHex))
     if interface[0] == "w":
         # f.write("Steve Taylor's Guest Network \\\n")
         f.write("${{wireless_essid {}}} \\\n".format(interface))
@@ -109,6 +109,7 @@ f.write("^fg({})${{if_match ${{downspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".for
 f.write("^i({}/net_down.xbm)\\\n".format(imagesDir))
 f.write("^fg({})${{if_match ${{upspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
 f.write("^i({}/net_up.xbm)\\\n".format(imagesDir))
+f.write(sectionSpacing)
 f.write(sectionSpacing)
 
 ## CPU & RAM
@@ -140,20 +141,38 @@ else:
     f.write("${{if_match ${{memperc}} >= 70}}^fg({})${{endif}}\\\n".format(colorschemeWhiteHex))
     f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
     f.write("  ^i({}/mem.xbm)\\\n".format(imagesDir))
+# Temp
+#f.write("  \\\n")
+#f.write("${if_match ${{acpitemp}} > 30}^fg({})^i({}/temp.xbm)}${else}".format(colorschemeWhiteHex))
+#f.write("${if_match ${{acpitemp}} > 80}^fg({})^i({}/temp.xbm)}${endif}".format(colorschemeRedHex))
 f.write(sectionSpacing)
+f.write("    \\\n")
 
 ## MEDIA
-f.write("^fg({})\\\n".format(colorschemeFgHex))
+# f.write("^fg({})\\\n".format(colorschemeFgHex))
+# f.write("${if_match ${texeci 2 amixer get Master | grep Mono: | grep -c '\[off\]'} >= 1}\\\n")
+# f.write("^i({}/spkr_02.xbm)".format(imagesDir))
+# f.write("^fg({})".format(colorschemeDimHex))
+# f.write("${else}\\\n")
+# f.write("^i({}/spkr_01.xbm)".format(imagesDir))
+# f.write("^fg({})".format(colorschemeGreyHex))
+# f.write("${endif}\\\n")
+# f.write(" ${texeci 1 amixer get Master | tail -1 | cut -d'[' -f2 | cut -d']' -f1}   \\\n")
+
 # TODO: if headphones are plugged in, then use plug.xbm and the headphones level
 f.write("${if_match ${texeci 2 amixer get Master | grep Mono: | grep -c '\[off\]'} >= 1}\\\n")
-f.write("^i({}/spkr_02.xbm)".format(imagesDir))
 f.write("^fg({})".format(colorschemeDimHex))
 f.write("${else}\\\n")
-f.write("^i({}/spkr_01.xbm)".format(imagesDir))
-f.write("^fg({})".format(colorschemeGreyHex))
+f.write("^fg({})".format(colorschemeFgHex))
 f.write("${endif}\\\n")
-f.write(" ${texeci 1 amixer get Master | tail -1 | cut -d'[' -f2 | cut -d']' -f1}\\\n")
-f.write("   \\\n")
+volumeSteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
+for i in volumeSteps:
+    f.write("${{if_match ${{texeci 1 amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\].*/\\1/g'}} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
+f.write("^i({}/volume_0.xbm)\\\n".format(imagesDir))
+for i in range(len(volumeSteps)):
+    f.write("${endif}")
+f.write(sectionSpacing)
+# f.write("    \\\n")
 
 ## TIME
 f.write("^fg({})".format(colorschemeGreyHex))
