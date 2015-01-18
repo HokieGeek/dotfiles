@@ -82,7 +82,6 @@ interfaces = [line.strip() for line in tempFile]
 tempFile.close()
 
 # For each interface, generate conky output
-# for interface in interfaces:
 for interface in [intf.decode("utf-8") for intf in interfaces]:
     f.write("  ${{if_up {}}}^fg({})\\\n".format(interface, colorschemeFgHex))
     if interface[0] == "w":
@@ -122,49 +121,42 @@ f.write(sectionSpacing)
 
 ## CPU & RAM
 numCpus = subprocess.check_output("grep -c 'processor' /proc/cpuinfo", shell=True).strip().decode("utf-8")
-if (infoFirehose):
-    # CPU
-    f.write("^fg({})^i({}/cpu.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
-    for cpu in range(1,int(numCpus)+1):
-        f.write("^fg({})\\\n".format(colorschemeWhiteHex))
-        f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg({})${{endif}}\\\n".format(cpu, colorschemeRedHex))
-        f.write("${{if_match ${{cpu cpu{}}} < 10}} ^fg({})${{endif}}\\\n".format(cpu, colorschemeDimHex))
-        f.write("${{cpu cpu{}}}% \\\n".format(cpu))
-    # RAM
-    f.write(" ^fg({})^i({}/mem.xbm)^fg({}) \\\n".format(colorschemeGreyHex, imagesDir, colorschemeWhiteHex))
-    f.write("${{if_match ${{memperc}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
-    f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
-    f.write("${memperc}%")
-else:
-    # CPU
-    for cpu in range(1,int(numCpus)+1):
-        f.write("^fg({})\\\n".format(colorschemeDimHex))
-        f.write("${{if_match ${{cpu cpu{}}} > 50}}^fg({})${{endif}}\\\n".format(cpu, colorschemeGreyHex))
-        f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg({})${{endif}}\\\n".format(cpu, colorschemeRedHex))
-        f.write("${{if_match ${{cpu cpu{}}} < 10}}^fg({})${{endif}}\\\n".format(cpu, colorschemeDarkHex))
-        f.write("^i({}/cpu.xbm) \\\n".format(imagesDir))
-    # RAM
-    f.write("^fg({})\\\n".format(colorschemeGreyHex))
-    f.write("${{if_match ${{memperc}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
-    f.write("${{if_match ${{memperc}} < 25}}^fg({})${{endif}}\\\n".format(colorschemeDarkHex))
-    f.write("${{if_match ${{memperc}} >= 70}}^fg({})${{endif}}\\\n".format(colorschemeWhiteHex))
-    f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
-    f.write("  ^i({}/mem.xbm)\\\n".format(imagesDir))
-f.write(" \\\n")
+# CPU
+for cpu in range(1,int(numCpus)+1):
+    f.write("^fg({})\\\n".format(colorschemeDimHex))
+    f.write("${{if_match ${{cpu cpu{}}} > 50}}^fg({})${{endif}}\\\n".format(cpu, colorschemeGreyHex))
+    f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg({})${{endif}}\\\n".format(cpu, colorschemeRedHex))
+    f.write("${{if_match ${{cpu cpu{}}} < 10}}^fg({})${{endif}}\\\n".format(cpu, colorschemeDarkHex))
+    f.write("^i({}/cpu.xbm) \\\n".format(imagesDir))
+# RAM
+f.write("^fg({})\\\n".format(colorschemeGreyHex))
+f.write("${{if_match ${{memperc}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
+f.write("${{if_match ${{memperc}} < 25}}^fg({})${{endif}}\\\n".format(colorschemeDarkHex))
+f.write("${{if_match ${{memperc}} >= 70}}^fg({})${{endif}}\\\n".format(colorschemeWhiteHex))
+f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
+f.write(" ^i({}/mem.xbm)\\\n".format(imagesDir))
+f.write("  \\\n")
 
 # TEMP
-f.write("${{if_match ${{acpitemp}} > 65}}^fg({})^i({}/temp.xbm)${{else}}\\\n".format(colorschemeWhiteHex, imagesDir))
-f.write("${{if_match ${{acpitemp}} > 85}}^fg({})^i({}/temp.xbm)${{endif}}${{endif}}\\\n".format(colorschemeRedHex, imagesDir))
+f.write("^fg({})\\\n".format(colorschemeDarkHex))
+f.write("${{if_match ${{acpitemp}} > 65}}^fg({})${{else}}\\\n".format(colorschemeWhiteHex))
+f.write("${{if_match ${{acpitemp}} > 85}}^fg({})${{endif}}${{endif}}\\\n".format(colorschemeRedHex))
+f.write("^i({}/temp.xbm)\\\n".format(imagesDir))
+f.write("  \\\n")
+
+# FAN
+f.write("^fg({})\\\n".format(colorschemeDarkHex))
+f.write("${{if_match ${{ibm_fan}} > 3000}}^fg({})${{else}}\\\n".format(colorschemeDimHex))
+f.write("${{if_match ${{ibm_fan}} > 3500}}^fg({})${{else}}\\\n".format(colorschemeWhiteHex))
+f.write("${{if_match ${{ibm_fan}} > 4000}}^fg({})${{endif}}${{endif}}${{endif}}\\\n".format(colorschemeRedHex))
+f.write("^i({}/fan.xbm)\\\n".format(imagesDir))
 f.write(sectionSpacing)
-# f.write("    \\\n")
 
 ## TIME
 f.write("^fg({})".format(colorschemeGreyHex))
 f.write("${{time %a}} ^fg({})${{time %d}} ^fg({})${{time %b}} \\\n".format(colorschemeFgHex, colorschemeDimHex))
 f.write("^fg({})${{time %H%M}}^fg({})\\\n".format(colorschemeWhiteHex, colorschemeWhiteHex))
-# if (infoFirehose):
 f.write("  ^fg({})${{uptime}}^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
-# f.write("   \\\n")
 f.write(sectionSpacing)
 
 ## BATTERY
@@ -181,9 +173,8 @@ for i in range(len(batterySteps)):
     f.write("${endif}")
 f.write("\\\n")
 
-# f.write("^fg({})".format(colorschemeFgHex))
+f.write("^fg({})".format(colorschemeFgHex))
 # f.write("   ${fs_free_perc /}\\\n")
-# f.write("   ${ibm_fan}\\\n")
 
 f.close()
 
