@@ -135,8 +135,11 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 -- }}}
 
 -- Keybindings {{{
+-- Don't forget to update keybindings-help.txt
 myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), spawn "dmenu_run")
+            , ((mod1Mask, xK_F4), kill)
+            , (((modm .|. controlMask .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((0, xF86XK_Sleep), spawn "sudo /usr/sbin/pm-suspend")
             , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
@@ -155,7 +158,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , (((modm .|. mod1Mask), xK_n), moveTo Next EmptyWS <+> spawn myBrowser)
             , (((modm .|. controlMask), xK_n), moveTo Next EmptyWS <+> spawn myTerminal)
             -- Window helpers
-            , (((modm .|. shiftMask), xK_BackSpace), nextMatch History (return True))
+            , (((modm .|. shiftMask), xK_BackSpace), nextMatch History (return True)) -- Is this necessary?!
             , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- shrink the master area
             , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the master area
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
