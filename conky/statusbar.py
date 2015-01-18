@@ -126,7 +126,7 @@ for cpu in range(1,int(numCpus)+1):
     f.write("^fg({})\\\n".format(colorschemeDimHex))
     f.write("${{if_match ${{cpu cpu{}}} > 50}}^fg({})${{endif}}\\\n".format(cpu, colorschemeGreyHex))
     f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg({})${{endif}}\\\n".format(cpu, colorschemeRedHex))
-    f.write("${{if_match ${{cpu cpu{}}} < 10}}^fg({})${{endif}}\\\n".format(cpu, colorschemeDarkHex))
+    f.write("${{if_match ${{cpu cpu{}}} < 15}}^fg({})${{endif}}\\\n".format(cpu, colorschemeDarkHex))
     f.write("^i({}/cpu.xbm) \\\n".format(imagesDir))
 # RAM
 f.write("^fg({})\\\n".format(colorschemeGreyHex))
