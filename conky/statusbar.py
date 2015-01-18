@@ -57,11 +57,10 @@ f.write("\nTEXT\n")
 
 ## Machine info
 distro = "arch"
-updateCheckInterval = "600"
+updateCheckInterval = "60"
 f.write("^fg({})${{nodename}}\\\n".format(colorschemeGreyHex))
 if distro == "arch":
-    f.write("${if_match ${texeci 10 /usr/bin/checkupdates | wc -l} > 0}\\\n")
-    # f.write("${if_match ${texeci {} /usr/bin/checkupdates | wc -l} > 0}\\\n".format(updateCheckInterval))
+    f.write("${{if_match ${{texeci {} /usr/bin/checkupdates | wc -l}} > 0}}\\\n".format(updateCheckInterval))
 # else:
     # something
 f.write("^fg({})".format(colorschemeFgHex))
@@ -73,7 +72,7 @@ if distro == "arch":
 else:
     f.write(" | \\\n")
 f.write("^fg({})${{kernel}}\\\n".format(colorschemeGreyHex))
-f.write(sectionSpacing)
+f.write("  \\\n")
 
 ## NETWORK
 # Retrieve interfaces
@@ -99,23 +98,32 @@ for interface in [intf.decode("utf-8") for intf in interfaces]:
         f.write("^fg({})\\\n".format(colorschemeFgHex))
         f.write("^i({}/ethernet.xbm)\\\n".format(imagesDir))
     f.write("^fg({})${{addr {}}}^fg({}) \\\n".format(colorschemeGreyHex, interface, colorschemeWhiteHex))
+    f.write("^fg({})${{if_match ${{downspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
+    f.write("^i({}/net_down.xbm)\\\n".format(imagesDir))
+    f.write("^fg({})${{if_match ${{upspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
+    f.write("^i({}/net_up.xbm)\\\n".format(imagesDir))
     f.write("${endif}\\\n")
 
 # Lastly, output the external IP
-f.write("^fg({})".format(colorschemeGreyHex))
+f.write("  ^fg({})".format(colorschemeGreyHex))
 f.write("(${texeci 3 wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \\< -f -1 | awk '{ print $1 }'})")
-f.write(" \\\n")
-f.write("^fg({})${{if_match ${{downspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
-f.write("^i({}/net_down.xbm)\\\n".format(imagesDir))
-f.write("^fg({})${{if_match ${{upspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
-f.write("^i({}/net_up.xbm)\\\n".format(imagesDir))
 f.write(sectionSpacing)
+
+## MEDIA
+f.write("${if_match ${texeci 2 amixer get Master | egrep '(Mono|Front)' | tail -1 | grep -c '\[off\]'} >= 1}\\\n")
+f.write("^fg({})${{else}}^fg({})${{endif}}".format(colorschemeDimHex, colorschemeFgHex))
+volumeSteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
+for i in volumeSteps:
+    f.write("${{if_match ${{texeci 1 amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\].*/\\1/g'}} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
+f.write("^i({}/volume_0.xbm)\\\n".format(imagesDir))
+for i in range(len(volumeSteps)):
+    f.write("${endif}")
 f.write(sectionSpacing)
 
 ## CPU & RAM
-# CPU
 numCpus = subprocess.check_output("grep -c 'processor' /proc/cpuinfo", shell=True).strip().decode("utf-8")
 if (infoFirehose):
+    # CPU
     f.write("^fg({})^i({}/cpu.xbm) \\\n".format(colorschemeGreyHex, imagesDir))
     for cpu in range(1,int(numCpus)+1):
         f.write("^fg({})\\\n".format(colorschemeWhiteHex))
@@ -128,6 +136,7 @@ if (infoFirehose):
     f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
     f.write("${memperc}%")
 else:
+    # CPU
     for cpu in range(1,int(numCpus)+1):
         f.write("^fg({})\\\n".format(colorschemeDimHex))
         f.write("${{if_match ${{cpu cpu{}}} > 50}}^fg({})${{endif}}\\\n".format(cpu, colorschemeGreyHex))
@@ -141,36 +150,11 @@ else:
     f.write("${{if_match ${{memperc}} >= 70}}^fg({})${{endif}}\\\n".format(colorschemeWhiteHex))
     f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
     f.write("  ^i({}/mem.xbm)\\\n".format(imagesDir))
-# Temp
-#f.write("  \\\n")
-#f.write("${if_match ${{acpitemp}} > 30}^fg({})^i({}/temp.xbm)}${else}".format(colorschemeWhiteHex))
-#f.write("${if_match ${{acpitemp}} > 80}^fg({})^i({}/temp.xbm)}${endif}".format(colorschemeRedHex))
-f.write(sectionSpacing)
-f.write("    \\\n")
+f.write(" \\\n")
 
-## MEDIA
-# f.write("^fg({})\\\n".format(colorschemeFgHex))
-# f.write("${if_match ${texeci 2 amixer get Master | grep Mono: | grep -c '\[off\]'} >= 1}\\\n")
-# f.write("^i({}/spkr_02.xbm)".format(imagesDir))
-# f.write("^fg({})".format(colorschemeDimHex))
-# f.write("${else}\\\n")
-# f.write("^i({}/spkr_01.xbm)".format(imagesDir))
-# f.write("^fg({})".format(colorschemeGreyHex))
-# f.write("${endif}\\\n")
-# f.write(" ${texeci 1 amixer get Master | tail -1 | cut -d'[' -f2 | cut -d']' -f1}   \\\n")
-
-# TODO: if headphones are plugged in, then use plug.xbm and the headphones level
-f.write("${if_match ${texeci 2 amixer get Master | grep Mono: | grep -c '\[off\]'} >= 1}\\\n")
-f.write("^fg({})".format(colorschemeDimHex))
-f.write("${else}\\\n")
-f.write("^fg({})".format(colorschemeFgHex))
-f.write("${endif}\\\n")
-volumeSteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
-for i in volumeSteps:
-    f.write("${{if_match ${{texeci 1 amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\].*/\\1/g'}} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
-f.write("^i({}/volume_0.xbm)\\\n".format(imagesDir))
-for i in range(len(volumeSteps)):
-    f.write("${endif}")
+# TEMP
+f.write("${{if_match ${{acpitemp}} > 65}}^fg({})^i({}/temp.xbm)${{else}}\\\n".format(colorschemeWhiteHex, imagesDir))
+f.write("${{if_match ${{acpitemp}} > 85}}^fg({})^i({}/temp.xbm)${{endif}}${{endif}}\\\n".format(colorschemeRedHex, imagesDir))
 f.write(sectionSpacing)
 # f.write("    \\\n")
 
@@ -178,8 +162,8 @@ f.write(sectionSpacing)
 f.write("^fg({})".format(colorschemeGreyHex))
 f.write("${{time %a}} ^fg({})${{time %d}} ^fg({})${{time %b}} \\\n".format(colorschemeFgHex, colorschemeDimHex))
 f.write("^fg({})${{time %H%M}}^fg({})\\\n".format(colorschemeWhiteHex, colorschemeWhiteHex))
-if (infoFirehose):
-    f.write("  ^fg({})${{uptime}}^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
+# if (infoFirehose):
+f.write("  ^fg({})${{uptime}}^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
 # f.write("   \\\n")
 f.write(sectionSpacing)
 
@@ -188,13 +172,19 @@ f.write("^fg({})\\\n".format(colorschemeDarkHex))
 f.write("${{if_match ${{battery_percent}} < 99}}^fg({})${{endif}}\\\n".format(colorschemeFgHex))
 f.write("${{if_match ${{battery_percent}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeYellowHex))
 f.write("${{if_match ${{battery_percent}} < 20}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
+f.write("${if_match ${battery_percent} < 10}${blink !}${endif}\\\n")
 batterySteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
 for i in batterySteps:
     f.write("${{if_match ${{battery_percent}} >= {}}}^i({}/battery_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
 f.write("^i({}/battery_0.xbm)\\\n".format(imagesDir))
 for i in range(len(batterySteps)):
     f.write("${endif}")
-f.write("\n")
+f.write("\\\n")
+
+# f.write("^fg({})".format(colorschemeFgHex))
+# f.write("   ${fs_free_perc /}\\\n")
+# f.write("   ${ibm_fan}\\\n")
+
 f.close()
 
 # os.system("cp {} /tmp/statusbar.conkyrc".format(conkyFile))

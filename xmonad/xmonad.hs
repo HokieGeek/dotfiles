@@ -39,7 +39,8 @@ import qualified Data.Map as M
 -- Local Variables {{{
 rangerExec = "export EDITOR=vim; " ++ myTerminal ++ " -e ranger"
 
-unmuteAllChannels = "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; "
+-- unmuteAllChannels = "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; "
+unmuteAllChannels = "amixer -q set Master unmute ; "
 
 modm = mod4Mask
 myTerminal = "urxvtc"
@@ -163,11 +164,11 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight -inc 20")
             , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -dec 20")
             -- Volume
-            , ((0, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer -c 0 -q set Master playback 3+"))
-            , ((shiftMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer -c 0 -q set Master playback 100"))
-            , ((0, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer -c 0 -q set Master playback 3-"))
-            , ((shiftMask, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer -c 0 -q set Master playback 30"))
-            , ((0, xF86XK_AudioMute), spawn "amixer -c 0 -q set Master toggle; amixer -c 0 -q set Speaker toggle; amixer -c 0 -q set Headphone toggle")
+            , ((0, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 3+"))
+            , ((shiftMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 100"))
+            , ((0, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 3-"))
+            , ((shiftMask, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 30"))
+            , ((0, xF86XK_AudioMute), spawn "amixer set Master toggle")
             , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer"))
             -- PrintScreen
             , ((0, xK_Print), spawn "scrot")
@@ -182,8 +183,9 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             -- , ((modm, xK_F10), addWorkspace "y")
             -- , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
 
-            -- ThinkPad specific binding (the black button)
-            , ((0, xF86XK_Launch1), spawn ("xmessage 'foobar'"))
+            -- ThinkPad-specific binding (the black button)
+            , ((0, xF86XK_Launch1), spawn myTerminal)
+            , ((shiftMask, xF86XK_Launch1), spawn myBrowser)
             ]
             ++
             [((m .|. modm, k), windows $ f i)
