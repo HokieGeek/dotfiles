@@ -17,6 +17,22 @@ git submodule update --init --recursive
 ### vim
 The following plugins are being used: https://github.com/HokieGeek/MahVimPlugins/blob/master/README.md
 
+#### List of commands and mappings defined in the vimrc
+##### Commands
+Scratch
+
+##### Mappings
+gh > :Scratch
+gsh > :Split
+gsv > :Vsplit
+gw > ctrl-w
+ga > :ArgsToggle
+gc > ctrl-]
+go > :TListToggle
+\\ > :Grep
+g\ > :Grep -b
+g/ > :Grep -a
+
 ### urxvt
 No scrollbar and transparent
 
