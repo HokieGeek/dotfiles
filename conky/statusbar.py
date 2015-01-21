@@ -119,15 +119,15 @@ for i in range(len(volumeSteps)):
     f.write("${endif}")
 f.write(sectionSpacing)
 
-## CPU & RAM
-numCpus = subprocess.check_output("grep -c 'processor' /proc/cpuinfo", shell=True).strip().decode("utf-8")
 # CPU
+numCpus = subprocess.check_output("grep -c 'processor' /proc/cpuinfo", shell=True).strip().decode("utf-8")
 for cpu in range(1,int(numCpus)+1):
     f.write("^fg({})\\\n".format(colorschemeDimHex))
     f.write("${{if_match ${{cpu cpu{}}} > 50}}^fg({})${{endif}}\\\n".format(cpu, colorschemeGreyHex))
     f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg({})${{endif}}\\\n".format(cpu, colorschemeRedHex))
     f.write("${{if_match ${{cpu cpu{}}} < 15}}^fg({})${{endif}}\\\n".format(cpu, colorschemeDarkHex))
     f.write("^i({}/cpu.xbm) \\\n".format(imagesDir))
+
 # RAM
 f.write("^fg({})\\\n".format(colorschemeGreyHex))
 f.write("${{if_match ${{memperc}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
