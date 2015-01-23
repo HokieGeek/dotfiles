@@ -22,16 +22,16 @@ The following plugins are being used: https://github.com/HokieGeek/MahVimPlugins
 Scratch
 
 ##### Mappings
-gh > :Scratch
-gsh > :Split
-gsv > :Vsplit
-gw > ctrl-w
-ga > :ArgsToggle
-gc > ctrl-]
-go > :TListToggle
-\\ > :Grep
-g\ > :Grep -b
-g/ > :Grep -a
+- gh > :Scratch
+- gsh > :Split
+- gsv > :Vsplit
+- gw > ctrl-w
+- ga > :ArgsToggle
+- gc > ctrl-]
+- go > :TListToggle
+- \\ > :Grep
+- g\ > :Grep -b
+- g/ > :Grep -a
 
 ### urxvt
 No scrollbar and transparent
