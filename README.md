@@ -32,6 +32,12 @@ Scratch
 - \\ > :Grep
 - g\ > :Grep -b
 - g/ > :Grep -a
+- <F9> > Save session
+- <leader><F9> > Save all window sessions
+- <F10> > Delete session
+- <leader><F10> > Load session
+- <F12> > Cycle colorschemes
+- <leader><F12> > Set specific colorscheme (herald)
 
 ### urxvt
 No scrollbar and transparent
