@@ -6,9 +6,8 @@ My personal linux config files
 
 ## Installation
 ``` sh
-git clone https://github.com/HokieGeek/dotfiles
+git clone --recursive https://github.com/HokieGeek/dotfiles
 cd dotfiles
-git submodule update --init --recursive
 ./setup.sh
 ```
 
