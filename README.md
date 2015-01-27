@@ -40,6 +40,46 @@ Scratch
 | &lt;leader&gt;&lt;F10&gt; | Load session |
 | &lt;F12&gt; | Cycle colorschemes |
 | &lt;leader&gt;&lt;F12&gt; | Set specific colorscheme (herald) |
+| &lt;count&gt;]b | Next buffer |
+| &lt;count&gt;[b | Previous buffer |
+| ]B | Last buffer |
+| [B | First buffer |
+| &lt;count&gt;]a | Next argument |
+| &lt;count&gt;[a | Previous argument |
+| ]A | Last argument |
+| [A | First argument |
+| &lt;count&gt;]q | Next quickfix item |
+| &lt;count&gt;[q | Previous quickfix item |
+| ]Q | Last quickfix item |
+| [Q | First quickfix item |
+| &lt;count&gt;]l | Next location item |
+| &lt;count&gt;[l | Previous location item |
+| ]L | Last location item |
+| [L | First location item |
+| con | Toggle relative number (if supported, else toggles number) |
+| coc | Toggles cursor line |
+| coC | Toggles cursor column (if supported) |
+| cow | Toggles word wrap |
+| cos | Toggles spelling |
+| col | Toggles displaying of special characters (tabs) |
+| cox | Toggles syntax highlighting |
+| cot | Toggles status bar |
+| cob | Toggles background (light/dark) |
+| coh | Toggles search highlighting |
+| cop | Toggles paste mode |
+| coF | Toggles folding |
+| cof | Enables syntax folding |
+| coff | Enables manual folding |
+| cofff | Enables marker folding |
+| jk | &lt;esc&gt; |
+| kj | &lt;esc&gt; |
+| ZZ | :wqa |
+| ZQ | :qa! |
+| &lt;space&gt; | : |
+| Y | Copy whole line |
+| n | (nzz) Centers screen on search hit |
+| jj | ctrl-n |
+| kk | ctrl-p |
 
 ### urxvt
 No scrollbar and transparent
