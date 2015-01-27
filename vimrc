@@ -381,9 +381,7 @@ augroup MiscOptions
         \   if getline(1) =~? '^#!' && executable('chmod') == 1 |
         \       silent! execute '!chmod +x "<afile>"' |
         \       edit |
-        \       if getline(1) !~? 'python' |
-        \           set filetype=sh |
-        \       endif |
+        \       filetype detect |
         \   endif |
         \   unlet! b:brand_new_file |
         \ endif
