@@ -22,22 +22,24 @@ The following plugins are being used: https://github.com/HokieGeek/MahVimPlugins
 Scratch
 
 ##### Mappings
-- gh > :Scratch
-- gsh > :Split
-- gsv > :Vsplit
-- gw > ctrl-w
-- ga > :ArgsToggle
-- gc > ctrl-]
-- go > :TListToggle
-- \\ > :Grep
-- g\ > :Grep -b
-- g/ > :Grep -a
-- <F9> > Save session
-- <leader><F9> > Save all window sessions
-- <F10> > Delete session
-- <leader><F10> > Load session
-- <F12> > Cycle colorschemes
-- <leader><F12> > Set specific colorscheme (herald)
+| Mapping | What it does |
+| ------- | ------------ |
+| gh | :Scratch |
+| gsh | :Split |
+| gsv | :Vsplit |
+| gw | ctrl-w |
+| ga | :ArgsToggle |
+| gc | ctrl-] |
+| go | :TListToggle |
+| \\\\ | :Grep |
+| g\ | :Grep -b |
+| g/ | :Grep -a |
+| &lt;F9&gt; | Save session |
+| &lt;leader&gt;&lt;F9&gt; | Save all window sessions |
+| &lt;F10&gt; | Delete session |
+| &lt;leader&gt;&lt;F10&gt; | Load session |
+| &lt;F12&gt; | Cycle colorschemes |
+| &lt;leader&gt;&lt;F12&gt; | Set specific colorscheme (herald) |
 
 ### urxvt
 No scrollbar and transparent
