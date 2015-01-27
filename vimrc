@@ -26,7 +26,7 @@ if g:have_plugins
     if has("win32unix") || has("win32") || has("win64") " Cygwin and windows can't handle it
         let g:que__vcs_section_enabled = 0
     endif
-    execute pathogen#infect()
+    silent! execute pathogen#infect()
     let g:syntastic_javascript_checkers = ['jslint']
 endif
 
