@@ -56,6 +56,7 @@ Scratch
 | ]L | Last location item |
 | [L | First location item |
 | con | Toggle relative number (if supported, else toggles number) |
+| coN | Toggles number and relative number |
 | coc | Toggles cursor line |
 | coC | Toggles cursor column (if supported) |
 | cow | Toggles word wrap |
