@@ -143,8 +143,7 @@ function! MyHighlights() " {{{
     " I like being able to spot my comments quickly
     highlight AFP ctermbg=darkblue ctermfg=red cterm=bold
     try
-        call matchadd("AFP", "AFP")
-        call matchadd("AFP", "afp")
+        call matchadd("AFP", "\cAFP")
     catch /E117:/
         match AFP /\cAFP/
     endtry
@@ -197,31 +196,32 @@ iabbrev afp]] [AFP]
 " }}}
 
 """ Keyboard mappings {{{
-"" Session saving (et.al.) " {{{
-nnoremap <silent> <F9> :call sessioner#save()<cr>
-nnoremap <silent> <leader><F9> :windo call sessioner#save()<cr>
-nnoremap <silent> <F10> :call sessioner#delete()<cr>
-nnoremap <silent> <leader><F10> :call sessioner#load()<cr>
-
+"" Some user stuff " {{{
 nnoremap <silent> <F12> :call CycleColorScheme()<cr>
 nnoremap <silent> <leader><F12> :colorscheme herald<cr>
-" }}}
 
-"" Some user stuff " {{{
 " A scratch space. Kinda useless, I think
 nnoremap <silent> gh :Scratch<cr>
 " nnoremap <silent> =" :Scratch<bar>put<bar>0d_<cr>
-" Split the term
-nnoremap <silent> gsh :Split<cr>
-nnoremap <silent> gsv :Vsplit<cr>
-
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
-nnoremap <silent> ga :ArgsToggle<cr>
-nnoremap <silent> gc <c-]>
+" nnoremap <silent> gc <c-]>
+" }}}
 
-"" Plugins
+"" Plugins " {{{
 if g:have_plugins
+    "" Session saving " {{{
+    nnoremap <silent> <F9> :call sessioner#save()<cr>
+    nnoremap <silent> <leader><F9> :windo call sessioner#save()<cr>
+    nnoremap <silent> <F10> :call sessioner#delete()<cr>
+    nnoremap <silent> <leader><F10> :call sessioner#load()<cr>
+    " }}}
+
+    " Split the term
+    nnoremap <silent> gsh :Split<cr>
+    nnoremap <silent> gsv :Vsplit<cr>
+
+    nnoremap <silent> ga :ArgsToggle<cr>
     nnoremap <silent> go :TlistToggle<cr>
 
     " Search current file
@@ -230,6 +230,8 @@ if g:have_plugins
     nnoremap <silent> g\ :Grep -b<space>
     " Search all files in current directory and down
     nnoremap <silent> g/ :Grep -a<space>
+
+    vmap <Enter> <Plug>(EasyAlign)
 endif
 " }}}
 
