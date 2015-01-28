@@ -232,6 +232,7 @@ if g:have_plugins
     nnoremap <silent> g/ :Grep -a<space>
 
     vmap <Enter> <Plug>(EasyAlign)
+    nmap ge <Plug>(EasyAlign)
 endif
 " }}}
 
