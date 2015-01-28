@@ -202,25 +202,24 @@ nnoremap <silent> <leader><F12> :colorscheme herald<cr>
 
 " A scratch space. Kinda useless, I think
 nnoremap <silent> gh :Scratch<cr>
-" nnoremap <silent> =" :Scratch<bar>put<bar>0d_<cr>
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
-" nnoremap <silent> gc <c-]>
+nnoremap <silent> gc <c-]>
 " }}}
 
 "" Plugins " {{{
 if g:have_plugins
-    "" Session saving " {{{
+    " Session saving
     nnoremap <silent> <F9> :call sessioner#save()<cr>
     nnoremap <silent> <leader><F9> :windo call sessioner#save()<cr>
     nnoremap <silent> <F10> :call sessioner#delete()<cr>
     nnoremap <silent> <leader><F10> :call sessioner#load()<cr>
-    " }}}
 
     " Split the term
     nnoremap <silent> gsh :Split<cr>
     nnoremap <silent> gsv :Vsplit<cr>
 
+    " Other random ones
     nnoremap <silent> ga :ArgsToggle<cr>
     nnoremap <silent> go :TlistToggle<cr>
 
