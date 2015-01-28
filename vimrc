@@ -50,7 +50,7 @@ set showcmd " Shows the command being typed
 set noshowmode " Don't show -- INSERT --
 set complete-=i " Don't search includes because they are slow
 set wildmenu " Tab completion in command-line mode (:)
-set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~,tags " These file types are ignored when doing auto completions
+set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~,tags,.hg,.git,*.pyc " These file types are ignored when doing auto completions
 set wildmode=list:longest,full
 set viminfo=h,%,'50,"100,<10000,s1000,/1000,:1000 " Remembers stuff. RTFM
 set history=1000
