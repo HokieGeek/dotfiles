@@ -28,8 +28,9 @@ Scratch
 | gsv | :Vsplit |
 | gw | ctrl-w |
 | ga | :ArgsToggle |
-| gc | ctrl-] |
 | go | :TListToggle |
+| ge | EasyAlign interactive mode |
+| (visual)&lt;Enter&gt; | EasyAlign interactive mode |
 | \\\\ | :Grep |
 | g\ | :Grep -b |
 | g/ | :Grep -a |
