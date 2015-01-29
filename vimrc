@@ -68,9 +68,11 @@ set smartcase " If search pattern uses upper case chars, make search case sensit
 set wrapscan " Searches wrap around the end of the file
 set nowrap " I prefer this. I can always turn wrap on when its necessary with the mapping below
 set linebreak " Wrap lines at convenient points
+execute "set showbreak=\u2937"
 set list " Displays unprintable characters (whitespace, essentially)
 " Define what symbols to use with unprintable characters
-execute "set listchars=tab:>>,trail:\uB7,extends:#,nbsp:_"
+execute "set listchars=tab:\u21C0\u21C0,trail:\uB7,extends:\u22EF,nbsp:_"
+execute "set fillchars=fold:\u2501,vert:\u2502"
 set splitright " When doing a vertical split, it puts it to the right of the current window
 set splitbelow " When doing a horizontal split, it puts it below the current window
 set diffopt+=iwhite " Vimdiff will ignore whitespace diffs
