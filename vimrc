@@ -205,6 +205,8 @@ nnoremap <silent> gh :Scratch<cr>
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
 nnoremap <silent> gc <c-]>
+
+cnoremap w!! w !sudo tee % >/dev/null
 " }}}
 
 "" Plugins " {{{
@@ -293,6 +295,11 @@ nnoremap <silent> cofff :setlocal foldenable foldmethod=marker<bar>echomsg &fold
 inoremap jk <esc>
 inoremap kj <esc>
 
+noremap j gj
+noremap k gk
+noremap gj j
+noremap gk k
+
 nnoremap ZZ :wqa<cr>
 nnoremap ZQ :qa!<cr>
 nnoremap <space> :
@@ -333,7 +340,9 @@ noremap <down> :echoerr "Use j instead! :-p"<cr>
 augroup FiletypeOptions
     autocmd!
 
-    autocmd BufNewFile,BufRead *.confluence set filetype=confluencewiki spell foldmethod=manual
+    autocmd BufNewFile,BufRead *.confluence set filetype=confluencewiki
+    autocmd FileType confluencewiki setlocal wrap linebreak nolist spell foldmethod=manual
+
     autocmd BufNewFile,BufRead *.conkyrc set filetype=conkyrc
     autocmd FileType markdown setlocal spell
     autocmd FileType gitcommit setlocal spell
