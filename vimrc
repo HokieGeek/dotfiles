@@ -302,7 +302,7 @@ noremap k gk
 noremap gj j
 noremap gk k
 
-nnoremap ZZ :wqa<cr>
+nnoremap ZZ :xa<cr>
 nnoremap ZQ :qa!<cr>
 nnoremap <space> :
 vnoremap <space> :
