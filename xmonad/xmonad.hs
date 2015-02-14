@@ -41,6 +41,9 @@ rangerExec = "export EDITOR=vim; " ++ myTerminal ++ " -e ranger"
 
 -- unmuteAllChannels = "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; "
 unmuteAllChannels = "amixer -q set Master unmute ; "
+xF86XK_AudioMicMute :: KeySym
+xF86XK_AudioMicMute = 0x1008ffb2
+-- xF86XK_AudioMicMute = 269025202
 
 modm = mod4Mask
 myTerminal = "urxvtc"
@@ -64,7 +67,8 @@ myAppGSMenu = [ ("Chrome", myBrowser)
               , ("MPC", myTerminal ++ " -e ncmpcpp")
               , ("VirtualBox", "virtualbox")
               -- , ("Ranger", rangerExec)
-              , ("Boardspace", myBrowser ++ " http://boardspace.net/cgi-bin/login.cgi?pname=HokieGeek&language=English")
+              -- , ("Boardspace", myBrowser ++ " http://boardspace.net/cgi-bin/login.cgi?pname=HokieGeek&language=English")
+              , ("Cheese", "cheese")
               , ("VLC", "vlc")
               , ("PlayOnLinux", "/usr/bin/playonlinux")
               , ("gVim", "gvim")
@@ -173,6 +177,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((shiftMask, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 30"))
             , ((0, xF86XK_AudioMute), spawn "amixer set Master toggle")
             , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer"))
+            , ((0, xF86XK_AudioMicMute), spawn "amixer set Capture toggle")
             -- PrintScreen
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
