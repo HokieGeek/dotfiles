@@ -13,7 +13,9 @@ filetype off
 filetype plugin indent off
 
 "" Add the Go plugins and such to the path
-set runtimepath+=$GOROOT/misc/vim
+if exists("$GOROOT")
+    execute "set runtimepath+=".expand("$GOROOT")."/misc/vim"
+endif
 
 "" Add the pathogen path to the rtp
 let g:have_plugins = 0
