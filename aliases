@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ## Random {{{
+[ -f `which nvim` ] && alias vim='nvim'
 alias vi='vim'
 alias buspirate='minicom buspirate'
 alias rn42='minicom rn42'
