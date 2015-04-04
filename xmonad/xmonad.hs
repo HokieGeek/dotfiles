@@ -168,8 +168,10 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
             , (((modm .|. controlMask), xK_k), rotSlavesUp)
             -- Backlight
-            , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight -inc 20")
-            , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -dec 20")
+            , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight -inc 5")
+            , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -dec 5")
+            , ((shiftMask, xF86XK_MonBrightnessUp), spawn "xbacklight -set 100")
+            , ((shiftMask, xF86XK_MonBrightnessDown), spawn "xbacklight -set 20")
             -- Volume
             , ((0, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 3+"))
             , ((shiftMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 100"))
@@ -178,15 +180,17 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((0, xF86XK_AudioMute), spawn "amixer set Master toggle")
             , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer"))
             , ((0, xF86XK_AudioMicMute), spawn "amixer set Capture toggle")
-            -- PrintScreen
-            , ((0, xK_Print), spawn "scrot")
-            , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
             -- Media
             , ((shiftMask, xF86XK_AudioPlay), spawn (myBrowser ++ " --new-window https://play.google.com/music/listen#/ap/queue"))
             , ((controlMask, xF86XK_AudioPlay), spawn (myBrowser ++ " --new-window http://pandora.com"))
             -- ((0, xF86XK_AudioStop), spawn "???")
             -- ((0, xF86XK_AudioPrev), spawn "???")
             -- ((0, xF86XK_AudioNext), spawn "???")
+            -- PrintScreen
+            , ((0, xK_Print), spawn "scrot")
+            , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
+            -- Other
+            -- , ((0, xF86XK_WebCam), spawn "sudo rfkill block bluetooth")
 
             -- , ((modm, xK_F10), addWorkspace "y")
             -- , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
