@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if [ `rfkill list | grep -A2 Bluetooth | grep -c "Soft.*yes"` -gt 0 ]; then
+    sudo rfkill unblock bluetooth
+else
+    sudo rfkill block bluetooth
+fi

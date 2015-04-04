@@ -182,7 +182,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
             -- Other
-            -- , ((0, xF86XK_WebCam), spawn "sudo rfkill block bluetooth")
+            , ((0, xF86XK_WebCam), spawn "$HOME/.bin/toggle-bluetooth")
 
             -- , ((modm, xK_F10), addWorkspace "y")
             -- , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
