@@ -43,22 +43,19 @@ rangerExec = "export EDITOR=vim; " ++ myTerminal ++ " -e ranger"
 unmuteAllChannels = "amixer -q set Master unmute ; "
 xF86XK_AudioMicMute :: KeySym
 xF86XK_AudioMicMute = 0x1008ffb2
--- xF86XK_AudioMicMute = 269025202
 
-modm = mod4Mask
-myTerminal = "urxvtc"
--- myBrowser = "chromium-dev"
-myBrowser = "google-chrome-stable"
+modm            = mod4Mask
+myTerminal      = "urxvtc"
+myBrowser       = "google-chrome-stable"
 colorForeground = "#9F0AC4"
-colorDimmed = "#9F0AC4"
+colorDimmed     = "#9F0AC4"
 colorBackground = "#1B1D1E"
-font = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
+font            = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 
-myWorkspaces = ["1","2","3","4","5","6","7","8","9","0","-","="]
+myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
 myAppGSMenu = [ ("Chrome", myBrowser)
-              -- , ("Netflix", "netflix-desktop")
               , ("Netflix", myBrowser ++ " --new-window http://netflix.com")
               , ("Irssi", myTerminal ++ " -e irssi")
               , ("Gimp", "gimp")
@@ -67,18 +64,13 @@ myAppGSMenu = [ ("Chrome", myBrowser)
               , ("MPC", myTerminal ++ " -e ncmpcpp")
               , ("VirtualBox", "virtualbox")
               -- , ("Ranger", rangerExec)
-              -- , ("Boardspace", myBrowser ++ " http://boardspace.net/cgi-bin/login.cgi?pname=HokieGeek&language=English")
               , ("Cheese", "cheese")
               , ("VLC", "vlc")
               , ("PlayOnLinux", "/usr/bin/playonlinux")
               , ("gVim", "gvim")
-              , ("Alsa Mixer", myTerminal ++ " -e alsamixer")
-              -- , ("Boardspace", "firefox http://boardspace.net/cgi-bin/login.cgi?pname=HokieGeek&language=English")
               -- , ("Steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
-              -- , ("Deluge", "deluge")
-              -- , ("minicom", myTerminal ++ " -e minicom") -- specific menu for the two configs
+              -- , ("minicom", myTerminal ++ " -e minicom") -- TODO: specific menu for the two configs
               ]
--- gamesMenu = [
 --}}}
 
 -- Local Methods {{{
@@ -209,26 +201,26 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
 --}}}
 
 -- Main {{{
-compmgr = "xcompmgr"
+compmgr   = "xcompmgr"
 barheight = "16"
-screenwidth_cmd = "xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1"
+screenwidth_cmd    = "xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1"
 workspaceStatusBar = "sleep 3s; dzen2 -fn '" ++ font ++ "' -x '0' -y '0' -h '" ++ barheight ++ "' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
-conkyStatusBar = "~/.conky/statusbar.py --color-fg '" ++ colorForeground ++ "' > /tmp/xmonad.conkyrc && conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '0' -w `" ++ screenwidth_cmd ++ "` -h '" ++ barheight ++ "' -ta 'r' -bg '" ++ colorBackground ++ "' -fg '#FFFFFF' -fn '" ++ font ++ "'"
+conkyStatusBar     = "~/.conky/statusbar.py --color-fg '" ++ colorForeground ++ "' > /tmp/xmonad.conkyrc && conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '0' -w `" ++ screenwidth_cmd ++ "` -h '" ++ barheight ++ "' -ta 'r' -bg '" ++ colorBackground ++ "' -fg '#FFFFFF' -fn '" ++ font ++ "'"
 main = do
         compMgrStart <- spawn compmgr
         dzenRightBar <- spawn conkyStatusBar
         dzenLeftBar  <- spawnPipe workspaceStatusBar
         xmonad $ withUrgencyHook dzenUrgencyHook { args = ["-bg", colorForeground, "-xs", "1"] }
                $ defaultConfig
-            { workspaces = myWorkspaces
-            , terminal = myTerminal
-            , modMask = modm
+            { workspaces        = myWorkspaces
+            , terminal          = myTerminal
+            , modMask           = modm
             , focusFollowsMouse = False
-            , borderWidth = 0
-            , manageHook = myManageHook
-            , layoutHook = myLayoutHook
-            , logHook = myLogHook dzenLeftBar
-            , handleEventHook = myHandleEventHook
+            , borderWidth       = 0
+            , manageHook        = myManageHook
+            , layoutHook        = myLayoutHook
+            , logHook           = myLogHook dzenLeftBar
+            , handleEventHook   = myHandleEventHook
             }
             `additionalKeys` myKeys
 --}}}
