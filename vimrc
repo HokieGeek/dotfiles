@@ -352,6 +352,7 @@ augroup FiletypeOptions
     autocmd FileType confluencewiki setlocal wrap linebreak nolist spell foldmethod=manual
 
     autocmd BufNewFile,BufRead *.conkyrc set filetype=conkyrc
+    autocmd BufNewFile,BufRead SConstruct set filetype=python
     autocmd FileType markdown setlocal spell
     autocmd FileType gitcommit setlocal spell
     autocmd Filetype make setlocal noexpandtab nolist
