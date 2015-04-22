@@ -53,5 +53,6 @@ shopt -s histappend
 shopt -s cmdhist
 
 export PATH=${PATH}:${HOME}/.bin
+export EDITOR="nvim"
 
 . $HOME/.bin/prompt.sh

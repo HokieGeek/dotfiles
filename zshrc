@@ -43,7 +43,7 @@ setopt hist_ignore_all_dups hist_ignore_space
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 export PATH=${PATH}:${HOME}/.bin
-export EDITOR="vim"
+export EDITOR="nvim"
 bindkey -M vicmd v edit-command-line
 
 [ -e /usr/share/doc/pkgfile/command-not-found.zsh ] && source /usr/share/doc/pkgfile/command-not-found.zsh
