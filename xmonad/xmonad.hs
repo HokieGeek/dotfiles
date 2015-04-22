@@ -183,7 +183,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
             -- Other
             , ((0, xF86XK_WebCam), spawn "$HOME/.bin/toggle-bluetooth")
-            , (((mod1Mask .|. controlMask), xK_l), spawn "xlock -mode pyro2")
+            , (((mod1Mask .|. controlMask), xK_l), spawn "slock")
 
             -- , ((modm, xK_F10), addWorkspace "y")
             -- , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
