@@ -133,7 +133,7 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 -- Keybindings {{{
 -- Don't forget to update keybindings-help.txt
 myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
-            , ((modm, xK_a), spawn "dmenu_run")
+            , ((modm, xK_a), spawn "dmenu_run -fn '" ++ font ++ "' -nb '" ++ colorBackground ++ "' -nf '#FFFFFF'")
             , ((mod1Mask, xK_F4), kill)
             , (((modm .|. controlMask .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
@@ -183,6 +183,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
             -- Other
             , ((0, xF86XK_WebCam), spawn "$HOME/.bin/toggle-bluetooth")
+            , (((mod1Mask .|. controlMask), xK_l), spawn "xlock -mode pyro2")
 
             -- , ((modm, xK_F10), addWorkspace "y")
             -- , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
