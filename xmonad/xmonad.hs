@@ -37,7 +37,7 @@ import qualified Data.Map as M
 -- }}}
 
 -- Local Variables {{{
-rangerExec = "export EDITOR=vim; " ++ myTerminal ++ " -e ranger"
+rangerExec = "export EDITOR=nvim; " ++ myTerminal ++ " -e ranger"
 
 -- unmuteAllChannels = "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; "
 unmuteAllChannels = "amixer -q set Master unmute ; "
@@ -63,7 +63,7 @@ myAppGSMenu = [ ("Chrome", myBrowser)
               , ("Eclipse", "eclipse")
               , ("MPC", myTerminal ++ " -e ncmpcpp")
               , ("VirtualBox", "virtualbox")
-              -- , ("Ranger", rangerExec)
+              , ("Ranger", rangerExec)
               , ("Cheese", "cheese")
               , ("VLC", "vlc")
               , ("PlayOnLinux", "/usr/bin/playonlinux")
