@@ -8,15 +8,15 @@ prompt_gitInfo() {
     branch=`git branch | grep "^*" | sed "s/^\*\s*//"`
     echo -n "${branch}"
 
-    status_out=`git status -sb -uno`
+    status_out=`git --porcelain status -sb -uno 2>/dev/null`
 
     # Add a symbol if local needs to be updated with remote
-    isBehind=`echo ${status_out} | grep "##" | grep -c behind`
+    isBehind=`echo ${status_out} | grep -c "##.*\[behind.*\]"`
     [ $isBehind -gt 0 ] && echo -n '\[\e[01;35m\]◂\[\e[0m'
 
 
     # Add a symbol if changes need to be pushed
-    isAhead=`echo ${status_out} | grep "##" | grep -c ahead`
+    isAhead=`echo ${status_out} | grep -c "##.*\[ahead.*\]"`
     [ $isAhead -gt 0 ] && echo -n '\[\e[01;35m\]▸\[\e[0m'
 
     # Add a symbol if modified files
