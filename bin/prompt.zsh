@@ -34,15 +34,15 @@ prompt_gitInfo() {
     branch=`git branch | grep "^*" | sed "s/^\*\s*//"`
     info="${info}${branch}"
 
-    status_out=`git status -sb -uno`
+    status_out=`git status --porcelain -sb -uno 2>/dev/null`
 
     # Add indicator if repository is behind remote
-    isBehind=`echo $status_out | grep "##" | grep -c 'behind'`
+    isBehind=`echo $status_out | grep -c "##.*\[behind.*\]'`
     [ $isBehind -gt 0 ] && info=${info}"%{$fg_no_bold[yellow]%}◂%{$reset_color%}"
     # U+25C2 - ◂
 
     # Add indicator if there are unpushed changes
-    isAhead=`echo $status_out | grep "##" | grep -c 'ahead'`
+    isAhead=`echo $status_out | grep -c "##.*\[ahead.*\]"`
     [ $isAhead -gt 0 ] && info=${info}"%{$fg_no_bold[yellow]%}▸%{$reset_color%}"
     # U+25B8 - ▸
 
