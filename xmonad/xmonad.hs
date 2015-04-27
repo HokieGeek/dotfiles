@@ -4,6 +4,7 @@ import Data.IORef
 import Control.Monad(liftM2)
 
 import Graphics.X11.ExtraTypes.XF86
+import Graphics.X11.ExtraTypes.XorgDefault
 
 import System.IO
 
@@ -154,7 +155,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , (((modm .|. mod1Mask), xK_n), moveTo Next EmptyWS <+> spawn myBrowser)
             , (((modm .|. controlMask), xK_n), moveTo Next EmptyWS <+> spawn myTerminal)
             -- Window helpers
-            , (((modm .|. shiftMask), xK_BackSpace), nextMatch History (return True)) -- Is this necessary?!
+            , ((modm .|. xK_grave), nextMatch History (return True)) -- Is this necessary?!
             , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- shrink the master area
             , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the master area
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
