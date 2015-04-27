@@ -16,7 +16,7 @@ Win+Shift+x Switch to selected workspace
 -- Workspace helpers
 Win+Alt+k       Previous workspace
 Win+Alt+j       Next workspace
-Win+Shift+`     Switch to last workspace
+Win+`           Switch to last workspace
 
 Win+n       Switch to next empty workspace
 Win+Alt+n   Switch to next empty workspace and launch browser
@@ -29,7 +29,7 @@ Win+[0..9,-,=]       Switch to indicated workspace
 Win+Ctrl+[0..9,-,=]  Swap current workspace with indicated workspace
 
 -- Window helpers
-Win+`                   Switch to last window
+Win+Shift+`             Switch to last window
 Win+Shift+n             Move window to next empty workspace
 Win+Shift+[0..9,-,=]    Move window to indicated workspace
 
