@@ -149,13 +149,13 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , (((modm .|. mod1Mask), xK_j), nextWS)
             , (((modm .|. shiftMask), xK_k), moveTo Prev NonEmptyWS)
             , (((modm .|. shiftMask), xK_j), moveTo Next NonEmptyWS)
-            , (((modm .|. shiftMask), xK_grave), toggleWS)
+            , ((modm, xK_grave), toggleWS)
             , ((modm, xK_n), moveTo Next EmptyWS)
             , (((modm .|. shiftMask), xK_n), shiftTo Next EmptyWS)
             , (((modm .|. mod1Mask), xK_n), moveTo Next EmptyWS <+> spawn myBrowser)
             , (((modm .|. controlMask), xK_n), moveTo Next EmptyWS <+> spawn myTerminal)
             -- Window helpers
-            , ((modm, xK_grave), nextMatch History (return True))
+            , (((modm .|. shiftMask), xK_grave), nextMatch History (return True))
             , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- shrink the master area
             , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the master area
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
