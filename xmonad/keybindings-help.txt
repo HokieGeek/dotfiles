@@ -1,42 +1,42 @@
 -- General
-Win+w   Cycle wallpapers
+Super+w   Cycle wallpapers
 Alt+F4  Kill current window
 
-Win+a                   Launch dmenu
+Super+a                   Launch dmenu
 Ctrl+Shift+Esc          Launch htop
 Shift+Mute              Launches Alsa mixer
 BlackButton             Launch terminal
 shiftMask+BlackButton   Launch browser
 
 -- Grid Select
-Win+z       Launch selected application
-Win+x       Switch to selected window
-Win+Shift+x Switch to selected workspace
+Super+z       Launch selected application
+Super+x       Switch to selected window
+Super+Shift+x Switch to selected workspace
 
 -- Workspace helpers
-Win+Alt+k       Previous workspace
-Win+Alt+j       Next workspace
-Win+`           Switch to last workspace
+Super+Alt+k       Previous workspace
+Super+Alt+j       Next workspace
+Super+`           Switch to last workspace
 
-Win+n       Switch to next empty workspace
-Win+Alt+n   Switch to next empty workspace and launch browser
-Win+Ctrl+n  Switch to next empty workspace and launch terminal
+Super+n       Switch to next empty workspace
+Super+Alt+n   Switch to next empty workspace and launch browser
+Super+Ctrl+n  Switch to next empty workspace and launch terminal
 
-Win+Shift+k Switch to previous non-empty workspace
-Win+Shift+j Switch to next non-empty workspace
+Super+Shift+k Switch to previous non-empty workspace
+Super+Shift+j Switch to next non-empty workspace
 
-Win+[0..9,-,=]       Switch to indicated workspace
-Win+Ctrl+[0..9,-,=]  Swap current workspace with indicated workspace
+Super+[0..9,-,=]       Switch to indicated workspace
+Super+Ctrl+[0..9,-,=]  Swap current workspace with indicated workspace
 
 -- Window helpers
-Win+Shift+`             Switch to last window
-Win+Shift+n             Move window to next empty workspace
-Win+Shift+[0..9,-,=]    Move window to indicated workspace
+Super+Shift+`             Switch to last window
+Super+Shift+n             Move window to next empty workspace
+Super+Shift+[0..9,-,=]    Move window to indicated workspace
 
-Win+Shift+h Shrink the master area
-Win+Shift+l Expand the master area
-Win+Ctrl+j  Move current slave window down
-Win+Ctrl+k  Move current slave window up
+Super+Shift+h Shrink the master area
+Super+Shift+l Expand the master area
+Super+Ctrl+j  Move current slave window down
+Super+Ctrl+k  Move current slave window up
 
 -- Media controls
 Shift+RaiseVolume   Raise volume to 100%
