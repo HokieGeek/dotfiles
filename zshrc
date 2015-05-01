@@ -48,5 +48,8 @@ bindkey -M vicmd v edit-command-line
 
 [ -e /usr/share/doc/pkgfile/command-not-found.zsh ] && source /usr/share/doc/pkgfile/command-not-found.zsh
 
-. $HOME/.bin/prompt.zsh
 . $HOME/.aliases
+. $HOME/.shell-plugins/prompt.zsh
+
+## This has to be on the end, apparently
+. $HOME/.shell-plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
