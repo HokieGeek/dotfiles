@@ -38,7 +38,6 @@ import qualified Data.Map as M
 -- }}}
 
 -- Local Variables {{{
-rangerExec = "export EDITOR=nvim; " ++ myTerminal ++ " -e ranger"
 
 -- unmuteAllChannels = "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; "
 unmuteAllChannels = "amixer -q set Master unmute ; "
@@ -56,19 +55,19 @@ font            = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
-myAppGSMenu = [ ("Chrome", myBrowser)
+myAppGSMenu = [ ("Browser", myBrowser)
               , ("Netflix", myBrowser ++ " --new-window http://netflix.com")
               , ("Irssi", myTerminal ++ " -e irssi")
-              , ("Gimp", "gimp")
+              -- , ("Gimp", "gimp")
               , ("Skype", "apulse32 skype")
-              , ("Eclipse", "eclipse")
+              -- , ("Eclipse", "eclipse")
               , ("MPC", myTerminal ++ " -e ncmpcpp")
-              , ("VirtualBox", "virtualbox")
-              , ("Ranger", rangerExec)
-              , ("Cheese", "cheese")
-              , ("VLC", "vlc")
-              , ("PlayOnLinux", "/usr/bin/playonlinux")
-              , ("gVim", "gvim")
+              -- , ("VirtualBox", "virtualbox")
+              , ("Ranger", ("export EDITOR=vim; " ++ myTerminal ++ " -e ranger"))
+              -- , ("Cheese", "cheese")
+              -- , ("VLC", "vlc")
+              -- , ("PlayOnLinux", "/usr/bin/playonlinux")
+              -- , ("gVim", "gvim")
               -- , ("Steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
               -- , ("minicom", myTerminal ++ " -e minicom") -- TODO: specific menu for the two configs
               ]
