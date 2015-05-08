@@ -52,6 +52,8 @@ colorDimmed     = "#9F0AC4"
 colorBackground = "#1B1D1E"
 font            = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 
+dmenuArgs = ["-fn", font, "-nb", colorBackground, "-nf", "#FFFFFF", "-sb", colorForeground]
+
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
@@ -133,7 +135,8 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 -- Keybindings {{{
 -- Don't forget to update keybindings-help.txt
 myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
-            , ((modm, xK_a), spawn ("dmenu_run -fn '" ++ font ++ "' -nb '" ++ colorBackground ++ "' -nf '#FFFFFF' -sb '" ++ colorForeground ++ "'"))
+            -- , ((modm, xK_a), spawn ("dmenu_run -fn '" ++ font ++ "' -nb '" ++ colorBackground ++ "' -nf '#FFFFFF' -sb '" ++ colorForeground ++ "'"))
+            , ((modm, xK_a), safeSpawn "dmenu_run" dmenuArgs)
             , ((mod1Mask, xK_F4), kill)
             , (((modm .|. controlMask .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
@@ -141,8 +144,9 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
             -- GridSelect
             , ((modm, xK_z), mySpawnSelected myAppGSMenu)
+            , (((modm .|. shiftMask), xK_z), menuMapArgs "dmenu" dmenuArgs M.fromList myAppGSMenu >>=flip whenJust spawn)
             , ((modm, xK_x), goToSelected defaultGSConfig)
-            , (((modm .|. shiftMask), xK_x), gridselectWorkspace defaultGSConfig (\ws -> W.greedyView ws . W.shift ws))
+            -- , (((modm .|. shiftMask), xK_x), gridselectWorkspace defaultGSConfig (\ws -> W.greedyView ws . W.shift ws))
             -- Workspace helpers
             , (((modm .|. mod1Mask), xK_k), prevWS)
             , (((modm .|. mod1Mask), xK_j), nextWS)
@@ -178,19 +182,18 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             -- ((0, xF86XK_AudioStop), spawn "???")
             -- ((0, xF86XK_AudioPrev), spawn "???")
             -- ((0, xF86XK_AudioNext), spawn "???")
-            -- PrintScreen
+            -- Other
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
-            -- Other
-            , ((0, xF86XK_WebCam), spawn "$HOME/.bin/toggle-bluetooth")
             , (((mod1Mask .|. controlMask), xK_l), spawn "slock")
-
-            -- , ((modm, xK_F10), addWorkspace "y")
-            -- , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
-
+            -- , ((0, xF86XK_WebCam), spawn "$HOME/.bin/toggle-bluetooth")
+            
             -- ThinkPad-specific binding (the black button)
             , ((0, xF86XK_Launch1), spawn myTerminal)
             , ((shiftMask, xF86XK_Launch1), spawn myBrowser)
+           
+            -- , ((modm, xK_F10), addWorkspace "y")
+            -- , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
             ]
             ++
             [((m .|. modm, k), windows $ f i)
@@ -205,7 +208,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
 compmgr   = "xcompmgr"
 barheight = "16"
 screenwidth_cmd    = "xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1"
-workspaceStatusBar = "sleep 3s; dzen2 -fn '" ++ font ++ "' -x '0' -y '0' -h '" ++ barheight ++ "' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
+workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ font ++ "' -x '0' -y '0' -h '" ++ barheight ++ "' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
 conkyStatusBar     = "~/.conky/statusbar.py --color-fg '" ++ colorForeground ++ "' > /tmp/xmonad.conkyrc && conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '0' -w `" ++ screenwidth_cmd ++ "` -h '" ++ barheight ++ "' -ta 'r' -bg '" ++ colorBackground ++ "' -fg '#FFFFFF' -fn '" ++ font ++ "'"
 main = do
         compMgrStart <- spawn compmgr
