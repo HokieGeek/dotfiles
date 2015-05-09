@@ -33,7 +33,7 @@ gtrack() {
         server=$1
         branch=$2
     }
-    git branch --set-to-upstream=${remote}/${branch} ${branch}
+    git branch --set-upstream-to=${remote}/${branch} ${branch}
 }
 alias gp='git pull'
 alias smgp='gp && git submodule foreach --recursive "git pull"'
