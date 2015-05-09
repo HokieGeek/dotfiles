@@ -50,7 +50,7 @@ xF86XK_AudioMicMute = 0x1008ffb2
 modm            = mod4Mask
 myTerminal      = "urxvtc"
 myBrowser       = "google-chrome-stable"
-colorForeground = "#9f0ac4"
+colorForeground = "#5f0087"
 colorBackground = "#1b1d1e"
 font            = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 

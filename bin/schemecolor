@@ -7,7 +7,7 @@
 }
 
 case ${1} in
-    purple) fg_hex="#9f0ac4"; fg_xterm="55"; ;;
+    purple) fg_hex="#5f0087"; fg_xterm="55"; ;;
      green) fg_hex="#008700"; fg_xterm="28"; ;;
     orange) fg_hex="#af5f00"; fg_xterm="130"; ;;
        red) fg_hex="#870000"; fg_xterm="88"; ;;
