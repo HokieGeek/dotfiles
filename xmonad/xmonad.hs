@@ -16,7 +16,9 @@ import XMonad.Actions.GridSelect
 import XMonad.Actions.GroupNavigation -- historyHook
 import XMonad.Actions.RotSlaves
 import XMonad.Actions.SwapWorkspaces
+import XMonad.Actions.Promote
 import XMonad.Actions.UpdatePointer
+import XMonad.Actions.WindowBringer
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops --fullScreenEventHook
 import XMonad.Hooks.FadeInactive
@@ -27,6 +29,7 @@ import XMonad.Hooks.UrgencyHook
 import XMonad.Layout.MagicFocus
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.ResizableTile
+import XMonad.Util.Dmenu
 import XMonad.Util.Run
 import XMonad.Util.EZConfig
 
@@ -57,20 +60,14 @@ dmenuArgs = ["-fn", font, "-nb", colorBackground, "-nf", "#FFFFFF", "-sb", color
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
-myAppGSMenu = [ ("Browser", myBrowser)
-              , ("Netflix", myBrowser ++ " --new-window http://netflix.com")
-              , ("Irssi", myTerminal ++ " -e irssi")
-              -- , ("Gimp", "gimp")
-              , ("Skype", "apulse32 skype")
-              -- , ("Eclipse", "eclipse")
-              , ("MPC", myTerminal ++ " -e ncmpcpp")
-              -- , ("VirtualBox", "virtualbox")
-              , ("Ranger", ("export EDITOR=vim; " ++ myTerminal ++ " -e ranger"))
-              -- , ("Cheese", "cheese")
-              -- , ("VLC", "vlc")
-              -- , ("PlayOnLinux", "/usr/bin/playonlinux")
-              -- , ("gVim", "gvim")
-              -- , ("Steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
+myDmenuMap = M.fromList
+              [ ("browser", myBrowser)
+              , ("netflix", myBrowser ++ " --new-window http://netflix.com")
+              , ("irssi", myTerminal ++ " -e irssi")
+              , ("skype", "apulse32 skype")
+              , ("mpc", myTerminal ++ " -e ncmpcpp")
+              , ("ranger", ("export EDITOR=vim; " ++ myTerminal ++ " -e ranger"))
+              -- , ("steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
               -- , ("minicom", myTerminal ++ " -e minicom") -- TODO: specific menu for the two configs
               ]
 --}}}
@@ -88,17 +85,19 @@ myManageHook = composeAll
     [ isFullscreen --> doFullFloat
     , className =? "Xmessage"   --> doCenterFloat
     , className =? "Gimp"       --> viewShift "-"
-    , className =? "VASSAL-launch-ModuleManager"  --> doFloat <+> doShift "="
-    , className =? "VASSAL-launch-Player" --> doFloat <+> doShift "="
+    , className =? "VASSAL-launch-ModuleManager"    --> doFloat <+> doShift "="
+    , className =? "VASSAL-launch-Player"           --> doFloat <+> doShift "="
+    , className =? "st-256color" --> (ask >>= \w -> liftX (setOpacity w 0x11111111) >> idHook)
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat -- Hangouts
-    , appName =? "crx_hmjkmjkepdijhoojdojkdfohbdgmmhki" --> viewShift "1" -- Google Keep
     ] <+> manageDocks
     where
         viewShift = doF . liftM2 (.) W.greedyView W.shift
+        -- doTrans i = ask >>= \w -> liftX (setOpacity w i) >> idHook
+    -- , className =? "st-256color"         --> doTrans 0x99999999
 -- }}}
 -- Log {{{
 myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
-                                            >> fadeInactiveLogHook 0.5
+                                            >> fadeInactiveLogHook 0.4
                                             >> updatePointer (Relative 1 1)
 
 myDzen h = defaultPP
@@ -135,18 +134,17 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 -- Keybindings {{{
 -- Don't forget to update keybindings-help.txt
 myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
-            -- , ((modm, xK_a), spawn ("dmenu_run -fn '" ++ font ++ "' -nb '" ++ colorBackground ++ "' -nf '#FFFFFF' -sb '" ++ colorForeground ++ "'"))
             , ((modm, xK_a), safeSpawn "dmenu_run" dmenuArgs)
+            , ((modm, xK_Return), promote)
             , ((mod1Mask, xK_F4), kill)
             , (((modm .|. controlMask .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((0, xF86XK_Sleep), spawn "sudo /usr/sbin/pm-suspend")
             , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
-            -- GridSelect
-            , ((modm, xK_z), mySpawnSelected myAppGSMenu)
-            , (((modm .|. shiftMask), xK_z), menuMapArgs "dmenu" dmenuArgs M.fromList myAppGSMenu >>=flip whenJust spawn)
+            -- Launcher menus
+            , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs myDmenuMap >>=flip whenJust spawn)
             , ((modm, xK_x), goToSelected defaultGSConfig)
-            -- , (((modm .|. shiftMask), xK_x), gridselectWorkspace defaultGSConfig (\ws -> W.greedyView ws . W.shift ws))
+            , (((modm .|. shiftMask), xK_x), gotoMenu)
             -- Workspace helpers
             , (((modm .|. mod1Mask), xK_k), prevWS)
             , (((modm .|. mod1Mask), xK_j), nextWS)
@@ -158,9 +156,8 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , (((modm .|. mod1Mask), xK_n), moveTo Next EmptyWS <+> spawn myBrowser)
             , (((modm .|. controlMask), xK_n), moveTo Next EmptyWS <+> spawn myTerminal)
             -- Window helpers
-            , (((modm .|. shiftMask), xK_grave), nextMatch History (return True))
-            , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- shrink the master area
-            , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the master area
+            , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- shrink the slave area
+            , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the slave area
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
             , (((modm .|. controlMask), xK_k), rotSlavesUp)
             -- Backlight
@@ -187,12 +184,12 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
             , (((mod1Mask .|. controlMask), xK_l), spawn "slock")
             -- , ((0, xF86XK_WebCam), spawn "$HOME/.bin/toggle-bluetooth")
-            
+
             -- ThinkPad-specific binding (the black button)
             , ((0, xF86XK_Launch1), spawn myTerminal)
             , ((shiftMask, xF86XK_Launch1), spawn myBrowser)
-           
-            -- , ((modm, xK_F10), addWorkspace "y")
+
+            -- , ((modm, xK_F10), addWorkspace "GIMP")
             -- , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
             ]
             ++

@@ -2,16 +2,16 @@
 Super+w   Cycle wallpapers
 Alt+F4  Kill current window
 
-Super+a                   Launch dmenu
+Super+a                 Launch dmenu
 Ctrl+Shift+Esc          Launch htop
-Shift+Mute              Launches Alsa mixer
+Shift+Mute              Launch Alsa mixer
 BlackButton             Launch terminal
 shiftMask+BlackButton   Launch browser
 
 -- Grid Select
 Super+z       Launch selected application
+Super+Shift+z Launch selected application
 Super+x       Switch to selected window
-Super+Shift+x Switch to selected workspace
 
 -- Workspace helpers
 Super+Alt+k       Previous workspace
@@ -29,12 +29,11 @@ Super+[0..9,-,=]       Switch to indicated workspace
 Super+Ctrl+[0..9,-,=]  Swap current workspace with indicated workspace
 
 -- Window helpers
-Super+Shift+`             Switch to last window
 Super+Shift+n             Move window to next empty workspace
 Super+Shift+[0..9,-,=]    Move window to indicated workspace
 
-Super+Shift+h Shrink the master area
-Super+Shift+l Expand the master area
+Super+Shift+h Shrink the slave area
+Super+Shift+l Expand the slave area
 Super+Ctrl+j  Move current slave window down
 Super+Ctrl+k  Move current slave window up
 
