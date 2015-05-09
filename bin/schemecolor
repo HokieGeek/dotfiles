@@ -1,0 +1,32 @@
+#!/bin/sh
+
+[ $# -le 0 ] && {
+    colors=$(awk -F')' '$0 ~ /^\s*[a-z]*)/ { print $1 }' $0 | xargs | sed 's/\s/|/g')
+    echo "USAGE: $(basename $0) [${colors}]"
+    exit 1
+}
+
+case ${1} in
+    purple) fg_hex="#9f0ac4"; fg_xterm="55"; ;;
+     green) fg_hex="#008700"; fg_xterm="28"; ;;
+    orange) fg_hex="#af5f00"; fg_xterm="130"; ;;
+       red) fg_hex="#870000"; fg_xterm="88"; ;;
+     white) fg_hex="#ffffff"; fg_xterm="231"; ;;
+      blue) fg_hex="#000087"; fg_xterm="18"; ;;
+         *) echo "ERROR: You're smoking crack"
+            exit 2
+            ;;
+esac
+
+## Update tmux
+sed \
+    -e "/window-status-current-format/s/colour[0-9]*/colour${fg_xterm}/" \
+    -e "/pane-active-border-fg/s/colour[0-9]*/colour${fg_xterm}/" \
+    -e "/message-bg/s/colour[0-9]*/colour${fg_xterm}/" \
+    -i $(readlink ~/.tmux.conf)
+tmux source-file ~/.tmux.conf >/dev/null 2>&1
+
+
+## Update xmonad
+sed "/colorForeground = /s/\".*\"/\"${fg_hex}\"/g" -i ~/.xmonad/xmonad.hs
+~/.xmonad/restart
