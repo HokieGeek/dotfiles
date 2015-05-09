@@ -72,13 +72,6 @@ myDmenuMap = M.fromList
               ]
 --}}}
 
--- Local Methods {{{
--- http://ixti.net/software/2013/09/07/xmonad-action-gridselect-spawnselected-with-nice-titles.html
-mySpawnSelected :: [(String, String)] -> X()
-mySpawnSelected lst = gridselect conf lst >>= flip whenJust spawn
-    where conf = defaultGSConfig
--- }}}
-
 -- Hooks {{{
 -- Manage {{{
 myManageHook = composeAll
