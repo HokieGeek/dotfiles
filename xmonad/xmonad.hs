@@ -50,9 +50,8 @@ xF86XK_AudioMicMute = 0x1008ffb2
 modm            = mod4Mask
 myTerminal      = "urxvtc"
 myBrowser       = "google-chrome-stable"
-colorForeground = "#9F0AC4"
-colorDimmed     = "#9F0AC4"
-colorBackground = "#1B1D1E"
+colorForeground = "#9f0ac4"
+colorBackground = "#1b1d1e"
 font            = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 
 dmenuArgs = ["-fn", font, "-nb", colorBackground, "-nf", "#FFFFFF", "-sb", colorForeground]
