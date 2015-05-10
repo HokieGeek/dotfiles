@@ -67,9 +67,14 @@ myDmenuMap = M.fromList
               , ("mpc", myTerminal ++ " -e ncmpcpp")
               , ("ranger", ("export EDITOR=vim; " ++ myTerminal ++ " -e ranger"))
               -- , ("steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
-              -- , ("minicom", myTerminal ++ " -e minicom") -- TODO: specific menu for the two configs
+              -- , ("minicom", myTerminal ++ " -e minicom") -- TODO: specific menu for the two configs?
               ]
 --}}}
+
+-- Local Variables {{{
+surroundInQuotes :: String -> String
+surroundInQuotes str = "'" ++ str ++ "'"
+-- }}}
 
 -- Hooks {{{
 -- Manage {{{
@@ -79,7 +84,7 @@ myManageHook = composeAll
     , className =? "Gimp"       --> viewShift "-"
     , className =? "VASSAL-launch-ModuleManager"    --> doFloat <+> doShift "="
     , className =? "VASSAL-launch-Player"           --> doFloat <+> doShift "="
-    , className =? "st-256color" --> (ask >>= \w -> liftX (setOpacity w 0x11111111) >> idHook)
+    -- , className =? "st-256color" --> (ask >>= \w -> liftX (setOpacity w 0x11111111) >> idHook)
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat -- Hangouts
     ] <+> manageDocks
     where
@@ -127,17 +132,15 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 -- Don't forget to update keybindings-help.txt
 myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), safeSpawn "dmenu_run" dmenuArgs)
-            , (((modm .|. controlMask), xK_Return), spawn "urxvtc")
             , ((modm, xK_Return), promote)
             , ((mod1Mask, xK_F4), kill)
             , (((modm .|. controlMask .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((0, xF86XK_Sleep), spawn "sudo /usr/sbin/pm-suspend")
             , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
-            , (((modm .|. shiftMask), xK_w), spawn ("$HOME/.bin/schemecolor --colors | dmenu | xargs $HOME/.bin/schemecolor"))
-            -- , (((modm .|. shiftMask), xK_w), spawn ("echo '$HOME/.bin/schemecolor --colors | dmenu " ++ unwords(dmenuArgs) ++ "| xargs $HOME/.bin/schemecolor' > /tmp/a"))
+            , (((modm .|. shiftMask), xK_w), spawn ("$HOME/.bin/schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs $HOME/.bin/schemecolor"))
             -- Launcher menus
-            , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs myDmenuMap >>=flip whenJust spawn)
+            , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs myDmenuMap >>= flip whenJust spawn)
             , ((modm, xK_x), goToSelected defaultGSConfig)
             , (((modm .|. shiftMask), xK_x), gotoMenu)
             -- Workspace helpers
@@ -198,7 +201,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
 
 -- Main {{{
 compmgr   = "xcompmgr"
-barheight = "16"
+barheight = "14"
 screenwidth_cmd    = "xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1"
 workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ font ++ "' -x '0' -y '0' -h '" ++ barheight ++ "' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
 conkyStatusBar     = "~/.conky/statusbar.py --color-fg '" ++ colorForeground ++ "' > /tmp/xmonad.conkyrc && conky -b -c /tmp/xmonad.conkyrc | dzen2 -y '0' -x '0' -w `" ++ screenwidth_cmd ++ "` -h '" ++ barheight ++ "' -ta 'r' -bg '" ++ colorBackground ++ "' -fg '#FFFFFF' -fn '" ++ font ++ "'"
