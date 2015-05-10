@@ -12,7 +12,7 @@ prompt_cvsInfo() {
 }
 
 prompt_mercurialInfo() {
-    info=" %{$fg_bold[cyan]%}"
+    info=" %{$fg[cyan]%}"
 
     # Determine the branch
     branch=`hg branch`
@@ -22,13 +22,13 @@ prompt_mercurialInfo() {
 
     # Add indicator if there are modified files
     numMods=`echo $status_out | egrep -c "(A|M|D)"`
-    [ $numMods -gt 0 ] && info=${info}"%{$fg_bold[red]%}±%{$reset_color%} "
+    [ $numMods -gt 0 ] && info=${info}"%b%F{52}±%{$reset_color%} "
 
     echo "${info}%{$reset_color%}"
 }
 
 prompt_gitInfo() {
-    info=" %{$fg_bold[yellow]%}"
+    info=" %{$fg[yellow]%}"
 
     # Determine the branch
     branch=`git branch | grep "^*" | sed "s/^\*\s*//"`
@@ -48,7 +48,7 @@ prompt_gitInfo() {
 
     # Add indicator if there are modified files
     numMods=`echo $status_out | egrep -c "(A|M|D)"`
-    [ $numMods -gt 0 ] && info=${info}"%{$fg_bold[red]%}±%{$reset_color%} "
+    [ $numMods -gt 0 ] && info=${info}"%b%F{52}±%{$reset_color%} "
 
     echo "${info}%{$reset_color%}"
 }
@@ -64,30 +64,27 @@ prompt_jobs() {
 }
 
 prompt_pwd() {
-    echo -n "%{$fg[white]%}%~%{$reset_color%}"
-    # echo -n "%{$fg_bold[yellow]%}%~%{$reset_color%}"
+    echo -n "%F{238}%~%{$reset_color%}"
 }
 
 prompt_host() {
     [ -n "$SSH_CLIENT" ] && echo -n "%{$fg[magenta]%}@%m%{$reset_color%} "
 }
 
-prompt_battery() {
+# prompt_battery() {
     # Display alert on right prompt
     # ☠
-    :
-}
+    # :
+# }
 
 autoload -U promptinit && promptinit
 autoload -U colors && colors
 setopt prompt_subst
 
-# local lastRet="%(?,,%{$fg_bold[red]%}☹%{$reset_color%})"
-# local lastRet="%(?,,%{$bg[red]%}☹ %{$reset_color%})" # U+2639 - ☹
 local lastRet="%(?,,%{$fg[red]%}∙%{$reset_color%})" # U+2639 - ☹
 
-# U+256D - ╭ ; U+2570 - ╰ ; U+2500 - ─
-# E2 95 AD ; E2 95 B0 ; E2 94 80
-PROMPT='%{$fg[gray]%}╭%{$reset_color%}${lastRet} $(prompt_host)$(prompt_pwd)$(prompt_repoInfo)
-%{$fg[gray]%}╰─%{$reset_color%}$(prompt_jobs) '
-RPROMPT='$(prompt_battery)'
+# U+256D - ╭ ; U+2570 - ╰
+# E2 95 AD ; E2 95 B0
+PROMPT='%F{234}╭%{$reset_color%}${lastRet} $(prompt_host)$(prompt_pwd)$(prompt_repoInfo)
+%F{234}╰─%{$reset_color%}$(prompt_jobs) '
+# RPROMPT='$(prompt_battery)'
