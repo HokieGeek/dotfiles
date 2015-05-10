@@ -127,12 +127,15 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 -- Don't forget to update keybindings-help.txt
 myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), safeSpawn "dmenu_run" dmenuArgs)
+            , (((modm .|. controlMask), xK_Return), spawn "st")
             , ((modm, xK_Return), promote)
             , ((mod1Mask, xK_F4), kill)
             , (((modm .|. controlMask .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((0, xF86XK_Sleep), spawn "sudo /usr/sbin/pm-suspend")
             , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
+            , (((modm .|. shiftMask), xK_w), spawn ("$HOME/.bin/schemecolor --colors | dmenu | xargs $HOME/.bin/schemecolor"))
+            -- , (((modm .|. shiftMask), xK_w), spawn ("echo '$HOME/.bin/schemecolor --colors | dmenu " ++ unwords(dmenuArgs) ++ "| xargs $HOME/.bin/schemecolor' > /tmp/a"))
             -- Launcher menus
             , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs myDmenuMap >>=flip whenJust spawn)
             , ((modm, xK_x), goToSelected defaultGSConfig)
