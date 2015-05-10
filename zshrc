@@ -44,6 +44,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 export PATH=${PATH}:${HOME}/.bin
 export EDITOR="nvim"
+export TERM="xterm-256color"
 bindkey -M vicmd v edit-command-line
 
 [ -e /usr/share/doc/pkgfile/command-not-found.zsh ] && source /usr/share/doc/pkgfile/command-not-found.zsh

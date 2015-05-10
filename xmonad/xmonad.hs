@@ -48,7 +48,7 @@ xF86XK_AudioMicMute :: KeySym
 xF86XK_AudioMicMute = 0x1008ffb2
 
 modm            = mod4Mask
-myTerminal      = "urxvtc"
+myTerminal      = "st"
 myBrowser       = "google-chrome-stable"
 colorForeground = "#5f0087"
 colorBackground = "#1b1d1e"
@@ -127,7 +127,7 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 -- Don't forget to update keybindings-help.txt
 myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), safeSpawn "dmenu_run" dmenuArgs)
-            , (((modm .|. controlMask), xK_Return), spawn "st")
+            , (((modm .|. controlMask), xK_Return), spawn "urxvtc")
             , ((modm, xK_Return), promote)
             , ((mod1Mask, xK_F4), kill)
             , (((modm .|. controlMask .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
