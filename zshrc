@@ -1,5 +1,3 @@
-# The following lines were added by compinstall
-
 [[ -z "$TMUX" ]] && exec tmux
 
 zstyle ':completion:*' completer _complete _ignored
@@ -9,15 +7,19 @@ zstyle :compinstall filename '/home/andres/.zshrc'
 
 autoload -Uz compinit
 compinit
-# End of lines added by compinstall
-# Lines configured by zsh-newuser-install
+
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=1000
+setopt hist_ignore_all_dups hist_ignore_space
+
 setopt autocd extendedglob nomatch
 unsetopt appendhistory beep notify
 bindkey -v
-# End of lines configured by zsh-newuser-install
+bindkey -M vicmd v edit-command-line
+
+export TERM="xterm-256color"
+[ -n "$TMUX" ] && export TERM="screen-256color"
 
 case $TERM in
     xterm*)
@@ -36,18 +38,10 @@ setopt correct # Spelling correction of commands
 autoload zmv # Fancy mv command
 autoload edit-command-line; zle -N edit-command-line
 
-export HISTSIZE=5000
-setopt hist_ignore_all_dups hist_ignore_space
-
-# Add an "alert" alias for long running commands.  Use like so: sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-export PATH=${PATH}:${HOME}/.bin
+export PATH=${PATH}:~/.bin
 export EDITOR="nvim"
-export TERM="xterm-256color"
-bindkey -M vicmd v edit-command-line
 
 [ -e /usr/share/doc/pkgfile/command-not-found.zsh ] && source /usr/share/doc/pkgfile/command-not-found.zsh
 
-. $HOME/.aliases
-. $HOME/.shell-plugins/prompt.zsh
+. ~/.aliases
+. ~/.shell-plugins/prompt.zsh
