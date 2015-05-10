@@ -82,8 +82,8 @@ Scratch
 | jj | ctrl-n |
 | kk | ctrl-p |
 
-### urxvt
-No scrollbar and transparent
+### st
+Nothing to be done here for simple terminal, of course, other than setting the font to DejaVu Sans Mono
 
 ### tmux
 Simple statusbar that just shows currently open terminals and an identifier for the current pane
@@ -92,7 +92,7 @@ Simple statusbar that just shows currently open terminals and an identifier for 
 Both **bash** and **zsh** prompts display git and mercurial repo information
 
 ### xmonad
-A fairly basic setup with custom key bindings and use of the GS menu
+A fairly basic setup with custom key bindings and a good amount of use of dmenu
 
 ### conky
 Using it to display statistic such as IP addresses, CPU use, battery life, etc.
