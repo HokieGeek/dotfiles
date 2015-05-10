@@ -60,7 +60,8 @@ prompt_repoInfo() {
 }
 
 prompt_jobs() {
-    [ `jobs | wc -l` -gt 0 ] && echo "%{$fg_bold[red]%}¡%{$reset_color%}"
+    # ¡
+    [ `jobs | wc -l` -gt 0 ] && echo "%{$fg[red]%}∙%{$reset_color%}"
 }
 
 prompt_pwd() {
@@ -71,20 +72,13 @@ prompt_host() {
     [ -n "$SSH_CLIENT" ] && echo -n "%{$fg[magenta]%}@%m%{$reset_color%} "
 }
 
-# prompt_battery() {
-    # Display alert on right prompt
-    # ☠
-    # :
-# }
-
 autoload -U promptinit && promptinit
 autoload -U colors && colors
 setopt prompt_subst
 
-local lastRet="%(?,,%{$fg[red]%}∙%{$reset_color%})" # U+2639 - ☹
+local last_ret="%(?,,%{$fg[red]%}∙%{$reset_color%})" # U+2639 - ☹
 
 # U+256D - ╭ ; U+2570 - ╰
 # E2 95 AD ; E2 95 B0
-PROMPT='%F{234}╭%{$reset_color%}${lastRet} $(prompt_host)$(prompt_pwd)$(prompt_repoInfo)
-%F{234}╰─%{$reset_color%}$(prompt_jobs) '
-# RPROMPT='$(prompt_battery)'
+PROMPT='%F{234}╭%{$reset_color%}$(prompt_jobs) $(prompt_host)$(prompt_pwd)$(prompt_repoInfo)
+%F{234}╰─%{$reset_color%}${last_ret} '
