@@ -193,7 +193,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             ++
             [((m .|. modm, k), windows $ f i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys
-                , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+                , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
             ++
             [((modm .|. controlMask, k), windows $ swapWithCurrent i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys]
