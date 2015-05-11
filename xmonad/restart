@@ -1,4 +1,8 @@
 #!/bin/sh
 xmonad --recompile || exit 1
-ps -eaf | egrep "(conky -b|xcompmgr)" | grep -v grep | awk '{ print $2 }' | xargs kill -9
+pkill conky
+pkill xcompmgr
 xmonad --restart
+sleep 0.25s
+xkev -u -e j
+xkev -u -e k
