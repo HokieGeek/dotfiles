@@ -11,7 +11,15 @@ cd dotfiles
 ./setup.sh
 ```
 
+## Philosophy
+I prefer to KISS as much as possible. All I need is a terminal and a browser and I've got all I need with my system. I prefer smaller laptops to I try to take advantage of as much real estate as I can.
+
+I keep the look and feel minimal so that it's less distracting so, to that end the "color scheme" is dark with some gray shadings and a single color used by tmux and the conky bar up top. The script bin/schemecolor will sed the indicated color into my tmux and xmonad.hs and will load both so that I can change the color on-the-fly.
+
 ## Features
+
+### chrome
+Running a dark theme and using the cVim plugin to use vim bindings. This makes me very happy.
 
 ### vim
 The following plugins are being used: https://github.com/HokieGeek/MahVimPlugins/blob/master/README.md
@@ -88,12 +96,24 @@ Nothing to be done here for simple terminal, of course, other than setting the f
 ### tmux
 Simple statusbar that just shows currently open terminals and an identifier for the current pane
 
-### shell prompts
-Both **bash** and **zsh** prompts display git and mercurial repo information
+Wrote a vim plugin that integrates with tmux somewhat
+
+### zsh
+Ported my bash prompt which displays information such as git and mercurial repository status and flags if the previous command returned a non-zero value and/or if a process is currently backgrounded.
 
 ### xmonad
-A fairly basic setup with custom key bindings and a good amount of use of dmenu
+A fairly basic setup with custom key bindings and a good amount of use of dmenu. 
+
+Using dzen2 to display the workspaces.
+
+##### A few sample custom key bindings that I love
+| Binding | What it does |
+| ------- | ------------ |
+| Super+n | Switches to the next empty workspace |
+| Super+Alt+n | Opens a browser window in the next available empty workspace |
+| Super+Shift+n | Shifts active window to the next empty workspace |
+| Super+` | Switches to the previous workspace |
+| Super+Ctrl+[WS#] | Swaps current workspace with indicated workspace |
 
 ### conky
-Using it to display statistic such as IP addresses, CPU use, battery life, etc.
-
+Using it to display statistics such as time, IP addresses, CPU use, battery life, etc. Piping conky's output to a dzen2 instance.
