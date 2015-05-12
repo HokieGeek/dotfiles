@@ -37,7 +37,7 @@ prompt_gitInfo() {
     status_out=`git status --porcelain -sb -uno 2>/dev/null`
 
     # Add indicator if repository is behind remote
-    isBehind=`echo $status_out | grep -c "##.*\[behind.*\]"`
+    isBehind=`echo $status_out | grep -c "##.*\[.*[,\s]*behind.*\]"`
     [ $isBehind -gt 0 ] && info=${info}"%{$fg_no_bold[yellow]%}◂%{$reset_color%}"
     # U+25C2 - ◂
 
