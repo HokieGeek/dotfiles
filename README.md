@@ -7,7 +7,9 @@ My personal linux config files
 ## Installation
 ``` sh
 git clone --recursive https://github.com/HokieGeek/dotfiles
-cd dotfiles
+cd dotfiles/vim/bundle
+git submodule update --init
+cd ../..
 ./setup.sh
 ```
 
@@ -94,9 +96,11 @@ Scratch
 Nothing to be done here for simple terminal, of course, other than setting the font to DejaVu Sans Mono
 
 ### tmux
-Simple statusbar that just shows currently open terminals and an identifier for the current pane
+Simple statusbar that just shows currently open terminals and an identifier for the current pane.
 
-Wrote a vim plugin that integrates with tmux somewhat
+Wrote a vim plugin that integrates with tmux somewhat.
+
+It is exec'ed by the shell upon login.
 
 ### zsh
 Ported my bash prompt which displays information such as git and mercurial repository status and flags if the previous command returned a non-zero value and/or if a process is currently backgrounded.
