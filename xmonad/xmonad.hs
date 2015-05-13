@@ -65,13 +65,13 @@ myDmenuMap = M.fromList
               , ("irssi", myTerminal ++ " -e irssi")
               , ("skype", "apulse32 skype")
               , ("mpc", myTerminal ++ " -e ncmpcpp")
-              , ("ranger", ("export EDITOR=vim; " ++ myTerminal ++ " -e ranger"))
-              -- , ("steam", "/usr/share/playonlinux/playonlinux --run \"Steam\" %F")
-              -- , ("minicom", myTerminal ++ " -e minicom") -- TODO: specific menu for the two configs?
+              -- , ("ranger", ("export EDITOR=vim; " ++ myTerminal ++ " -e ranger"))
+              , ("steam", "playonlinux --run \"Steam\" %F")
+              -- , ("minicom", myTerminal ++ " -e minicom")
               ]
 --}}}
 
--- Local Variables {{{
+-- Local Methods {{{
 surroundInQuotes :: String -> String
 surroundInQuotes str = "'" ++ str ++ "'"
 -- }}}
