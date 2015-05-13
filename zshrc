@@ -1,3 +1,4 @@
+[[ $- != *i* ]] && return
 [[ -z "$TMUX" ]] && exec tmux
 
 zstyle ':completion:*' completer _complete _ignored
