@@ -12,4 +12,4 @@ done
 
 echo ":: Editing slim.conf"
 themes=`find . -maxdepth 1 -type d ! -name "." -print | cut -d/ -f2 | paste -d, -s`
-sudo sed -i -e '/current_theme/{s/^#\s*//;s/default/'${themes}'/}' /etc/slim.conf
+sudo sed -i -e '/current_theme/{s/^#\s*//;s/rear-window/'${themes}'/}' /etc/slim.conf
