@@ -165,7 +165,7 @@ f.write("^fg({})\\\n".format(colorschemeDarkHex))
 f.write("${{if_match ${{battery_percent}} < 99}}^fg({})${{endif}}\\\n".format(colorschemeFgHex))
 f.write("${{if_match ${{battery_percent}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeYellowHex))
 f.write("${{if_match ${{battery_percent}} < 20}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
-f.write("${if_match ${battery_percent} < 10}${blink !}${endif}\\\n")
+# f.write("${if_match ${battery_percent} < 10}${blink !}${endif}\\\n")
 batterySteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
 for i in batterySteps:
     f.write("${{if_match ${{battery_percent}} >= {}}}^i({}/battery_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
