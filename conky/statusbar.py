@@ -60,20 +60,20 @@ distro = "arch"
 updateCheckInterval = "60"
 f.write("^fg({})${{nodename}}\\\n".format(colorschemeGreyHex))
 if distro == "arch":
-    f.write("${{if_match ${{texeci {} /usr/bin/checkupdates | wc -l}} > 0}}\\\\\\n".format(updateCheckInterval))
+    f.write("${{if_match ${{texeci {} /usr/bin/checkupdates | wc -l}} > 0}}\\\n".format(updateCheckInterval))
 elif distro == "centos":
-    f.write("${{if_match ${{texeci {} /usr/bin/yum check-update >/dev/null 2>&1; echo $?}} == 100}}\\\\\\n".format\342\213\257
+    f.write("${{if_match ${{texeci {} /usr/bin/yum check-update >/dev/null 2>&1; echo $?}} == 100}}\\\n".format(updateCheckInterval))
 else:
-    f.write("${if_match '' == 'x'}\\\\\\n")
+    f.write("${if_match '' == 'x'}\\\n")
 
-f.write("^fg({})".format(colorschemeFgHex))
-f.write("${endif}\\\\\\n")
+f.write("^fg({})\\\n".format(colorschemeFgHex))
+f.write("${endif}\\\n")
 if distro == "arch":
-    f.write(" ^i({}/arch.xbm) \\\\\\n".format(imagesDir))
+    f.write(" ^i({}/arch.xbm) \\\n".format(imagesDir))
 else:
-    f.write(" ^c(7) \\\\\\n")
-f.write("^fg({})${{kernel}}\\\\\\n".format(colorschemeGreyHex))
-f.write("  \\\\\\n")
+    f.write(" ^c(7) \\\n")
+f.write("^fg({})${{kernel}}\\\n".format(colorschemeGreyHex))
+f.write("  \\\n")
 
 ## NETWORK
 # Retrieve interfaces
