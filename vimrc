@@ -358,7 +358,7 @@ augroup FiletypeOptions
     autocmd Filetype make setlocal noexpandtab nolist
     autocmd Filetype vim colorscheme herald
     autocmd Filetype qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
-    autocmd Filetype go set nolist
+    autocmd Filetype go set nolist foldmethod=syntax
 augroup END
 
 augroup HighlightingOptions
