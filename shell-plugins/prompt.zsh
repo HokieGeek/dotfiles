@@ -80,5 +80,5 @@ local last_ret="%(?,,%{$fg[red]%}∙%{$reset_color%})" # U+2639 - ☹
 
 # U+256D - ╭ ; U+2570 - ╰
 # E2 95 AD ; E2 95 B0
-PROMPT='%F{234}╭%{$reset_color%}$(prompt_jobs) $(prompt_host)$(prompt_pwd)$(prompt_repoInfo)
-%F{234}╰─%{$reset_color%}${last_ret} '
+PROMPT='%F{234}╭%f$(prompt_jobs) $(prompt_host)$(prompt_pwd)$(prompt_repoInfo)
+%F{234}╰─%f${last_ret} '
