@@ -111,7 +111,7 @@ myDzen h = defaultPP
       , ppOutput            =   hPutStrLn h
     }
     where
-        dzenWorkspaceSymbol x = "^i(/home/andres/.xmonad/imgs/workspace.xbm)"
+        dzenWorkspaceSymbol x = "^r(4x4)^fg(" ++ colorBackground ++ ")^r(5x1)"
 -- }}}
 -- Layout{{{
 incDelta = 3/100
