@@ -181,7 +181,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
             , (((mod1Mask .|. controlMask), xK_l), spawn "slock")
-            -- , ((0, xF86XK_WebCam), spawn "$HOME/.bin/toggle-bluetooth")
+            , ((0, xF86XK_WebCam), spawn "$HOME/.bin/toggle-bluetooth")
 
             -- ThinkPad-specific binding (the black button)
             , ((0, xF86XK_Launch1), spawn myTerminal)
