@@ -61,7 +61,7 @@ prompt_repoInfo() {
 
 prompt_jobs() {
     # ¡
-    [ `jobs | wc -l` -gt 0 ] && echo "%{$fg[red]%}∙%{$reset_color%}"
+    [ `jobs | wc -l` -gt 0 ] && echo "%{$fg[red]%}∙%{$reset_color%}" || echo " "
 }
 
 prompt_pwd() {
@@ -76,9 +76,9 @@ autoload -U promptinit && promptinit
 autoload -U colors && colors
 setopt prompt_subst
 
-local last_ret="%(?,,%{$fg[red]%}∙%{$reset_color%})" # U+2639 - ☹
+local last_ret="%(?, ,%{$fg[red]%}∙%{$reset_color%})" # U+2639 - ☹
 
 # U+256D - ╭ ; U+2570 - ╰
 # E2 95 AD ; E2 95 B0
-PROMPT='%F{234}╭%f$(prompt_jobs) $(prompt_host)$(prompt_pwd)$(prompt_repoInfo)
-%F{234}╰─%f${last_ret} '
+PROMPT='%F{234}╭%f$(prompt_jobs)$(prompt_host)$(prompt_pwd)$(prompt_repoInfo)
+%F{234}╰─%f${last_ret}'
