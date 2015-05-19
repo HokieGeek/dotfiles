@@ -65,6 +65,8 @@ dmenuArgs = ["-fn", font, "-nb", colorBackground, "-nf", "#FFFFFF", "-sb", color
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
+-- myDmenuMap2 = M.fromList [ ("browser", spawn myBrowser) ]
+
 myDmenuMap = M.fromList
               [ ("browser", myBrowser)
               , ("netflix", myBrowser ++ " --new-window http://netflix.com")
@@ -92,7 +94,7 @@ surroundInQuotes str = "'" ++ str ++ "'"
 myManageHook = composeAll
     [ isFullscreen --> doFullFloat
     , className =? "Xmessage"   --> doCenterFloat
-    , className =? "Gimp"       --> viewShift "gimp"
+    , className =? "Gimp"       --> shiftNew "gimp"
     , className =? "VASSAL-launch-ModuleManager"    --> doFloat <+> doShift "="
     , className =? "VASSAL-launch-Player"           --> doFloat <+> doShift "="
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat -- Hangouts
@@ -165,6 +167,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , (((modm .|. shiftMask), xK_w), spawn ("$HOME/.bin/schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs $HOME/.bin/schemecolor"))
             -- Launcher menus
             , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs myDmenuMap >>= flip whenJust spawn)
+            -- , ((modm, xK_z), (menuMapArgs "dmenu" dmenuArgs myDmenuMap))
             , ((modm, xK_x), goToSelected defaultGSConfig)
             , (((modm .|. shiftMask), xK_x), gotoMenu)
             -- Workspace helpers
@@ -216,7 +219,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((0, xF86XK_Launch1), spawn myTerminal)
             , ((shiftMask, xF86XK_Launch1), spawn myBrowser)
 
-            , ((modm, xK_F10), addWorkspace "gimp")
+            -- , ((modm, xK_F10), addWorkspace "gimp")
             , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
             , (((modm .|. mod1Mask), xK_g), addWorkspace "gimp" <+> spawn "gimp")
             ]
