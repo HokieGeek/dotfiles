@@ -146,6 +146,12 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 -- }}}
 
 -- Keybindings {{{
+-- moveOnBack :: [] -> []
+-- moveOnBack [] = []
+-- moveOnBack x = tail x ++ [head x]
+
+-- testing :: X()
+-- testing = addWorkspace "blah" <+> moveOnBack workspaces
 -- Don't forget to update keybindings-help.txt
 myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_a), safeSpawn "dmenu_run" dmenuArgs)
@@ -212,6 +218,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
 
             , ((modm, xK_F10), addWorkspace "gimp")
             , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
+            , (((modm .|. mod1Mask), xK_g), addWorkspace "gimp" <+> spawn "gimp")
             ]
             ++
             [((m .|. modm, k), windows $ f i)
