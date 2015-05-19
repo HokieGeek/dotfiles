@@ -113,23 +113,23 @@ for cpu in range(1,int(numCpus)+1):
     f.write("${{if_match ${{cpu cpu{}}} < 15}}^fg({})${{endif}}\\\n".format(cpu, colorschemeDarkHex))
     f.write("^i({}/cpu.xbm) \\\n".format(imagesDir))
 
-# RAM
+## RAM
 f.write("^fg({})\\\n".format(colorschemeGreyHex))
-f.write("${{if_match ${{memperc}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
+f.write("${{if_match ${{memperc}} <= 50}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
 f.write("${{if_match ${{memperc}} < 25}}^fg({})${{endif}}\\\n".format(colorschemeDarkHex))
-f.write("${{if_match ${{memperc}} >= 70}}^fg({})${{endif}}\\\n".format(colorschemeWhiteHex))
+f.write("${{if_match ${{memperc}} > 50}}^fg({})${{endif}}\\\n".format(colorschemeWhiteHex))
 f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
 f.write(" ^i({}/mem.xbm)\\\n".format(imagesDir))
 f.write("  \\\n")
 
-# TEMP
+## TEMP
 f.write("^fg({})\\\n".format(colorschemeDarkHex))
 f.write("${{if_match ${{acpitemp}} > 65}}^fg({})${{else}}\\\n".format(colorschemeWhiteHex))
 f.write("${{if_match ${{acpitemp}} > 85}}^fg({})${{endif}}${{endif}}\\\n".format(colorschemeRedHex))
 f.write("^i({}/temp.xbm)\\\n".format(imagesDir))
 f.write("  \\\n")
 
-# FAN
+## FAN
 f.write("^fg({})\\\n".format(colorschemeDarkHex))
 f.write("${{if_match ${{ibm_fan}} > 3000}}^fg({})${{else}}\\\n".format(colorschemeDimHex))
 f.write("${{if_match ${{ibm_fan}} > 3500}}^fg({})${{else}}\\\n".format(colorschemeWhiteHex))
