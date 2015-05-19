@@ -26,5 +26,5 @@ done
 
 # set -x
 #/usr/local/bin/python3.4 
-${here}/statusbar.py --height ${height} --color-fg ${fg} --color-bg ${bg} > ${tmprc} || exit 1
+/usr/bin/python ${here}/statusbar.py --height ${height} --color-fg ${fg} --color-bg ${bg} > ${tmprc} || exit 1
 conky -b -c ${tmprc} | dzen2 -y '0' -x '0' -ta 'r' -w ${width} -fn "${font}" -bg ${bg}
