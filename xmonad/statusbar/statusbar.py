@@ -180,7 +180,7 @@ if False:
     f.write("${{if_match ${{battery_percent}} >= {}}}^i({}/battery_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
     f.write("^i({}/battery_0.xbm)\\\n".format(imagesDir))
 else:
-    height = args["height"]
+    height = int(args["height"])
     batteryStep = int(100 / height)
     batterySteps = list(range(batteryStep, 100, batteryStep))
     batteryHeight = height
