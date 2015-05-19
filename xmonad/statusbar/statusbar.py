@@ -1,13 +1,27 @@
-#!/usr/bin/python
 import subprocess
 import tempfile
 import os
 import signal
+import argparse
 import sys
 
 ## Handle the arguments
-f = open('/tmp/statusbar.py.out', 'w+')
-f.write(" ".join(sys.argv))
+# f = open('/tmp/statusbar.py.out', 'w+')
+# f.write(" ".join(sys.argv))
+parser = argparse.ArgumentParser(description='Create a conky config')
+parser.add_argument('--height',
+                    default='12',
+                    help="The value in pixels of the height of the statusbar",
+                    metavar="10")
+parser.add_argument('--color-fg',
+                    default="#FFFFFF",
+                    help="The hex value of the foreground color (default: #FFFFFF)",
+                    metavar="#000000")
+parser.add_argument('--color-bg',
+                    default="#000000",
+                    help="The hex value of the background color (default: #000000)",
+                    metavar="#000000")
+args = vars(parser.parse_args())
 
 ## Setup cleanup
 def cleanup():
@@ -18,18 +32,20 @@ def handleSigTERM():
 
 ## Variables
 infoFirehose = False
-imagesDir = "$HOME/.xmonad/statusbar/imgs"
+imagesDir = "{}/imgs".format(os.path.dirname(os.path.realpath(__file__)))
+colorschemeFgHex = "\\{}".format(args["color_fg"])
+colorschemeBgHex = "\\{}".format(args["color_bg"])
 colorschemeGreyHex = "\\#606060"
-colorschemeDimHex = "\\#3A3A3A"
+colorschemeDimHex = "\\#3a3a3a"
 colorschemeDarkHex = "\\#282828"
-colorschemeWhiteHex = "\\#FFFFFF"
-colorschemeRedHex = "\\#FF0000"
+colorschemeWhiteHex = "\\#ffffff"
+colorschemeRedHex = "\\#ff0000"
 colorschemeGreenHex = "\\#006400"
-colorschemeYellowHex = "\\#FFCC00"
+colorschemeYellowHex = "\\#ffcc00"
+sectionSpacing = "     \\\\\n"
+
 conkyFile = tempfile.NamedTemporaryFile('w', delete = False).name
 signal.signal(signal.SIGTERM, handleSigTERM)
-sectionSpacing = "     \\\n"
-
 f = open(conkyFile, 'w')
 
 ## CONKY SETTINGS
@@ -39,10 +55,14 @@ f.write("out_to_x no\n")
 f.write("update_interval 1\n")
 f.write("\nTEXT\n")
 
+## Set the background
+f.write("^bg({})\\\\\\n".format(colorschemeBgHex))
+
 ## Machine info
 distro = "arch" # TODO
 updateCheckInterval = "60"
 f.write("^fg({})${{nodename}}\\\n".format(colorschemeGreyHex))
+f.write("^fg({})".format(colorschemeFgHex))
 if distro == "arch":
     f.write("${{if_match ${{texeci {} /usr/bin/checkupdates | wc -l}} > 0}}\\\n".format(updateCheckInterval))
 elif distro == "centos":
@@ -50,7 +70,7 @@ elif distro == "centos":
 else:
     f.write("${if_match '' == 'x'}\\\n")
 
-f.write("^fg()\\\n")
+f.write("^fg({})\\\n".format(colorschemeFgHex))
 f.write("${endif}\\\n")
 if distro == "arch":
     f.write(" ^i({}/arch.xbm) \\\n".format(imagesDir))
@@ -68,7 +88,8 @@ tempFile.close()
 
 # For each interface, generate conky output
 for interface in [intf.decode("utf-8") for intf in interfaces]:
-    f.write("  ${{if_up {}}}^fg()\\\n".format(interface))
+    f.write("  ${{if_up {}}}^fg({})\\\n".format(interface, colorschemeFgHex))
+
     if interface[0] == "w":
         # f.write("Steve Taylor's Guest Network \\\n")
         f.write("${{wireless_essid {}}} \\\n".format(interface))
@@ -79,12 +100,12 @@ for interface in [intf.decode("utf-8") for intf in interfaces]:
         f.write("^i({}/wifi_25.xbm)\\\n".format(imagesDir))
         f.write("${endif}${endif}${endif} \\\n")
     elif interface[0] == "e":
-        f.write("^fg()\\\n")
+        f.write("^fg({})\\\n".format(colorschemeFgHex))
         f.write("^i({}/ethernet.xbm)\\\n".format(imagesDir))
     f.write("^fg({})${{addr {}}}^fg({}) \\\n".format(colorschemeGreyHex, interface, colorschemeWhiteHex))
-    f.write("^fg({})${{if_match ${{downspeedf {}}} > 1.5}}^fg()${{endif}}\\\n".format(colorschemeDimHex, interface))
+    f.write("^fg({})${{if_match ${{downspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
     f.write("^i({}/net_down.xbm)\\\n".format(imagesDir))
-    f.write("^fg({})${{if_match ${{upspeedf {}}} > 1.5}}^fg()${{endif}}\\\n".format(colorschemeDimHex, interface))
+    f.write("^fg({})${{if_match ${{upspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
     f.write("^i({}/net_up.xbm)\\\n".format(imagesDir))
     f.write("${endif}\\\n")
 
@@ -94,14 +115,16 @@ f.write("(${texeci 3 wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d 
 f.write(sectionSpacing)
 
 ## MEDIA
+f.write("^ca(1, st -e alsamixer)")
 f.write("${if_match ${texeci 2 amixer get Master | egrep '(Mono|Front)' | tail -1 | grep -c '\[off\]'} >= 1}\\\n")
-f.write("^fg({})${{else}}^fg()${{endif}}".format(colorschemeDimHex))
+f.write("^fg({})${{else}}^fg({})${{endif}}".format(colorschemeDimHex, colorschemeFgHex))
 volumeSteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
 for i in volumeSteps:
     f.write("${{if_match ${{texeci 1 amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\].*/\\1/g'}} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
 f.write("^i({}/volume_0.xbm)\\\n".format(imagesDir))
 for i in range(len(volumeSteps)):
     f.write("${endif}")
+f.write("^ca()")
 f.write(sectionSpacing)
 
 # CPU
@@ -139,50 +162,46 @@ f.write(sectionSpacing)
 
 ## TIME
 f.write("^fg({})".format(colorschemeGreyHex))
-f.write("${{time %a}} ^fg()${{time %d}} ^fg({})${{time %b}} \\\n".format( colorschemeDimHex))
+f.write("${{time %a}} ^fg({})${{time %d}} ^fg({})${{time %b}} \\\n".format(colorschemeFgHex, colorschemeDimHex))
 f.write("^fg({})${{time %H%M}}^fg({})\\\n".format(colorschemeWhiteHex, colorschemeWhiteHex))
 f.write("  ^fg({})${{uptime}}^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
 f.write(sectionSpacing)
 
 ## BATTERY
 f.write("^fg({})\\\n".format(colorschemeDarkHex))
-f.write("${if_match ${battery_percent} < 99}^fg()${endif}\\\n")
+f.write("${{if_match ${{battery_percent}} < 99}}^fg({})${{endif}}\\\n".format(colorschemeFgHex))
 f.write("${{if_match ${{battery_percent}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeYellowHex))
 f.write("${{if_match ${{battery_percent}} < 20}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
 f.write("${if_match ${battery_percent} < 10}${blink !}${endif}\\\n")
 
-if True:
+if False:
     batterySteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
     for i in batterySteps:
-        f.write("${{if_match ${{battery_percent}} >= {}}}^i({}/battery_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
+    f.write("${{if_match ${{battery_percent}} >= {}}}^i({}/battery_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
     f.write("^i({}/battery_0.xbm)\\\n".format(imagesDir))
 else:
-    height = 14 # TODO: this needs to be passed in, annoyingly
+    height = args["height"]
     batteryStep = int(100 / height)
     batterySteps = list(range(batteryStep, 100, batteryStep))
     batteryHeight = height
     batteryHeightStep = -1
     f.write("^fg(\\#151515)${battery_percent}^fg()")
-    f.write("^p(;_BOTTOM)^bg({})\\\\\\n".format(colorschemeDarkHex))
+    f.write("^p(;_BOTTOM)^bg({})\\\n".format(colorschemeDarkHex))
     if True:
         batteryHeight = 1
         batteryHeightStep = 1
-        f.write("^p()^p(;-1)^fg({})^bg(\\#005f00)\\\\\\n".format(colorschemeDarkHex)) # TODO: this would also need to be p\342\213\257
+        f.write("^p()^p(;-1)^fg({})^bg({})\\\n".format(colorschemeDarkHex, colorschemeFgHex))
     for perc in reversed(batterySteps):
-        f.write("${{if_match ${{battery_percent}} > {}}}^r(16x{})${{else}}\\\\\\n".format(perc, batteryHeight))
+        f.write("${{if_match ${{battery_percent}} > {}}}^r(16x{})${{else}}\\\n".format(perc, batteryHeight))
         batteryHeight += batteryHeightStep
-    f.write("^r(16x0)\\\\\\n")
-
+    f.write("^r(16x0)\\\n")
+f.write("^i({}/battery_0.xbm)\\\n".format(imagesDir))
 for i in range(len(batterySteps)):
     f.write("${endif}")
 f.write("\\\n")
 
-f.write("^fg()")
-# f.write("   ${fs_free_perc /}\\\n")
-
+## Done and done
 f.close()
-
 for out in open(conkyFile):
     print(out, end="")
 cleanup()
-
