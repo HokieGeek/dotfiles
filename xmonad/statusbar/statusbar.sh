@@ -10,7 +10,7 @@ width=1
 height=1
 fg="#ffffff"
 bg="#000000"
-font="whatever"
+font="*"
 
 while [ $# -gt 0 ]; do
     case $1 in
@@ -25,9 +25,6 @@ while [ $# -gt 0 ]; do
 done
 
 # set -x
-${here}/statusbar.py > ${tmprc} && {
-conky -b -c ${tmprc} | dzen2 -y '0' -x '0' -ta 'r' \
-    -w ${width} -h ${height} \
-    -bg "${bg}" -fg "${fg}" \
-    -fn "${font}"
-}
+#/usr/local/bin/python3.4 
+${here}/statusbar.py --height ${height} --color-fg ${fg} --color-bg ${bg} > ${tmprc} || exit 1
+conky -b -c ${tmprc} | dzen2 -y '0' -x '0' -ta 'r' -w ${width} -fn "${font}" -bg ${bg}
