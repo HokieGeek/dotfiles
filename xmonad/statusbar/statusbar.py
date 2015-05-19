@@ -149,11 +149,26 @@ f.write("^fg({})\\\n".format(colorschemeDarkHex))
 f.write("${if_match ${battery_percent} < 99}^fg()${endif}\\\n")
 f.write("${{if_match ${{battery_percent}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeYellowHex))
 f.write("${{if_match ${{battery_percent}} < 20}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
-# f.write("${if_match ${battery_percent} < 10}${blink !}${endif}\\\n")
-batterySteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
-for i in batterySteps:
-    f.write("${{if_match ${{battery_percent}} >= {}}}^i({}/battery_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
-f.write("^i({}/battery_0.xbm)\\\n".format(imagesDir))
+f.write("${if_match ${battery_percent} < 10}${blink !}${endif}\\\n")
+
+if True:
+    batterySteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
+    for i in batterySteps:
+        f.write("${{if_match ${{battery_percent}} >= {}}}^i({}/battery_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
+    f.write("^i({}/battery_0.xbm)\\\n".format(imagesDir))
+else:
+    height = 14 # TODO: this needs to be passed in, annoyingly
+    batteryStep = int(100 / height)
+    batterySteps = list(range(batteryStep, 100, batteryStep))
+    batteryHeight = height
+    f.write("^fg(\\#151515)${battery_percent}^fg()")
+    f.write("^p(;_BOTTOM)^bg({})\\\\\\n".format(colorschemeDarkHex))
+    # f.write("^p(;-1)^fg({})^bg(\\#005f00)\\\\\\n".format(colorschemeDarkHex))
+    for perc in reversed(batterySteps):
+        f.write("${{if_match ${{battery_percent}} > {}}}^r(16x{})${{else}}\\\\\\n".format(perc, batteryHeight))
+        batteryHeight -= 1
+    f.write("^r(16x0)\\\\\\n")
+
 for i in range(len(batterySteps)):
     f.write("${endif}")
 f.write("\\\n")
