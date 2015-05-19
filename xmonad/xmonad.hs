@@ -94,7 +94,7 @@ surroundInQuotes str = "'" ++ str ++ "'"
 myManageHook = composeAll
     [ isFullscreen --> doFullFloat
     , className =? "Xmessage"   --> doCenterFloat
-    , className =? "Gimp"       --> viewShift "gimp"
+    , className =? "Gimp"       --> shiftNew "gimp"
     , className =? "VASSAL-launch-ModuleManager"    --> doFloat <+> doShift "="
     , className =? "VASSAL-launch-Player"           --> doFloat <+> doShift "="
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat -- Hangouts
