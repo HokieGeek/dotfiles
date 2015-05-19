@@ -42,7 +42,7 @@ colorschemeWhiteHex = "\\#ffffff"
 colorschemeRedHex = "\\#ff0000"
 colorschemeGreenHex = "\\#006400"
 colorschemeYellowHex = "\\#ffcc00"
-sectionSpacing = "     \\\\\n"
+sectionSpacing = "       \\\n"
 
 conkyFile = tempfile.NamedTemporaryFile('w', delete = False).name
 signal.signal(signal.SIGTERM, handleSigTERM)
@@ -56,7 +56,7 @@ f.write("update_interval 1\n")
 f.write("\nTEXT\n")
 
 ## Set the background
-f.write("^bg({})\\\\\\n".format(colorschemeBgHex))
+f.write("^bg({})\\\n".format(colorschemeBgHex))
 
 ## Machine info
 distro = "arch" # TODO
@@ -111,7 +111,7 @@ for interface in [intf.decode("utf-8") for intf in interfaces]:
 
 # Lastly, output the external IP
 f.write("  ^fg({})".format(colorschemeGreyHex))
-f.write("(${texeci 3 wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \\< -f -1 | awk '{ print $1 }'})")
+f.write("(${texeci 3 wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \< -f -1 | awk '{ print $1 }'})")
 f.write(sectionSpacing)
 
 ## MEDIA
@@ -120,7 +120,7 @@ f.write("${if_match ${texeci 2 amixer get Master | egrep '(Mono|Front)' | tail -
 f.write("^fg({})${{else}}^fg({})${{endif}}".format(colorschemeDimHex, colorschemeFgHex))
 volumeSteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
 for i in volumeSteps:
-    f.write("${{if_match ${{texeci 1 amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\].*/\\1/g'}} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
+    f.write("${{if_match ${{texeci 1 amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\].*/\1/g'}} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
 f.write("^i({}/volume_0.xbm)\\\n".format(imagesDir))
 for i in range(len(volumeSteps)):
     f.write("${endif}")
@@ -172,33 +172,22 @@ f.write("^fg({})\\\n".format(colorschemeDarkHex))
 f.write("${{if_match ${{battery_percent}} < 99}}^fg({})${{endif}}\\\n".format(colorschemeFgHex))
 f.write("${{if_match ${{battery_percent}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeYellowHex))
 f.write("${{if_match ${{battery_percent}} < 20}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
-f.write("${if_match ${battery_percent} < 10}${blink !}${endif}\\\n")
 
-if False:
-    batterySteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
-    for i in batterySteps:
-    f.write("${{if_match ${{battery_percent}} >= {}}}^i({}/battery_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
-    f.write("^i({}/battery_0.xbm)\\\n".format(imagesDir))
-else:
-    height = int(args["height"])
-    batteryStep = int(100 / height)
-    batterySteps = list(range(batteryStep, 100, batteryStep))
-    batteryHeight = height
-    batteryHeightStep = -1
-    f.write("^fg(\\#151515)${battery_percent}^fg()")
-    f.write("^p(;_BOTTOM)^bg({})\\\n".format(colorschemeDarkHex))
-    if True:
-        batteryHeight = 1
-        batteryHeightStep = 1
-        f.write("^p()^p(;-1)^fg({})^bg({})\\\n".format(colorschemeDarkHex, colorschemeFgHex))
-    for perc in reversed(batterySteps):
-        f.write("${{if_match ${{battery_percent}} > {}}}^r(16x{})${{else}}\\\n".format(perc, batteryHeight))
-        batteryHeight += batteryHeightStep
-    f.write("^r(16x0)\\\n")
-f.write("^i({}/battery_0.xbm)\\\n".format(imagesDir))
+height = int(args["height"])
+batteryStep = int(100 / height)
+batterySteps = list(range(batteryStep, 100, batteryStep))
+batteryHeight = 1
+batteryHeightStep = 1
+# f.write("^fg(\#151515)${battery_percent}^fg()")
+f.write("^p()^p(;-1)^fg({})^bg({})\\\n".format(colorschemeDarkHex, colorschemeFgHex))
+for perc in reversed(batterySteps):
+    f.write("${{if_match ${{battery_percent}} > {}}}^r(16x{})${{else}}\\\n".format(perc, batteryHeight))
+    batteryHeight += batteryHeightStep
+f.write("^r(16x0)\\\n")
 for i in range(len(batterySteps)):
     f.write("${endif}")
 f.write("\\\n")
+f.write("${{if_match ${{battery_percent}} < 10}}^fg({})${{blink !}}${{endif}}\\\n".format(colorschemeRedHex))
 
 ## Done and done
 f.close()
