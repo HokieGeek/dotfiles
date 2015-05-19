@@ -18,7 +18,7 @@ def handleSigTERM():
 
 ## Variables
 infoFirehose = False
-imagesDir = "$HOME/.conky/imgs"
+imagesDir = "$HOME/.xmonad/statusbar/imgs"
 colorschemeGreyHex = "\\#606060"
 colorschemeDimHex = "\\#3A3A3A"
 colorschemeDarkHex = "\\#282828"
