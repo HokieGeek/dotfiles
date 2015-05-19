@@ -83,10 +83,16 @@ surroundInQuotes str = "'" ++ str ++ "'"
 
 -- Hooks {{{
 -- Manage {{{
+-- shiftToNew :: String -> X()
+-- shiftToNew ws = addWorkspace ws
+                -- viewShift ws
+    -- where
+        -- viewShift = doF . liftM2 (.) W.greedyView W.shift
+
 myManageHook = composeAll
     [ isFullscreen --> doFullFloat
     , className =? "Xmessage"   --> doCenterFloat
-    , className =? "Gimp"       --> viewShift "-"
+    , className =? "Gimp"       --> viewShift "gimp"
     , className =? "VASSAL-launch-ModuleManager"    --> doFloat <+> doShift "="
     , className =? "VASSAL-launch-Player"           --> doFloat <+> doShift "="
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat -- Hangouts
@@ -131,6 +137,7 @@ myDzen h = defaultPP
     }
     where
         dzenWorkspaceSymbol x
+              | notElem x myWorkspaces = x
               | otherwise = "^r(4x4)^fg(" ++ colorBackground ++ ")^r(5x1)"
 -- }}}
 -- HandleEvent {{{
@@ -203,8 +210,8 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((0, xF86XK_Launch1), spawn myTerminal)
             , ((shiftMask, xF86XK_Launch1), spawn myBrowser)
 
-            -- , ((modm, xK_F10), addWorkspace "GIMP")
-            -- , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
+            , ((modm, xK_F10), addWorkspace "gimp")
+            , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
             ]
             ++
             [((m .|. modm, k), windows $ f i)
