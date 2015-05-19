@@ -161,12 +161,16 @@ else:
     batteryStep = int(100 / height)
     batterySteps = list(range(batteryStep, 100, batteryStep))
     batteryHeight = height
+    batteryHeightStep = -1
     f.write("^fg(\\#151515)${battery_percent}^fg()")
     f.write("^p(;_BOTTOM)^bg({})\\\\\\n".format(colorschemeDarkHex))
-    # f.write("^p(;-1)^fg({})^bg(\\#005f00)\\\\\\n".format(colorschemeDarkHex))
+    if True:
+        batteryHeight = 1
+        batteryHeightStep = 1
+        f.write("^p()^p(;-1)^fg({})^bg(\\#005f00)\\\\\\n".format(colorschemeDarkHex)) # TODO: this would also need to be p\342\213\257
     for perc in reversed(batterySteps):
         f.write("${{if_match ${{battery_percent}} > {}}}^r(16x{})${{else}}\\\\\\n".format(perc, batteryHeight))
-        batteryHeight -= 1
+        batteryHeight += batteryHeightStep
     f.write("^r(16x0)\\\\\\n")
 
 for i in range(len(batterySteps)):
