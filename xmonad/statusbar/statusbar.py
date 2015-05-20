@@ -33,6 +33,7 @@ def handleSigTERM():
 ## Variables
 infoFirehose = False
 imagesDir = "{}/imgs".format(os.path.dirname(os.path.realpath(__file__)))
+height = int(args["height"])
 colorschemeFgHex = "\\{}".format(args["color_fg"])
 colorschemeBgHex = "\\{}".format(args["color_bg"])
 colorschemeGreyHex = "\\#606060"
@@ -118,12 +119,35 @@ f.write(sectionSpacing)
 f.write("^ca(1, st -e alsamixer)")
 f.write("${if_match ${texeci 2 amixer get Master | egrep '(Mono|Front)' | tail -1 | grep -c '\[off\]'} >= 1}\\\n")
 f.write("^fg({})${{else}}^fg({})${{endif}}".format(colorschemeDimHex, colorschemeFgHex))
-volumeSteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
-for i in volumeSteps:
-    f.write("${{if_match ${{texeci 1 amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\].*/\1/g'}} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
-f.write("^i({}/volume_0.xbm)\\\n".format(imagesDir))
-for i in range(len(volumeSteps)):
-    f.write("${endif}")
+if True:
+    volumeSteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
+    for i in volumeSteps:
+        ## FIXME: this crap is broken. Can't do \1, apparently
+        f.write("${{if_match ${{texeci 1 amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\].*/\1/g'}} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
+        # f.write("${{if_match ${{texeci 1 amixer get Master -M | sed -n -e 's/.*\[\([0-9]*\)%\].*/\1/p'}} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
+    f.write("^i({}/volume_0.xbm)\\\n".format(imagesDir))
+    for i in range(len(volumeSteps)):
+        f.write("${endif}")
+    f.write("^ca()")
+else:
+    # TODO: shit f.write("^fg({})${{else}}^fg({})${{endif}}".format(colorschemeDimHex, colorschemeBgHex))
+    f.write("^p(;-1)\\\n")
+    volumeCmd = "amixer get Master -M | sed -n -e 's/.*\[\([0-9]*\)%\].*/\\\1/p'"
+    # f.write("${{if_match ${{texeci 1 amixer get Master -M | sed -n -e 's/.*\[\([0-9]*\)%\].*/\1/p'}} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
+    volumeLevel = 0
+    # volumeStep = int(100 / (height*3))
+    volumeStep = 2.85
+    for i in reversed(range(0, height)):
+        f.write("^fg({})^bg({})\\\n".format(colorschemeBgHex, colorschemeFgHex))
+        # f.write("${{if_match ${{texeci 1 amixer get Master -M | sed -n -e 's/.*\[\([0-9]*\)%\].*/\\\1/p'}} >= {}}}^r(1x{})${{endif}}\\\n".format(volumeLevel, i))
+        f.write("${{if_match ${{texeci 1 {}}} >= {}}}^r(1x{})${{endif}}\\\n".format(volumeCmd, volumeLevel, i))
+        volumeLevel += volumeStep
+        f.write("${{if_match ${{texeci 1 {}}} >= {}}}^r(1x{})${{endif}}\\\n".format(volumeCmd, volumeLevel, i))
+        volumeLevel += volumeStep
+        f.write("${{if_match ${{texeci 1 {}}} >= {}}}^bg({})^r(1x{})${{endif}}\\\n".format(volumeCmd, volumeLevel, colorschemeBgHex, i))
+        volumeLevel += volumeStep
+    f.write("^p()^fg({})^bg({})\\\n".format(colorschemeFgHex, colorschemeBgHex))
+
 f.write("^ca()")
 f.write(sectionSpacing)
 
@@ -173,7 +197,6 @@ f.write("${{if_match ${{battery_percent}} < 99}}^fg({})${{endif}}\\\n".format(co
 f.write("${{if_match ${{battery_percent}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeYellowHex))
 f.write("${{if_match ${{battery_percent}} < 20}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
 
-height = int(args["height"])
 batteryStep = int(100 / height)
 batterySteps = list(range(batteryStep, 100, batteryStep))
 batteryHeight = 1
