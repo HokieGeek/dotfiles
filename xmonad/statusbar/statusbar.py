@@ -204,11 +204,12 @@ f.write("^i({}/temp.xbm)\\\n".format(imagesDir))
 f.write("  \\\n")
 
 ## FAN
-f.write("^fg({})\\\n".format(colorschemeDarkHex))
-f.write("${{if_match ${{ibm_fan}} > 3000}}^fg({})${{else}}\\\n".format(colorschemeDimHex))
-f.write("${{if_match ${{ibm_fan}} > 3500}}^fg({})${{else}}\\\n".format(colorschemeWhiteHex))
-f.write("${{if_match ${{ibm_fan}} > 4000}}^fg({})${{endif}}${{endif}}${{endif}}\\\n".format(colorschemeRedHex))
-f.write("^i({}/fan.xbm)\\\n".format(imagesDir))
+if os.path.isfile("/proc/acpi/ibm/fan"):
+    f.write("^fg({})\\\n".format(colorschemeDarkHex))
+    f.write("${{if_match ${{ibm_fan}} > 3000}}^fg({})${{else}}\\\n".format(colorschemeDimHex))
+    f.write("${{if_match ${{ibm_fan}} > 3500}}^fg({})${{else}}\\\n".format(colorschemeWhiteHex))
+    f.write("${{if_match ${{ibm_fan}} > 4000}}^fg({})${{endif}}${{endif}}${{endif}}\\\n".format(colorschemeRedHex))
+    f.write("^i({}/fan.xbm)\\\n".format(imagesDir))
 f.write(sectionSpacing)
 
 ## TIME
