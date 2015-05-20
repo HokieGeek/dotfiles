@@ -74,7 +74,9 @@ else:
 f.write("^fg({})\\\n".format(colorschemeFgHex))
 f.write("${endif}\\\n")
 if distro == "arch":
+    f.write("^ca(1, st -e yaourt -Syua)")
     f.write(" ^i({}/arch.xbm) \\\n".format(imagesDir))
+    f.write("^ca()")
 else:
     f.write(" ^c(7) \\\n")
 f.write("^fg({})${{kernel}}\\\n".format(colorschemeGreyHex))
@@ -122,20 +124,16 @@ f.write("^fg({})${{else}}^fg({})${{endif}}".format(colorschemeDimHex, colorschem
 if False:
     volumeSteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
     for i in volumeSteps:
-        ## FIXME: this crap is broken. Can't do \1, apparently
-        # OLD: f.write("${{if_match ${{texeci 1 amixer get Master | tail -1 | sed 's/.*\[\([0-9]*\)%\].*/\1/g'}} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
-        # NEW: f.write("${{if_match ${{texeci 1 amixer get Master -M | sed -n -e 's/.*\[\([0-9]*\)%\].*/\1/p'}} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
         f.write("${{if_match ${{texeci 1 amixer get Master -M | awk -F'[' '$2 ~ /%/ { sub(/%]/, "", $2); print $2 }' }} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
     f.write("^i({}/volume_0.xbm)\\\n".format(imagesDir))
     for i in range(len(volumeSteps)):
         f.write("${endif}")
-    f.write("^ca()")
 else:
     # TODO: crap! f.write("^fg({})${{else}}^fg({})${{endif}}".format(colorschemeDimHex, colorschemeBgHex))
+    # SOLUTION: have a texeci that just stores volume level and fg color to a file.
+    # The other texecs can just read that file (head -1 for level, tail -1 for color)
     f.write("^p(;-1)\\\n")
-    # volumeCmd = "amixer get Master -M | sed -n -e 's/.*\[\([0-9]*\)%\].*/\\\1/p'"
     volumeCmd = "amixer get Master -M | awk -F'[' '$2 ~ /%/ { sub(/%]/, \"\", $2); print $2 }'"
-    # f.write("${{if_match ${{texeci 1 amixer get Master -M | sed -n -e 's/.*\[\([0-9]*\)%\].*/\1/p'}} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
     volumeLevel = 0
     # volumeStep = int(100 / (height*3))
     volumeStep = 2.85
@@ -155,6 +153,7 @@ f.write("^ca()")
 f.write(sectionSpacing)
 
 # CPU
+f.write("^ca(1, htop --sort-key PERCENT_CPU)\\\n")
 numCpus = subprocess.check_output("grep -c 'processor' /proc/cpuinfo", shell=True).strip().decode("utf-8")
 for cpu in range(1,int(numCpus)+1):
     f.write("^fg({})\\\n".format(colorschemeDimHex))
@@ -162,14 +161,17 @@ for cpu in range(1,int(numCpus)+1):
     f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg({})${{endif}}\\\n".format(cpu, colorschemeRedHex))
     f.write("${{if_match ${{cpu cpu{}}} < 15}}^fg({})${{endif}}\\\n".format(cpu, colorschemeDarkHex))
     f.write("^i({}/cpu.xbm) \\\n".format(imagesDir))
+f.write("^ca()\\\n")
 
 ## RAM
+f.write("^ca(1, htop --sort-key PERCENT_MEM)\\\n")
 f.write("^fg({})\\\n".format(colorschemeGreyHex))
 f.write("${{if_match ${{memperc}} <= 50}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
 f.write("${{if_match ${{memperc}} < 25}}^fg({})${{endif}}\\\n".format(colorschemeDarkHex))
 f.write("${{if_match ${{memperc}} > 50}}^fg({})${{endif}}\\\n".format(colorschemeWhiteHex))
 f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
 f.write(" ^i({}/mem.xbm)\\\n".format(imagesDir))
+f.write("^ca()\\\n")
 f.write("  \\\n")
 
 ## TEMP
