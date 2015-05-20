@@ -78,7 +78,9 @@ if distro == "arch":
     f.write(" ^i({}/arch.xbm) \\\n".format(imagesDir))
     f.write("^ca()")
 else:
+    f.write("^ca(1, st -e sudo yum -y update)")
     f.write(" ^c(7) \\\n")
+    f.write("^ca()")
 f.write("^fg({})${{kernel}}\\\n".format(colorschemeGreyHex))
 f.write("  \\\n")
 
