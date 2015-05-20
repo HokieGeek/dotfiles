@@ -272,6 +272,7 @@ batteryStep = int(100 / height)
 batterySteps = list(range(batteryStep, 100, batteryStep))
 batteryHeight = 1
 batteryHeightStep = 1
+f.write("${if_match ${battery_percent} < 100}\\\n")
 # f.write("^fg(\#151515)${battery_percent}^fg()")
 f.write("${if_match ${battery_percent} < 100}\\\n")
 f.write("^p()^p(;-1)^fg({})^bg({})\\\n".format(colorschemeDimHex, colorschemeFgHex))
