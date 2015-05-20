@@ -1,6 +1,7 @@
 import subprocess
 import tempfile
 import os
+import stat
 import signal
 import argparse
 import sys
@@ -134,31 +135,39 @@ if False:
     for i in range(len(volumeSteps)):
         f.write("${endif}")
 else:
-    # TODO: crap! f.write("^fg({})${{else}}^fg({})${{endif}}".format(colorschemeDimHex, colorschemeBgHex))
-    # SOLUTION: have a texeci that just stores volume level and fg color to a file.
-    # The other texecs can just read that file (head -1 for level, tail -1 for color)
-    #volumeFile = "/tmp/statusbar.py.vol" ## TODO: betterify
-    # TODO: make this a single bash script that gets called by texec
-    #volumeCmd2 = "amixer get Master -M | awk -F'[' '$2 ~ /%/ {{ sub(/%]/, \"\", $2); print $2 }}' >> {}".format(volumeFile)
-    #f.write("${{texeci 2 {}}}\\\n".format(volumeCmd2))
-    #muteCmd = "[ amixer get Master | egrep '(Mono|Front)' | tail -1 | grep -c '\[off\]' >= 1 ] && echo '{}' >> {} || echo '{}' >> {}".format(colorschemeDimHex, volumeFile, colorschemeFgHex, volumeFile)
-    #f.write("${{texeci 2 {}}}".format(muteCmd))
+    volumeFile = "/tmp/statusbar.py.vol" ## TODO: betterify
+    # volumeFile = tempfile.NamedTemporaryFile('w', delete = False).name
 
-    volumeCmd = "amixer get Master -M | awk -F'[' '$2 ~ /%/ { sub(/%]/, \"\", $2); print $2 }'"
+    volumeScriptName = tempfile.NamedTemporaryFile('w', delete = False).name
+    volumeScript = open(volumeScriptName, 'w')
+    volumeScript.write("#!/bin/bash\n")
+    volumeScript.write("[ $# -le 0 ] && {\n")
+    volumeScript.write("    {\n")
+    volumeScript.write("        amixer get Master -M | awk -F'[' '$2 ~ /%/ { sub(/%]/, \"\", $2); print $2 }' | head -1\n")
+    volumeScript.write("        amixer get Master | egrep '(Mono|Front)' | tail -1 | awk -F'[' '{ sub(/]/, \"\", $3); print $3 }'\n")
+    volumeScript.write("    }} > {}\n".format(volumeFile))
+    volumeScript.write("    chmod 666 {}\n".format(volumeFile))
+    volumeScript.write("} || {\n")
+    volumeScript.write("    set -x\n")
+    volumeScript.write("    [ $1 -ge `head -1 {}` -a \"`tail -1 {}`\" == \"on\" ] && echo 1 || echo 0\n".format(volumeFile, volumeFile))
+    volumeScript.write("}\n")
+    volumeScript.close()
+    os.chmod(volumeScriptName, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
+    f.write("${{texeci 1 {}}}\\\n".format(volumeScriptName))
 
     volumeLevel = 0
     # volumeStep = int(100 / (height*3))
-    volumeStep = 2.85
-    f.write("^p(;-1)\\\n")
+    volumeStep = 3.036
+    # f.write("\nAFP: step = {}\n".format(volumeStep))
+    f.write("^p(;-1)^fg({})\\\n".format(colorschemeBgHex))
     for i in reversed(range(0, height)):
-        f.write("^fg({})^bg({})\\\n".format(colorschemeBgHex, colorschemeFgHex))
-        # TODO: only change the color, not whether the rectangle is drawn. that way width doesn't change
-        # f.write("${{if_match ${{texeci 1 amixer get Master -M | sed -n -e 's/.*\[\([0-9]*\)%\].*/\\\1/p'}} >= {}}}^r(1x{})${{endif}}\\\n".format(volumeLevel, i))
-        f.write("${{if_match ${{texeci 1 {}}} >= {}}}^r(1x{})${{endif}}\\\n".format(volumeCmd, volumeLevel, i))
-        volumeLevel += volumeStep
-        f.write("${{if_match ${{texeci 1 {}}} >= {}}}^r(1x{})${{endif}}\\\n".format(volumeCmd, volumeLevel, i))
-        volumeLevel += volumeStep
-        f.write("${{if_match ${{texeci 1 {}}} >= {}}}^bg({})^r(1x{})${{endif}}\\\n".format(volumeCmd, volumeLevel, colorschemeBgHex, i))
+        for j in range(0,2):
+            f.write("${{if_match ${{texeci 1 {} {}}} == 1 }}^bg({})${{else}}^bg({})${{endif}}".format(volumeScriptName, round(volumeLevel), colorschemeDimHex, colorschemeFgHex))
+            f.write("^r(1x{})\\\n".format(i))
+            volumeLevel += volumeStep
+
+        # f.write("\nAFP: {}, {}, {}\n".format(volumeLevel, volumeLevel+volumeStep, volumeLevel+volumeStep))
+        f.write("^bg({})^r(1x{})\\\n".format(colorschemeBgHex, i))
         volumeLevel += volumeStep
     f.write("^p()^fg({})^bg({})\\\n".format(colorschemeFgHex, colorschemeBgHex))
 
@@ -219,6 +228,7 @@ batteryStep = int(100 / height)
 batterySteps = list(range(batteryStep, 100, batteryStep))
 batteryHeight = 1
 batteryHeightStep = 1
+f.write("${if_match ${battery_percent} < 100}\\\n")
 # f.write("^fg(\#151515)${battery_percent}^fg()")
 f.write("^p()^p(;-1)^fg({})^bg({})\\\n".format(colorschemeDarkHex, colorschemeFgHex))
 for perc in reversed(batterySteps):
@@ -228,6 +238,7 @@ f.write("^r(16x0)\\\n")
 for i in range(len(batterySteps)):
     f.write("${endif}")
 f.write("\\\n")
+f.write("${endif}\\\n")
 
 ## Done and done
 f.close()
