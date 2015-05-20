@@ -120,11 +120,12 @@ f.write(sectionSpacing)
 ## MEDIA
 f.write("^ca(1, st -e alsamixer)")
 f.write("${if_match ${texeci 2 amixer get Master | egrep '(Mono|Front)' | tail -1 | grep -c '\[off\]'} >= 1}\\\n")
-f.write("^fg({})${{else}}^fg({})${{endif}}".format(colorschemeDimHex, colorschemeFgHex))
+f.write("^fg({})${{else}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, colorschemeFgHex))
 if False:
     volumeSteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
+    volumeCmd = "amixer get Master -M | awk -F'[' '$2 ~ /%/ { sub(/%]/, \"\", $2); print $2 }'"
     for i in volumeSteps:
-        f.write("${{if_match ${{texeci 1 amixer get Master -M | awk -F'[' '$2 ~ /%/ { sub(/%]/, "", $2); print $2 }' }} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
+        f.write("${{if_match ${{texeci 1 {}}} }} >= {} }}^i({}/volume_{}.xbm)${{else}}\\\n".format(volumeCmd, i, imagesDir, i))
     f.write("^i({}/volume_0.xbm)\\\n".format(imagesDir))
     for i in range(len(volumeSteps)):
         f.write("${endif}")
@@ -132,11 +133,19 @@ else:
     # TODO: crap! f.write("^fg({})${{else}}^fg({})${{endif}}".format(colorschemeDimHex, colorschemeBgHex))
     # SOLUTION: have a texeci that just stores volume level and fg color to a file.
     # The other texecs can just read that file (head -1 for level, tail -1 for color)
-    f.write("^p(;-1)\\\n")
+    #volumeFile = "/tmp/statusbar.py.vol" ## TODO: betterify
+    # TODO: make this a single bash script that gets called by texec
+    #volumeCmd2 = "amixer get Master -M | awk -F'[' '$2 ~ /%/ {{ sub(/%]/, \"\", $2); print $2 }}' >> {}".format(volumeFile)
+    #f.write("${{texeci 2 {}}}\\\n".format(volumeCmd2))
+    #muteCmd = "[ amixer get Master | egrep '(Mono|Front)' | tail -1 | grep -c '\[off\]' >= 1 ] && echo '{}' >> {} || echo '{}' >> {}".format(colorschemeDimHex, volumeFile, colorschemeFgHex, volumeFile)
+    #f.write("${{texeci 2 {}}}".format(muteCmd))
+
     volumeCmd = "amixer get Master -M | awk -F'[' '$2 ~ /%/ { sub(/%]/, \"\", $2); print $2 }'"
+
     volumeLevel = 0
     # volumeStep = int(100 / (height*3))
     volumeStep = 2.85
+    f.write("^p(;-1)\\\n")
     for i in reversed(range(0, height)):
         f.write("^fg({})^bg({})\\\n".format(colorschemeBgHex, colorschemeFgHex))
         # TODO: only change the color, not whether the rectangle is drawn. that way width doesn't change
