@@ -1,8 +1,15 @@
 #!/bin/sh
 xmonad --recompile || exit 1
+
+# Nuke 'em from space!
+pkill -f statusbar/statusbar.sh
 pkill conky
+pkill dzen2
 pkill xcompmgr
+
 xmonad --restart
+
+# So what's a drity hack like you doing in a place like this?
 sleep 0.25s
 xkev -u -e j
 xkev -u -e k
