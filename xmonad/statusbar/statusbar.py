@@ -51,7 +51,7 @@ signal.signal(signal.SIGTERM, handleSigTERM)
 f = open(conkyFile, 'w')
 
 ## CONKY SETTINGS
-f.write("background yes\n")
+# f.write("background yes\n")
 f.write("out_to_console yes\n")
 f.write("out_to_x no\n")
 f.write("update_interval 1\n")
@@ -61,7 +61,7 @@ f.write("\nTEXT\n")
 f.write("^bg({})\\\n".format(colorschemeBgHex))
 
 ## Machine info
-distro = "arch" # TODO
+distro = "centos" # TODO
 updateCheckInterval = "60"
 f.write("^fg({})${{nodename}}\\\n".format(colorschemeGreyHex))
 f.write("^fg({})".format(colorschemeFgHex))
@@ -123,21 +123,20 @@ f.write("${texeci 3 wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d :
 f.write(sectionSpacing)
 
 ## MEDIA
-f.write("^ca(1, st -e alsamixer)\\\n")
-if False:
+f.write("^ca(1, st -e alsamixer)")
+if True:
     f.write("${if_match ${texeci 2 amixer get Master | egrep '(Mono|Front)' | tail -1 | grep -c '\[off\]'} >= 1}\\\n")
-    f.write("^fg({})${{else}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, colorschemeFgHex))
+    f.write("^fg({})${{else}}^fg({})${{endif}}\\\n".format(colorschemeDarkHex, colorschemeFgHex))
     volumeSteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
     volumeCmd = "amixer get Master -M | awk -F'[' '$2 ~ /%/ { sub(/%]/, \"\", $2); print $2 }'"
     for i in volumeSteps:
-        # f.write("${{if_match ${{texeci 1 {}}} }} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(volumeCmd, i, imagesDir, i))
-        f.write("${{if_match ${{texeci 1 amixer get Master -M | awk -F'[' '$2 ~ /%/ {{ sub(/%]/, \"\", $2); print $2 }}' }} }} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
+        f.write("${{if_match ${{texeci 1 {}}} }} >= {} }}^i({}/volume_{}.xbm)${{else}}\\\n".format(volumeCmd, i, imagesDir, i))
     f.write("^i({}/volume_0.xbm)\\\n".format(imagesDir))
     for i in range(len(volumeSteps)):
         f.write("${endif}")
 else:
-    volumeFile = "/tmp/statusbar.py.vol" ## TODO: betterify
-    # volumeFile = tempfile.NamedTemporaryFile('w', delete = False).name
+    volumeFile = "/tmp/statusbar.py.vol"
+    # TODO: volumeFile = tempfile.NamedTemporaryFile('w', delete = False).name
 
     volumeScriptName = tempfile.NamedTemporaryFile('w', delete = False).name
     volumeScript = open(volumeScriptName, 'w')
@@ -165,9 +164,9 @@ else:
     f.write("^p(;-1)^fg({})\\\n".format(colorschemeBgHex))
     for i in reversed(range(0, height)):
         for j in range(0,2):
-            f.write("${{if_match ${{texeci 1 {} {}}} == 1 }}^bg({})${{else}}^bg({})${{endif}}".format(volumeScriptName, round(volumeLevel), colorschemeFgHex, colorschemeDimHex))
-            # f.write("${{if_match ${{texeci 1 {}}} == 'off' }}^bg({})${{else}}\\\n".format(volumeMuteCmd, colorschemeDimHex))
-            # f.write("${{if_match ${{texeci 1 {}}} >= {} }}^bg({})${{else}}^bg({})${{endif}}\\\n${{endif}}\\\n".format(volumeMuteCmd, round(volumeLevel), colorschemeFgHex, colorschemeDimHex))
+            # f.write("${{if_match ${{texeci 1 {} {}}} == 1 }}^bg({})${{else}}^bg({})${{endif}}".format(volumeScriptName, round(volumeLevel), colorschemeFgHex, colorschemeDimHex))
+            f.write("${{if_match ${{texeci 1 {}}} == 'off' }}^bg({})${{else}}\\\n".format(volumeMuteCmd, colorschemeDarkHex))
+            f.write("${{if_match ${{texeci 1 {}}} >= {} }}^bg({})${{else}}^bg({})${{endif}}\\\n${{endif}}\\\n".format(volumeMuteCmd, round(volumeLevel), colorschemeFgHex, colorschemeDarkHex))
             f.write("^r(1x{})\\\n".format(i))
             volumeLevel += volumeStep
 
@@ -177,7 +176,43 @@ else:
     f.write("^p()^fg({})^bg({})\\\n".format(colorschemeFgHex, colorschemeBgHex))
     # TODO: delete volumeScriptName?
 
-f.write("^ca()\\\n")
+
+    #volumeFile = "/tmp/statusbar.py.vol" ## TODO: betterify
+
+    #volumeScriptName = tempfile.NamedTemporaryFile('w', delete = False).name
+    #volumeScript = open(volumeScriptName, 'w')
+    #volumeScript.write("#!/bin/bash\n")
+    #volumeScript.write("[ $# -le 0 ] && {\n")
+    #volumeScript.write("    {\n")
+    #volumeScript.write("        amixer get Master -M | awk -F'[' '$2 ~ /%/ { sub(/%]/, \"\", $2); print $2 }' | head -1\n")
+    #volumeScript.write("        amixer get Master | egrep '(Mono|Front)' | tail -1 | awk -F'[' '{ sub(/]/, \"\", $3); print $3 }'\n")
+    #volumeScript.write("    }} > {}\n".format(volumeFile))
+    #volumeScript.write("    chmod 666 {}\n".format(volumeFile))
+    #volumeScript.write("} || {\n")
+    #volumeScript.write("    set -x\n")
+    #volumeScript.write("    [ $1 -ge `head -1 {}` -a \"`tail -1 {}`\" == \"on\" ] && echo 1 || echo 0\n".format(volumeFile, volumeFile))
+    #volumeScript.write("}\n")
+    #volumeScript.close()
+    #os.chmod(volumeScriptName, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH)
+    #f.write("${{texeci 1 {}}}\\\n".format(volumeScriptName))
+
+    #volumeLevel = 0
+    ## volumeStep = int(100 / (height*3))
+    #volumeStep = 3.036
+    ## f.write("\nAFP: step = {}\n".format(volumeStep))
+    #f.write("^p(;-1)^fg({})\\\n".format(colorschemeBgHex))
+    #for i in reversed(range(0, height)):
+    #    for j in range(0,2):
+    #        f.write("${{if_match ${{texeci 1 {} {}}} == 1 }}^bg({})${{else}}^bg({})${{endif}}".format(volumeScriptName, round(volumeLevel), colorschemeDimHex, colorschemeFgHex))
+    #        f.write("^r(1x{})\\\n".format(i))
+    #        volumeLevel += volumeStep
+
+    #    # f.write("\nAFP: {}, {}, {}\n".format(volumeLevel, volumeLevel+volumeStep, volumeLevel+volumeStep))
+    #    f.write("^bg({})^r(1x{})\\\n".format(colorschemeBgHex, i))
+    #    volumeLevel += volumeStep
+    #f.write("^p()^fg({})^bg({})\\\n".format(colorschemeFgHex, colorschemeBgHex))
+
+f.write("^ca()")
 f.write(sectionSpacing)
 
 # CPU
@@ -203,13 +238,14 @@ f.write("^ca()\\\n")
 f.write("  \\\n")
 
 ## TEMP
-f.write("^fg({})\\\n".format(colorschemeDarkHex))
-f.write("${{if_match ${{acpitemp}} > 65}}^fg({})${{else}}\\\n".format(colorschemeWhiteHex))
-f.write("${{if_match ${{acpitemp}} > 85}}^fg({})${{endif}}${{endif}}\\\n".format(colorschemeRedHex))
-f.write("^i({}/temp.xbm)\\\n".format(imagesDir))
-f.write("  \\\n")
+#f.write("^fg({})\\\n".format(colorschemeDarkHex))
+#f.write("${{if_match ${{acpitemp}} > 65}}^fg({})${{else}}\\\n".format(colorschemeWhiteHex))
+#f.write("${{if_match ${{acpitemp}} > 85}}^fg({})${{endif}}${{endif}}\\\n".format(colorschemeRedHex))
+#f.write("^i({}/temp.xbm)\\\n".format(imagesDir))
+#f.write("  \\\n")
 
 ## FAN
+# f.write("${acpifan}\\\n")
 if os.path.isfile("/proc/acpi/ibm/fan"):
     f.write("^fg({})\\\n".format(colorschemeDarkHex))
     f.write("${{if_match ${{ibm_fan}} > 3000}}^fg({})${{else}}\\\n".format(colorschemeDimHex))
@@ -231,20 +267,24 @@ f.write("${{if_match ${{battery_percent}} < 99}}^fg({})${{endif}}\\\n".format(co
 f.write("${{if_match ${{battery_percent}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeYellowHex))
 f.write("${{if_match ${{battery_percent}} < 20}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
 
+batteryWidth=16
 batteryStep = int(100 / height)
 batterySteps = list(range(batteryStep, 100, batteryStep))
 batteryHeight = 1
 batteryHeightStep = 1
-f.write("${if_match ${battery_percent} < 100}\\\n")
 # f.write("^fg(\#151515)${battery_percent}^fg()")
-f.write("^p()^p(;-1)^fg({})^bg({})\\\n".format(colorschemeDarkHex, colorschemeFgHex))
+f.write("${if_match ${battery_percent} < 100}\\\n")
+f.write("^p()^p(;-1)^fg({})^bg({})\\\n".format(colorschemeDimHex, colorschemeFgHex))
 for perc in reversed(batterySteps):
-    f.write("${{if_match ${{battery_percent}} > {}}}^r(16x{})${{else}}\\\n".format(perc, batteryHeight))
+    f.write("${{if_match ${{battery_percent}} > {}}}^r({}x{})${{else}}\\\n".format(perc, batteryWidth, batteryHeight))
     batteryHeight += batteryHeightStep
-f.write("^r(16x0)\\\n")
+f.write("^r({}x0)\\\n".format(batteryWidth))
 for i in range(len(batterySteps)):
     f.write("${endif}")
 f.write("\\\n")
+# f.write("${{if_match ${{battery_percent}} < 10}}^fg({})${{blink !}}${{endif}}\\\n".format(colorschemeRedHex))
+f.write("${else}\\\n")
+f.write("^fg({})^r({}x{})\\\n".format(colorschemeDarkHex, batteryWidth, height))
 f.write("${endif}\\\n")
 
 ## Done and done
