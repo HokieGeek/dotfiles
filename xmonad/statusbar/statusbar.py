@@ -123,14 +123,15 @@ f.write("${texeci 3 wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d :
 f.write(sectionSpacing)
 
 ## MEDIA
-f.write("^ca(1, st -e alsamixer)")
+f.write("^ca(1, st -e alsamixer)\\\n")
 if False:
     f.write("${if_match ${texeci 2 amixer get Master | egrep '(Mono|Front)' | tail -1 | grep -c '\[off\]'} >= 1}\\\n")
     f.write("^fg({})${{else}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, colorschemeFgHex))
     volumeSteps = [100, 94, 88, 82, 75, 69, 63, 56, 50, 44, 38, 31, 25, 19, 12, 6]
     volumeCmd = "amixer get Master -M | awk -F'[' '$2 ~ /%/ { sub(/%]/, \"\", $2); print $2 }'"
     for i in volumeSteps:
-        f.write("${{if_match ${{texeci 1 {}}} }} >= {} }}^i({}/volume_{}.xbm)${{else}}\\\n".format(volumeCmd, i, imagesDir, i))
+        # f.write("${{if_match ${{texeci 1 {}}} }} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(volumeCmd, i, imagesDir, i))
+        f.write("${{if_match ${{texeci 1 amixer get Master -M | awk -F'[' '$2 ~ /%/ {{ sub(/%]/, \"\", $2); print $2 }}' }} }} >= {}}}^i({}/volume_{}.xbm)${{else}}\\\n".format(i, imagesDir, i))
     f.write("^i({}/volume_0.xbm)\\\n".format(imagesDir))
     for i in range(len(volumeSteps)):
         f.write("${endif}")
@@ -176,7 +177,7 @@ else:
     f.write("^p()^fg({})^bg({})\\\n".format(colorschemeFgHex, colorschemeBgHex))
     # TODO: delete volumeScriptName?
 
-f.write("^ca()")
+f.write("^ca()\\\n")
 f.write(sectionSpacing)
 
 # CPU
