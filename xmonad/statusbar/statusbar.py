@@ -61,7 +61,7 @@ f.write("\nTEXT\n")
 f.write("^bg({})\\\n".format(colorschemeBgHex))
 
 ## Machine info
-distro = "arch" # TODO
+distro = "centos" # TODO
 updateCheckInterval = "60"
 f.write("^fg({})${{nodename}}\\\n".format(colorschemeGreyHex))
 f.write("^fg({})".format(colorschemeFgHex))
@@ -238,11 +238,11 @@ f.write("^ca()\\\n")
 f.write("  \\\n")
 
 ## TEMP
-f.write("^fg({})\\\n".format(colorschemeDarkHex))
-f.write("${{if_match ${{acpitemp}} > 65}}^fg({})${{else}}\\\n".format(colorschemeWhiteHex))
-f.write("${{if_match ${{acpitemp}} > 85}}^fg({})${{endif}}${{endif}}\\\n".format(colorschemeRedHex))
-f.write("^i({}/temp.xbm)\\\n".format(imagesDir))
-f.write("  \\\n")
+#f.write("^fg({})\\\n".format(colorschemeDarkHex))
+#f.write("${{if_match ${{acpitemp}} > 65}}^fg({})${{else}}\\\n".format(colorschemeWhiteHex))
+#f.write("${{if_match ${{acpitemp}} > 85}}^fg({})${{endif}}${{endif}}\\\n".format(colorschemeRedHex))
+#f.write("^i({}/temp.xbm)\\\n".format(imagesDir))
+#f.write("  \\\n")
 
 ## FAN
 # f.write("${acpifan}\\\n")
@@ -272,7 +272,6 @@ batteryStep = int(100 / height)
 batterySteps = list(range(batteryStep, 100, batteryStep))
 batteryHeight = 1
 batteryHeightStep = 1
-f.write("${if_match ${battery_percent} < 100}\\\n")
 # f.write("^fg(\#151515)${battery_percent}^fg()")
 f.write("${if_match ${battery_percent} < 100}\\\n")
 f.write("^p()^p(;-1)^fg({})^bg({})\\\n".format(colorschemeDimHex, colorschemeFgHex))
