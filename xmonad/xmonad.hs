@@ -204,9 +204,8 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
 compmgr   = "xcompmgr"
 barheight = "14"
 screenwidth_cmd    = "xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1"
-workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ font ++ "' -x '0' -y '0' -h '" ++ barheight ++ "' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
 conkyStatusBar     = "~/.xmonad/statusbar/statusbar.sh --width `" ++ screenwidth_cmd ++ "` --height '" ++ barheight ++ "' --bg '" ++ colorBackground ++ "' --fg '" ++ colorForeground ++ "' --font '" ++ font ++ "'"
-
+workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ font ++ "' -x '0' -y '0' -h '" ++ barheight ++ "' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
 main = do
         compMgrStart <- spawn compmgr
         dzenRightBar <- spawn conkyStatusBar
