@@ -282,7 +282,6 @@ f.write("^r({}x0)\\\n".format(batteryWidth))
 for i in range(len(batterySteps)):
     f.write("${endif}")
 f.write("\\\n")
-# f.write("${{if_match ${{battery_percent}} < 10}}^fg({})${{blink !}}${{endif}}\\\n".format(colorschemeRedHex))
 f.write("${else}\\\n")
 f.write("^fg({})^r({}x{})\\\n".format(colorschemeDarkHex, batteryWidth, height))
 f.write("${endif}\\\n")
