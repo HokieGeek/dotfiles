@@ -226,7 +226,6 @@ f.write("^r(16x0)\\\n")
 for i in range(len(batterySteps)):
     f.write("${endif}")
 f.write("\\\n")
-f.write("${{if_match ${{battery_percent}} < 10}}^fg({})${{blink !}}${{endif}}\\\n".format(colorschemeRedHex))
 
 ## Done and done
 f.close()
