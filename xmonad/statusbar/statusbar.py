@@ -86,7 +86,9 @@ f.write("  \\\n")
 ## NETWORK
 # Retrieve interfaces
 tempFile = tempfile.NamedTemporaryFile()
-os.system("ip link show up | egrep '^[0-9]*:' | awk -F: '$2 !~ /lo/ {{ sub(\"^ *\", \"\", $2); print $2 }}' > {}".format(tempFile.name))
+# TODO: this is ugly
+os.system("netstat -i | awk '$NF ~ /R/ && $1 !~ /lo/ {{ print $1 }}' > {}".format(tempFile.name))
+# f.write(tempFile)
 interfaces = [line.strip() for line in tempFile]
 tempFile.close()
 
@@ -114,8 +116,8 @@ for interface in [intf.decode("utf-8") for intf in interfaces]:
     f.write("${endif}\\\n")
 
 # Lastly, output the external IP
-f.write("  ^fg({})".format(colorschemeGreyHex))
-f.write("(${texeci 3 wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \< -f -1 | awk '{ print $1 }'})")
+f.write("  ^fg({})".format(colorschemeDimHex))
+f.write("${texeci 3 wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \< -f -1 | awk '{ print $1 }' | sed 's/null//' }")
 f.write(sectionSpacing)
 
 ## MEDIA
