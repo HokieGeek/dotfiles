@@ -53,7 +53,6 @@ f = open(conkyFile, 'w')
 ## CONKY SETTINGS
 # f.write("background yes\n")
 f.write("out_to_console yes\n")
-f.write("out_to_x no\n")
 f.write("update_interval 1\n")
 f.write("\nTEXT\n")
 
