@@ -6,8 +6,10 @@ zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower
 zstyle :compinstall filename '/home/andres/.zshrc'
 #zstyle :compinstall filename '/home/'`whoami`'/.zshrc'
 
-autoload -Uz compinit
-compinit
+autoload -Uz compinit; compinit
+
+source ~/.shell-plugins/zsh-autosuggestions/autosuggestions.zsh
+zle -N autosuggest-start
 
 HISTFILE=~/.histfile
 HISTSIZE=10000
@@ -38,6 +40,8 @@ export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 setopt correct # Spelling correction of commands
 autoload zmv # Fancy mv command
 autoload edit-command-line; zle -N edit-command-line
+
+export GOPATH=${HOME}/src/go
 
 export PATH=${PATH}:~/.bin
 export EDITOR="nvim"
