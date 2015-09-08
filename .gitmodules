@@ -1,3 +1,6 @@
 [submodule "vim/bundle"]
 	path = vim/bundle
-	url = https://github.com/HokieGeek/MahVimPlugins
+	url = git://github.com/HokieGeek/MahVimPlugins
+[submodule "shell-plugins/zsh-autosuggestions"]
+    path = shell-plugins/zsh-autosuggestions
+    url = https://github.com/tarruda/zsh-autosuggestions
