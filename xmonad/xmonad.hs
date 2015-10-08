@@ -42,7 +42,6 @@ import qualified Data.Map as M
 
 -- Local Variables {{{
 
--- unmuteAllChannels = "amixer -q set Master unmute ; amixer -q set Speaker unmute ; amixer -q set Headphone unmute ; "
 unmuteAllChannels = "amixer -q set Master unmute ; "
 xF86XK_AudioMicMute :: KeySym
 xF86XK_AudioMicMute = 0x1008ffb2
@@ -66,7 +65,7 @@ myDmenuMap = M.fromList
               , ("skype", "apulse32 skype")
               , ("mpc", myTerminal ++ " -e ncmpcpp")
               , ("steam", "playonlinux --run \"Steam\" %F")
-              -- , ("minicom", myTerminal ++ " -e minicom")
+              , ("picocom", myTerminal ++ " -e picocom")
               ]
 --}}}
 
@@ -83,13 +82,22 @@ myManageHook = composeAll
     , className =? "Gimp"       --> viewShift "-"
     , className =? "VASSAL-launch-ModuleManager"    --> doFloat <+> doShift "="
     , className =? "VASSAL-launch-Player"           --> doFloat <+> doShift "="
-    -- , className =? "st-256color" --> (ask >>= \w -> liftX (setOpacity w 0x11111111) >> idHook)
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat -- Hangouts
     ] <+> manageDocks
     where
         viewShift = doF . liftM2 (.) W.greedyView W.shift
-        -- doTrans i = ask >>= \w -> liftX (setOpacity w i) >> idHook
-    -- , className =? "st-256color"         --> doTrans 0x99999999
+-- }}}
+-- Layout{{{
+myLayoutHook = avoidStruts
+               $ onWorkspace "1" ((ResizableTall 1 incDelta (3/4) []) ||| Full)
+               $ onWorkspace "2" (magicFocus (Mirror (ResizableTall 1 incDelta (2/3) [])) ||| Full)
+               $ onWorkspace "-" ((ResizableTall 2 incDelta (1/6) []) ||| Full)
+               -- $ onWorkspace "GIMP" ((ResizableTall 2 incDelta (1/6) []) ||| Full)
+               $ myDefaultLayout
+    where
+        incDelta = 3/100
+        tiledStd = ResizableTall 1 incDelta (1/2) [] -- # masters, % to inc when resizing, % of screen used by master, slaves
+        myDefaultLayout = tiledStd ||| Mirror tiledStd ||| Full
 -- }}}
 -- Log {{{
 myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
@@ -112,17 +120,6 @@ myDzen h = defaultPP
     where
         dzenWorkspaceSymbol x
               | otherwise = "^r(4x4)^fg(" ++ colorBackground ++ ")^r(5x1)"
--- }}}
--- Layout{{{
-incDelta = 3/100
-myDefaultLayout = tiledStd ||| Mirror tiledStd ||| Full
-    where
-        tiledStd = ResizableTall 1 incDelta (1/2) [] -- # masters, % to inc when resizing, % of screen used by master, slaves
-myLayoutHook = avoidStruts
-               $ onWorkspace "1" ((ResizableTall 1 incDelta (3/4) []) ||| Full)
-               $ onWorkspace "2" (magicFocus (Mirror (ResizableTall 1 incDelta (2/3) [])) ||| Full)
-               $ onWorkspace "-" ((ResizableTall 2 incDelta (1/6) []) ||| Full)
-               $ myDefaultLayout
 -- }}}
 -- HandleEvent {{{
 myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
@@ -176,9 +173,6 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             -- Media
             , ((shiftMask, xF86XK_AudioPlay), spawn (myBrowser ++ " --new-window https://play.google.com/music/listen#/ap/queue"))
             , ((controlMask, xF86XK_AudioPlay), spawn (myBrowser ++ " --new-window http://pandora.com"))
-            -- ((0, xF86XK_AudioStop), spawn "???")
-            -- ((0, xF86XK_AudioPrev), spawn "???")
-            -- ((0, xF86XK_AudioNext), spawn "???")
             -- Other
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
