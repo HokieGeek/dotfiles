@@ -121,6 +121,7 @@ myDefaultLayout = tiledStd ||| Mirror tiledStd ||| Full
 myLayoutHook = avoidStruts
                $ onWorkspace "1" ((ResizableTall 1 incDelta (3/4) []) ||| Full)
                $ onWorkspace "2" (magicFocus (Mirror (ResizableTall 1 incDelta (2/3) [])) ||| Full)
+               $ onWorkspace "-" ((ResizableTall 2 incDelta (1/6) []) ||| Full)
                $ myDefaultLayout
 -- }}}
 -- HandleEvent {{{
