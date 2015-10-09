@@ -100,6 +100,7 @@ myManageHook = composeAll
 -- }}}
 -- Layout{{{
 myLayoutHook = avoidStruts
+               . mkToggle (single MIRROR)
                -- . mkToggle (single ACCORDION)
                $ onWorkspace "1" ((ResizableTall 1 incDelta (3/4) []) ||| Full)
                $ onWorkspace "2" (magicFocus (Mirror (ResizableTall 1 incDelta (2/3) [])) ||| Full)
