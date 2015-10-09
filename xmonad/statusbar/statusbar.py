@@ -123,21 +123,9 @@ f.write(sectionSpacing)
 
 ## MEDIA
 f.write("^ca(1, st -e alsamixer)\\\n")
-volumeMuteCmd = "amixer get Master | egrep '^\s*(Mono|Front)' | tail -1 | awk -F'[' '{ sub(/]/, \"\", $NF); print $NF }'"
-volumeLevelCmd = "amixer get Master -M | awk -F'[' '$2 ~ /%/ { sub(/%]/, \"\", $2); print $2 }' | head -1"
-
-volumeLevel = 0
-volumeStep = 100 / (height*2.85)
+volumeScriptCmd = "{}/volume.py --height={} --color-fg='{}' --color-bg='{}' --color-muted='{}'".format(os.path.dirname(os.path.realpath(__file__)), height, colorschemeFgHex.replace("\\", ""), colorschemeBgHex.replace("\\", ""), colorschemeDarkHex.replace("\\", ""))
 f.write("^p(;-1)^fg({})\\\n".format(colorschemeBgHex))
-for i in reversed(range(0, height)):
-    for j in range(0,2):
-        f.write("${{if_match \"${{texeci 1 {}}}\" == \"off\" }}^bg({})${{else}}\\\n".format(volumeMuteCmd, colorschemeDarkHex))
-        f.write("${{if_match ${{texeci 1 {}}} >= {} }}^bg({})${{else}}^bg({})${{endif}}\\\n${{endif}}\\\n".format(volumeLevelCmd, round(volumeLevel), colorschemeFgHex, colorschemeDarkHex))
-        f.write("^r(1x{})\\\n".format(i))
-        volumeLevel += volumeStep
-
-    f.write("^bg({})^r(1x{})\\\n".format(colorschemeBgHex, i))
-    volumeLevel += volumeStep
+f.write("${{execi 1 {}}}\\\n".format(volumeScriptCmd))
 f.write("^p()^fg({})^bg({})\\\n".format(colorschemeFgHex, colorschemeBgHex))
 f.write("^ca()")
 f.write(sectionSpacing)
