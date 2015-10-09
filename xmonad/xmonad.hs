@@ -1,3 +1,6 @@
+{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 -- Imports {{{
 import Data.IORef
 
@@ -26,9 +29,17 @@ import XMonad.Hooks.FadeWindows -- fadeWindowEventHook
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.UrgencyHook
+import XMonad.Layout.Accordion
+-- import XMonad.Layout.BoringWindows
+-- import XMonad.Layout.Dishes
 import XMonad.Layout.MagicFocus
+-- import XMonad.Layout.Minimize
+import XMonad.Layout.MultiToggle
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.ResizableTile
+import XMonad.Layout.StackTile
+-- import XMonad.Layout.ToggleLayouts
+import XMonad.Layout.TwoPane
 import XMonad.Util.Dmenu
 import XMonad.Util.Run
 import XMonad.Util.EZConfig
@@ -89,15 +100,29 @@ myManageHook = composeAll
 -- }}}
 -- Layout{{{
 myLayoutHook = avoidStruts
+               -- . mkToggle (single ACCORDION)
                $ onWorkspace "1" ((ResizableTall 1 incDelta (3/4) []) ||| Full)
                $ onWorkspace "2" (magicFocus (Mirror (ResizableTall 1 incDelta (2/3) [])) ||| Full)
                $ onWorkspace "-" ((ResizableTall 2 incDelta (1/6) []) ||| Full)
                -- $ onWorkspace "GIMP" ((ResizableTall 2 incDelta (1/6) []) ||| Full)
+               -- $ toggleLayouts (stacked)
+               -- $ toggleLayouts (Dishes 2 (1/8))
+               -- $ toggleLayouts (twoPanes ||| Mirror twoPanes ||| Full)
                $ myDefaultLayout
     where
         incDelta = 3/100
         tiledStd = ResizableTall 1 incDelta (1/2) [] -- # masters, % to inc when resizing, % of screen used by master, slaves
-        myDefaultLayout = tiledStd ||| Mirror tiledStd ||| Full
+        stacked = StackTile 1 incDelta (1/2)
+        twoPanes = TwoPane incDelta (2/3)
+        -- myDefaultLayout = tiledStd ||| Mirror tiledStd ||| Full
+        myDefaultLayout = mkToggle (single MIRROR)  (tiledStd ||| Full)
+
+data MIRROR = MIRROR deriving (Read, Show, Eq, Typeable)
+instance Transformer MIRROR Window where
+    transform _ x k = k (Mirror x) (\(Mirror x') -> x')
+-- data ACCORDION = ACCORDION deriving (Read, Show, Eq, Typeable)
+-- instance Transformer ACCORDION Window where
+    -- transform _ x k = k Accordion
 -- }}}
 -- Log {{{
 myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
@@ -143,6 +168,9 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_x), goToSelected defaultGSConfig)
             , (((modm .|. shiftMask), xK_x), gotoMenu)
             -- Workspace helpers
+            -- , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout)
+            -- , (((modm .|. shiftMask), xK_space), sendMessage $ Toggle ACCORDION)
+            , (((modm .|. shiftMask), xK_space), sendMessage $ Toggle MIRROR)
             , (((modm .|. mod1Mask), xK_k), prevWS)
             , (((modm .|. mod1Mask), xK_j), nextWS)
             , (((modm .|. shiftMask), xK_k), moveTo Prev NonEmptyWS)
@@ -153,6 +181,8 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , (((modm .|. mod1Mask), xK_n), moveTo Next EmptyWS <+> spawn myBrowser)
             , (((modm .|. controlMask), xK_n), moveTo Next EmptyWS <+> spawn myTerminal)
             -- Window helpers
+            -- , (((modm .|. shiftMask), xK_????), withFocused minimizeWindow)
+            -- , (((modm .|. shiftMask), xK_????), sendMessage RestoreNextMinimizedWin)
             , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- shrink the slave area
             , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the slave area
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
