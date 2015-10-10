@@ -41,7 +41,7 @@ import XMonad.Util.Run
 import XMonad.Util.EZConfig
 
 import XMonad.Actions.DynamicWorkspaces
-import XMonad.Actions.CopyWindow(copy)
+import XMonad.Actions.CopyWindow
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
@@ -175,6 +175,8 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the slave area
             , (((modm .|. controlMask), xK_j), rotSlavesDown)
             , (((modm .|. controlMask), xK_k), rotSlavesUp)
+            , ((modm, xK_v), windows copyToAll)
+            , (((modm .|. shiftMask), xK_v), killAllOtherCopies)
             -- Backlight
             , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight -inc 5")
             , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -dec 5")
