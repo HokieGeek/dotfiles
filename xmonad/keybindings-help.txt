@@ -16,7 +16,7 @@ Super+x       Switch to selected window
 -- Workspace helpers
 Super+Alt+k       Previous workspace
 Super+Alt+j       Next workspace
-Super+`           Switch to last workspace
+Super+Tab         Switch to last workspace
 
 Super+n       Switch to next empty workspace
 Super+Alt+n   Switch to next empty workspace and launch browser
@@ -28,17 +28,27 @@ Super+Shift+j Switch to next non-empty workspace
 Super+[0..9,-,=]       Switch to indicated workspace
 Super+Ctrl+[0..9,-,=]  Swap current workspace with indicated workspace
 
+Super+Ctrl+Space    Toggles alternate layouts
+
 -- Window helpers
+Super+j     Switch to next window in layout order but ignoring minimized
+Super+k     Switch to previous window in layout order but ignoring minimized
+Super+m     Switch to master window but ignores minimized
+
 Super+Shift+n             Move window to next empty workspace
 Super+Shift+[0..9,-,=]    Move window to indicated workspace
 
-Super+Shift+h Shrink the slave area
-Super+Shift+l Expand the slave area
-Super+Ctrl+j  Move current slave window down
-Super+Ctrl+k  Move current slave window up
+Super+Shift+h   Shrink the slave area
+Super+Shift+l   Expand the slave area
+Super+Ctrl+j    Move current slave window down
+Super+Ctrl+k    Move current slave window up
+
+Super+Ctrl+'    Minimizes current window
+Super+Shift+'   Restores a minimized window
+
+Super+v         Makes a window sticky across all desktops
+Super+V         Removes sticky from window
 
 -- Media controls
 Shift+RaiseVolume   Raise volume to 100%
 Shift+LowerVolume   Lower volume to 30%
-Shift+Play          Launch Google Music
-Ctrl+Play           Launch Pandora
