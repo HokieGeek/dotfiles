@@ -97,7 +97,7 @@ myManageHook = composeAll
 -- Layout{{{
 myLayoutHook = avoidStruts
                $ onWorkspace "1" (boringWindows (minimize ((ResizableTall 1 incDelta (3/4) []) ||| Full)))
-               $ onWorkspace "2" (boringWindows (minimize (Mirror (TwoPane incDelta (2/3)) ||| Full)))
+               $ onWorkspace "2" (boringWindows (minimize (magicFocus (Mirror (TwoPane incDelta (2/3)) ||| Full))))
                -- $ onWorkspace "0" (boringWindows (minimize (big)))
                $ onWorkspace "-" (boringWindows (minimize ((ResizableTall 2 incDelta (1/6) []) ||| Full)))
                $ toggleLayouts (boringWindows (minimize (twoPanes ||| Mirror twoPanes ||| big ||| Full)))
