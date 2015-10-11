@@ -72,7 +72,7 @@ myDmenuMap = M.fromList
               , ("skype", "apulse32 skype")
               , ("mpc", myTerminal ++ " -e ncmpcpp")
               , ("steam", "playonlinux --run \"Steam\" %F")
-              , ("picocom", myTerminal ++ " -e picocom")
+              , ("ranger", myTerminal ++ " -e ranger")
               ]
 --}}}
 
