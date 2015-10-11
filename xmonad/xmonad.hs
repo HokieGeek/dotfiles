@@ -17,6 +17,7 @@ import XMonad.Actions.GridSelect
 import XMonad.Actions.GroupNavigation -- historyHook
 import XMonad.Actions.RotSlaves
 import XMonad.Actions.SwapWorkspaces
+-- import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.Promote
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.WindowBringer
@@ -228,6 +229,10 @@ myKeys =    [
             ++
             [((modm .|. controlMask, k), windows $ swapWithCurrent i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys]
+            -- ++
+            -- [((modm .|. mask, key), f sc)
+                -- | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+                -- , (f, mask) <- [(viewScreen, 0), (sendToScreen, shiftMask)]]
 --}}}
 
 -- Main {{{
