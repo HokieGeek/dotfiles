@@ -81,6 +81,9 @@ myDmenuMap = M.fromList
 -- Local Methods {{{
 surroundInQuotes :: String -> String
 surroundInQuotes str = "'" ++ str ++ "'"
+
+removeExtraWs :: X() -> X()
+removeExtraWs c = removeEmptyWorkspaceAfterExcept myWorkspaces c
 -- }}}
 
 -- Hooks {{{
@@ -166,18 +169,16 @@ myKeys =    [
             -- Workspace helpers {{{
             , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout)
 
-            , (((modm .|. mod1Mask), xK_k), removeEmptyWorkspaceAfterExcept myWorkspaces prevWS)
-            , (((modm .|. mod1Mask), xK_j), removeEmptyWorkspaceAfterExcept myWorkspaces nextWS)
-            , (((modm .|. controlMask), xK_k), removeEmptyWorkspaceAfterExcept myWorkspaces (moveTo Prev NonEmptyWS))
-            , (((modm .|. controlMask), xK_j), removeEmptyWorkspaceAfterExcept myWorkspaces (moveTo Next NonEmptyWS))
-            , ((modm, xK_Tab), removeEmptyWorkspaceAfterExcept myWorkspaces toggleWS)
-            , ((modm, xK_n), moveTo Next EmptyWS)
+            , (((modm .|. mod1Mask), xK_k), removeExtraWs prevWS)
+            , (((modm .|. mod1Mask), xK_j), removeExtraWs nextWS)
+            , (((modm .|. controlMask), xK_k), removeExtraWs (moveTo Prev NonEmptyWS))
+            , (((modm .|. controlMask), xK_j), removeExtraWs (moveTo Next NonEmptyWS))
+            , ((modm, xK_Tab), removeExtraWs toggleWS)
+            , ((modm, xK_n), removeExtraWs (moveTo Next EmptyWS))
             , (((modm .|. shiftMask), xK_n), shiftTo Next EmptyWS)
 
-            , (((modm .|. mod1Mask), xK_n), removeEmptyWorkspaceAfterExcept myWorkspaces (moveTo Next EmptyWS) <+> spawn myBrowser)
-            , (((modm .|. controlMask), xK_n), removeEmptyWorkspaceAfterExcept myWorkspaces (moveTo Next EmptyWS) <+> spawn myTerminal)
-
-            , (((modm .|. shiftMask), xK_BackSpace), removeEmptyWorkspace)
+            , (((modm .|. mod1Mask), xK_n), removeExtraWs (moveTo Next EmptyWS) <+> spawn myBrowser)
+            , (((modm .|. controlMask), xK_n), removeExtraWs (moveTo Next EmptyWS) <+> spawn myTerminal)
             -- }}}
             -- Window helpers {{{
             , ((modm, xK_j), focusDown)
