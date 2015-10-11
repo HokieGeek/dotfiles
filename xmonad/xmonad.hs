@@ -86,7 +86,7 @@ surroundInQuotes str = "'" ++ str ++ "'"
 -- Manage {{{
 myManageHook = composeAll
     [
-    isFullscreen --> doFullFloat
+      isFullscreen --> doFullFloat
     , className =? "Xmessage"   --> doCenterFloat
     , className =? "Gimp"       --> shiftToNew "gimp"
     , className =? "VASSAL-launch-ModuleManager"    --> doFloat <+> doShift "="
@@ -153,8 +153,8 @@ myKeys =    [
             , ((shiftMask, xF86XK_Sleep), spawn "systemctl hibernate")
             , (((modm .|. controlMask .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
-            , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
-            , (((modm .|. shiftMask), xK_w), spawn ("$HOME/.bin/schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs $HOME/.bin/schemecolor"))
+            , ((modm, xK_b), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
+            , (((modm .|. shiftMask), xK_b), spawn ("$HOME/.bin/schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs $HOME/.bin/schemecolor"))
             -- }}}
             -- Launcher menus {{{
             , ((modm, xK_a), safeSpawn "dmenu_run" dmenuArgs)
