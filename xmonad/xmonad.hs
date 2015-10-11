@@ -1,5 +1,6 @@
 -- Imports {{{
 import Data.IORef
+import Data.Maybe
 
 import Control.Monad(liftM2)
 
@@ -58,31 +59,21 @@ myTerminal      = "st"
 myBrowser       = "google-chrome-unstable"
 colorForeground = "#af5f00"
 colorBackground = "#1b1d1e"
-font            = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
+termFont        = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 
-dmenuArgs = ["-fn", font, "-nb", colorBackground, "-nf", "#FFFFFF", "-sb", colorForeground]
+dmenuArgs = ["-fn", termFont, "-nb", colorBackground, "-nf", "#FFFFFF", "-sb", colorForeground]
 
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
 myDmenuMap = M.fromList
-              [ ("browser", myBrowser)
-              , ("netflix", myBrowser ++ " --new-window http://netflix.com")
-              , ("irssi", myTerminal ++ " -e irssi")
-              , ("skype", "apulse32 skype")
-              , ("mpc", myTerminal ++ " -e ncmpcpp")
-              , ("steam", "playonlinux --run \"Steam\" %F")
-              , ("ranger", myTerminal ++ " -e ranger")
-              ]
-myDmenuMap2 = M.fromList
               [ ("browser", spawn myBrowser)
               , ("netflix", spawn (myBrowser ++ " --new-window http://netflix.com"))
               , ("irssi", spawn (myTerminal ++ " -e irssi"))
               , ("skype", spawn "apulse32 skype")
               , ("mpc", spawn (myTerminal ++ " -e ncmpcpp"))
               , ("steam", spawn "playonlinux --run \"Steam\" %F")
-              , ("picocom", spawn (myTerminal ++ " -e picocom"))
-              , ("gimp", (addWorkspace "gimp" <+> spawn "gimp"))
+              , ("ranger", spawn (myTerminal ++ " -e ranger"))
               ]
 --}}}
 
@@ -103,15 +94,13 @@ myManageHook = composeAll
     ] <+> manageDocks
     where
         viewShift = doF . liftM2 (.) W.greedyView W.shift
-        -- shiftToNew ws = addWorkspace ws <+> viewShift ws
-        shiftToNew ws = viewShift ws
+        shiftToNew ws = liftX (addWorkspace ws) >> viewShift ws
 -- }}}
 -- Layout{{{
 myLayoutHook = avoidStruts
                $ onWorkspace "1" (boringWindows (minimize ((ResizableTall 1 incDelta (3/4) []) ||| Full)))
                $ onWorkspace "2" (boringWindows (minimize (magicFocus (Mirror (TwoPane incDelta (2/3)) ||| Full))))
                -- $ onWorkspace "0" (boringWindows (minimize (big)))
-               $ onWorkspace "-" (boringWindows (minimize ((ResizableTall 2 incDelta (1/6) []) ||| Full)))
                $ onWorkspace "gimp" (boringWindows (minimize ((ResizableTall 2 incDelta (1/6) []) ||| Full)))
                $ toggleLayouts (boringWindows (minimize (twoPanes ||| Mirror twoPanes ||| big ||| Full)))
                $ myDefaultLayout
@@ -165,10 +154,9 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
             , (((modm .|. shiftMask), xK_w), spawn ("$HOME/.bin/schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs $HOME/.bin/schemecolor"))
             -- Launcher menus
-            , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs myDmenuMap >>= flip whenJust spawn)
-            -- , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs myDmenuMap2 >>= flip )
+            , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs myDmenuMap >>= fromMaybe (return ()))
             , ((modm, xK_x), goToSelected defaultGSConfig)
-            , (((modm .|. shiftMask), xK_x), gotoMenu)
+            , (((modm .|. shiftMask), xK_x), gotoMenuArgs dmenuArgs)
             -- Workspace helpers
             , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout)
             , (((modm .|. mod1Mask), xK_k), prevWS)
@@ -180,6 +168,8 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , (((modm .|. shiftMask), xK_n), shiftTo Next EmptyWS)
             , (((modm .|. mod1Mask), xK_n), moveTo Next EmptyWS <+> spawn myBrowser)
             , (((modm .|. controlMask), xK_n), moveTo Next EmptyWS <+> spawn myTerminal)
+
+            , (((modm .|. shiftMask), xK_BackSpace), removeEmptyWorkspace)
             -- Window helpers
             , ((modm, xK_j), focusDown)
             , ((modm, xK_k), focusUp)
@@ -217,9 +207,6 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             -- ThinkPad-specific binding (the black button)
             , ((0, xF86XK_Launch1), spawn myTerminal)
             , ((shiftMask, xF86XK_Launch1), spawn myBrowser)
-
-            , (((modm .|. shiftMask), xK_F10), removeEmptyWorkspace)
-            , (((modm .|. mod1Mask), xK_g), addWorkspace "gimp" <+> spawn "gimp")
             ]
             ++
             [((m .|. modm, k), windows $ f i)
@@ -234,8 +221,8 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
 compmgr   = "xcompmgr"
 barheight = "14"
 screenwidth_cmd    = "xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1"
-conkyStatusBar     = "~/.xmonad/statusbar/statusbar.sh --width `" ++ screenwidth_cmd ++ "` --height '" ++ barheight ++ "' --bg '" ++ colorBackground ++ "' --fg '" ++ colorForeground ++ "' --font '" ++ font ++ "'"
-workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ font ++ "' -x '0' -y '0' -h '" ++ barheight ++ "' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
+conkyStatusBar     = "~/.xmonad/statusbar/statusbar.sh --width `" ++ screenwidth_cmd ++ "` --height '" ++ barheight ++ "' --bg '" ++ colorBackground ++ "' --fg '" ++ colorForeground ++ "' --font '" ++ termFont ++ "'"
+workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ termFont ++ "' -x '0' -y '0' -h '" ++ barheight ++ "' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
 main = do
         compMgrStart <- spawn compmgr
         dzenRightBar <- spawn conkyStatusBar
