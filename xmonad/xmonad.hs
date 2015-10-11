@@ -1,6 +1,7 @@
 -- Imports {{{
 import Data.IORef
 import Data.Maybe
+import Data.Ratio ((%))
 
 import Control.Monad(liftM2)
 
@@ -28,13 +29,17 @@ import XMonad.Hooks.FadeWindows -- fadeWindowEventHook
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.UrgencyHook
+-- import XMonad.Hooks.XPropManage
 import XMonad.Layout.BoringWindows
+import XMonad.Layout.IM
 import XMonad.Layout.MagicFocus
 import XMonad.Layout.Minimize
 import XMonad.Layout.OneBig
 import XMonad.Layout.PerWorkspace
+import XMonad.Layout.Reflect
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.StackTile
+import XMonad.Layout.Tabbed
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.TwoPane
 
@@ -88,14 +93,27 @@ removeExtraWs c = removeEmptyWorkspaceAfterExcept myWorkspaces c
 
 -- Hooks {{{
 -- Manage {{{
+-- QNot :: Query Bool -> Query Bool
+
+-- myXPropMatches :: [XPropMatch]
+-- myXPropMatches = [
+                  -- ([(wM_NAME, any ("Hangouts"==))], pmP (W.shift "1"))
+                 -- ]
+
 myManageHook = composeAll
     [
       isFullscreen --> doFullFloat
     , className =? "Xmessage"   --> doCenterFloat
     , className =? "Gimp"       --> shiftToNew "gimp"
-    , className =? "VASSAL-launch-ModuleManager"    --> doFloat <+> doShift "="
-    , className =? "VASSAL-launch-Player"           --> doFloat <+> doShift "="
-    , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat -- Hangouts
+    , className =? "Skype"      --> shiftToNew "skype"
+    , className =? "VASSAL-launch-ModuleManager"        --> doFloat <+> doShift "="
+    , className =? "VASSAL-launch-Player"               --> doFloat <+> doShift "="
+    -- , className =? "crx_nckgahadagoaajjgafhacjanaoiihapd" <&&> appName /=? "Hangouts" --> doFloat
+    -- , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" <&&> ((stringProperty "WM_NAME") =? "Hangouts") --> doShift "1"
+    -- , title =? "Hangouts" --> doShift "1"
+    -- , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doShift "1"
+    , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat
+    -- ] <+> xPropManageHook myXPropMatches <+> manageDocks
     ] <+> manageDocks
     where
         viewShift = doF . liftM2 (.) W.greedyView W.shift
@@ -103,10 +121,10 @@ myManageHook = composeAll
 -- }}}
 -- Layout{{{
 myLayoutHook = avoidStruts
-               $ onWorkspace "1" (boringWindows (minimize ((ResizableTall 1 incDelta (3/4) []) ||| Full)))
+               $ onWorkspace "1" (boringWindows (minimize (reflectHoriz $ withIM (12%1) (ClassName "crx_nckgahadagoaajjgafhacjanaoiihapd") (ResizableTall 1 incDelta (1/6) []) ||| Full)))
                $ onWorkspace "2" (boringWindows (minimize (magicFocus (Mirror (TwoPane incDelta (2/3)) ||| Full))))
-               -- $ onWorkspace "0" (boringWindows (minimize (big)))
                $ onWorkspace "gimp" (boringWindows (minimize ((ResizableTall 2 incDelta (1/6) []) ||| Full)))
+               $ onWorkspace "skype" (boringWindows (minimize Full))
                $ toggleLayouts (boringWindows (minimize (twoPanes ||| Mirror twoPanes ||| big ||| Full)))
                $ myDefaultLayout
     where
