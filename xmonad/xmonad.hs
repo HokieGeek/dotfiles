@@ -170,6 +170,7 @@ myKeys =    [
             , ((modm, xK_Tab), toggleWS)
             , ((modm, xK_n), moveTo Next EmptyWS)
             , (((modm .|. shiftMask), xK_n), shiftTo Next EmptyWS)
+
             , (((modm .|. mod1Mask), xK_n), moveTo Next EmptyWS <+> spawn myBrowser)
             , (((modm .|. controlMask), xK_n), moveTo Next EmptyWS <+> spawn myTerminal)
 
@@ -219,6 +220,9 @@ myKeys =    [
             [((m .|. modm, k), windows $ f i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys
                 , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+            -- zip (zip (repeat (modm)) myWorkspaceKeys) (map ((removeEmptyWorkspaceAfterExcept myWorkspaces) . withNthWorkspace W.view) [0..])
+            -- ++
+            -- zip (zip (repeat (modm .|. shiftMask)) myWorkspaceKeys) (map (withNthWorkspace W.shift) [0..])
             ++
             [((modm .|. controlMask, k), windows $ swapWithCurrent i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys]
