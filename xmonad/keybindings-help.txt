@@ -1,14 +1,15 @@
 -- General
-Super+w   Cycle wallpapers
-Alt+F4  Kill current window
+Super+b         Cycle wallpapers
+Super+Shift+b   Change color scheme
+Alt+F4          Kill current window
 
-Super+a                 Launch dmenu
 Ctrl+Shift+Esc          Launch htop
 Shift+Mute              Launch Alsa mixer
 BlackButton             Launch terminal
 shiftMask+BlackButton   Launch browser
 
--- Grid Select
+-- Launcher menus
+Super+a          Launch dmenu
 Super+z          Launch selected application
 Super+x          Launch GS menu of open windows
 Super+Shift+x    Launch dmenu of open windows
