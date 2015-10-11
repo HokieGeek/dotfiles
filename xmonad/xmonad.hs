@@ -85,7 +85,8 @@ surroundInQuotes str = "'" ++ str ++ "'"
 -- Hooks {{{
 -- Manage {{{
 myManageHook = composeAll
-    [ isFullscreen --> doFullFloat
+    [
+    isFullscreen --> doFullFloat
     , className =? "Xmessage"   --> doCenterFloat
     , className =? "Gimp"       --> shiftToNew "gimp"
     , className =? "VASSAL-launch-ModuleManager"    --> doFloat <+> doShift "="
@@ -163,16 +164,17 @@ myKeys =    [
             -- }}}
             -- Workspace helpers {{{
             , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout)
-            , (((modm .|. mod1Mask), xK_k), prevWS)
-            , (((modm .|. mod1Mask), xK_j), nextWS)
-            , (((modm .|. shiftMask), xK_k), moveTo Prev NonEmptyWS)
-            , (((modm .|. shiftMask), xK_j), moveTo Next NonEmptyWS)
-            , ((modm, xK_Tab), toggleWS)
+
+            , (((modm .|. mod1Mask), xK_k), removeEmptyWorkspaceAfterExcept myWorkspaces prevWS)
+            , (((modm .|. mod1Mask), xK_j), removeEmptyWorkspaceAfterExcept myWorkspaces nextWS)
+            , (((modm .|. controlMask), xK_k), removeEmptyWorkspaceAfterExcept myWorkspaces (moveTo Prev NonEmptyWS))
+            , (((modm .|. controlMask), xK_j), removeEmptyWorkspaceAfterExcept myWorkspaces (moveTo Next NonEmptyWS))
+            , ((modm, xK_Tab), removeEmptyWorkspaceAfterExcept myWorkspaces toggleWS)
             , ((modm, xK_n), moveTo Next EmptyWS)
             , (((modm .|. shiftMask), xK_n), shiftTo Next EmptyWS)
 
-            , (((modm .|. mod1Mask), xK_n), moveTo Next EmptyWS <+> spawn myBrowser)
-            , (((modm .|. controlMask), xK_n), moveTo Next EmptyWS <+> spawn myTerminal)
+            , (((modm .|. mod1Mask), xK_n), removeEmptyWorkspaceAfterExcept myWorkspaces (moveTo Next EmptyWS) <+> spawn myBrowser)
+            , (((modm .|. controlMask), xK_n), removeEmptyWorkspaceAfterExcept myWorkspaces (moveTo Next EmptyWS) <+> spawn myTerminal)
 
             , (((modm .|. shiftMask), xK_BackSpace), removeEmptyWorkspace)
             -- }}}
@@ -220,7 +222,7 @@ myKeys =    [
             [((m .|. modm, k), windows $ f i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys
                 , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
-            -- zip (zip (repeat (modm)) myWorkspaceKeys) (map ((removeEmptyWorkspaceAfterExcept myWorkspaces) . withNthWorkspace W.view) [0..])
+            -- zip (zip (repeat (modm)) myWorkspaceKeys) (map ((removeEmptyWorkspaceAfterExcept myWorkspaces) . withNthWorkspace W.greedyView) [0..])
             -- ++
             -- zip (zip (repeat (modm .|. shiftMask)) myWorkspaceKeys) (map (withNthWorkspace W.shift) [0..])
             ++
