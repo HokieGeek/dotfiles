@@ -9,9 +9,9 @@ BlackButton             Launch terminal
 shiftMask+BlackButton   Launch browser
 
 -- Grid Select
-Super+z       Launch selected application
-Super+Shift+z Launch selected application
-Super+x       Switch to selected window
+Super+z          Launch selected application
+Super+x          Launch GS menu of open windows
+Super+Shift+x    Launch dmenu of open windows
 
 -- Workspace helpers
 Super+Alt+k       Previous workspace
@@ -22,8 +22,8 @@ Super+n       Switch to next empty workspace
 Super+Alt+n   Switch to next empty workspace and launch browser
 Super+Ctrl+n  Switch to next empty workspace and launch terminal
 
-Super+Shift+k Switch to previous non-empty workspace
-Super+Shift+j Switch to next non-empty workspace
+Super+Ctrl+k  Switch to previous non-empty workspace
+Super+Ctrl+j  Switch to next non-empty workspace
 
 Super+[0..9,-,=]       Switch to indicated workspace
 Super+Ctrl+[0..9,-,=]  Swap current workspace with indicated workspace
@@ -47,7 +47,7 @@ Super+Ctrl+'    Minimizes current window
 Super+Shift+'   Restores a minimized window
 
 Super+v         Makes a window sticky across all desktops
-Super+V         Removes sticky from window
+Super+Shift+v   Removes sticky from window
 
 -- Media controls
 Shift+RaiseVolume   Raise volume to 100%
