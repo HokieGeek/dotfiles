@@ -143,21 +143,25 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 
 -- Keybindings {{{
 -- Don't forget to update keybindings-help.txt
-myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
-            , ((modm, xK_a), safeSpawn "dmenu_run" dmenuArgs)
+myKeys =    [
+            -- Misc {{{
+              ((modm, xK_q), spawn "~/.xmonad/restart")
             , ((modm, xK_Return), promote)
             , ((mod1Mask, xK_F4), kill)
-            , (((modm .|. controlMask .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
-            , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((0, xF86XK_Sleep), spawn "systemctl suspend")
             , ((shiftMask, xF86XK_Sleep), spawn "systemctl hibernate")
+            , (((modm .|. controlMask .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
+            , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((modm, xK_w), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
             , (((modm .|. shiftMask), xK_w), spawn ("$HOME/.bin/schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs $HOME/.bin/schemecolor"))
-            -- Launcher menus
+            -- }}}
+            -- Launcher menus {{{
+            , ((modm, xK_a), safeSpawn "dmenu_run" dmenuArgs)
             , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs myDmenuMap >>= fromMaybe (return ()))
             , ((modm, xK_x), goToSelected defaultGSConfig)
             , (((modm .|. shiftMask), xK_x), gotoMenuArgs dmenuArgs)
-            -- Workspace helpers
+            -- }}}
+            -- Workspace helpers {{{
             , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout)
             , (((modm .|. mod1Mask), xK_k), prevWS)
             , (((modm .|. mod1Mask), xK_j), nextWS)
@@ -170,7 +174,8 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , (((modm .|. controlMask), xK_n), moveTo Next EmptyWS <+> spawn myTerminal)
 
             , (((modm .|. shiftMask), xK_BackSpace), removeEmptyWorkspace)
-            -- Window helpers
+            -- }}}
+            -- Window helpers {{{
             , ((modm, xK_j), focusDown)
             , ((modm, xK_k), focusUp)
             , ((modm, xK_m), focusMaster)
@@ -182,7 +187,8 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             , (((modm .|. controlMask), xK_k), rotSlavesUp)
             , ((modm, xK_v), windows copyToAll)
             , (((modm .|. shiftMask), xK_v), killAllOtherCopies)
-            -- Backlight
+            -- }}}
+            -- Backlight {{{
             , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight -inc 5")
             , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -dec 5")
             , ((shiftMask, xF86XK_MonBrightnessUp), spawn "xbacklight -set 100")
@@ -207,6 +213,7 @@ myKeys =    [ ((modm, xK_q), spawn "~/.xmonad/restart")
             -- ThinkPad-specific binding (the black button)
             , ((0, xF86XK_Launch1), spawn myTerminal)
             , ((shiftMask, xF86XK_Launch1), spawn myBrowser)
+            -- }}}
             ]
             ++
             [((m .|. modm, k), windows $ f i)
