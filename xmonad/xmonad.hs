@@ -168,7 +168,7 @@ myKeys =    [
             , (((modm .|. shiftMask), xK_x), gotoMenuArgs dmenuArgs)
             -- }}}
             -- Workspace helpers {{{
-            , (((modm .|. shiftMask), xK_space), sendMessage ToggleLayout)
+            , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout)
 
             , (((modm .|. mod1Mask), xK_k), removeExtraWs prevWS)
             , (((modm .|. mod1Mask), xK_j), removeExtraWs nextWS)
