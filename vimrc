@@ -319,18 +319,18 @@ nnoremap ]] ]]z<CR>
 
 "" Completion " {{{
 " word
-inoremap jj <c-n>
-inoremap kk <c-p>
+" inoremap jj <c-n>
+" inoremap kk <c-p>
 " line
-inoremap JJ <c-x><c-l>
+" inoremap JJ <c-x><c-l>
 " filename
 " inoremap FF <c-x><c-f>
 " dictionary
-inoremap DD <c-x><c-k>
+" inoremap DD <c-x><c-k>
 " user
-inoremap UU <c-x><c-u>
+" inoremap UU <c-x><c-u>
 " omni
-inoremap KK <c-x><c-o>
+" inoremap KK <c-x><c-o>
 " tag
 " inoremap TT <c-x><c-]>
 " }}}
@@ -355,10 +355,11 @@ augroup FiletypeOptions
     autocmd BufNewFile,BufRead SConstruct set filetype=python
     autocmd FileType markdown setlocal spell
     autocmd FileType gitcommit setlocal spell
-    autocmd Filetype make setlocal noexpandtab nolist
-    autocmd Filetype vim colorscheme herald
-    autocmd Filetype qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
-    autocmd Filetype go set nolist foldmethod=syntax
+    autocmd FileType make setlocal noexpandtab nolist
+    autocmd FilTtype vim colorscheme herald
+    autocmd FileType qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
+    autocmd FileType cpp setlocal foldmethod=syntax
+    autocmd FileType go set nolist " foldmethod=syntax
 augroup END
 
 augroup HighlightingOptions
