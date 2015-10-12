@@ -51,6 +51,7 @@ set ruler
 set showcmd " Shows the command being typed
 set noshowmode " Don't show -- INSERT --
 set complete-=i " Don't search includes because they are slow
+set completeopt=longest,menuone,preview
 set wildmenu " Tab completion in command-line mode (:)
 set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~,tags,.hg,.git,*.pyc " These file types are ignored when doing auto completions
 set wildmode=list:longest,full
