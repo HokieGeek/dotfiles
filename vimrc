@@ -357,7 +357,7 @@ augroup FiletypeOptions
     autocmd FileType markdown setlocal spell
     autocmd FileType gitcommit setlocal spell
     autocmd FileType make setlocal noexpandtab nolist
-    autocmd FilTtype vim colorscheme herald
+    autocmd Filetype vim colorscheme herald
     autocmd FileType qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
     autocmd FileType cpp setlocal foldmethod=syntax
     autocmd FileType go set nolist " foldmethod=syntax
