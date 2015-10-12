@@ -1,9 +1,9 @@
 -- Imports {{{
+import Control.Monad(liftM2)
+
 import Data.IORef
 import Data.Maybe
 import Data.Ratio ((%))
-
-import Control.Monad(liftM2)
 
 import Graphics.X11.ExtraTypes.XF86
 import Graphics.X11.ExtraTypes.XorgDefault
@@ -11,17 +11,19 @@ import Graphics.X11.ExtraTypes.XorgDefault
 import System.IO
 
 import XMonad
-import XMonad.Core
+import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
+import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.GridSelect
 import XMonad.Actions.GroupNavigation -- historyHook
-import XMonad.Actions.RotSlaves
-import XMonad.Actions.SwapWorkspaces
 -- import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.Promote
+import XMonad.Actions.RotSlaves
+import XMonad.Actions.SwapWorkspaces
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.WindowBringer
+import XMonad.Core
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops --fullScreenEventHook
 import XMonad.Hooks.FadeInactive
@@ -29,7 +31,6 @@ import XMonad.Hooks.FadeWindows -- fadeWindowEventHook
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.UrgencyHook
--- import XMonad.Hooks.XPropManage
 import XMonad.Layout.BoringWindows
 import XMonad.Layout.IM
 import XMonad.Layout.MagicFocus
@@ -39,27 +40,17 @@ import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Reflect
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.StackTile
-import XMonad.Layout.Tabbed
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.TwoPane
-
 import XMonad.Util.Dmenu
-import XMonad.Util.Run
 import XMonad.Util.EZConfig
-
-import XMonad.Actions.DynamicWorkspaces
-import XMonad.Actions.CopyWindow
+import XMonad.Util.Run
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 -- }}}
 
 -- Local Variables {{{
-
-unmuteAllChannels = "amixer -q set Master unmute ; "
-xF86XK_AudioMicMute :: KeySym
-xF86XK_AudioMicMute = 0x1008ffb2
-
 modm            = mod4Mask
 myTerminal      = "st"
 myBrowser       = "google-chrome-unstable"
@@ -67,12 +58,13 @@ colorForeground = "#af5f00"
 colorBackground = "#1b1d1e"
 termFont        = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 
-dmenuArgs = ["-fn", termFont, "-nb", colorBackground, "-nf", "#FFFFFF", "-sb", colorForeground]
+unmuteAllChannels = "amixer -q set Master unmute ; "
 
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
-myDmenuMap = M.fromList
+dmenuArgs  = ["-fn", termFont, "-nb", colorBackground, "-nf", "#FFFFFF", "-sb", colorForeground]
+randomCmdsMenu = M.fromList
               [ ("browser", spawn myBrowser)
               , ("netflix", spawn (myBrowser ++ " --new-window http://netflix.com"))
               , ("irssi", spawn (myTerminal ++ " -e irssi"))
@@ -84,6 +76,9 @@ myDmenuMap = M.fromList
 --}}}
 
 -- Local Methods {{{
+xF86XK_AudioMicMute :: KeySym
+xF86XK_AudioMicMute = 0x1008ffb2
+
 surroundInQuotes :: String -> String
 surroundInQuotes str = "'" ++ str ++ "'"
 
@@ -93,13 +88,6 @@ removeExtraWs c = removeEmptyWorkspaceAfterExcept myWorkspaces c
 
 -- Hooks {{{
 -- Manage {{{
--- QNot :: Query Bool -> Query Bool
-
--- myXPropMatches :: [XPropMatch]
--- myXPropMatches = [
-                  -- ([(wM_NAME, any ("Hangouts"==))], pmP (W.shift "1"))
-                 -- ]
-
 myManageHook = composeAll
     [
       isFullscreen --> doFullFloat
@@ -108,12 +96,7 @@ myManageHook = composeAll
     , className =? "Skype"      --> shiftToNew "skype"
     , className =? "VASSAL-launch-ModuleManager"        --> doFloat <+> doShift "="
     , className =? "VASSAL-launch-Player"               --> doFloat <+> doShift "="
-    -- , className =? "crx_nckgahadagoaajjgafhacjanaoiihapd" <&&> appName /=? "Hangouts" --> doFloat
-    -- , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" <&&> ((stringProperty "WM_NAME") =? "Hangouts") --> doShift "1"
-    -- , title =? "Hangouts" --> doShift "1"
-    -- , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doShift "1"
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat
-    -- ] <+> xPropManageHook myXPropMatches <+> manageDocks
     ] <+> manageDocks
     where
         viewShift = doF . liftM2 (.) W.greedyView W.shift
@@ -180,12 +163,12 @@ myKeys =    [
             -- }}}
             -- Launcher menus {{{
             , ((modm, xK_a), safeSpawn "dmenu_run" dmenuArgs)
-            , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs myDmenuMap >>= fromMaybe (return ()))
+            , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs randomCmdsMenu >>= fromMaybe (return ()))
             , ((modm, xK_x), goToSelected defaultGSConfig)
             , (((modm .|. shiftMask), xK_x), gotoMenuArgs dmenuArgs)
             -- }}}
             -- Workspace helpers {{{
-            , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout)
+            , (((modm .|. shiftMask), xK_space), sendMessage ToggleLayout)
 
             , (((modm .|. mod1Mask), xK_k), removeExtraWs prevWS)
             , (((modm .|. mod1Mask), xK_j), removeExtraWs nextWS)
@@ -224,9 +207,6 @@ myKeys =    [
             , ((0, xF86XK_AudioMute), spawn "amixer set Master toggle")
             , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer"))
             , ((0, xF86XK_AudioMicMute), spawn "amixer set Capture toggle")
-            -- Media
-            -- , ((shiftMask, xF86XK_AudioPlay), spawn (myBrowser ++ " --new-window https://play.google.com/music/listen#/ap/queue"))
-            -- , ((controlMask, xF86XK_AudioPlay), spawn (myBrowser ++ " --new-window http://pandora.com"))
             -- Other
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
