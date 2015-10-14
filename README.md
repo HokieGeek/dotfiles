@@ -14,9 +14,9 @@ cd ../..
 ```
 
 ## Philosophy
-I prefer to KISS as much as possible. All I need is a terminal and a browser and I've got all I need with my system. I prefer smaller laptops to I try to take advantage of as much real estate as I can.
+I prefer to KISS as much as possible. All I need is a terminal and a browser and I've got all I need for 99% of what I do. I prefer smaller laptops so I try to take advantage of as much real estate as I can.
 
-I keep the look and feel minimal so that it's less distracting so, to that end the "color scheme" is dark with some gray shadings and a single color used by tmux and the conky bar up top. The script bin/schemecolor will sed the indicated color into my tmux and xmonad.hs and will load both so that I can change the color on-the-fly.
+I keep the look and feel minimal so that it's less distracting so, to that end, the "color scheme" is dark with some gray shadings and a single color used by tmux and the conky bar up top. The script `bin/schemecolor` will sed the indicated color into my tmux.conf and xmonad.hs and will reload both so that I can change the color on-the-fly.
 
 ## Features
 
@@ -106,7 +106,7 @@ It is exec'ed by the shell upon login.
 Ported my bash prompt which displays information such as git and mercurial repository status and flags if the previous command returned a non-zero value and/or if a process is currently backgrounded.
 
 ### xmonad
-A fairly basic setup with custom key bindings and a good amount of use of dmenu. 
+My focus was to enable layouts that let me take advantage of my small laptop screen in a way that most benefits what I am currently working on. I couple that with a good number of custom keybindings so that I don't have to use the mouse to interact with the window manager. I also have been making pretty heavy use of `dmenu` to provide me some extra control.
 
 Using dzen2 to display the workspaces.
 
@@ -116,8 +116,8 @@ Using dzen2 to display the workspaces.
 | Super+n | Switches to the next empty workspace |
 | Super+Alt+n | Opens a browser window in the next available empty workspace |
 | Super+Shift+n | Shifts active window to the next empty workspace |
-| Super+` | Switches to the previous workspace |
+| Super+Tab | Switches to the previous workspace |
 | Super+Ctrl+[WS#] | Swaps current workspace with indicated workspace |
 
-### conky
-Using it to display statistics such as time, IP addresses, CPU use, battery life, etc. Piping conky's output to a dzen2 instance.
+### conky + dzen2
+Using them to display statistics such as time, IP addresses, CPU use, battery life, etc.
