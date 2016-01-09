@@ -24,4 +24,5 @@ channels = (
   { name = "#vim"; chatnet = "fn"; autojoin = "yes"; },
   { name = "#go"; chatnet = "fn"; autojoin = "yes"; },
   { name = "#bgg"; chatnet = "fn"; autojoin = "yes"; }
+  { name = "##biohack"; chatnet = "fn"; autojoin = "yes"; }
 );
