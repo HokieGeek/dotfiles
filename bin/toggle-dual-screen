@@ -9,3 +9,4 @@ xrandr | grep "HDMI1 connected" && {
 }
 
 # RULE: SUBSYSTEM=="drm", ACTION=="change", RUN+="blah"
+# cat /sys/class/drm/card0-HDMI-A-1/status (connected | disconnected)
