@@ -54,7 +54,7 @@ import qualified Data.Map as M
 modm            = mod4Mask
 myTerminal      = "st"
 myBrowser       = "google-chrome-unstable"
-colorForeground = "#af5f00"
+colorForeground = "#870000"
 colorBackground = "#1b1d1e"
 termFont        = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 
