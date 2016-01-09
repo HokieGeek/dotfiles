@@ -63,7 +63,8 @@ unmuteAllChannels = "amixer -q set Master unmute ; "
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
-dmenuArgs  = ["-fn", termFont, "-nb", colorBackground, "-nf", "#FFFFFF", "-sb", colorForeground]
+-- dmenuArgs  = ["-fn", termFont, "-nb", colorBackground, "-nf", "#FFFFFF", "-sb", colorForeground]
+dmenuArgs  = ["-nb", colorBackground, "-nf", "#FFFFFF", "-sb", colorForeground]
 randomCmdsMenu = M.fromList
               [ ("browser", spawn myBrowser)
               , ("netflix", spawn (myBrowser ++ " --new-window http://netflix.com"))
