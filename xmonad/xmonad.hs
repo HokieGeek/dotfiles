@@ -127,16 +127,16 @@ myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
 
 myDzen h = defaultPP
     {
-        ppCurrent           =   dzenColor colorForeground colorBackground . pad . dzenWorkspaceSymbol
-      , ppVisible           =   dzenColor "white" colorBackground . pad . dzenWorkspaceSymbol
-      , ppHidden            =   dzenColor "white" colorBackground . pad . dzenWorkspaceSymbol
-      , ppHiddenNoWindows   =   dzenColor "#363636" colorBackground . pad . dzenWorkspaceSymbol
-      , ppUrgent            =   dzenColor "#ff0000" colorBackground . pad . dzenWorkspaceSymbol
-      , ppLayout            =   (\x -> "")
-      , ppTitle             =   (\x -> "")
-      , ppSep               =   ""
-      , ppWsSep             =   ""
-      , ppOutput            =   hPutStrLn h
+        ppCurrent         = dzenColor colorForeground colorBackground . pad . dzenWorkspaceSymbol
+      , ppVisible         = dzenColor "white" colorBackground . pad . dzenWorkspaceSymbol
+      , ppHidden          = dzenColor "white" colorBackground . pad . dzenWorkspaceSymbol
+      , ppHiddenNoWindows = dzenColor "#363636" colorBackground . pad . dzenWorkspaceSymbol
+      , ppUrgent          = dzenColor "#ff0000" colorBackground . pad . dzenWorkspaceSymbol
+      , ppLayout          = (\x -> "")
+      , ppTitle           = (\x -> "")
+      , ppSep             = ""
+      , ppWsSep           = ""
+      , ppOutput          = hPutStrLn h
     }
     where
         dzenWorkspaceSymbol x
