@@ -121,6 +121,7 @@ endif
 " Always want it
 set t_Co=256
 set background=dark
+let g:sierra_Pitch = 1
 if has("gui_running")
     try
         colorscheme badwolf
@@ -132,7 +133,8 @@ if has("gui_running")
     set guioptions+=c " Use console dialogs instead of popup dialogs
 else
     try
-        colorscheme ir_black
+        " colorscheme ir_black
+        colorscheme sierra
     catch /E185:/
         colorscheme desert
     endtry

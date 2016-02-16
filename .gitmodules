@@ -4,3 +4,6 @@
 [submodule "shell-plugins/zsh-autosuggestions"]
     path = shell-plugins/zsh-autosuggestions
     url = https://github.com/tarruda/zsh-autosuggestions
+[submodule "vim/colors/Sierra"]
+	path = vim/colors/Sierra
+	url = git@github.com:AlessandroYorba/Sierra.git
