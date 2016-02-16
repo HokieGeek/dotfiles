@@ -58,7 +58,8 @@ set wildmode=list:longest,full
 set viminfo=h,%,'50,"100,<10000,s1000,/1000,:1000 " Remembers stuff. RTFM
 set history=1000
 set undolevels=5000
-if exists("&undofile")
+if has("persistent_undo")
+    " set undodir=~/.undodir/
     set undofile " Create an undo file so you can undo even after closing a file
 endif
 set foldenable " Close folds on open
