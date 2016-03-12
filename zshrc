@@ -43,7 +43,7 @@ autoload edit-command-line; zle -N edit-command-line
 
 export GOPATH=${HOME}/src/go
 
-export PATH=${PATH}:~/.bin
+export PATH=${PATH}:${GOPATH}/bin:~/.bin
 export EDITOR="nvim"
 
 [ -e /usr/share/doc/pkgfile/command-not-found.zsh ] && source /usr/share/doc/pkgfile/command-not-found.zsh
