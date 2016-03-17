@@ -1,12 +1,10 @@
-#!/bin/zsh
-
 prompt_cvsInfo() {
     info="%{fg[cyan]%}<CVS>"
 
     # Add a symbol if modified files
     status_out=`cvs -n -q update`
     numMods=`echo ${status_out} | egrep -c "(A|M|D)"`
-    [ $numMods -gt 0 ] && info=${info}"%{$fg_bold[red]%}±%{$reset_color%} "
+    [ $numMods -gt 0 ] && info=${info}"%{$fg[red]%}±%{$reset_color%} "
 
     echo "${info}%{$reset_color%}"
 }
@@ -54,9 +52,9 @@ prompt_gitInfo() {
 }
 
 prompt_repoInfo() {
-    `git status >/dev/null 2>&1` && prompt_gitInfo
-    `hg status >/dev/null 2>&1` && prompt_mercurialInfo
-    #`cvs status >/dev/null 2>&1` && prompt_cvsInfo
+    which git >/dev/null 2>&1 && git status >/dev/null 2>&` && prompt_gitInfo
+    which hg >/dev/null 2>&1 && hg status >/dev/null 2>&` && prompt_mercurialInfo
+    which cvs >/dev/null 2>&1 && [ ! -z ${CVSROOT+x} ] && cvs status >/dev/null 2>&1 && prompt_cvsInfo
 }
 
 prompt_jobs() {
