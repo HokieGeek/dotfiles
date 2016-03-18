@@ -122,7 +122,7 @@ myLayoutHook = avoidStruts
 -- }}}
 -- Log {{{
 myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
-                                            >> fadeInactiveLogHook 0.4
+                                            >> fadeInactiveCurrentWSLogHook 0.4
                                             >> updatePointer (1, 1) (0, 0)
 
 myDzen h = defaultPP
