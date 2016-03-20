@@ -52,9 +52,9 @@ prompt_gitInfo() {
 }
 
 prompt_repoInfo() {
-    which git >/dev/null 2>&1 && git status >/dev/null 2>&` && prompt_gitInfo
-    which hg >/dev/null 2>&1 && hg status >/dev/null 2>&` && prompt_mercurialInfo
-    which cvs >/dev/null 2>&1 && [ ! -z ${CVSROOT+x} ] && cvs status >/dev/null 2>&1 && prompt_cvsInfo
+    which git >/dev/null 2>&1 && git status >/dev/null 2>&1 && prompt_gitInfo
+    which hg >/dev/null 2>&1 && hg status >/dev/null 2>&1 && prompt_mercurialInfo
+    which cvs >/dev/null 2>&1 && cvs status >/dev/null 2>&1 && prompt_cvsInfo
 }
 
 prompt_jobs() {
