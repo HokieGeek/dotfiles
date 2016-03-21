@@ -14,7 +14,6 @@ zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' menu select=2
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} 
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-# zstyle :compinstall filename '$HOME/.zshrc'
 
 [ -f $HOME/.shell-plugins/zsh-autosuggestions/autosuggestions.zsh ] && { 
     source $HOME/.shell-plugins/zsh-autosuggestions/autosuggestions.zsh
@@ -40,9 +39,10 @@ setopt hist_no_store         # Remove the history command from the command histo
 
 # Vimify {{{
 export EDITOR="nvim"
-bindkey -v
-bindkey -M vicmd v edit-command-line
+setopt vi
 
+# Allows editing the command line in
+bindkey -M vicmd v edit-command-line
 autoload edit-command-line; zle -N edit-command-line
 # }}}
 
@@ -90,8 +90,11 @@ setopt extendedglob      # Use advanced expansion (#,~,^)
 setopt nomatch           # Print error when filename pattern doesn't match
 
 setopt hist_subst_pattern # Allow pattern matching with :s
+unsetopt beep
 
-unsetopt beep notify
+# Job control
+# unsetopt notify           # Wait until a prompt needs to be printing before notifying that bg job has stopped
+unsetopt bg_nice          # Run bg'ed processes at regular priority
 
 autoload zmv # Fancy mv command
 # }}}
