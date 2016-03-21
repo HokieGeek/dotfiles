@@ -1,26 +1,41 @@
 [[ $- != *i* ]] && return
-[[ -z "$TMUX" ]] && exec tmux
+[[ -z "$TMUX" && -f "/usr/bin/tmux" ]] && exec tmux
+
+# Completion {{{
+autoload -Uz compinit; compinit
 
 zstyle ':completion:*' completer _complete _ignored
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-zstyle :compinstall filename '/home/andres/.zshrc'
-#zstyle :compinstall filename '/home/'`whoami`'/.zshrc'
+zstyle :compinstall filename '$HOME/.zshrc'
+#allow tab completion in the middle of a word
+setopt complete_in_word
 
-autoload -Uz compinit; compinit
+[ -f $HOME/.shell-plugins/zsh-autosuggestions/autosuggestions.zsh ] && { 
+    source $HOME/.shell-plugins/zsh-autosuggestions/autosuggestions.zsh
+    zle -N autosuggest-start
+}
 
-source ~/.shell-plugins/zsh-autosuggestions/autosuggestions.zsh
-zle -N autosuggest-start
+[ -e /usr/share/doc/pkgfile/command-not-found.zsh ] && source /usr/share/doc/pkgfile/command-not-found.zsh
 
+setopt correct # Spelling correction of commands
+# }}}
+
+# History {{{
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=1000
-setopt hist_ignore_all_dups hist_ignore_space
+setopt append_history inc_append_history share_history hist_ignore_all_dups hist_ignore_space
+# }}}
 
-setopt autocd extendedglob nomatch
-unsetopt appendhistory beep notify
+# Vimify {{{
+export EDITOR="nvim"
 bindkey -v
 bindkey -M vicmd v edit-command-line
 
+autoload edit-command-line; zle -N edit-command-line
+# }}}
+
+# Term Colors {{{
 export TERM="xterm-256color"
 [ -n "$TMUX" ] && export TERM="screen-256color"
 
@@ -36,17 +51,33 @@ export LESS_TERMCAP_se=$'\E[0m'           # end standout-mode
 export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box
 export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
+# }}}
 
-setopt correct # Spelling correction of commands
-autoload zmv # Fancy mv command
-autoload edit-command-line; zle -N edit-command-line
-
+# PATHing {{{
 export GOPATH=${HOME}/src/go
-
+export PATH=${PATH}:/sbin:/usr/sbin:/usr/local/sbin
 export PATH=${PATH}:${GOPATH}/bin:~/.bin
-export EDITOR="nvim"
+# }}}
 
-[ -e /usr/share/doc/pkgfile/command-not-found.zsh ] && source /usr/share/doc/pkgfile/command-not-found.zsh
+# Misc {{{
+## Get notified when someone logs in
+watch=all                       # watch all logins
+logcheck=30                     # every 30 seconds
+WATCHFMT="%n from %M has %a tty%l at %T %W"
 
-. ~/.aliases
-. ~/.shell-plugins/prompt.zsh
+autoload -U tetris && tetris
+
+setopt autocd auto_pushd pushd_ignore_dups
+setopt extendedglob nomatch
+unsetopt beep notify
+
+autoload zmv # Fancy mv command
+# }}}
+
+# Source the things {{{
+. $HOME/.aliases
+. $HOME/.shell-plugins/prompt.zsh
+[ -f $HOME/.zshrc_work ] && . $HOME/.zshrc_work
+# }}}
+
+# vim: set ft=sh foldmethod=marker
