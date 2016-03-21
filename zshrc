@@ -8,12 +8,23 @@ setopt always_to_end      # When completing from the middle of a word, move the 
 setopt auto_list          # Automatically list choices
 setopt list_ambiguous     # Complete a word up to where it becomes ambiguous
 setopt auto_remove_slash  # Remove an inserted slash when not needed
-setopt complete_aliases # ??
+setopt complete_aliases   # ??
 
 zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' menu select=2
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} 
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*:functions' ignored-patterns '_*' # Don't complete on commands I don't have
+
+# Disable completion on CVS files
+zstyle ':completion:*:(all-|)files' ignored-patterns '(|*/)CVS'
+zstyle ':completion:*:cd:*' ignored-patterns '(*/)#CVS'
+
+# Prettier kill auto completion
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:kill:*'   force-list always
+
+zstyle ':completion:*:cd:*' ignore-parents parent pwd
 
 [ -f $HOME/.shell-plugins/zsh-autosuggestions/autosuggestions.zsh ] && { 
     source $HOME/.shell-plugins/zsh-autosuggestions/autosuggestions.zsh
