@@ -3,8 +3,12 @@
 
 # Completion {{{
 autoload -Uz compinit; compinit
-setopt complete_in_word   #allow tab completion in the middle of a word
-setopt list_ambiguous
+setopt complete_in_word   # Allow tab completion in the middle of a word
+setopt always_to_end      # When completing from the middle of a word, move the cursor to the end of the word
+setopt auto_list          # Automatically list choices
+setopt list_ambiguous     # Complete a word up to where it becomes ambiguous
+setopt auto_remove_slash  # Remove an inserted slash when not needed
+setopt complete_aliases # ??
 
 zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' menu select=2
@@ -24,9 +28,14 @@ setopt correct # Spelling correction of commands
 
 # History {{{
 HISTFILE=~/.histfile
-HISTSIZE=10000
-SAVEHIST=1000
-setopt append_history inc_append_history share_history hist_ignore_all_dups hist_ignore_space
+HISTSIZE=1024
+SAVEHIST=1024
+setopt append_history        # Append to the history file
+setopt inc_append_history    # Add to history file as commands are typed
+setopt share_history         # All zsh sessions share the same history
+setopt hist_ignore_all_dups  # Do not add dupes
+setopt hist_ignore_space     # Ignore commands which start with a space
+setopt hist_no_store         # Remove the history command from the command history
 # }}}
 
 # Vimify {{{
@@ -67,10 +76,21 @@ watch=all                       # watch all logins
 logcheck=30                     # every 30 seconds
 WATCHFMT="%n from %M has %a tty%l at %T %W"
 
-alias snore="autoload -U tetris && tetris"
+alias snore="autoload -U tetris && tetris" # heh
 
-setopt auto_cd auto_pushd pushd_ignore_dups pushd_to_home
-setopt extendedglob nomatch
+# Changing directories
+setopt auto_cd           # Just use the name of a directory to CD to it
+setopt auto_pushd        # Uses pushd instead of cd
+setopt pushd_ignore_dups # Don't push multiple copies of the same directory to the stack
+setopt pushd_to_home     # pushd without an argument goes to home
+setopt pushd_silent      # Do not print directory stack after pushd or popd
+
+# Expansions
+setopt extendedglob      # Use advanced expansion (#,~,^)
+setopt nomatch           # Print error when filename pattern doesn't match
+
+setopt hist_subst_pattern # Allow pattern matching with :s
+
 unsetopt beep notify
 
 autoload zmv # Fancy mv command
