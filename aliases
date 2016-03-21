@@ -1,9 +1,6 @@
 ## Random {{{
-[ -f `which nvim` ] && alias vim='nvim'
-#alias nvim='vim'
+[ -f "`which nvim`" ] && alias vim='nvim'
 alias vi='vim'
-alias buspirate='minicom buspirate'
-alias rn42='minicom rn42'
 
 #alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/$\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 alias build-failed='notify-send --urgency=critical -i error "Build Failed" `pwd`'
@@ -24,7 +21,6 @@ alias grp='grep -rnI'
 ## Development {{{
 alias make='make -j`expr $NUM_PROCESSORS + 1`'
 alias scons='scons -j`expr $NUM_PROCESSORS + 1`'
-# alias scont='scons -j`expr $NUM_PROCESSORS + 1` -c'
 alias klean='make clean && make'
 alias cant='ant clean && ant'
 
@@ -50,8 +46,8 @@ vrofile() {
 alias g='s -g'
 alias gi='s -g -i'
 alias f='s -f'
-# alias todo='g "(FIXME|TODO)"'
 alias todo='g TODO'
+alias fixme='g FIXME'
 ## }}}
 
 ## Color aliases {{{
