@@ -1,5 +1,5 @@
 prompt_cvsInfo() {
-    info="%{fg[cyan]%}<CVS>"
+    info="%{fg[magenta]%}<CVS>"
 
     # Add a symbol if modified files
     status_out=`cvs -n -q update`
@@ -13,10 +13,10 @@ prompt_mercurialInfo() {
     info=" %{$fg[cyan]%}"
 
     # Determine the branch
-    branch=`hg branch`
+    branch=`hg branch 2>/dev/null`
     info="${info}${branch}"
 
-    status_out=`hg status`
+    status_out=`hg status 2>/dev/null`
 
     # Add indicator if there are modified files
     numMods=`echo $status_out | egrep -c "(A|M|D)"`
@@ -58,8 +58,7 @@ prompt_repoInfo() {
 }
 
 prompt_jobs() {
-    # ¡
-    [ `jobs | wc -l` -gt 0 ] && echo "%{$fg[red]%}∙%{$reset_color%}" || echo " "
+    [ `jobs | wc -l` -gt 0 ] && echo "%{$fg[red]%}•%{$reset_color%}" || echo " "
 }
 
 prompt_pwd() {
@@ -74,9 +73,8 @@ autoload -U promptinit && promptinit
 autoload -U colors && colors
 setopt prompt_subst
 
-local last_ret="%(?, ,%{$fg[red]%}∙%{$reset_color%})" # U+2639 - ☹
+local last_ret="%(?, ,%{$fg[red]%}•%{$reset_color%})"
 
-# U+256D - ╭ ; U+2570 - ╰
-# E2 95 AD ; E2 95 B0
-PROMPT='%F{234}╭%f$(prompt_jobs)$(prompt_host)$(prompt_pwd)$(prompt_repoInfo)
-%F{234}╰─%f${last_ret}'
+# U+256D - ╭ ; U+2570 - ╰  ; U+2574 - ╴
+PROMPT='%F{234}╭%f${last_ret}$(prompt_host)$(prompt_pwd)$(prompt_repoInfo)
+%F{234}╰╴%f$(prompt_jobs)'
