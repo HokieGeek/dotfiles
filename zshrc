@@ -3,12 +3,14 @@
 
 # Completion {{{
 autoload -Uz compinit; compinit
+setopt complete_in_word   #allow tab completion in the middle of a word
+setopt list_ambiguous
 
-zstyle ':completion:*' completer _complete _ignored
+zstyle ':completion:*' completer _expand _complete _ignored _approximate
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS} 
 zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
-zstyle :compinstall filename '$HOME/.zshrc'
-#allow tab completion in the middle of a word
-setopt complete_in_word
+# zstyle :compinstall filename '$HOME/.zshrc'
 
 [ -f $HOME/.shell-plugins/zsh-autosuggestions/autosuggestions.zsh ] && { 
     source $HOME/.shell-plugins/zsh-autosuggestions/autosuggestions.zsh
@@ -65,9 +67,9 @@ watch=all                       # watch all logins
 logcheck=30                     # every 30 seconds
 WATCHFMT="%n from %M has %a tty%l at %T %W"
 
-autoload -U tetris && tetris
+alias snore="autoload -U tetris && tetris"
 
-setopt autocd auto_pushd pushd_ignore_dups
+setopt auto_cd auto_pushd pushd_ignore_dups pushd_to_home
 setopt extendedglob nomatch
 unsetopt beep notify
 
