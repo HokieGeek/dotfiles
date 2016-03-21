@@ -69,6 +69,11 @@ prompt_host() {
     [ -n "$SSH_CLIENT" ] && echo -n "%{$fg[magenta]%}@%m%{$reset_color%} "
 }
 
+prompt_gotmail() {
+    # U+2709
+    echo -n "✉"
+}
+
 autoload -U promptinit && promptinit
 autoload -U colors && colors
 setopt prompt_subst
@@ -78,3 +83,4 @@ local last_ret="%(?, ,%{$fg[red]%}•%{$reset_color%})"
 # U+256D - ╭ ; U+2570 - ╰  ; U+2574 - ╴
 PROMPT='%F{234}╭%f${last_ret}$(prompt_host)$(prompt_pwd)$(prompt_repoInfo)
 %F{234}╰╴%f$(prompt_jobs)'
+# RPROMPT="$(prompt_gotmail)" 
