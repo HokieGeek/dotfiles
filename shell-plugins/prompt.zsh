@@ -1,5 +1,5 @@
 prompt_cvsInfo() {
-    info="%{fg[magenta]%}<CVS>"
+    info=" %{fg[magenta]%}<CVS>"
 
     # Add a symbol if modified files
     status_out=`cvs -n -q update`
