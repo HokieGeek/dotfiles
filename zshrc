@@ -42,7 +42,6 @@ HISTSIZE=1024
 SAVEHIST=1024
 setopt append_history        # Append to the history file
 setopt inc_append_history    # Add to history file as commands are typed
-setopt share_history         # All zsh sessions share the same history
 setopt hist_ignore_all_dups  # Do not add dupes
 setopt hist_ignore_space     # Ignore commands which start with a space
 setopt hist_no_store         # Remove the history command from the command history
