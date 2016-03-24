@@ -40,7 +40,7 @@ alias smgp='gp && git submodule foreach --recursive "git pull --prune || :"'
 vrofile() {
     vim --cmd 'profile start /tmp/vim.profile' --cmd 'profile func *' $* && vi /tmp/vim.profile +/SORTED
 }
-alias dev='docker run -ti hokiegeek/dev'
+alias dev='docker run -ti -v /var/run/docker.sock:/var/run/docker.sock hokiegeek/dev'
 ## }}}
 
 ## S-based aliases {{{
