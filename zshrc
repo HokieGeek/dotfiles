@@ -51,27 +51,19 @@ setopt hist_no_store         # Remove the history command from the command histo
 export EDITOR="nvim"
 setopt vi
 
-# Allows editing the command line in
 bindkey -M vicmd v edit-command-line
 autoload edit-command-line; zle -N edit-command-line
 # }}}
 
 # Term Colors {{{
-# export TERM="xterm-256color"
-# [ -n "$TMUX" ] && export TERM="screen-256color"
-
-# case $TERM in
-#     xterm*)
-#         precmd () {print -Pn "\e]0;%~\a"}
-#         ;;
-# esac
-# export LESS_TERMCAP_mb=$'\E[01;31m'       # begin blinking
-# export LESS_TERMCAP_md=$'\E[01;38;5;74m'  # begin bold
-# export LESS_TERMCAP_me=$'\E[0m'           # end mode
-# export LESS_TERMCAP_se=$'\E[0m'           # end standout-mode
-# export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box
-# export LESS_TERMCAP_ue=$'\E[0m'           # end underline
-# export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
+# Colorized man pages
+export LESS_TERMCAP_mb=$(printf "\e[1;31m")     # being blinking
+export LESS_TERMCAP_md=$(printf "\e[1;31m")     # begin bold
+export LESS_TERMCAP_me=$(printf "\e[0m")        # end mode
+export LESS_TERMCAP_se=$(printf "\e[0m")        # end standout-mode
+export LESS_TERMCAP_so=$(printf "\e[1;44;33m")  # begin standout-mode - info box
+export LESS_TERMCAP_ue=$(printf "\e[0m")        # end underline
+export LESS_TERMCAP_us=$(printf "\e[1;32m")     # begin underline
 # }}}
 
 # PATHing {{{
@@ -112,7 +104,7 @@ autoload zmv # Fancy mv command
 # Source the things {{{
 . $HOME/.aliases
 . $HOME/.shell-plugins/prompt.zsh
-[ -f $HOME/.zshrc_work ] && . $HOME/.zshrc_work
+[ -f $HOME/.zshrc_alt ] && . $HOME/.zshrc_alt
 # }}}
 
 # vim: set ft=sh foldmethod=marker

@@ -2,7 +2,7 @@
 	path = vim/bundle
 	url = git://github.com/HokieGeek/MahVimPlugins
 [submodule "shell-plugins/zsh-autosuggestions"]
-    path = shell-plugins/zsh-autosuggestions
+	path = shell-plugins/zsh/zsh-autosuggestions
     url = https://github.com/tarruda/zsh-autosuggestions
 [submodule "vim/colors/Sierra"]
 	path = vim/colors/Sierra
