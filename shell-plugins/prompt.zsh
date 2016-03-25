@@ -52,7 +52,7 @@ prompt_gitInfo() {
 }
 
 prompt_repoInfo() {
-    which git >/dev/null 2>&1 && git status >/dev/null 2>&1 && prompt_gitInfo
+    which git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1 && prompt_gitInfo
     which hg >/dev/null 2>&1 && hg status >/dev/null 2>&1 && prompt_mercurialInfo
     which cvs >/dev/null 2>&1 && cvs status >/dev/null 2>&1 && prompt_cvsInfo
 }
