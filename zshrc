@@ -52,7 +52,17 @@ export EDITOR="nvim"
 setopt vi
 
 bindkey -M vicmd v edit-command-line
-autoload edit-command-line; zle -N edit-command-line
+zle -N edit-command-line
+autoload -Uz edit-command-line
+
+# allow ctrl-p, ctrl-n for navigate history (standard behaviour)
+bindkey '^P' up-history
+bindkey '^N' down-history
+
+# allow ctrl-h, ctrl-w, ctrl-? for char and word deletion (standard behaviour)
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
 # }}}
 
 # Term Colors {{{
