@@ -2,7 +2,8 @@
 [[ -z "$TMUX" && -f "/usr/bin/tmux" ]] && exec tmux
 
 # Completion {{{
-autoload -Uz compinit; compinit
+autoload -Uz compinit && compinit # Turn on tab completion
+# autoload -Uz promptinit && promptinit # Prompt themes
 setopt complete_in_word   # Allow tab completion in the middle of a word
 setopt always_to_end      # When completing from the middle of a word, move the cursor to the end of the word
 setopt auto_list          # Automatically list choices
@@ -68,7 +69,7 @@ bindkey '^w' backward-kill-word
 # Term Colors {{{
 # Colorized man pages
 export LESS_TERMCAP_mb=$(printf "\e[1;31m")     # being blinking
-export LESS_TERMCAP_md=$(printf "\e[1;31m")     # begin bold
+export LESS_TERMCAP_md=$(printf "\e[1;34m")     # begin bold
 export LESS_TERMCAP_me=$(printf "\e[0m")        # end mode
 export LESS_TERMCAP_se=$(printf "\e[0m")        # end standout-mode
 export LESS_TERMCAP_so=$(printf "\e[1;44;33m")  # begin standout-mode - info box
