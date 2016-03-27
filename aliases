@@ -1,24 +1,30 @@
 ## Random {{{
-[ -f "`which nvim`" ] && alias vim='nvim'
-alias vi='vim'
-
 #alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/$\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-alias build-failed='notify-send --urgency=critical -i error "Build Failed" `pwd`'
-alias build-succeeded='notify-send --urgency=normal -i sunny "Build Succeeded" `pwd`'
-alias build-notify='build-succeeded || build-failed'
+[ -f "`which notify-send`" ] && {
+    alias build-failed='notify-send --urgency=critical -i error "Build Failed" `pwd`'
+    alias build-succeeded='notify-send --urgency=normal -i sunny "Build Succeeded" `pwd`'
+    alias build-notify='build-succeeded || build-failed'
+}
+
 alias tattach='tmux attach-session -t'
 
-function d() {
-    expr $((RANDOM%$1)) + 1
-}
-alias d6='d 6'
-alias d20='d 20'
+alias roll='expr $((RANDOM%20)) + 1'
 alias broadcast='script -qf | tee >(nc -kl 5000)'
 
-alias grp='grep -rnI'
+[ -f "`which wego`" ] && {
+    alias w2='wego -days 2'
+    alias w5='wego -days 5'
+}
 ## }}}
 
 ## Development {{{
+[ -f "`which nvim`" ] && alias vim='nvim'
+alias vi='vim'
+
+vrofile() {
+    vim --cmd 'profile start /tmp/vim.profile' --cmd 'profile func *' $* && vi /tmp/vim.profile +/SORTED
+}
+
 alias make='make -j`expr $NUM_PROCESSORS + 1`'
 alias scons='scons -j`expr $NUM_PROCESSORS + 1`'
 alias klean='make clean && make'
@@ -37,16 +43,23 @@ gtrack() {
 alias gp='git pull --prune'
 alias smgp='gp && git submodule foreach --recursive "git pull --prune || :"'
 
-vrofile() {
-    vim --cmd 'profile start /tmp/vim.profile' --cmd 'profile func *' $* && vi /tmp/vim.profile +/SORTED
-}
 alias dev='docker run -ti -v /var/run/docker.sock:/var/run/docker.sock hokiegeek/dev'
 ## }}}
 
-## S-based aliases {{{
-alias g='s -g'
-alias gi='s -g -i'
-alias f='s -f'
+## Search aliases {{{
+alias grp='grep -rnI'
+alias fnd='find . -name'
+
+[ -f "`which s`" ] && {
+    alias g='s -g'
+    alias gi='s -g -i'
+    alias f='s -f'
+} || {
+    alias g='grp'
+    alias gi='grp -i'
+    alias f='fnd'
+}
+
 alias todo='g TODO'
 alias fixme='g FIXME'
 ## }}}
