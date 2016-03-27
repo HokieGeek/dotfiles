@@ -40,6 +40,7 @@ Scratch
 | ga | :ArgsToggle |
 | go | :TListToggle |
 | ge | EasyAlign interactive mode |
+| gc | Toggles Undotree |
 | (visual)&lt;Enter&gt; | EasyAlign interactive mode |
 | \\\\ | :Grep |
 | g\ | :Grep -b |

@@ -213,7 +213,6 @@ nnoremap <silent> <leader><F12> :colorscheme herald<cr>
 nnoremap <silent> gh :Scratch<cr>
 " Ctrl+W is a horrible window control whatsit
 nnoremap <silent> gw <c-w>
-nnoremap <silent> gc <c-]>
 
 cnoremap w!! w !sudo tee % >/dev/null
 " }}}
@@ -243,6 +242,8 @@ if g:have_plugins
 
     vmap <Enter> <Plug>(EasyAlign)
     nmap ge <Plug>(EasyAlign)
+
+    nnoremap <silent> gc :UndotreeToggle<cr>:UndotreeFocus<cr>
 endif
 " }}}
 
