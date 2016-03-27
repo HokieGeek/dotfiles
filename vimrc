@@ -364,6 +364,7 @@ augroup FiletypeOptions
     autocmd FileType qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
     autocmd FileType cpp setlocal foldmethod=syntax
     autocmd FileType go set nolist " foldmethod=syntax
+    autocmd BufNewFile,BufRead *.pkgbuild set filetype=sh
 augroup END
 
 augroup HighlightingOptions
