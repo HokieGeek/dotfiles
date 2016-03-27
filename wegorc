@@ -1,0 +1,31 @@
+# wego configuration
+# 
+# This config has https://github.com/schachmat/ingo syntax.
+# Empty lines or lines starting with # will be ignored.
+# All other lines must look like `KEY=VALUE` (without the quotes).
+# The VALUE must not be enclosed in quotes!
+
+# BACKEND to be used (default worldweatheronline.com)
+backend=worldweatheronline.com
+
+# LOCATION to be queried (default New York)
+city=20874
+
+# NUMBER of days of weather forecast to be displayed (default 3)
+days=1
+
+# FRONTEND to be used (default ascii-art-table)
+frontend=ascii-art-table
+
+# json frontend: do not indent the output (default false)
+jsn-no-indent=false
+
+# UNITSYSTEM to use for output.
+# Choices are: metric, imperial, si (default metric)
+units=imperial
+
+# wwo backend: the api KEY to use (default )
+wwo-api-key=c5765eed449d9df290a1ae7dda591
+
+# wwo backend: the LANGUAGE to request from wwo (default en)
+wwo-lang=en
