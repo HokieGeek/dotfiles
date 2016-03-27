@@ -118,4 +118,4 @@ autoload zmv # Fancy mv command
 [ -f $HOME/.zshrc_alt ] && . $HOME/.zshrc_alt
 # }}}
 
-# vim: set ft=sh foldmethod=marker
+# vim: set ft=sh foldmethod=marker:
