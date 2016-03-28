@@ -5,6 +5,9 @@
 # All other lines must look like `KEY=VALUE` (without the quotes).
 # The VALUE must not be enclosed in quotes!
 
+# Show geo coordinates (default false)
+aat-coords=false
+
 # BACKEND to be used (default worldweatheronline.com)
 backend=worldweatheronline.com
 
@@ -26,6 +29,9 @@ units=imperial
 
 # wwo backend: the api KEY to use (default )
 wwo-api-key=c5765eed449d9df290a1ae7dda591
+
+# wwo backend: print raw requests and responses (default false)
+wwo-debug=false
 
 # wwo backend: the LANGUAGE to request from wwo (default en)
 wwo-lang=en
