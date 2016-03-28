@@ -110,6 +110,12 @@ unsetopt beep
 unsetopt bg_nice          # Run bg'ed processes at regular priority
 
 autoload zmv # Fancy mv command
+
+## Fixes backspace "issue"
+function zle-line-init () { echoti smkx }
+function zle-line-finish () { echoti rmkx }
+zle -N zle-line-init
+zle -N zle-line-finish
 # }}}
 
 # Source the things {{{
