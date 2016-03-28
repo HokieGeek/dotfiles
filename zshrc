@@ -28,7 +28,7 @@ zstyle ':completion:*:kill:*'   force-list always
 zstyle ':completion:*:cd:*' ignore-parents parent pwd
 
 [ -f $HOME/.shell-plugins/zsh-autosuggestions/autosuggestions.zsh ] && { 
-    source $HOME/.shell-plugins/zsh-autosuggestions/autosuggestions.zsh
+    source $HOME/.shell-plugins/zsh/zsh-autosuggestions/autosuggestions.zsh
     zle -N autosuggest-start
 }
 
