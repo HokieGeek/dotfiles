@@ -1,5 +1,5 @@
 prompt_cvsInfo() {
-    info=" %{fg[magenta]%}<CVS>"
+    info=" %{$fg[magenta]%}<CVS>"
 
     # Add a symbol if modified files
     status_out=`cvs -n -q update`
@@ -29,7 +29,7 @@ prompt_gitInfo() {
     info=" %{$fg[yellow]%}"
 
     # Determine the branch
-    branch=`git branch | grep "^*" | sed "s/^\*\s*//"`
+    branch=`git branch >2/dev/null | grep "^*" | sed "s/^\*\s*//"`
     info="${info}${branch}"
 
     status_out=`git status --porcelain -sb -uno 2>/dev/null`
@@ -46,9 +46,9 @@ prompt_gitInfo() {
 
     # Add indicator if there are modified files
     numMods=`echo $status_out | egrep -c "(A|M|D)"`
-    [ $numMods -gt 0 ] && info=${info}"%b%F{52}±%{$reset_color%} "
+    [ $numMods -gt 0 ] && info=${info}"%{$fg[red]%}±%{$reset_color%} "
 
-    echo "${info}%{$reset_color%}"
+    echo -n "${info}%{$reset_color%}"
 }
 
 prompt_repoInfo() {
@@ -66,7 +66,7 @@ prompt_pwd() {
 }
 
 prompt_host() {
-    [ -n "$SSH_CLIENT" ] && echo -n "%{$fg[magenta]%}@%m%{$reset_color%} "
+    [ -n "$SSH_CLIENT" ] && echo -n "%{$fg[green]%}@%m%{$reset_color%} "
 }
 
 prompt_gotmail() {
