@@ -12,6 +12,7 @@ alias roll='expr $((RANDOM%20)) + 1'
 alias broadcast='script -qf | tee >(nc -kl 5000)'
 
 [ -f "`which wego`" ] && {
+    alias w1='wego -days 1'
     alias w2='wego -days 2'
     alias w5='wego -days 5'
 }

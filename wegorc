@@ -12,7 +12,7 @@ backend=worldweatheronline.com
 city=20874
 
 # NUMBER of days of weather forecast to be displayed (default 3)
-days=1
+days=0
 
 # FRONTEND to be used (default ascii-art-table)
 frontend=ascii-art-table
