@@ -2,7 +2,7 @@
 
 # [ `ps aux | grep ssh-agent | grep -v grep | wc -l` -le 0 ] && exec ssh-agent $0 $@
 [ -z "$SSH_AGENT_PID" ] && exec ssh-agent $0 $@
-ssh-add
+ssh-add ~/.ssh/id_rsa_github
 
 git fetch --all
 git pull origin master
