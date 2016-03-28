@@ -131,7 +131,7 @@ myDzen h = defaultPP
       , ppVisible         = dzenColor "white" colorBackground . pad . dzenWorkspaceSymbol
       , ppHidden          = dzenColor "white" colorBackground . pad . dzenWorkspaceSymbol
       , ppHiddenNoWindows = dzenColor "#363636" colorBackground . pad . dzenWorkspaceSymbol
-      , ppUrgent          = dzenColor "#ff0000" colorBackground . pad . dzenWorkspaceSymbol
+      , ppUrgent          = dzenColor "#ff0000" colorBackground . pad . dzenAlertWorkspaceSymbol
       , ppLayout          = (\x -> "")
       , ppTitle           = (\x -> "")
       , ppSep             = ""
@@ -142,6 +142,8 @@ myDzen h = defaultPP
         dzenWorkspaceSymbol x
               | notElem x myWorkspaces = x
               | otherwise = "^r(4x4)^fg(" ++ colorBackground ++ ")^r(5x1)"
+        dzenAlertWorkspaceSymbol x
+              | otherwise = "^r(2x2)^fg(" ++ colorBackground ++ ")^r(5x1)"
 -- }}}
 -- HandleEvent {{{
 myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
@@ -238,8 +240,8 @@ myKeys =    [
 -- Main {{{
 compmgr   = "xcompmgr"
 barheight = "14"
-screenwidth_cmd    = "xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1"
-conkyStatusBar     = "~/.xmonad/statusbar/statusbar.sh --width `" ++ screenwidth_cmd ++ "` --height '" ++ barheight ++ "' --bg '" ++ colorBackground ++ "' --fg '" ++ colorForeground ++ "' --font '" ++ termFont ++ "'"
+screenwidth_cmd    = "`xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1`"
+conkyStatusBar     = "~/.xmonad/statusbar/statusbar.sh --width " ++ screenwidth_cmd ++ " --height '" ++ barheight ++ "' --bg '" ++ colorBackground ++ "' --fg '" ++ colorForeground ++ "' --font '" ++ termFont ++ "'"
 workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ termFont ++ "' -x '0' -y '0' -h '" ++ barheight ++ "' -w '280' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
 main = do
         compMgrStart <- spawn compmgr
