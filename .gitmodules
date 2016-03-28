@@ -7,3 +7,6 @@
 [submodule "vim/colors/Sierra"]
 	path = vim/colors/Sierra
 	url = git@github.com:AlessandroYorba/Sierra.git
+[submodule "look"]
+	path = look
+	url = git@github.com:HokieGeek/look.git
