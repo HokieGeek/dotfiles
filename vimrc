@@ -37,11 +37,12 @@ filetype plugin indent on
 
 """ Options {{{
 set autoindent " Indents when you insert
-set tabstop=4 " Tab = 4 spaces. Because I'm not a savage
-set softtabstop=4
-set shiftwidth=4
-set expandtab
-set shiftround " Always indent to nearest tabstop
+set copyindent " Uses previous indentation when autoindenting
+set tabstop=4 " How many spaces to display when it gets a tab
+set softtabstop=4 " Tab = 4 spaces. Because I'm not a savage
+set shiftwidth=4 " Number of spaces to use for each step of (auto)indenting
+set expandtab " If you hit the tab key, it inserts spaces
+set shiftround " USe multiple of shiftwidth when indenting with '>' and '<'
 set smarttab " Use shiftwidth at left margin, instead of tabstops
 set backspace=2 " Make backspace actually work, because why not?
 set title
@@ -51,9 +52,9 @@ set ruler
 set showcmd " Shows the command being typed
 set noshowmode " Don't show -- INSERT --
 set complete-=i " Don't search includes because they are slow
-set completeopt=longest,menuone,preview
+set completeopt=longest,menuone,preview " Changing insert mode completion options
 set wildmenu " Tab completion in command-line mode (:)
-set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~,tags,.hg,.git,*.pyc " These file types are ignored when doing auto completions
+set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~,tags,.hg,.git,*.pyc,*.orig " These file types are ignored when doing auto completions
 set wildmode=list:longest,full
 set viminfo=h,%,'50,"100,<10000,s1000,/1000,:1000 " Remembers stuff. RTFM
 set history=1000
@@ -207,7 +208,11 @@ iabbrev afp]] [AFP]
 """ Keyboard mappings {{{
 "" Some user stuff " {{{
 nnoremap <silent> <F12> :call CycleColorScheme()<cr>
-nnoremap <silent> <leader><F12> :colorscheme herald<cr>
+if has ("gui_running")
+    nnoremap <silent> <leader><F12> :colorscheme badwolf<cr>
+else
+    nnoremap <silent> <leader><F12> :colorscheme ir_black<cr>
+endif
 
 " A scratch space. Kinda useless, I think
 nnoremap <silent> gh :Scratch<cr>
@@ -290,10 +295,10 @@ nnoremap <silent> cos :setlocal spell!<cr>
 nnoremap <silent> col :setlocal list!<cr>
 nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
 nnoremap <silent> cot :let &laststatus = (&laststatus == 2 ? 1 : 2)<cr>
-nnoremap <silent> cob :let &background = (&background == "dark" ? "light" : "dark")<cr>
+" nnoremap <silent> cob :let &background = (&background == "dark" ? "light" : "dark")<cr>
 " nnoremap <silent> cob :let &background = (&background == "dark" ? "light" : "dark")<bar>execute "colorscheme ".g:my_current_scheme<cr>
-nnoremap <silent> coH :nohlsearch<cr>
 nnoremap <silent> coh :setlocal hlsearch!<cr>
+nnoremap <silent> coH :nohlsearch<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
 nnoremap <silent> coF :setlocal foldenable!<cr>
 nnoremap <silent> cof   :setlocal foldenable foldmethod=syntax<bar>echomsg &foldmethod<cr>
