@@ -1,6 +1,6 @@
 ## Random {{{
 #alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/$\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-[ -f "`which notify-send`" ] && {
+[ -f "`which notify-send 2>/dev/null`" ] && {
     alias build-failed='notify-send --urgency=critical -i error "Build Failed" `pwd`'
     alias build-succeeded='notify-send --urgency=normal -i sunny "Build Succeeded" `pwd`'
     alias build-notify='build-succeeded || build-failed'
@@ -11,7 +11,7 @@ alias tattach='tmux attach-session -t'
 alias roll='expr $((RANDOM%20)) + 1'
 alias broadcast='script -qf | tee >(nc -kl 5000)'
 
-[ -f "`which wego`" ] && {
+[ -f "`which wego 2>/dev/null`" ] && {
     alias w1='wego -days 1'
     alias w2='wego -days 2'
     alias w5='wego -days 5'
@@ -19,7 +19,7 @@ alias broadcast='script -qf | tee >(nc -kl 5000)'
 ## }}}
 
 ## Development {{{
-[ -f "`which nvim`" ] && alias vim='nvim'
+[ -f "`which nvim 2>/dev/null`" ] && alias vim='nvim'
 alias vi='vim'
 
 vrofile() {
@@ -84,4 +84,4 @@ alias :q='exit'
 alias :qa='exit'
 ## }}}
 
-# vim: set foldmethod=marker:
+# vim: set ft=sh foldmethod=marker:
