@@ -29,7 +29,7 @@ prompt_gitInfo() {
     info=" %{$fg[yellow]%}"
 
     # Determine the branch
-    branch=`git branch >2/dev/null | grep "^*" | sed "s/^\*\s*//"`
+    branch=`git branch 2>/dev/null | grep "^*" | sed "s/^\*\s*//"`
     info="${info}${branch}"
 
     status_out=`git status --porcelain -sb -uno 2>/dev/null`
