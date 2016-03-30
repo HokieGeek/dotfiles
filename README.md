@@ -50,7 +50,8 @@ Scratch
 | &lt;F10&gt; | Delete session |
 | &lt;leader&gt;&lt;F10&gt; | Load session |
 | &lt;F12&gt; | Cycle colorschemes |
-| &lt;leader&gt;&lt;F12&gt; | Set specific colorscheme (herald) |
+| &lt;leader&gt;&lt;F12&gt; | Set favorite colorscheme (differerent if on GUI vs. terminal) |
+| &lt;C-F12&gt; | Sets to failsafe colorscheme (different if on GUI vs. terminal) |
 | &lt;count&gt;]b | Next buffer |
 | &lt;count&gt;[b | Previous buffer |
 | ]B | Last buffer |
@@ -67,8 +68,8 @@ Scratch
 | &lt;count&gt;[l | Previous location item |
 | ]L | Last location item |
 | [L | First location item |
-| con | Toggle relative number (if supported, else toggles number) |
-| coN | Toggles number and relative number |
+| coN | Toggle relative number (if supported, else toggles number) |
+| con | Toggles number and relative number |
 | coc | Toggles cursor line |
 | coC | Toggles cursor column (if supported) |
 | cow | Toggles word wrap |
@@ -109,7 +110,9 @@ Ported my bash prompt which displays information such as git and mercurial repos
 ### xmonad
 My focus was to enable layouts that let me take advantage of my small laptop screen in a way that most benefits what I am currently working on. I couple that with a good number of custom keybindings so that I don't have to use the mouse to interact with the window manager. I also have been making pretty heavy use of `dmenu` to provide me some extra control.
 
-Using dzen2 to display the workspaces.
+Using `dzen2` to display the workspaces.
+
+Also using `dzen2` for some application launchers as well as the selector which lets me change the color theme.
 
 ##### A few sample custom key bindings that I love
 | Binding | What it does |
@@ -121,4 +124,4 @@ Using dzen2 to display the workspaces.
 | Super+Ctrl+[WS#] | Swaps current workspace with indicated workspace |
 
 ### conky + dzen2
-Using them to display statistics such as time, IP addresses, CPU use, battery life, etc.
+Displaying statistics such as time, IP addresses, CPU use, battery life, etc.
