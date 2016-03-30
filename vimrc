@@ -283,8 +283,8 @@ nnoremap <silent> [L :lfirst<cr>
 
 "" Configuration " {{{
 if exists("&relativenumber")
-    nnoremap <silent> con :setlocal relativenumber!<cr>
-    nnoremap <silent> coN :setlocal number!<bar>if exists("&relativenumber")<bar>setlocal relativenumber!<bar>endif<cr>
+    nnoremap <silent> coN :setlocal relativenumber!<cr>
+    nnoremap <silent> con :setlocal number!<bar>if exists("&relativenumber")<bar>setlocal relativenumber!<bar>endif<cr>
 else
     nnoremap <silent> con :setlocal number!<cr>
 endif
