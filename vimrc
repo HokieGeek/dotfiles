@@ -123,10 +123,10 @@ endif
 " Always want it
 set t_Co=256
 set background=dark
-let g:sierra_Pitch = 1
 if has("gui_running")
+    let g:sierra_Midnight = 1
     try
-        colorscheme badwolf
+        colorscheme ir_black
     catch /E185:/
         colorscheme murphy
     endtry
@@ -134,8 +134,8 @@ if has("gui_running")
     set guioptions-=T guioptions-=m guioptions-=r guioptions-=l guioptions-=b
     set guioptions+=c " Use console dialogs instead of popup dialogs
 else
+    let g:sierra_Pitch = 1
     try
-        " colorscheme ir_black
         colorscheme sierra
     catch /E185:/
         colorscheme desert
@@ -170,7 +170,7 @@ function! MyHighlights() " {{{
 endfunction " }}}
 function! CycleColorScheme() " {{{
     if !exists("g:my_schemes")
-        let g:my_schemes = split(glob(expand(g:dot_vim_dir."/colors")."/*"), '\n')
+        let g:my_schemes = split(glob(expand(g:dot_vim_dir."/colors")."/*.vim"), '\n')
         let g:my_schemes = map(g:my_schemes, 'fnamemodify(v:val, ":t:r")')
     endif
     if exists("g:my_current_scheme") > 0
@@ -209,9 +209,11 @@ iabbrev afp]] [AFP]
 "" Some user stuff " {{{
 nnoremap <silent> <F12> :call CycleColorScheme()<cr>
 if has ("gui_running")
-    nnoremap <silent> <leader><F12> :colorscheme badwolf<cr>
-else
     nnoremap <silent> <leader><F12> :colorscheme ir_black<cr>
+    nnoremap <silent> <C-F12> :colorscheme badwolf<cr>
+else
+    nnoremap <silent> <leader><F12> :colorscheme sierra<cr>
+    nnoremap <silent> <C-F12> :colorscheme ir_black<cr>
 endif
 
 " A scratch space. Kinda useless, I think
