@@ -10,3 +10,24 @@
 [submodule "look"]
 	path = look
 	url = git@github.com:HokieGeek/look.git
+[submodule "vim/colors/badwolf"]
+	path = vim/colors/badwolf
+	url = https://github.com/sjl/badwolf
+[submodule "vim/colors/ir_black"]
+	path = vim/colors/ir_black
+	url = https://github.com/twerth/ir_black
+[submodule "vim/colors/gentooish.vim"]
+	path = vim/colors/gentooish
+	url = https://github.com/cdaddr/gentooish.vim
+[submodule "vim/colors/herald.vim"]
+	path = vim/colors/herald
+	url = https://github.com/vim-scripts/herald.vim
+[submodule "vim/colors/mustang-vim"]
+	path = vim/colors/mustang
+	url = https://github.com/croaker/mustang-vim
+[submodule "vim/colors/peaksea"]
+	path = vim/colors/peaksea
+	url = https://github.com/vim-scripts/peaksea
+[submodule "vim/colors/Zenburn"]
+	path = vim/colors/Zenburn
+	url = https://github.com/jnurmine/Zenburn
