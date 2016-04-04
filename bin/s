@@ -38,7 +38,10 @@ fi
 doGrep() {
     grepformat="%f:%l:%c:%m"
     glob=""
-    if [ -x "`which ag 2>/dev/null`" ]; then
+    if `git rev-parse --is-inside-working-tree >/dev/null 2>&1`; then
+        grepprg="git\\ grep\\ -n\\ --no-color"
+        grepformat="%f:%l:%m"
+    elif [ -x "`which ag 2>/dev/null`" ]; then
         grepprg="ag\\ --nogroup\\ --nocolor\\ --column"
     elif [ -x "`which ack 2>/dev/null`" ]; then
         grepprg="ack\\ --nogroup\\ --nocolor\\ --column"
@@ -59,12 +62,12 @@ doGrep() {
 
 doFind() {
     [ $caseInsensitive -gt 0 ] && opt_ci="i" || opt_ci=""
-    results=/tmp/s.results.$$
+    results=`mktemp`
     find . -${opt_ci}name "*${expression}*" -print | xargs file | sed 's/:/:1:/' > ${results}
-    if [ -f "${results}" -a `cat ${results} | wc -l` -gt 0 ]; then
+    if [ -f "${results}" -a `wc -l ${results}` -gt 0 ]; then
         exec vim -c "cfile ${results}" \
                  -c "set errorformat=%f:%l:%m" \
-                 -c "if len(getqflist()) > 1|cwindow|endif" \
+                 -c "if empty(getqflist())|qa|else|if len(getqflist()) > 1|cwindow|endif|endif" \
                  -c "call delete('${results}')"
     fi
 }
