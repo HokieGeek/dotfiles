@@ -4,11 +4,10 @@ usage() {
     {
     [ $# -gt 0 ] && echo -e "${1}\n"
     echo "USAGE: `basename $0` [-g|-f] [-i] <EXPRESSION>"
-    echo ""
     more << USAGE_INFO
+    
        -g      - [DEFAULT] Greps the contents of all of the files in the directory (recursive)
        -f      - Searches for file and directory names (recursive)
-
        -i      - Makes any search case-insensitive
 USAGE_INFO
     } >&2
