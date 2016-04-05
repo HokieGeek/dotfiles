@@ -5,24 +5,27 @@ usage() {
     [ $# -gt 0 ] && echo -e "${1}\n"
     echo "USAGE: `basename $0` [-g|-f] [-i] <EXPRESSION>"
     more << USAGE_INFO
-    
-       -g      - [DEFAULT] Greps the contents of all of the files in the directory (recursive)
-       -f      - Searches for file and directory names (recursive)
-       -i      - Makes any search case-insensitive
+
+       -g      [DEFAULT] Greps the contents of all of the files in the directory (recursive)
+       -f      Searches for file and directory names (recursive)
+       -i      Makes any search case-insensitive
+       -q      Quits after performing search instead of starting vim
 USAGE_INFO
     } >&2
 }
 
 expression=""
 searchType="GREP"
-caseInsensitive=0
+caseInsensitive=false
+loadInVim=true
 
 # Parse the arguments
 while [ $# -gt 0 ]; do
     case $1 in
     -f) searchType="FILES";;
     -g) searchType="GREP";;
-    -i) caseInsensitive=1 ;;
+    -i) caseInsensitive=true ;;
+    -q) loadInVim=false ;;
     *) expression="${expression} $1";;
     esac
     shift
@@ -35,39 +38,51 @@ if [ -z "${expression}" ]; then
 fi
 
 doGrep() {
-    grepformat="%f:%l:%c:%m"
     glob=""
     if `git rev-parse --is-inside-working-tree >/dev/null 2>&1`; then
-        grepprg="git\\ grep\\ -n\\ --no-color"
+        grepprg="git\\ grep\\ -n\\ -E\\ --no-color"
         grepformat="%f:%l:%m"
-    elif [ -x "`which ag 2>/dev/null`" ]; then
+    elif `which ag 2>/dev/null`; then
         grepprg="ag\\ --nogroup\\ --nocolor\\ --column"
-    elif [ -x "`which ack 2>/dev/null`" ]; then
+        grepformat="%f:%l:%c:%m"
+    elif `which ack 2>/dev/null`; then
         grepprg="ack\\ --nogroup\\ --nocolor\\ --column"
+        grepformat="%f:%l:%c:%m"
     else
-        grepprg="grep\\ -rnIH"
+        grepprg="grep\\ -rnIHE"
         grepformat="%f:%l:%m"
         glob="*"
     fi
-    [ $caseInsensitive -gt 0 ] && opt_ci="-i" || opt_ci=""
-    exec vim -c "set grepprg=${grepprg}" \
-             -c "set grepformat=${grepformat}" \
-             -c "set foldlevel=99" \
-             -c "set cursorline" \
-             -c "silent grep ${opt_ci} ${expression} ${glob}" \
-             -c "if empty(getqflist())|qa|else|if len(getqflist()) > 1|copen|endif|endif" \
-             -c "set nocursorline"
+    $caseInsensitive && opt_ci="-i" || opt_ci=""
+
+    if $loadInVim; then
+        exec vim -c "set grepprg=${grepprg}" \
+                 -c "set grepformat=${grepformat}" \
+                 -c "set foldlevel=99" \
+                 -c "set cursorline" \
+                 -c "silent grep ${opt_ci} \"${expression}\" ${glob}" \
+                 -c "if empty(getqflist())|qa|else|if len(getqflist()) > 1|copen|endif|endif" \
+                 -c "set nocursorline"
+    else
+        `echo ${grepprg} | sed -s 's/\\\\//g'` ${opt_ci} ${expression} ${glob}
+    fi
 }
 
 doFind() {
-    [ $caseInsensitive -gt 0 ] && opt_ci="i" || opt_ci=""
-    results=`mktemp`
-    find . -${opt_ci}name "*${expression}*" -print | xargs file | sed 's/:/:1:/' > ${results}
-    if [ -f "${results}" -a `wc -l ${results}` -gt 0 ]; then
-        exec vim -c "cfile ${results}" \
-                 -c "set errorformat=%f:%l:%m" \
-                 -c "if empty(getqflist())|qa|else|if len(getqflist()) > 1|cwindow|endif|endif" \
-                 -c "call delete('${results}')"
+    $caseInsensitive && opt_ci="i" || opt_ci=""
+    findCmd="find . -${opt_ci}name "*${expression}*" -print"
+
+    if $loadInVim; then
+        results=`mktemp`
+        ${findCmd} | xargs file | sed 's/:/:1:/' > ${results}
+        if [ -f "${results}" -a `cat ${results} | wc -l` -gt 0 ]; then
+            exec vim -c "cfile ${results}" \
+                     -c "set errorformat=%f:%l:%m" \
+                     -c "if empty(getqflist())|qa|else|if len(getqflist()) > 1|cwindow|endif|endif" \
+                     -c "call delete('${results}')"
+        fi
+    else
+        ${findCmd}
     fi
 }
 

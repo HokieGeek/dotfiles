@@ -48,21 +48,16 @@ alias dev='docker run -ti -v /var/run/docker.sock:/var/run/docker.sock hokiegeek
 ## }}}
 
 ## Search aliases {{{
-alias grp='grep -rnI'
-alias fnd='find . -name'
-
 [ -f "`which s`" ] && {
     alias g='s -g'
     alias gi='s -g -i'
     alias f='s -f'
 } || {
-    alias g='grp'
-    alias gi='grp -i'
-    alias f='fnd'
+    alias g='grep -rnIE'
+    alias gi='g -i'
+    alias f='find . -name'
 }
-
-alias todo='g TODO'
-alias fixme='g FIXME'
+alias todo='gi "(TODO\|FIXME)"'
 ## }}}
 
 ## Color aliases {{{
