@@ -70,7 +70,9 @@ doGrep() {
 
 doFind() {
     $caseInsensitive && opt_ci="i" || opt_ci=""
+    set -o noglob
     findCmd="find . -${opt_ci}name "*${expression}*" -print"
+    unset noglob
 
     if $loadInVim; then
         results=`mktemp`
