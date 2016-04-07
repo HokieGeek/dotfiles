@@ -10,7 +10,6 @@
 [merge]
 	tool = vimgitdiff
 [diff]
-    # external = git_diff_wrapper
     tool = gvimdiff
     guitool = gvimdiff
 # [pager]

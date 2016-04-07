@@ -49,7 +49,7 @@ setopt hist_no_store         # Remove the history command from the command histo
 # }}}
 
 # Vimify {{{
-export EDITOR="nvim"
+export EDITOR="vim"
 setopt vi
 
 bindkey -M vicmd v edit-command-line

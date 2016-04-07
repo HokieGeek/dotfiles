@@ -8,7 +8,8 @@
 
 alias tattach='tmux attach-session -t'
 
-alias roll='expr $((RANDOM%20)) + 1'
+alias roll='echo $(($((RANDOM%20))+1))'
+
 alias broadcast='script -qf | tee >(nc -kl 5000)'
 
 `which wego >/dev/null 2>&1` && {
@@ -25,8 +26,8 @@ vrofile() {
     vim --cmd 'profile start /tmp/vim.profile' --cmd 'profile func *' $* && vi /tmp/vim.profile +/SORTED
 }
 
-alias make='make -j`expr $NUM_PROCESSORS + 1`'
-alias scons='scons -j`expr $NUM_PROCESSORS + 1`'
+alias make='make -j$(($(egrep -c "^processor" /proc/cpuinfo)+1))'
+alias scons='scons -j$(($(egrep -c "^processor" /proc/cpuinfo)+1))'
 alias klean='make clean && make'
 alias cant='ant clean && ant'
 
@@ -41,9 +42,10 @@ gtrack() {
     git branch --set-upstream-to=${remote}/${branch} ${branch}
 }
 alias gp='git pull --prune'
-alias smgp='gp && git submodule foreach --recursive "git pull --prune || :"'
+alias smgp='git pull --prune && git submodule foreach --recursive "git pull --prune || :"'
 
 alias ts='awk "{ printf(\"[%s] %s\n\", strftime(\"%Y-%m-%d %H:%M:%S\"), \$0); }"'
+# alias tsfmt='awk "{ print strftime(\"%Y-%m-%d %H:%M:%S\"), \$0); }"'
 
 alias dev='docker run -ti -v /var/run/docker.sock:/var/run/docker.sock hokiegeek/dev'
 ## }}}
