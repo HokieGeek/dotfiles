@@ -1,3 +1,0 @@
-#!/bin/sh
-
-[ $# -gt 0 ] && ps -eaf | grep $@ | grep -v grep | awk '{ print $2 }' | xargs kill -9
