@@ -1,15 +1,14 @@
 ## Random {{{
-#alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/$\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+#alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo sunny || echo error)" "$(history|tail -n1|sed -e '\''s/$\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 `which notify-send >/dev/null 2>&1` && {
-    alias build-failed='notify-send --urgency=critical -i error "Build Failed" `pwd`'
-    alias build-succeeded='notify-send --urgency=normal -i sunny "Build Succeeded" `pwd`'
-    alias build-notify='build-succeeded || build-failed'
+    alias notify-failed='notify-send --urgency=critical -i error "Failed" `pwd`'
+    alias notify-succeeded='notify-send --urgency=normal -i sunny "Succeeded" `pwd`'
+    alias notify='notify-succeeded || notify-failed'
 }
 
 alias tattach='tmux attach-session -t'
 
 alias roll='echo $(($((RANDOM%20))+1))'
-
 alias broadcast='script -qf | tee >(nc -kl 5000)'
 
 `which wego >/dev/null 2>&1` && {
@@ -33,10 +32,10 @@ alias cant='ant clean && ant'
 
 gtrack() {
     [ $# -eq 1 ] && {
-        server='origin'
+        remote='origin'
         branch=$1
     } || {
-        server=$1
+        remote=$1
         branch=$2
     }
     git branch --set-upstream-to=${remote}/${branch} ${branch}
@@ -44,8 +43,13 @@ gtrack() {
 alias gp='git pull --prune'
 alias smgp='git pull --prune && git submodule foreach --recursive "git pull --prune || :"'
 
-alias ts='awk "{ printf(\"[%s] %s\n\", strftime(\"%Y-%m-%d %H:%M:%S\"), \$0); }"'
-# alias tsfmt='awk "{ print strftime(\"%Y-%m-%d %H:%M:%S\"), \$0); }"'
+alias ts='awk "{ printf(\"[%s] %s\n\", strftime(\"%F %T\"), \$0); }"'
+tsfmt() {
+    while [ $# -gt 0 ]; do
+        echo $1 | awk '{ print strftime("%F %T", $0); }'
+        shift
+    done
+}
 
 alias dev='docker run -ti -v /var/run/docker.sock:/var/run/docker.sock hokiegeek/dev'
 ## }}}
@@ -53,10 +57,14 @@ alias dev='docker run -ti -v /var/run/docker.sock:/var/run/docker.sock hokiegeek
 ## Search aliases {{{
 `which s >/dev/null 2>&1` && {
     alias g='s -g'
+    alias gq='s -g -q'
     alias f='s -f'
+    alias fq='s -f -q'
 } || {
     alias g='grep -rnIE'
+    alias gq='g'
     alias f='find . -name'
+    alias fq='f'
 }
 alias gi='g -i'
 alias todo='gi "(TODO\|FIXME)"'
@@ -66,7 +74,6 @@ alias todo='gi "(TODO\|FIXME)"'
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
@@ -76,6 +83,7 @@ du() {
                              $1 ~ /.*M/ { printf "\033[33m" } \
                                         { print $0"\033[0m" }'
 }
+alias du1='du --max-depth=1'
 ## }}}
 
 ## Typo fixing {{{
