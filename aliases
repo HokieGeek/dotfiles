@@ -43,19 +43,20 @@ gtrack() {
 alias gp='git pull --prune'
 alias smgp='gp && git submodule foreach --recursive "git pull --prune || :"'
 
+alias ts='awk "{ printf(\"[%s] %s\n\", strftime(\"%Y-%m-%d %H:%M:%S\"), \$0); }"'
+
 alias dev='docker run -ti -v /var/run/docker.sock:/var/run/docker.sock hokiegeek/dev'
 ## }}}
 
 ## Search aliases {{{
 `which s >/dev/null 2>&1` && {
     alias g='s -g'
-    alias gi='s -g -i'
     alias f='s -f'
 } || {
     alias g='grep -rnIE'
-    alias gi='g -i'
     alias f='find . -name'
 }
+alias gi='g -i'
 alias todo='gi "(TODO\|FIXME)"'
 ## }}}
 
