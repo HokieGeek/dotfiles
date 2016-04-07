@@ -69,7 +69,11 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
-alias du='du_color'
+du() {
+    /usr/bin/du -h $@ | awk '$1 ~ /.*G/ { print "\033[31m"$0"\033[0m" } \
+                             $1 ~ /.*M/ { print "\033[33m"$0"\033[0m" } \
+                             $1 !~ /.*[MG]/ { print $0 }'
+}
 ## }}}
 
 ## Typo fixing {{{
