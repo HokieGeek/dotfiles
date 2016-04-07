@@ -19,7 +19,6 @@ alias broadcast='script -qf | tee >(nc -kl 5000)'
 ## }}}
 
 ## Development {{{
-`which nvim >/dev/null 2>&1` && alias vim='nvim'
 alias vi='vim'
 
 vrofile() {
