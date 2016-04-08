@@ -368,7 +368,7 @@ augroup FiletypeOptions
     autocmd FileType markdown setlocal spell
     autocmd FileType gitcommit setlocal spell
     autocmd FileType make setlocal noexpandtab nolist
-    autocmd Filetype vim colorscheme herald
+    " autocmd Filetype vim colorscheme herald
     autocmd FileType qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
     autocmd FileType cpp setlocal foldmethod=syntax
     autocmd FileType go set nolist " foldmethod=syntax
@@ -402,7 +402,7 @@ augroup MiscOptions
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
     " Turn off diffing when exiting otherwise the view stuff below won't work well
-    autocmd VimLeave * windo diffoff
+    " autocmd VimLeave * windo diffoff
 
     " if ! &diff
         " autocmd BufWinLeave * if expand("%") != "" | mkview! | endif
