@@ -26,6 +26,102 @@ Running a dark theme and using the cVim plugin to use vim bindings. This makes m
 ### vim
 The following plugins are being used: https://github.com/HokieGeek/MahVimPlugins/blob/master/README.md
 
+#### Mine
+- [vit](https://github.com/HokieGeek/vit)
+- [¿que?](https://github.com/HokieGeek/que)
+- [comentarista](https://github.com/HokieGeek/comentarista)
+- [shai-hulud](https://github.com/HokieGeek/shai-hulud)
+- [argh](https://github.com/HokieGeek/argh)
+- [sessioner](https://github.com/HokieGeek/sessioner)
+- [splitter](https://github.com/HokieGeek/splitter)
+- [uvix](https://github.com/HokieGeek/uvix)
+
+#### Third-party
+
+##### vim.org
+- [matchit](http://www.vim.org/scripts/script.php?script_id=39 "vim.org #39")
+- [taglist](http://www.vim.org/scripts/script.php?script_id=273 "vim.org #273")
+- [argtextobj](http://www.vim.org/scripts/script.php?script_id=2699 "vim.org #2699")
+- [vim-indent-object](http://www.vim.org/scripts/script.php?script_id=3037 "vim.org #3037")
+
+##### GitHub
+- [tpope/vim-pathogen](https://github.com/tpope/vim-pathogen)
+- [tpope/vim-surround](https://github.com/tpope/vim-surround)
+- [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange)
+- [bkad/CamelCaseMotion](https://github.com/bkad/CamelCaseMotion)
+- [terryma/vim-multiple-cursors](https://github.com/terryma/vim-multiple-cursors)
+- [tpope/vim-repeat](https://github.com/tpope/vim-repeat)
+- [tpope/vim-markdown](https://github.com/tpope/vim-markdown)
+- [scrooloose/syntastic](https://github.com/scrooloose/syntastic)
+- [ynkdir/vim-vimlparser](https://github.com/ynkdir/vim-vimlparser)
+- [syngan/vim-vimlint](https://github.com/syngan/vim-vimlint)
+- [junegunn/vim-easy-align](https://github.com/junegunn/vim-easy-align)
+- [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim)
+- [SirVer/ultisnips](https://github.com/SirVer/ultisnips.git)
+- [fatih/vim-go](https://github.com/fatih/vim-go.git)
+- [elzr/vim-json](https://github.com/elzr/vim-json.git)
+- [mbbill/undotree](git@github.com:mbbill/undotree.git)
+
+#### List of new commands and mappings
+
+##### Commands
+
+| Command | Source plugin | What it does |
+| ------- | ------------- | ------------ |
+| Only | argh | |
+| ArgsOnly | argh | |
+| ArgsToggle | argh | |
+| ArgsAll | argh | |
+| Badd | argh | |
+| Bd | argh | |
+| Tear | argh | |
+| Build | shai-hulud | |
+| Split | splitter | |
+| Vsplit | splitter | |
+| Run | splitter | |
+| RunIn | splitter | |
+| Log | splitter | |
+| Find | uvix | |
+| Chmod | uvix | |
+| Rm | uvix | |
+| Tail | uvix | |
+| Grep | uvix | |
+| Git | vit | |
+| Helptags | vim-pathogen | |
+| SyntasticInfo | syntastic | |
+| EasyAlign | vim-easy-align | |
+| LiveEasyAlign | vim-easy-align | |
+
+##### Mappings
+
+| Mapping | Source plugin | What it does |
+| ------- | ------------- | ------------ |
+| &lt;Tab&gt; | comentarista | |
+| &lt;shift&gt;&lt;Tab&gt; | comentarista | |
+| cs | vim-surround | |
+| ds | vim-surround | |
+| yss | vim-surround | |
+| cx | vim-exchange | |
+| cxx | vim-exchange | |
+| X | vim-exchange | |
+| cxc | vim-exchange | |
+| ,w | CamelCaseMotion | |
+| ,b | CamelCaseMotion | |
+| ,e | CamelCaseMotion | |
+| ctrl-n | vim-multiple-cursors |
+| ctrl-p | vim-multiple-cursors |
+| ctrl-x | vim-multiple-cursors |
+
+## Text-objects
+
+| Object | Source plugin | What it does |
+| ------ | ------------- | ------------ |
+| a | argtextobj | |
+| ai | vim-indent-object | |
+| ii | vim-indent-object | |
+| al | vim-indent-object | |
+
+
 #### List of commands and mappings defined in the vimrc
 ##### Commands
 Scratch
