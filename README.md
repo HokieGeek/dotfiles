@@ -7,10 +7,7 @@ My personal linux config files
 ## Installation
 ``` sh
 git clone --recursive https://github.com/HokieGeek/dotfiles
-cd dotfiles/vim/bundle
-git submodule update --init
-cd ../..
-./setup.sh
+dotfiles/setup.sh
 ```
 
 ## Philosophy
@@ -26,41 +23,24 @@ Running a dark theme and using the cVim plugin to use vim bindings. This makes m
 ### vim
 The following plugins are being used: https://github.com/HokieGeek/MahVimPlugins/blob/master/README.md
 
-#### Mine
-- [vit](https://github.com/HokieGeek/vit)
-- [¿que?](https://github.com/HokieGeek/que)
-- [comentarista](https://github.com/HokieGeek/comentarista)
-- [shai-hulud](https://github.com/HokieGeek/shai-hulud)
-- [argh](https://github.com/HokieGeek/argh)
-- [sessioner](https://github.com/HokieGeek/sessioner)
-- [splitter](https://github.com/HokieGeek/splitter)
-- [uvix](https://github.com/HokieGeek/uvix)
-
-#### Third-party
-
-##### vim.org
-- [matchit](http://www.vim.org/scripts/script.php?script_id=39 "vim.org #39")
-- [taglist](http://www.vim.org/scripts/script.php?script_id=273 "vim.org #273")
-- [argtextobj](http://www.vim.org/scripts/script.php?script_id=2699 "vim.org #2699")
-- [vim-indent-object](http://www.vim.org/scripts/script.php?script_id=3037 "vim.org #3037")
-
-##### GitHub
-- [tpope/vim-pathogen](https://github.com/tpope/vim-pathogen)
-- [tpope/vim-surround](https://github.com/tpope/vim-surround)
-- [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange)
-- [bkad/CamelCaseMotion](https://github.com/bkad/CamelCaseMotion)
-- [terryma/vim-multiple-cursors](https://github.com/terryma/vim-multiple-cursors)
-- [tpope/vim-repeat](https://github.com/tpope/vim-repeat)
-- [tpope/vim-markdown](https://github.com/tpope/vim-markdown)
-- [scrooloose/syntastic](https://github.com/scrooloose/syntastic)
-- [ynkdir/vim-vimlparser](https://github.com/ynkdir/vim-vimlparser)
-- [syngan/vim-vimlint](https://github.com/syngan/vim-vimlint)
-- [junegunn/vim-easy-align](https://github.com/junegunn/vim-easy-align)
-- [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim)
-- [SirVer/ultisnips](https://github.com/SirVer/ultisnips.git)
-- [fatih/vim-go](https://github.com/fatih/vim-go.git)
-- [elzr/vim-json](https://github.com/elzr/vim-json.git)
-- [mbbill/undotree](git@github.com:mbbill/undotree.git)
+| Mine | GitHub | vim.org |
+| ---- | ------ | ------- |
+| [vit](https://github.com/HokieGeek/vit) | [tpope/vim-pathogen](https://github.com/tpope/vim-pathogen) | [matchit](http://www.vim.org/scripts/script.php?script_id=39 "vim.org #39") |
+| [¿que?](https://github.com/HokieGeek/que) | [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange) | [argtextobj](http://www.vim.org/scripts/script.php?script_id=2699 "vim.org #2699") |
+| [comentarista](https://github.com/HokieGeek/comentarista) | [terryma/vim-multiple-cursors](https://github.com/terryma/vim-multiple-cursors) | [taglist](http://www.vim.org/scripts/script.php?script_id=273 "vim.org #273") |
+| [shai-hulud](https://github.com/HokieGeek/shai-hulud) | [tpope/vim-markdown](https://github.com/tpope/vim-markdown) | [vim-indent-object](http://www.vim.org/scripts/script.php?script_id=3037 "vim.org #3037") |
+| [argh](https://github.com/HokieGeek/argh) | [ynkdir/vim-vimlparser](https://github.com/ynkdir/vim-vimlparser) | |
+| [sessioner](https://github.com/HokieGeek/sessioner) | [junegunn/vim-easy-align](https://github.com/junegunn/vim-easy-align) | |
+| [splitter](https://github.com/HokieGeek/splitter) | [SirVer/ultisnips](https://github.com/SirVer/ultisnips.git) | |
+| [uvix](https://github.com/HokieGeek/uvix) | [elzr/vim-json](https://github.com/elzr/vim-json.git) | |
+| | [tpope/vim-surround](https://github.com/tpope/vim-surround) | |
+| | [bkad/CamelCaseMotion](https://github.com/bkad/CamelCaseMotion) | |
+| | [tpope/vim-repeat](https://github.com/tpope/vim-repeat) | |
+| | [scrooloose/syntastic](https://github.com/scrooloose/syntastic) | |
+| | [syngan/vim-vimlint](https://github.com/syngan/vim-vimlint) | |
+| | [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim) | |
+| | [fatih/vim-go](https://github.com/fatih/vim-go.git) | |
+| | [mbbill/undotree](https://github.com/mbbill/undotree.git) | |
 
 #### List of new commands and mappings
 
