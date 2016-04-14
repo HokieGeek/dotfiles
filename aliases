@@ -43,7 +43,7 @@ gtrack() {
 alias gp='git pull --prune'
 alias smgp='git pull --prune && git submodule foreach --recursive "git pull --prune || :"'
 
-alias ts='awk "{ printf(\"[%s] %s\n\", strftime(\"%F %T\"), \$0); }"'
+alias ts='awk "{ printf(\"[%s] %s\n\", strftime(\"%F %T\"), \$0); }"' #NOCSH
 tsfmt() {
     while [ $# -gt 0 ]; do
         echo $1 | awk '{ print strftime("%F %T", $0); }'
