@@ -21,7 +21,7 @@ I keep the look and feel minimal so that it's less distracting so, to that end, 
 Running a dark theme and using the cVim plugin to use vim bindings. This makes me very happy.
 
 ### vim
-The following plugins are being used: https://github.com/HokieGeek/MahVimPlugins/blob/master/README.md
+The following plugins are being used:
 
 | Mine | GitHub | vim.org |
 | ---- | ------ | ------- |
