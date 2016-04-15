@@ -22,7 +22,7 @@ alias broadcast='script -qf | tee >(nc -kl 5000)'
 alias vi='vim'
 
 vip() {
-    vim --cmd 'profile start /tmp/vim.profile' --cmd 'profile func *' $* && vi /tmp/vim.profile +/SORTED
+    vim --cmd 'profile start /tmp/vim.profile' --cmd 'profile func *' --cmd 'profile file *' $* && vi /tmp/vim.profile +/SORTED
 }
 
 alias make='make -j$(($(egrep -c "^processor" /proc/cpuinfo)+1))'
@@ -46,7 +46,7 @@ alias smgp='git pull --prune && git submodule foreach --recursive "git pull --pr
 alias ts='awk "{ printf(\"[%s] %s\n\", strftime(\"%F %T\"), \$0); }"' #NOCSH
 tsfmt() {
     while [ $# -gt 0 ]; do
-        echo $1 | awk '{ print strftime("%F %T", $0); }'
+        echo $1 | awk '{ printf("%s: %s\n", $0, strftime("%F %T", $0)); }'
         shift
     done
 }
