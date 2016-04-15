@@ -45,10 +45,7 @@ alias smgp='git pull --prune && git submodule foreach --recursive "git pull --pr
 
 alias ts='awk "{ printf(\"[%s] %s\n\", strftime(\"%F %T\"), \$0); }"' #NOCSH
 tsfmt() {
-    while [ $# -gt 0 ]; do
-        echo $1 | awk '{ printf("%s: %s\n", $0, strftime("%F %T", $0)); }'
-        shift
-    done
+    echo $@ | awk 'BEGIN{ RS=" " } { printf("%s: %s\n", $1, strftime("%F %T", $1)); }'
 }
 
 alias dev='docker run -ti -v /var/run/docker.sock:/var/run/docker.sock hokiegeek/dev'
