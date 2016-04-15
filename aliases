@@ -21,7 +21,7 @@ alias broadcast='script -qf | tee >(nc -kl 5000)'
 ## Development {{{
 alias vi='vim'
 
-vrofile() {
+vip() {
     vim --cmd 'profile start /tmp/vim.profile' --cmd 'profile func *' $* && vi /tmp/vim.profile +/SORTED
 }
 
@@ -30,16 +30,16 @@ alias scons='scons -j$(($(egrep -c "^processor" /proc/cpuinfo)+1))'
 alias klean='make clean && make'
 alias cant='ant clean && ant'
 
-gtrack() {
-    [ $# -eq 1 ] && {
-        remote='origin'
-        branch=$1
-    } || {
-        remote=$1
-        branch=$2
-    }
-    git branch --set-upstream-to=${remote}/${branch} ${branch}
-}
+# gtrack() {
+#     [ $# -eq 1 ] && {
+#         remote='origin'
+#         branch=$1
+#     } || {
+#         remote=$1
+#         branch=$2
+#     }
+#     git branch --set-upstream-to=${remote}/${branch} ${branch}
+# }
 alias gp='git pull --prune'
 alias smgp='git pull --prune && git submodule foreach --recursive "git pull --prune || :"'
 
