@@ -130,8 +130,8 @@ if has("gui_running")
     catch /E185:/
         colorscheme murphy
     endtry
-    " Never show the toolbar, menubar, right, left and bottom scrollbars
-    set guioptions-=T guioptions-=m guioptions-=r guioptions-=l guioptions-=b
+    " Never show the toolbar (T), menubar (m), right (rR), left (lL) and bottom (b) scrollbars
+    set guioptions-=T guioptions-=m guioptions-=r guioptions-=R guioptions-=l guioptions-=L guioptions-=b
     set guioptions+=c " Use console dialogs instead of popup dialogs
 else
     let g:sierra_Pitch = 1
