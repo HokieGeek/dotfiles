@@ -56,7 +56,7 @@ set completeopt=longest,menuone,preview " Changing insert mode completion option
 set wildmenu " Tab completion in command-line mode (:)
 set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~,tags,.hg,.git,*.pyc,*.orig " These file types are ignored when doing auto completions
 set wildmode=list:longest,full
-set viminfo=h,%,'50,"100,<10000,s1000,/1000,:1000 " Remembers stuff. RTFM
+set viminfo=h,'50,"100,<10000,s1000 " Remembers stuff. RTFM
 set history=1000
 set undolevels=5000
 if has("persistent_undo")
