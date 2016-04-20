@@ -385,7 +385,7 @@ augroup HighlightingOptions
 
     " Disable cursorline when in insert mode cause I don't really need that
     autocmd InsertEnter * let b:last_cursorline=&cursorline | set nocursorline
-    autocmd InsertLeave * execute "let &cursorline=".b:last_cursorline
+    autocmd InsertLeave * execute "let &cursorline=".b:last_cursorline." | unlet! b:last_cursorline"
 augroup END
 
 augroup MiscOptions
