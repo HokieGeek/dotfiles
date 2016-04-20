@@ -44,7 +44,7 @@ set shiftwidth=4 " Number of spaces to use for each step of (auto)indenting
 set expandtab " If you hit the tab key, it inserts spaces
 set shiftround " USe multiple of shiftwidth when indenting with '>' and '<'
 set smarttab " Use shiftwidth at left margin, instead of tabstops
-set backspace=2 " Make backspace actually work, because why not?
+set backspace=indent,eol,start " Make backspace actually work, because why not?
 set title
 set noerrorbells
 set visualbell
