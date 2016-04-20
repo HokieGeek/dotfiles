@@ -15,23 +15,23 @@
 # [pager]
     # diff =
 [alias]
+    alias = config --get-regexp ^alias.
     st = status -sb
-    stash-unapply = !git stash show -p | git apply -R
     sf = submodule foreach
     sp = submodule foreach 'git pull --prune || :'
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(cyan)<%an>%Creset'
     diff = diff --patience
     df = diff --ext-diff --patience
     dt = difftool -y
+    mt = mergetool -y
     branch-sort = !git-sorted-branches
     sublog = !git-submodules-log
-    alias = config --get-regexp ^alias.
 [core]
     eol = lf
-	excludesfile = ~/.gitignore
+    excludesfile = ~/.gitignore
 [help]
     autocorrect = 10
 [mergetool "vimgitdiff"]
-	cmd = vimgitdiff $BASE $LOCAL $REMOTE $MERGED
-	trustExitCode = true
-	keepBackup = false
+    cmd = vimgitdiff $BASE $LOCAL $REMOTE $MERGED
+    trustExitCode = true
+    keepBackup = false
