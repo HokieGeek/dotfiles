@@ -100,3 +100,6 @@
 [submodule "vim/bundle/vit"]
 	path = vim/bundle/vit
 	url = git@github.com:HokieGeek/vit.git
+[submodule "vim/colors/vim-hickop-colors"]
+	path = vim/colors/vim-hickop-colors
+	url = git@github.com:hickop/vim-hickop-colors.git

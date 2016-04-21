@@ -1,0 +1,1 @@
+vim-hickop-colors/colors/hickop.vim
