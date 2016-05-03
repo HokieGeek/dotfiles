@@ -30,6 +30,7 @@ if g:have_plugins
     endif
     silent! execute pathogen#infect()
     let g:syntastic_javascript_checkers = ['jslint']
+    let g:Que__vcs_funcref = function("vit#Statusline")
 endif
 
 filetype plugin indent on
