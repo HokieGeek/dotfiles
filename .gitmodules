@@ -93,28 +93,28 @@
 	url = git@gist.github.com:45e53bc3c90c77eaa5d47525cb9a8737.git
 [submodule "vim/colors/.badwolf"]
 	path = vim/colors/.badwolf
-	url = /home/andres/dotfiles/vim/colors/.badwolf
+	url = https://github.com/sjl/badwolf
 [submodule "vim/colors/.gentooish"]
 	path = vim/colors/.gentooish
-	url = /home/andres/dotfiles/vim/colors/.gentooish
+	url = https://github.com/cdaddr/gentooish.vim
 [submodule "vim/colors/.herald"]
 	path = vim/colors/.herald
-	url = /home/andres/dotfiles/vim/colors/.herald
+	url = https://github.com/vim-scripts/herald.vim
 [submodule "vim/colors/.ir_black"]
 	path = vim/colors/.ir_black
-	url = /home/andres/dotfiles/vim/colors/.ir_black
+	url = https://github.com/twerth/ir_black
 [submodule "vim/colors/.mustang"]
 	path = vim/colors/.mustang
-	url = /home/andres/dotfiles/vim/colors/.mustang
+	url = https://github.com/croaker/mustang-vim
 [submodule "vim/colors/.peaksea"]
 	path = vim/colors/.peaksea
-	url = /home/andres/dotfiles/vim/colors/.peaksea
+	url = https://github.com/vim-scripts/peaksea
 [submodule "vim/colors/.sierra"]
 	path = vim/colors/.sierra
-	url = /home/andres/dotfiles/vim/colors/.sierra
+	url = https://github.com/AlessandroYorba/Sierra.git
 [submodule "vim/colors/.zenburn"]
 	path = vim/colors/.zenburn
-	url = /home/andres/dotfiles/vim/colors/.zenburn
+	url = https://github.com/jnurmine/Zenburn
 [submodule "vim/colors/.hickop"]
 	path = vim/colors/.hickop
-	url = /home/andres/dotfiles/vim/colors/.hickop
+	url = https://github.com/hickop/vim-hickop-colors.git
