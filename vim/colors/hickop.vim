@@ -1,1 +1,1 @@
-vim-hickop-colors/colors/hickop.vim
+.hickop/colors/hickop.vim

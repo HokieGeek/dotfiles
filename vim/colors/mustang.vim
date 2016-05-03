@@ -1,1 +1,1 @@
-mustang/colors/mustang.vim
+.mustang/colors/mustang.vim

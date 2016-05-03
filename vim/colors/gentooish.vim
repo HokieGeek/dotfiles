@@ -1,1 +1,1 @@
-gentooish/colors/gentooish.vim
+.gentooish/colors/gentooish.vim

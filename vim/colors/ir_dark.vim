@@ -1,1 +1,0 @@
-ir_black/colors/ir_dark.vim

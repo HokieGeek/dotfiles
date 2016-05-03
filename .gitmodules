@@ -1,33 +1,9 @@
 [submodule "shell-plugins/zsh-autosuggestions"]
 	path = shell-plugins/zsh/zsh-autosuggestions
     url = https://github.com/tarruda/zsh-autosuggestions
-[submodule "vim/colors/Sierra"]
-	path = vim/colors/Sierra
-	url = git@github.com:AlessandroYorba/Sierra.git
 [submodule "look"]
 	path = look
 	url = git@github.com:HokieGeek/look.git
-[submodule "vim/colors/badwolf"]
-	path = vim/colors/badwolf
-	url = https://github.com/sjl/badwolf
-[submodule "vim/colors/ir_black"]
-	path = vim/colors/ir_black
-	url = https://github.com/twerth/ir_black
-[submodule "vim/colors/gentooish.vim"]
-	path = vim/colors/gentooish
-	url = https://github.com/cdaddr/gentooish.vim
-[submodule "vim/colors/herald.vim"]
-	path = vim/colors/herald
-	url = https://github.com/vim-scripts/herald.vim
-[submodule "vim/colors/mustang-vim"]
-	path = vim/colors/mustang
-	url = https://github.com/croaker/mustang-vim
-[submodule "vim/colors/peaksea"]
-	path = vim/colors/peaksea
-	url = https://github.com/vim-scripts/peaksea
-[submodule "vim/colors/Zenburn"]
-	path = vim/colors/Zenburn
-	url = https://github.com/jnurmine/Zenburn
 [submodule "vim/bundle/CamelCaseMotion"]
 	path = vim/bundle/CamelCaseMotion
 	url = git@github.com:bkad/CamelCaseMotion
@@ -100,9 +76,6 @@
 [submodule "vim/bundle/vit"]
 	path = vim/bundle/vit
 	url = git@github.com:HokieGeek/vit.git
-[submodule "vim/colors/vim-hickop-colors"]
-	path = vim/colors/vim-hickop-colors
-	url = git@github.com:hickop/vim-hickop-colors.git
 [submodule "vim/bundle/SearchComplete"]
 	path = vim/bundle/SearchComplete
 	url = git@github.com:vim-scripts/SearchComplete.git
@@ -118,3 +91,30 @@
 [submodule "bin/hours.git"]
 	path = bin/.hours.git
 	url = git@gist.github.com:45e53bc3c90c77eaa5d47525cb9a8737.git
+[submodule "vim/colors/.badwolf"]
+	path = vim/colors/.badwolf
+	url = /home/andres/dotfiles/vim/colors/.badwolf
+[submodule "vim/colors/.gentooish"]
+	path = vim/colors/.gentooish
+	url = /home/andres/dotfiles/vim/colors/.gentooish
+[submodule "vim/colors/.herald"]
+	path = vim/colors/.herald
+	url = /home/andres/dotfiles/vim/colors/.herald
+[submodule "vim/colors/.ir_black"]
+	path = vim/colors/.ir_black
+	url = /home/andres/dotfiles/vim/colors/.ir_black
+[submodule "vim/colors/.mustang"]
+	path = vim/colors/.mustang
+	url = /home/andres/dotfiles/vim/colors/.mustang
+[submodule "vim/colors/.peaksea"]
+	path = vim/colors/.peaksea
+	url = /home/andres/dotfiles/vim/colors/.peaksea
+[submodule "vim/colors/.sierra"]
+	path = vim/colors/.sierra
+	url = /home/andres/dotfiles/vim/colors/.sierra
+[submodule "vim/colors/.zenburn"]
+	path = vim/colors/.zenburn
+	url = /home/andres/dotfiles/vim/colors/.zenburn
+[submodule "vim/colors/.hickop"]
+	path = vim/colors/.hickop
+	url = /home/andres/dotfiles/vim/colors/.hickop

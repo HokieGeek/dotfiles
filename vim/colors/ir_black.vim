@@ -1,1 +1,1 @@
-ir_black/colors/ir_black.vim
+.ir_black/colors/ir_black.vim

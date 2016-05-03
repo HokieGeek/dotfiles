@@ -1,1 +1,1 @@
-badwolf/colors/badwolf.vim
+.badwolf/colors/badwolf.vim

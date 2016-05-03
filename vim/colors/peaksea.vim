@@ -1,1 +1,1 @@
-peaksea/colors/peaksea.vim
+.peaksea/colors/peaksea.vim

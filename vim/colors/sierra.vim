@@ -1,1 +1,1 @@
-Sierra/colors/sierra.vim
+.sierra/colors/sierra.vim

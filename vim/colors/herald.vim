@@ -1,1 +1,1 @@
-herald/colors/herald.vim
+.herald/colors/herald.vim
