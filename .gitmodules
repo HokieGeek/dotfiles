@@ -115,3 +115,6 @@
 [submodule "vim/bundle/taglist.vim"]
 	path = vim/bundle/taglist.vim
 	url = git@github.com:vim-scripts/taglist.vim.git
+[submodule "bin/hours.git"]
+	path = bin/hours.git
+	url = git@gist.github.com:45e53bc3c90c77eaa5d47525cb9a8737.git
