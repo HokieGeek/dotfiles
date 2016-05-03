@@ -118,3 +118,6 @@
 [submodule "vim/colors/.hickop"]
 	path = vim/colors/.hickop
 	url = https://github.com/hickop/vim-hickop-colors.git
+[submodule "vim/bundle/unembed"]
+	path = vim/bundle/unembed
+	url = git@github.com:HokieGeek/unembed.git
