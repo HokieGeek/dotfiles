@@ -57,13 +57,13 @@ myBrowser       = "google-chrome-unstable"
 colorForeground = "#87af00"
 colorBackground = "#1b1d1e"
 termFont        = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
+statusbarHeight = "14"
 
 unmuteAllChannels = "amixer -q set Master unmute ; "
 
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
--- dmenuArgs  = ["-fn", termFont, "-nb", colorBackground, "-nf", "#FFFFFF", "-sb", colorForeground]
 dmenuArgs  = ["-nb", colorBackground, "-nf", "#FFFFFF", "-sb", colorForeground]
 randomCmdsMenu = M.fromList
               [ ("browser", spawn myBrowser)
@@ -92,9 +92,9 @@ removeExtraWs c = removeEmptyWorkspaceAfterExcept myWorkspaces c
 myManageHook = composeAll
     [
       isFullscreen --> doFullFloat
-    , className =? "Xmessage"   --> doCenterFloat
-    , className =? "Gimp"       --> shiftToNew "gimp"
-    , className =? "Skype"      --> shiftToNew "skype"
+    , className =? "Xmessage" --> doCenterFloat
+    , className =? "Gimp"     --> shiftToNew "gimp"
+    , className =? "Skype"    --> shiftToNew "skype"
     , className =? "VASSAL-launch-ModuleManager"        --> doFloat <+> doShift "="
     , className =? "VASSAL-launch-Player"               --> doFloat <+> doShift "="
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat
@@ -159,12 +159,12 @@ myKeys =    [
             , ((0, xF86XK_Sleep), spawn "systemctl suspend")
             , ((shiftMask, xF86XK_Sleep), spawn "systemctl hibernate")
             , (((modm .|. controlMask .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
-            , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((modm, xK_b), spawn "rotate-wallpaper $HOME/.look/bgs")
-            , (((modm .|. shiftMask), xK_b), spawn ("schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs schemecolor"))
+            , (((modm .|. shiftMask), xK_b), unsafeSpawn ("schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs schemecolor"))
             -- }}}
             -- Launcher menus {{{
             , ((modm, xK_a), safeSpawn "dmenu_run" dmenuArgs)
+            , (((modm .|. shiftMask), xK_a), unsafeSpawn ("dmenu_path | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ " | xargs st -e"))
             , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs randomCmdsMenu >>= fromMaybe (return ()))
             , ((modm, xK_x), goToSelected defaultGSConfig)
             , (((modm .|. shiftMask), xK_x), gotoMenuArgs dmenuArgs)
@@ -191,8 +191,8 @@ myKeys =    [
             , (((modm .|. shiftMask), xK_apostrophe), sendMessage RestoreNextMinimizedWin)
             , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- shrink the slave area
             , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the slave area
-            , (((modm .|. controlMask), xK_j), rotSlavesDown)
-            , (((modm .|. controlMask), xK_k), rotSlavesUp)
+            , (((modm .|. shiftMask .|. controlMask), xK_j), rotSlavesDown)
+            , (((modm .|. shiftMask .|. controlMask), xK_k), rotSlavesUp)
             , ((modm, xK_v), windows copyToAll)
             , (((modm .|. shiftMask), xK_v), killAllOtherCopies)
             -- }}}
@@ -230,18 +230,13 @@ myKeys =    [
             ++
             [((modm .|. controlMask, k), windows $ swapWithCurrent i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys]
-            -- ++
-            -- [((modm .|. mask, key), f sc)
-                -- | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-                -- , (f, mask) <- [(viewScreen, 0), (sendToScreen, shiftMask)]]
 --}}}
 
 -- Main {{{
 compmgr   = "xcompmgr"
-barheight = "14"
 screenwidth_cmd    = "`xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1`"
-conkyStatusBar     = "~/.xmonad/statusbar/statusbar.sh --width " ++ screenwidth_cmd ++ " --height '" ++ barheight ++ "' --bg '" ++ colorBackground ++ "' --fg '" ++ colorForeground ++ "' --font '" ++ termFont ++ "'"
-workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ termFont ++ "' -x '0' -y '0' -h '" ++ barheight ++ "' -w '310' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
+conkyStatusBar     = "~/.xmonad/statusbar/statusbar.sh --width " ++ screenwidth_cmd ++ " --height '" ++ statusbarHeight ++ "' --bg '" ++ colorBackground ++ "' --fg '" ++ colorForeground ++ "' --font '" ++ termFont ++ "'"
+workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ termFont ++ "' -x '0' -y '0' -h '" ++ statusbarHeight ++ "' -w '310' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
 main = do
         compMgrStart <- spawn compmgr
         dzenRightBar <- spawn conkyStatusBar

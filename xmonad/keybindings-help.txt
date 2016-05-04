@@ -10,6 +10,7 @@ shiftMask+BlackButton   Launch browser
 
 -- Launcher menus
 Super+a          Launch dmenu
+Super+Shift+a    Launch application in terminal
 Super+z          Launch selected application
 Super+x          Launch GS menu of open windows
 Super+Shift+x    Launch dmenu of open windows
@@ -41,8 +42,8 @@ Super+Shift+[0..9,-,=]    Move window to indicated workspace
 
 Super+Shift+h   Shrink the slave area
 Super+Shift+l   Expand the slave area
-Super+Ctrl+j    Move current slave window down
-Super+Ctrl+k    Move current slave window up
+Super+Shift+Ctrl+j    Move current slave window down
+Super+Shift+Ctrl+k    Move current slave window up
 
 Super+Ctrl+'    Minimizes current window
 Super+Shift+'   Restores a minimized window
