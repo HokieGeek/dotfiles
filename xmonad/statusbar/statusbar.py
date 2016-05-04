@@ -24,6 +24,18 @@ parser.add_argument('--color-bg',
                     metavar="#000000")
 args = vars(parser.parse_args())
 
+def determineDistro():
+    if os.path.isfile("/etc/arch-release"):
+        return "arch"
+    elif os.path.isfile("/etc/centos-release"):
+        return "centos"
+    elif os.path.isfile("/etc/redhat-release"):
+        return "redhat"
+    elif os.path.isfile("/etc/lsb-release"):
+        return "something" # TODO
+    else:
+        return "unknown"
+
 ## Setup cleanup
 def cleanup():
     os.remove(conkyFile)
@@ -51,7 +63,6 @@ signal.signal(signal.SIGTERM, handleSigTERM)
 f = open(conkyFile, 'w')
 
 ## CONKY SETTINGS
-# f.write("background yes\n")
 f.write("out_to_console yes\n")
 f.write("out_to_x no\n")
 f.write("update_interval 1\n")
@@ -61,10 +72,10 @@ f.write("\nTEXT\n")
 f.write("^bg({})\\\n".format(colorschemeBgHex))
 
 ## Machine info
-distro = "arch" # TODO
-updateCheckInterval = "60"
+distro = determineDistro()
+updateCheckInterval = "120"
 f.write("^fg({})${{nodename}}\\\n".format(colorschemeGreyHex))
-f.write("^fg({})".format(colorschemeFgHex))
+f.write("^fg({})".format(colorschemeDimHex))
 if distro == "arch":
     f.write("${{if_match ${{texeci {} /usr/bin/checkupdates | wc -l}} > 0}}\\\n".format(updateCheckInterval))
 elif distro == "centos":
@@ -75,13 +86,9 @@ else:
 f.write("^fg({})\\\n".format(colorschemeFgHex))
 f.write("${endif}\\\n")
 if distro == "arch":
-    f.write("^ca(1, st -e yaourt -Syua)")
     f.write(" ^i({}/arch.xbm) \\\n".format(imagesDir))
-    f.write("^ca()")
 else:
-    f.write("^ca(1, st -e sudo yum -y update)")
     f.write(" ^c(7) \\\n")
-    f.write("^ca()")
 f.write("^fg({})${{kernel}}\\\n".format(colorschemeGreyHex))
 f.write("  \\\n")
 
@@ -98,7 +105,6 @@ for interface in [intf.decode("utf-8") for intf in interfaces]:
     f.write("  ${{if_up {}}}^fg({})\\\n".format(interface, colorschemeFgHex))
 
     if interface[0] == "w":
-        # f.write("Steve Taylor's Guest Network \\\n")
         f.write("${{wireless_essid {}}} \\\n".format(interface))
         f.write("^fg({})\\\n".format(colorschemeWhiteHex))
         f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 95}}^i({}/wifi_100.xbm)${{else}}\\\n".format(interface, imagesDir))
@@ -122,16 +128,13 @@ f.write("${texeci 3 wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d :
 f.write(sectionSpacing)
 
 ## MEDIA
-f.write("^ca(1, st -e alsamixer)\\\n")
 volumeScriptCmd = "{}/volume.py --height={} --color-fg='{}' --color-bg='{}' --color-muted='{}'".format(os.path.dirname(os.path.realpath(__file__)), height, colorschemeFgHex.replace("\\", ""), colorschemeBgHex.replace("\\", ""), colorschemeDarkHex.replace("\\", ""))
 f.write("^p(;-1)^fg({})\\\n".format(colorschemeBgHex))
 f.write("${{execi 1 {}}}\\\n".format(volumeScriptCmd))
 f.write("^p()^fg({})^bg({})\\\n".format(colorschemeFgHex, colorschemeBgHex))
-f.write("^ca()")
 f.write(sectionSpacing)
 
 # CPU
-f.write("^ca(1, htop --sort-key PERCENT_CPU)\\\n")
 numCpus = subprocess.check_output("grep -c 'processor' /proc/cpuinfo", shell=True).strip().decode("utf-8")
 for cpu in range(1,int(numCpus)+1):
     f.write("^fg({})\\\n".format(colorschemeDimHex))
@@ -139,18 +142,16 @@ for cpu in range(1,int(numCpus)+1):
     f.write("${{if_match ${{cpu cpu{}}} >= 85}}^fg({})${{endif}}\\\n".format(cpu, colorschemeRedHex))
     f.write("${{if_match ${{cpu cpu{}}} < 15}}^fg({})${{endif}}\\\n".format(cpu, colorschemeDarkHex))
     f.write("^i({}/cpu.xbm) \\\n".format(imagesDir))
-f.write("^ca()\\\n")
+f.write("\\\n")
 
 ## RAM
-f.write("^ca(1, htop --sort-key PERCENT_MEM)\\\n")
 f.write("^fg({})\\\n".format(colorschemeGreyHex))
 f.write("${{if_match ${{memperc}} <= 50}}^fg({})${{endif}}\\\n".format(colorschemeDimHex))
 f.write("${{if_match ${{memperc}} < 25}}^fg({})${{endif}}\\\n".format(colorschemeDarkHex))
 f.write("${{if_match ${{memperc}} > 50}}^fg({})${{endif}}\\\n".format(colorschemeWhiteHex))
 f.write("${{if_match ${{memperc}} >= 85}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
 f.write(" ^i({}/mem.xbm)\\\n".format(imagesDir))
-f.write("^ca()\\\n")
-f.write("  \\\n")
+f.write("\\\n  \\\n")
 
 ## TEMP
 f.write("^fg({})\\\n".format(colorschemeDarkHex))
@@ -170,8 +171,8 @@ f.write(sectionSpacing)
 
 ## TIME
 f.write("^fg({})".format(colorschemeGreyHex))
-f.write("${{time %a}} ^fg({})${{time %d}} ^fg({})${{time %b}} \\\n".format(colorschemeFgHex, colorschemeDimHex))
-f.write("^fg({})${{time %H%M}}^fg({})\\\n".format(colorschemeWhiteHex, colorschemeWhiteHex))
+f.write("${{time %a}} ^fg({})${{time %d}} ^fg({})${{time %b}} \\\n".format(colorschemeWhiteHex, colorschemeDimHex))
+f.write("^fg({})${{time %H%M}}^fg({})\\\n".format(colorschemeFgHex, colorschemeFgHex))
 f.write("  ^fg({})${{uptime}}^fg({})\\\n".format(colorschemeDimHex, colorschemeWhiteHex))
 f.write(sectionSpacing)
 
