@@ -196,7 +196,7 @@ for i in range(len(batterySteps)):
     f.write("${endif}")
 f.write("\\\n")
 f.write("${else}\\\n")
-f.write("^fg({})^r({}x{})\\\n".format(colorschemeDarkHex, batteryWidth, height))
+f.write("^fg({})^r({}x{})\\\n".format(colorschemeBgHex, batteryWidth, height))
 f.write("${endif}\\\n")
 
 ## Done and done

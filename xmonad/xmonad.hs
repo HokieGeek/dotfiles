@@ -109,15 +109,14 @@ myLayoutHook = avoidStruts
                $ onWorkspace "2" (boringWindows (minimize (magicFocus (Mirror (TwoPane incDelta (2/3)) ||| Full))))
                $ onWorkspace "gimp" (boringWindows (minimize ((ResizableTall 2 incDelta (1/6) []) ||| Full)))
                $ onWorkspace "skype" (boringWindows (minimize Full))
-               $ toggleLayouts (boringWindows (minimize (twoPanes ||| Mirror twoPanes ||| big ||| Full)))
-               $ myDefaultLayout
+               $ toggleLayouts (boringWindows (minimize (Mirror tiledStd ||| stacked ||| Mirror twoPanes ||| Full))) -- alternate
+               $ boringWindows (minimize (tiledStd ||| twoPanes ||| big ||| Full)) -- default
     where
         incDelta = 3/100
         tiledStd = ResizableTall 1 incDelta (1/2) [] -- # masters, % to inc when resizing, % of screen used by master, slaves
         stacked = StackTile 1 incDelta (1/2)
         twoPanes = TwoPane incDelta (1/2)
         big = OneBig (3/4) (3/4)
-        myDefaultLayout = boringWindows (minimize (tiledStd ||| Mirror tiledStd ||| stacked ||| Full))
 
 -- }}}
 -- Log {{{
