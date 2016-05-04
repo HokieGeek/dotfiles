@@ -26,14 +26,14 @@ The following plugins are being used:
 | Mine | GitHub | vim.org |
 | ---- | ------ | ------- |
 | [vit](https://github.com/HokieGeek/vit) | [tpope/vim-pathogen](https://github.com/tpope/vim-pathogen) | [matchit](http://www.vim.org/scripts/script.php?script_id=39 "vim.org #39") |
-| [¿que?](https://github.com/HokieGeek/que) | [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange) | [argtextobj](http://www.vim.org/scripts/script.php?script_id=2699 "vim.org #2699") |
+| [¿que?](https://github.com/HokieGeek/que) | [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange) | [vim-indent-object](http://www.vim.org/scripts/script.php?script_id=3037 "vim.org #3037") |
 | [comentarista](https://github.com/HokieGeek/comentarista) | [terryma/vim-multiple-cursors](https://github.com/terryma/vim-multiple-cursors) | [taglist](http://www.vim.org/scripts/script.php?script_id=273 "vim.org #273") |
-| [shai-hulud](https://github.com/HokieGeek/shai-hulud) | [tpope/vim-markdown](https://github.com/tpope/vim-markdown) | [vim-indent-object](http://www.vim.org/scripts/script.php?script_id=3037 "vim.org #3037") |
+| [shai-hulud](https://github.com/HokieGeek/shai-hulud) | [tpope/vim-markdown](https://github.com/tpope/vim-markdown) |  |
 | [argh](https://github.com/HokieGeek/argh) | [ynkdir/vim-vimlparser](https://github.com/ynkdir/vim-vimlparser) | |
 | [sessioner](https://github.com/HokieGeek/sessioner) | [junegunn/vim-easy-align](https://github.com/junegunn/vim-easy-align) | |
 | [splitter](https://github.com/HokieGeek/splitter) | [SirVer/ultisnips](https://github.com/SirVer/ultisnips.git) | |
 | [uvix](https://github.com/HokieGeek/uvix) | [elzr/vim-json](https://github.com/elzr/vim-json.git) | |
-| | [tpope/vim-surround](https://github.com/tpope/vim-surround) | |
+| [unembed](https://github.com/HokieGeek/unembed) | [tpope/vim-surround](https://github.com/tpope/vim-surround) | |
 | | [bkad/CamelCaseMotion](https://github.com/bkad/CamelCaseMotion) | |
 | | [tpope/vim-repeat](https://github.com/tpope/vim-repeat) | |
 | | [scrooloose/syntastic](https://github.com/scrooloose/syntastic) | |
@@ -41,7 +41,8 @@ The following plugins are being used:
 | | [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim) | |
 | | [fatih/vim-go](https://github.com/fatih/vim-go.git) | |
 | | [mbbill/undotree](https://github.com/mbbill/undotree.git) | |
-
+| | [tpope/vim-endwise](https://github.com/tpope/vim-endwise.git) | |
+| | [welle/targets](https://github.com/wellle/targets.vim.git) | |
 #### List of new commands and mappings
 
 ##### Commands
