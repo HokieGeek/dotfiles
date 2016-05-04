@@ -160,8 +160,8 @@ myKeys =    [
             , ((shiftMask, xF86XK_Sleep), spawn "systemctl hibernate")
             , (((modm .|. controlMask .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
-            , ((modm, xK_b), spawn "$HOME/.bin/rotate-wallpaper $HOME/.look/bgs")
-            , (((modm .|. shiftMask), xK_b), spawn ("$HOME/.bin/schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs $HOME/.bin/schemecolor"))
+            , ((modm, xK_b), spawn "rotate-wallpaper $HOME/.look/bgs")
+            , (((modm .|. shiftMask), xK_b), spawn ("schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs schemecolor"))
             -- }}}
             -- Launcher menus {{{
             , ((modm, xK_a), safeSpawn "dmenu_run" dmenuArgs)
@@ -213,7 +213,7 @@ myKeys =    [
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
             , (((mod1Mask .|. controlMask), xK_l), spawn "slock")
-            , ((0, xF86XK_WebCam), spawn "$HOME/.bin/toggle-bluetooth")
+            , ((0, xF86XK_WebCam), spawn "toggle-bluetooth")
 
             -- ThinkPad-specific binding (the black button)
             , ((0, xF86XK_Launch1), spawn myTerminal)

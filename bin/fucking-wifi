@@ -1,7 +1,0 @@
-#!/bin/sh
-
-sudo modprobe -r iwldvm
-sudo modprobe -r iwlwifi
-sudo modprobe iwlwifi
-sudo systemctl restart netctl-auto@wlp3s0.service
-
