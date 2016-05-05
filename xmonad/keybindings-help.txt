@@ -1,26 +1,42 @@
 -- General
+Super+q         Restart xmonad
+Super+Shift+q   Quit xmonad
 Super+b         Cycle wallpapers
 Super+Shift+b   Change color scheme
-Alt+F4          Kill current window
+Super+t         Push window back into tiling; unfloat and re-tile it
 
-Ctrl+Shift+Esc          Launch htop
-Shift+Mute              Launch Alsa mixer
-BlackButton             Launch terminal (ThinkPad)
-shiftMask+BlackButton   Launch browser  (ThinkPad)
+Alt+F4          Close/kill the focused window
+Super+Shift-c   Close/kill the focused window
 
--- Launcher menus
+Super+Space        Rotate through the available layout algorithms
+Super+Shift-Space  Reset the layouts on the current workSpace to default
+
+-- Launchers
 Super+a          Launch dmenu
 Super+Shift+a    Launch application in terminal
 Super+z          Launch selected application
 Super+x          Launch GS menu of open windows
 Super+Shift+x    Launch dmenu of open windows
 
+Super+Shift-Enter       Launch terminal
+Ctrl+Shift+Esc          Launch htop
+Shift+Mute              Launch Alsa mixer
+
+BlackButton             Launch terminal (ThinkPad)
+shiftMask+BlackButton   Launch browser  (ThinkPad)
+
 -- Screen helpers
-Super+Alt+h       Previous screen
-Super+Alt+l       Next screen
-Super+Ctrl+w       Swap current screen with next screen
+Super+{w,e,r}        Switch to physical/Xinerama screens 1, 2, or 3
+Super+Shift-{w,e,r}  Move client to screen 1, 2, or 3
+
+Super+Alt+h          Previous screen
+Super+Alt+l          Next screen
+Super+Ctrl+w         Swap current screen with next screen
 
 -- Workspace helpers
+Super+,   Increment the number of windows in the master area
+Super+.   Deincrement the number of windows in the master area
+
 Super+Alt+k       Previous workspace
 Super+Alt+j       Next workspace
 Super+Tab         Switch to last workspace
@@ -32,8 +48,8 @@ Super+Ctrl+n  Switch to next empty workspace and launch terminal
 Super+Shift+Ctrl+k  Switch to previous non-empty workspace
 Super+Shift+Ctrl+j  Switch to next non-empty workspace
 
-Super+[0..9,-,=]       Switch to indicated workspace
-Super+Ctrl+[0..9,-,=]  Swap current workspace with indicated workspace
+Super+[0..9,-,=]        Switch to indicated workspace
+Super+Ctrl+[0..9,-,=]   Swap current workspace with indicated workspace
 
 Super+Ctrl+Space    Toggles alternate layouts
 
@@ -45,8 +61,14 @@ Super+m     Switch to master window but ignores minimized
 Super+Shift+n             Move window to next empty workspace
 Super+Shift+[0..9,-,=]    Move window to indicated workspace
 
+Super+h  Shrink the master area
+Super+l  Expand the master area
 Super+Shift+h   Shrink the slave area
 Super+Shift+l   Expand the slave area
+
+Super+Return    Swap the focused window and the master window
+Super+Shift-j   Swap the focused window with the next window
+Super+Shift-k   Swap the focused window with the previous window
 Super+Ctrl+j    Move current slave window down
 Super+Ctrl+k    Move current slave window up
 
@@ -61,3 +83,8 @@ Ctrl+RaiseVolume    Raise volume at 10% steps
 Shift+RaiseVolume   Raise volume to 100%
 Ctrl+LowerVolume    Lower volume at 10% steps
 Shift+LowerVolume   Lower volume to 30%
+
+-- Mouse bindings: default actions bound to mouse events
+Super+button1  Set the window to floating mode and move by dragging
+Super+button2  Raise the window to the top of the stack
+Super+button3  Set the window to floating mode and resize by dragging

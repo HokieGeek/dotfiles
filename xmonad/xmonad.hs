@@ -158,7 +158,7 @@ myKeys =    [
             , ((mod1Mask, xK_F4), kill)
             , ((0, xF86XK_Sleep), spawn "systemctl suspend")
             , ((shiftMask, xF86XK_Sleep), spawn "systemctl hibernate")
-            , (((modm .|. controlMask .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
+            , (((modm .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((modm, xK_b), spawn "rotate-wallpaper $HOME/.look/bgs")
             , (((modm .|. shiftMask), xK_b), unsafeSpawn ("schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs schemecolor"))
@@ -224,12 +224,13 @@ myKeys =    [
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
             , (((mod1Mask .|. controlMask), xK_l), spawn "slock")
-            , ((0, xF86XK_WebCam), spawn "toggle-bluetooth")
-            , ((0, xF86XK_Display), spawn "toggle-dual-screen")
             -- }}}
-            -- ThinkPad-specific (the black button) {{{
+            -- ThinkPad-specific {{{
             , ((0, xF86XK_Launch1), spawn myTerminal)
             , ((shiftMask, xF86XK_Launch1), spawn myBrowser)
+
+            , ((0, xF86XK_WebCam), spawn "toggle-bluetooth")
+            , ((0, xF86XK_Display), spawn "toggle-video-input HDMI1")
             -- }}}
             -- Poker-specific (Calculator) {{{
             -- , ((0, xF86XK_Calculator), spawn "xmessage 'testing'")
