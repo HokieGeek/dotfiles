@@ -17,7 +17,6 @@ import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.GridSelect
 import XMonad.Actions.GroupNavigation -- historyHook
--- import XMonad.Actions.PhysicalScreens
 import XMonad.Actions.Promote
 import XMonad.Actions.RotSlaves
 import XMonad.Actions.SwapWorkspaces
@@ -202,7 +201,7 @@ myKeys =    [
             , ((modm, xK_v), windows copyToAll)
             , (((modm .|. shiftMask), xK_v), killAllOtherCopies)
             -- }}}
-            -- Volume {{{
+            -- Media {{{
             , ((0, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 1+"))
             , ((controlMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 10+"))
             , ((shiftMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 100"))
@@ -239,9 +238,6 @@ myKeys =    [
             [((m .|. modm, k), windows $ f i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys
                 , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
-            -- zip (zip (repeat (modm)) myWorkspaceKeys) (map ((removeEmptyWorkspaceAfterExcept myWorkspaces) . withNthWorkspace W.greedyView) [0..])
-            -- ++
-            -- zip (zip (repeat (modm .|. shiftMask)) myWorkspaceKeys) (map (withNthWorkspace W.shift) [0..])
             ++
             [((modm .|. controlMask, k), windows $ swapWithCurrent i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys]
