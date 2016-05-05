@@ -169,13 +169,18 @@ myKeys =    [
             , ((modm, xK_x), goToSelected defaultGSConfig)
             , (((modm .|. shiftMask), xK_x), gotoMenuArgs dmenuArgs)
             -- }}}
+            -- Screen helpers {{{
+            , (((modm .|. mod1Mask), xK_h), prevScreen)
+            , (((modm .|. mod1Mask), xK_l), nextScreen)
+            , (((modm .|. controlMask), xK_w), swapNextScreen)
+            -- }}}
             -- Workspace helpers {{{
             , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout)
 
             , (((modm .|. mod1Mask), xK_k), removeExtraWs prevWS)
             , (((modm .|. mod1Mask), xK_j), removeExtraWs nextWS)
-            , (((modm .|. controlMask), xK_k), removeExtraWs (moveTo Prev NonEmptyWS))
-            , (((modm .|. controlMask), xK_j), removeExtraWs (moveTo Next NonEmptyWS))
+            , (((modm .|. shiftMask .|. controlMask), xK_k), removeExtraWs (moveTo Prev NonEmptyWS))
+            , (((modm .|. shiftMask .|. controlMask), xK_j), removeExtraWs (moveTo Next NonEmptyWS))
             , ((modm, xK_Tab), removeExtraWs toggleWS)
             , ((modm, xK_n), removeExtraWs (moveTo Next EmptyWS))
             , (((modm .|. shiftMask), xK_n), shiftTo Next EmptyWS)
@@ -191,33 +196,42 @@ myKeys =    [
             , (((modm .|. shiftMask), xK_apostrophe), sendMessage RestoreNextMinimizedWin)
             , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- shrink the slave area
             , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the slave area
-            , (((modm .|. shiftMask .|. controlMask), xK_j), rotSlavesDown)
-            , (((modm .|. shiftMask .|. controlMask), xK_k), rotSlavesUp)
+            , (((modm .|. controlMask), xK_j), rotSlavesDown)
+            , (((modm .|. controlMask), xK_k), rotSlavesUp)
             , ((modm, xK_v), windows copyToAll)
             , (((modm .|. shiftMask), xK_v), killAllOtherCopies)
             -- }}}
-            -- Backlight {{{
+            -- Volume {{{
+            , ((0, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 1+"))
+            , ((controlMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 10+"))
+            , ((shiftMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 100"))
+
+            , ((0, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 1-"))
+            , ((controlMask, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 10-"))
+            , ((shiftMask, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 30"))
+
+            , ((0, xF86XK_AudioMute), spawn "amixer set Master toggle")
+            , ((0, xF86XK_AudioMicMute), spawn "amixer set Capture toggle")
+            , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer"))
+            -- }}}
+            -- Other {{{
             , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight -inc 5")
             , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -dec 5")
             , ((shiftMask, xF86XK_MonBrightnessUp), spawn "xbacklight -set 100")
             , ((shiftMask, xF86XK_MonBrightnessDown), spawn "xbacklight -set 20")
-            -- Volume
-            , ((0, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 1+"))
-            , ((shiftMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 100"))
-            , ((0, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 1-"))
-            , ((shiftMask, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 30"))
-            , ((0, xF86XK_AudioMute), spawn "amixer set Master toggle")
-            , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer"))
-            , ((0, xF86XK_AudioMicMute), spawn "amixer set Capture toggle")
-            -- Other
+
             , ((0, xK_Print), spawn "scrot")
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
             , (((mod1Mask .|. controlMask), xK_l), spawn "slock")
             , ((0, xF86XK_WebCam), spawn "toggle-bluetooth")
-
-            -- ThinkPad-specific binding (the black button)
+            , ((0, xF86XK_Display), spawn "toggle-dual-screen")
+            -- }}}
+            -- ThinkPad-specific (the black button) {{{
             , ((0, xF86XK_Launch1), spawn myTerminal)
             , ((shiftMask, xF86XK_Launch1), spawn myBrowser)
+            -- }}}
+            -- Poker-specific (Calculator) {{{
+            -- , ((0, xF86XK_Calculator), spawn "xmessage 'testing'")
             -- }}}
             ]
             ++

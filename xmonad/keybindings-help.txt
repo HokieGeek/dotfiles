@@ -5,8 +5,8 @@ Alt+F4          Kill current window
 
 Ctrl+Shift+Esc          Launch htop
 Shift+Mute              Launch Alsa mixer
-BlackButton             Launch terminal
-shiftMask+BlackButton   Launch browser
+BlackButton             Launch terminal (ThinkPad)
+shiftMask+BlackButton   Launch browser  (ThinkPad)
 
 -- Launcher menus
 Super+a          Launch dmenu
@@ -14,6 +14,11 @@ Super+Shift+a    Launch application in terminal
 Super+z          Launch selected application
 Super+x          Launch GS menu of open windows
 Super+Shift+x    Launch dmenu of open windows
+
+-- Screen helpers
+Super+Alt+h       Previous screen
+Super+Alt+l       Next screen
+Super+Ctrl+w       Swap current screen with next screen
 
 -- Workspace helpers
 Super+Alt+k       Previous workspace
@@ -24,8 +29,8 @@ Super+n       Switch to next empty workspace
 Super+Alt+n   Switch to next empty workspace and launch browser
 Super+Ctrl+n  Switch to next empty workspace and launch terminal
 
-Super+Ctrl+k  Switch to previous non-empty workspace
-Super+Ctrl+j  Switch to next non-empty workspace
+Super+Shift+Ctrl+k  Switch to previous non-empty workspace
+Super+Shift+Ctrl+j  Switch to next non-empty workspace
 
 Super+[0..9,-,=]       Switch to indicated workspace
 Super+Ctrl+[0..9,-,=]  Swap current workspace with indicated workspace
@@ -42,8 +47,8 @@ Super+Shift+[0..9,-,=]    Move window to indicated workspace
 
 Super+Shift+h   Shrink the slave area
 Super+Shift+l   Expand the slave area
-Super+Shift+Ctrl+j    Move current slave window down
-Super+Shift+Ctrl+k    Move current slave window up
+Super+Ctrl+j    Move current slave window down
+Super+Ctrl+k    Move current slave window up
 
 Super+Ctrl+'    Minimizes current window
 Super+Shift+'   Restores a minimized window
@@ -52,5 +57,7 @@ Super+v         Makes a window sticky across all desktops
 Super+Shift+v   Removes sticky from window
 
 -- Media controls
+Ctrl+RaiseVolume    Raise volume at 10% steps
 Shift+RaiseVolume   Raise volume to 100%
+Ctrl+LowerVolume    Lower volume at 10% steps
 Shift+LowerVolume   Lower volume to 30%
