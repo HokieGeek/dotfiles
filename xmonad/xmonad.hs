@@ -56,6 +56,7 @@ myTerminal      = "st"
 myBrowser       = "google-chrome-unstable"
 colorForeground = "#87af00"
 colorBackground = "#1b1d1e"
+colorWhite      = "#cdcdcd"
 termFont        = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 statusbarHeight = "14"
 
@@ -64,7 +65,7 @@ unmuteAllChannels = "amixer -q set Master unmute ; "
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
-dmenuArgs  = ["-nb", colorBackground, "-nf", "#FFFFFF", "-sb", colorForeground]
+dmenuArgs  = ["-nb", colorBackground, "-nf", colorWhite, "-sb", colorForeground]
 randomCmdsMenu = M.fromList
               [ ("browser", spawn myBrowser)
               , ("netflix", spawn (myBrowser ++ " --new-window http://netflix.com"))
@@ -250,7 +251,7 @@ myKeys =    [
 compmgr   = "xcompmgr"
 screenwidth_cmd    = "`xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1`"
 conkyStatusBar     = "~/.xmonad/statusbar/statusbar.sh --width " ++ screenwidth_cmd ++ " --height '" ++ statusbarHeight ++ "' --bg '" ++ colorBackground ++ "' --fg '" ++ colorForeground ++ "' --font '" ++ termFont ++ "'"
-workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ termFont ++ "' -x '0' -y '0' -h '" ++ statusbarHeight ++ "' -w '310' -fg '#FFFFFF' -bg '" ++ colorBackground ++ "' -ta l"
+workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ termFont ++ "' -x '0' -y '0' -h '" ++ statusbarHeight ++ "' -w '310' -fg '" ++ colorWhite ++ "' -bg '" ++ colorBackground ++ "' -ta l"
 main = do
         compMgrStart <- spawn compmgr
         dzenRightBar <- spawn conkyStatusBar
