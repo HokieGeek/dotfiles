@@ -1,12 +1,22 @@
 #!/bin/bash
 
-# exec 2>&1 >>/tmp/dk
+statusbarHeight=$1
+screenWidth=$2
+lines=$3
+bg=$4
+
+width=615
+xpos=$(( ${screenWidth} - ${width} ))
+ypos=${statusbarHeight}
+scroll_step=$(( ${lines} / 2 ))
 
 awk '
-$0 ~ /^--/ { printf("^fg(blue)%s^fg()\n", $0); next }
-NR > 1 && $0 !~ /^ *$/ { sub("^[^ \t]*", "^fg(green)&^fg()"); print; next }
+NR > 1 && $0 !~ /^ *$/ && $1 !~ /^--/ { sub("^[^ \t]*", "^fg(green)&^fg()"); }
+$1 ~ /^--/ { sub(".*", "^fg(blue)&^fg()") }
 { print $0 }
 ' $(cd $(dirname $0); pwd)"/keybindings-help.txt" | \
 dzen2 -e \
-'onstart=uncollapse,scrollhome,grabkeys;entertitle=grabkeys;enterslave=grabkeys;leaveslave=ungrabkeys;button2=exit:13;key_k=scrollup:39;key_j=scrolldown:39;key_Escape=ungrabkeys,exit' \
- -p -l 40 -x 800 -y 100 -w 620
+"onstart=uncollapse,scrollhome,grabkeys;entertitle=grabkeys;enterslave=grabkeys;leaveslave=ungrabkeys;button2=exit:13;key_k=scrollup:${scroll_step};key_j=scrolldown:${scroll_step};key_Escape=ungrabkeys,exit;key_q=ungrabkeys,exit" \
+ -p -l ${lines} -x ${xpos} -y ${ypos} -w ${width} -bg ${bg} &
+sleep 0.09s
+xdotool mousemove $(( ${xpos} + ${width} - 1 )) ${ypos}

@@ -1,26 +1,26 @@
-Xmonad Keybindings
+::: Xmonad Keybindings :::
 -- General
-mod-q         Restart xmonad
-mod-Shift-q   Quit xmonad
-mod-b         Cycle wallpapers
-mod-Shift-b   Change color scheme
-mod-t         Push window back into tiling; unfloat and re-tile it
+mod-q            Restart xmonad
+mod-Shift-q      Quit xmonad
+mod-b            Cycle wallpapers
+mod-Shift-b      Change color scheme
+mod-t            Push window back into tiling; unfloat and re-tile it
 
-Alt-F4          Close/kill the focused window
-mod-Shift-c   Close/kill the focused window
+Alt-F4           Close/kill the focused window
+mod-Shift-c      Close/kill the focused window
 
 mod-Space        Rotate through the available layout algorithms
 mod-Shift-Space  Reset the layouts on the current workSpace to default
 
 -- Launchers
-mod-z          Launch dmenu
-mod-Shift-z    Launch selected application
-mod-a          Launch dmenu of open windows
-mod-Ctrl-a     Launch GS menu of open windows
+mod-z              Launch dmenu
+mod-Shift-z        Launch selected application
+mod-a              Launch dmenu of open windows
+mod-Ctrl-a         Launch GS menu of open windows
 
-mod-Shift-Enter       Launch terminal
-Ctrl-Shift-Esc          Launch htop
-Shift-Mute              Launch Alsa mixer
+mod-Shift-Enter    Launch terminal
+Ctrl-Shift-Esc     Launch htop
+Shift-Mute         Launch Alsa mixer
 
 BlackButton             Launch terminal (ThinkPad)
 shiftMask-BlackButton   Launch browser  (ThinkPad)
@@ -34,24 +34,24 @@ mod-Alt-l          Next screen
 mod-Ctrl-w         Swap current screen with next screen
 
 -- Workspace helpers
-mod-,   Increment the number of windows in the master area
-mod-.   Deincrement the number of windows in the master area
+mod-,       Increment the number of windows in the master area
+mod-.       Deincrement the number of windows in the master area
 
-mod-Alt-k       Previous workspace
-mod-Alt-j       Next workspace
-mod-Tab         Switch to last workspace
+mod-Alt-k   Previous workspace
+mod-Alt-j   Next workspace
+mod-Tab     Switch to last workspace
 
 mod-n       Switch to next empty workspace
 mod-Alt-n   Switch to next empty workspace and launch browser
 mod-Ctrl-n  Switch to next empty workspace and launch terminal
 
-mod-Shift-Ctrl-k  Switch to previous non-empty workspace
-mod-Shift-Ctrl-j  Switch to next non-empty workspace
+mod-Shift-Ctrl-k     Switch to previous non-empty workspace
+mod-Shift-Ctrl-j     Switch to next non-empty workspace
 
-mod-[0..9,-,=]        Switch to indicated workspace
-mod-Ctrl-[0..9,-,=]   Swap current workspace with indicated workspace
+mod-[0..9,-,=]       Switch to indicated workspace
+mod-Ctrl-[0..9,-,=]  Swap current workspace with indicated workspace
 
-mod-Ctrl-Space    Toggles alternate layouts
+mod-Ctrl-Space       Toggles alternate layouts
 
 -- Window helpers
 mod-j     Switch to next window in layout order but ignoring minimized
@@ -61,8 +61,8 @@ mod-m     Switch to master window but ignores minimized
 mod-Shift-n             Move window to next empty workspace
 mod-Shift-[0..9,-,=]    Move window to indicated workspace
 
-mod-h  Shrink the master area
-mod-l  Expand the master area
+mod-h         Shrink the master area
+mod-l         Expand the master area
 mod-Shift-h   Shrink the slave area
 mod-Shift-l   Expand the slave area
 
@@ -85,6 +85,6 @@ Ctrl-LowerVolume    Lower volume at 10% steps
 Shift-LowerVolume   Lower volume to 30%
 
 -- Mouse bindings: default actions bound to mouse events
-mod-button1  Set the window to floating mode and move by dragging
-mod-button2  Raise the window to the top of the stack
-mod-button3  Set the window to floating mode and resize by dragging
+mod-button1    Set the window to floating mode and move by dragging
+mod-button2    Raise the window to the top of the stack
+mod-button3    Set the window to floating mode and resize by dragging
