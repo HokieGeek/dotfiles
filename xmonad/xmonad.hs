@@ -168,7 +168,7 @@ myKeys =    [
             , (((modm .|. shiftMask), xK_a), unsafeSpawn ("dmenu_path | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ " | xargs st -e"))
             , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs randomCmdsMenu >>= fromMaybe (return ()))
             , ((modm, xK_x), goToSelected defaultGSConfig)
-            , (((modm .|. shiftMask), xK_x), gotoMenuArgs dmenuArgs)
+            , (((modm .|. shiftMask), xK_x), gotoMenuArgs (dmenuArgs ++ [ "-l", "25" ]))
             -- }}}
             -- Screen helpers {{{
             , (((modm .|. mod1Mask), xK_h), prevScreen)
