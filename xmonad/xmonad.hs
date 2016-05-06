@@ -164,11 +164,12 @@ myKeys =    [
             , (((modm .|. shiftMask), xK_b), unsafeSpawn ("schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs schemecolor"))
             -- }}}
             -- Launcher menus {{{
-            , ((modm, xK_a), safeSpawn "dmenu_run" dmenuArgs)
-            , (((modm .|. shiftMask), xK_a), unsafeSpawn ("dmenu_path | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ " | xargs st -e"))
-            , ((modm, xK_z), menuMapArgs "dmenu" dmenuArgs randomCmdsMenu >>= fromMaybe (return ()))
-            , ((modm, xK_x), goToSelected defaultGSConfig)
-            , (((modm .|. shiftMask), xK_x), gotoMenuArgs (dmenuArgs ++ [ "-l", "25" ]))
+            , ((modm, xK_z), safeSpawn "dmenu_run" dmenuArgs)
+            , (((modm .|. shiftMask), xK_z), menuMapArgs "dmenu" dmenuArgs randomCmdsMenu >>= fromMaybe (return ()))
+            -- , (((modm .|. controlMask), xK_z), unsafeSpawn ("dmenu_path | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ " | xargs " ++ myTerminal ++ " -e"))
+
+            , ((modm, xK_a), gotoMenuArgs (dmenuArgs ++ [ "-l", "25" ]))
+            , (((modm .|. controlMask), xK_a), goToSelected defaultGSConfig)
             -- }}}
             -- Screen helpers {{{
             , (((modm .|. mod1Mask), xK_h), prevScreen)

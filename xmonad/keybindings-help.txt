@@ -12,11 +12,10 @@ Super+Space        Rotate through the available layout algorithms
 Super+Shift-Space  Reset the layouts on the current workSpace to default
 
 -- Launchers
-Super+a          Launch dmenu
-Super+Shift+a    Launch application in terminal
-Super+z          Launch selected application
-Super+x          Launch GS menu of open windows
-Super+Shift+x    Launch dmenu of open windows
+Super+z          Launch dmenu
+Super+Shift+z    Launch selected application
+Super+a          Launch dmenu of open windows
+Super+Ctrl+a     Launch GS menu of open windows
 
 Super+Shift-Enter       Launch terminal
 Ctrl+Shift+Esc          Launch htop
