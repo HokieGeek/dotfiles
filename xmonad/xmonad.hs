@@ -158,7 +158,7 @@ myKeys =    [
             , ((mod1Mask, xK_F4), kill)
             , ((0, xF86XK_Sleep), spawn "systemctl suspend")
             , ((shiftMask, xF86XK_Sleep), spawn "systemctl hibernate")
-            , (((modm .|. shiftMask), xK_slash), spawn "xmessage -file $HOME/.xmonad/keybindings-help.txt")
+            , (((modm .|. shiftMask), xK_slash), spawn "$HOME/.xmonad/display-keybindings.sh")
             , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
             , ((modm, xK_b), spawn "rotate-wallpaper $HOME/.look/bgs")
             , (((modm .|. shiftMask), xK_b), unsafeSpawn ("schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs schemecolor"))
