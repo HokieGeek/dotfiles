@@ -150,97 +150,135 @@ myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 -- }}}
 
 -- Keybindings {{{
--- Don't forget to update keybindings-help.txt
 myKeys =    [
-            -- Misc {{{
-              ((modm, xK_q), spawn "~/.xmonad/restart")
-            , ((modm, xK_Return), promote)
-            , ((mod1Mask, xK_F4), kill)
-            , ((0, xF86XK_Sleep), spawn "systemctl suspend")
-            , ((shiftMask, xF86XK_Sleep), spawn "systemctl hibernate")
-            , (((modm .|. shiftMask), xK_slash), spawn ("$HOME/.xmonad/display-keybindings.sh " ++ statusbarHeight ++ " 1600 48 '" ++ colorBackground ++ "'"))
-            , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop"))
-            , ((modm, xK_b), spawn "rotate-wallpaper $HOME/.look/bgs")
-            , (((modm .|. shiftMask), xK_b), unsafeSpawn ("schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs schemecolor"))
+            -- General {{{
+              ((modm, xK_q), spawn "~/.xmonad/restart") --        Restart xmonad
+            -- %HELP% mod-Shift-q      Quit xmonad
+
+            , ((modm, xK_b), spawn "rotate-wallpaper $HOME/.look/bgs") --        Cycle wallpapers
+            , (((modm .|. shiftMask), xK_b), unsafeSpawn ("schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs schemecolor")) --  Change color scheme
+
+            , ((mod1Mask, xK_F4), kill) --       Close/kill the focused window
+            -- %HELP% mod-Shift-c      Close/kill the focused window
+
+            , ((0, xF86XK_Sleep), spawn "systemctl suspend") -- %SKIPHELP%
+            , ((shiftMask, xF86XK_Sleep), spawn "systemctl hibernate") -- %SKIPHELP%
+            , (((modm .|. shiftMask), xK_slash), spawn ("$HOME/.xmonad/display-keybindings.sh " ++ statusbarHeight ++ " 1600 48 '" ++ colorBackground ++ "'")) -- %SKIPHELP%
             -- }}}
-            -- Launcher menus {{{
-            , ((modm, xK_z), safeSpawn "dmenu_run" dmenuArgs)
-            , (((modm .|. shiftMask), xK_z), menuMapArgs "dmenu" dmenuArgs randomCmdsMenu >>= fromMaybe (return ()))
+            -- Launchers {{{
+            , ((modm, xK_z), safeSpawn "dmenu_run" dmenuArgs) --       Launch dmenu
+            , (((modm .|. shiftMask), xK_z), menuMapArgs "dmenu" dmenuArgs randomCmdsMenu >>= fromMaybe (return ())) -- Launch selected application
             -- , (((modm .|. controlMask), xK_z), unsafeSpawn ("dmenu_path | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ " | xargs " ++ myTerminal ++ " -e"))
 
-            , ((modm, xK_a), gotoMenuArgs (dmenuArgs ++ [ "-l", "25" ]))
-            , (((modm .|. controlMask), xK_a), goToSelected defaultGSConfig)
+            , ((modm, xK_a), gotoMenuArgs (dmenuArgs ++ [ "-l", "25" ])) --       Launch dmenu of open windows
+            , (((modm .|. controlMask), xK_a), goToSelected defaultGSConfig) --  Launch GS menu of open windows
+
+            -- %HELP% mod-Shift-Enter       Launch terminal
+            , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop")) -- Launch htop
+            , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer")) --   Launch Alsa mixer
+
             -- }}}
             -- Screen helpers {{{
-            , (((modm .|. mod1Mask), xK_h), prevScreen)
-            , (((modm .|. mod1Mask), xK_l), nextScreen)
-            , (((modm .|. controlMask), xK_w), swapNextScreen)
+            -- %HELP% mod-{w,e,r}        Switch to physical/Xinerama screens 1, 2, or 3
+            -- %HELP% mod-Shift-{w,e,r}  Move client to screen 1, 2, or 3
+
+            , (((modm .|. mod1Mask), xK_h), prevScreen) --  Previous screen
+            , (((modm .|. mod1Mask), xK_l), nextScreen) --  Next screen
+            , (((modm .|. controlMask), xK_w), swapNextScreen) -- Swap current screen with next screen
+
             -- }}}
             -- Workspace helpers {{{
-            , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout)
+            -- %HELP% mod-,          Increment the number of windows in the master area
+            -- %HELP% mod-.          Deincrement the number of windows in the master area
 
-            , (((modm .|. mod1Mask), xK_k), removeExtraWs prevWS)
-            , (((modm .|. mod1Mask), xK_j), removeExtraWs nextWS)
-            , (((modm .|. shiftMask .|. controlMask), xK_k), removeExtraWs (moveTo Prev NonEmptyWS))
-            , (((modm .|. shiftMask .|. controlMask), xK_j), removeExtraWs (moveTo Next NonEmptyWS))
-            , ((modm, xK_Tab), removeExtraWs toggleWS)
-            , ((modm, xK_n), removeExtraWs (moveTo Next EmptyWS))
-            , (((modm .|. shiftMask), xK_n), shiftTo Next EmptyWS)
+            , (((modm .|. mod1Mask), xK_k), removeExtraWs prevWS) --  Previous workspace
+            , (((modm .|. mod1Mask), xK_j), removeExtraWs nextWS) --  Next workspace
+            , ((modm, xK_Tab), removeExtraWs toggleWS) --    Switch to last selected workspace
 
-            , (((modm .|. mod1Mask), xK_n), removeExtraWs (moveTo Next EmptyWS) <+> spawn myBrowser)
-            , (((modm .|. controlMask), xK_n), removeExtraWs (moveTo Next EmptyWS) <+> spawn myTerminal)
+            , ((modm, xK_n), removeExtraWs (moveTo Next EmptyWS)) --      Switch to next empty workspace
+            , (((modm .|. mod1Mask), xK_n), removeExtraWs (moveTo Next EmptyWS) <+> spawn myBrowser) --  Switch to next empty workspace and launch browser
+            , (((modm .|. controlMask), xK_n), removeExtraWs (moveTo Next EmptyWS) <+> spawn myTerminal) -- Switch to next empty workspace and launch terminal
+
+            , (((modm .|. shiftMask .|. controlMask), xK_k), removeExtraWs (moveTo Prev NonEmptyWS)) -- Switch to previous non-empty workspace
+            , (((modm .|. shiftMask .|. controlMask), xK_j), removeExtraWs (moveTo Next NonEmptyWS)) -- Switch to next non-empty workspace
+
+            -- %HELP% mod-[0..9,-,=]       Switch to indicated workspace
+            -- %HELP% mod-Ctrl-[0..9,-,=]  Swap current workspace with indicated workspace
+
+            -- %HELP% mod-Space          Rotate through the available layout algorithms
+            -- %HELP% mod-Shift-Space    Reset the layouts on the current workSpace to default
+            , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout) -- Toggles alternate layouts
+
             -- }}}
             -- Window helpers {{{
-            , ((modm, xK_j), focusDown)
-            , ((modm, xK_k), focusUp)
-            , ((modm, xK_m), focusMaster)
-            , (((modm .|. controlMask), xK_apostrophe), withFocused minimizeWindow)
-            , (((modm .|. shiftMask), xK_apostrophe), sendMessage RestoreNextMinimizedWin)
-            , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- shrink the slave area
-            , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- expand the slave area
-            , (((modm .|. controlMask), xK_j), rotSlavesDown)
-            , (((modm .|. controlMask), xK_k), rotSlavesUp)
-            , ((modm, xK_v), windows copyToAll)
-            , (((modm .|. shiftMask), xK_v), killAllOtherCopies)
+            , ((modm, xK_j), focusDown) -- Switch to next window in layout order but ignoring minimized
+            , ((modm, xK_k), focusUp) -- Switch to previous window in layout order but ignoring minimized
+            , ((modm, xK_m), focusMaster) -- Switch to master window but ignores minimized
+
+            , (((modm .|. shiftMask), xK_n), shiftTo Next EmptyWS) --         Move window to next empty workspace
+            -- %HELP% mod-Shift-[0..9,-,=]    Move window to indicated workspace
+
+            -- %HELP% mod-h           Shrink the master area
+            -- %HELP% mod-l           Expand the master area
+            , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- Shrink the slave area
+            , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- Expand the slave area
+
+            , ((modm, xK_Return), promote) --  Swap the focused window and the master window
+            -- %HELP% mod-Shift-j     Swap the focused window with the next window
+            -- %HELP% mod-Shift-k     Swap the focused window with the previous window
+            , (((modm .|. controlMask), xK_j), rotSlavesDown) --  Move current slave window down
+            , (((modm .|. controlMask), xK_k), rotSlavesUp) --  Move current slave window up
+
+            , (((modm .|. controlMask), xK_apostrophe), withFocused minimizeWindow) --  Minimizes current window
+            , (((modm .|. shiftMask), xK_apostrophe), sendMessage RestoreNextMinimizedWin) -- Restores a minimized window
+
+            , ((modm, xK_v), windows copyToAll) --       Makes a window sticky across all desktops
+            , (((modm .|. shiftMask), xK_v), killAllOtherCopies) -- Removes sticky from window
+
+            -- %HELP% mod-t           Push window back into tiling; unfloat and re-tile it
+
             -- }}}
-            -- Media {{{
-            , ((0, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 1+"))
-            , ((controlMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 10+"))
-            , ((shiftMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 100"))
+            -- Media controls {{{
+            , ((0, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 1+")) -- %SKIPHELP%
+            , ((controlMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 10+")) --  Raise volume at 10% steps
+            , ((shiftMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 100")) -- Raise volume to 100%
 
-            , ((0, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 1-"))
-            , ((controlMask, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 10-"))
-            , ((shiftMask, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 30"))
-
-            , ((0, xF86XK_AudioMute), spawn "amixer set Master toggle")
-            , ((0, xF86XK_AudioMicMute), spawn "amixer set Capture toggle")
-            , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer"))
+            , ((0, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 1-")) -- %SKIPHELP%
+            , ((controlMask, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 10-")) --  Lower volume at 10% steps
+            , ((shiftMask, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 30")) -- Lower volume to 30%
+                                                                        -- %SKIPHELP%
+            , ((0, xF86XK_AudioMute), spawn "amixer set Master toggle") -- %SKIPHELP%
+            , ((0, xF86XK_AudioMicMute), spawn "amixer set Capture toggle") -- %SKIPHELP%
             -- }}}
-            -- Other {{{
-            , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight -inc 5")
-            , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -dec 5")
-            , ((shiftMask, xF86XK_MonBrightnessUp), spawn "xbacklight -set 100")
-            , ((shiftMask, xF86XK_MonBrightnessDown), spawn "xbacklight -set 20")
+            -- Other {{{ -- %SKIPHELP%
+            , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight -inc 5") -- %SKIPHELP%
+            , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -dec 5") -- %SKIPHELP%
+            , ((shiftMask, xF86XK_MonBrightnessUp), spawn "xbacklight -set 100") -- %SKIPHELP%
+            , ((shiftMask, xF86XK_MonBrightnessDown), spawn "xbacklight -set 20") -- %SKIPHELP%
 
-            , ((0, xK_Print), spawn "scrot")
-            , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s")
-            , (((mod1Mask .|. controlMask), xK_l), spawn "slock")
+            , ((0, xK_Print), spawn "scrot") -- %SKIPHELP%
+            , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s") -- %SKIPHELP%
+            , (((mod1Mask .|. controlMask), xK_l), spawn "slock") -- %SKIPHELP%
             -- }}}
             -- ThinkPad-specific {{{
-            , ((0, xF86XK_Launch1), spawn myTerminal)
-            , ((shiftMask, xF86XK_Launch1), spawn myBrowser)
+            , ((0, xF86XK_Launch1), spawn myTerminal) --       Launch terminal
+            , ((shiftMask, xF86XK_Launch1), spawn myBrowser) -- Launch browser
 
-            , ((0, xF86XK_WebCam), spawn "toggle-bluetooth")
-            , ((0, xF86XK_Display), spawn "toggle-video-input HDMI1")
+            , ((0, xF86XK_WebCam), spawn "toggle-bluetooth") -- %SKIPHELP%
+            , ((0, xF86XK_Display), spawn "toggle-video-input HDMI1") -- %SKIPHELP%
             -- }}}
             -- Poker-specific (Calculator) {{{
             -- , ((0, xF86XK_Calculator), spawn "xmessage 'testing'")
             -- }}}
+            -- Mouse bindings
+            -- %HELP% mod-button1    Set the window to floating mode and move by dragging
+            -- %HELP% mod-button2    Raise the window to the top of the stack
+            -- %HELP% mod-button3    Set the window to floating mode and resize by dragging
             ]
             ++
             [((m .|. modm, k), windows $ f i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys
-                , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+                , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]] -- %SKIPHELP%
             ++
             [((modm .|. controlMask, k), windows $ swapWithCurrent i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys]
