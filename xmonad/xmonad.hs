@@ -65,6 +65,7 @@ myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
 dmenuArgs  = ["-nb", colorBackground, "-nf", colorWhite, "-sb", colorForeground]
+dzenArgs  = ["-bg", colorBackground, "-fg", colorWhite, "-fn", termFont]
 randomCmdsMenu = M.fromList
               [ ("browser", spawn myBrowser)
               , ("netflix", spawn (myBrowser ++ " --new-window http://netflix.com"))
@@ -158,59 +159,29 @@ myKeys =    [
             , ((modm, xK_b), spawn "rotate-wallpaper $HOME/.look/bgs") --        Cycle wallpapers
             , (((modm .|. shiftMask), xK_b), unsafeSpawn ("schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs schemecolor")) --  Change color scheme
 
-            , ((mod1Mask, xK_F4), kill) --       Close/kill the focused window
-            -- %HELP% mod-Shift-c      Close/kill the focused window
-
             , ((0, xF86XK_Sleep), spawn "systemctl suspend") -- %SKIPHELP%
             , ((shiftMask, xF86XK_Sleep), spawn "systemctl hibernate") -- %SKIPHELP%
-            , (((modm .|. shiftMask), xK_slash), spawn ("$HOME/.xmonad/display-keybindings.sh " ++ statusbarHeight ++ " 1600 48 '" ++ colorBackground ++ "'")) -- %SKIPHELP%
+            , (((modm .|. shiftMask), xK_slash), spawn ("$HOME/.xmonad/display-keybindings.sh " ++ statusbarHeight ++ " 1600 62 " ++ unwords(map surroundInQuotes dzenArgs))) -- %SKIPHELP%
             -- }}}
             -- Launchers {{{
-            , ((modm, xK_z), safeSpawn "dmenu_run" dmenuArgs) --       Launch dmenu
-            , (((modm .|. shiftMask), xK_z), menuMapArgs "dmenu" dmenuArgs randomCmdsMenu >>= fromMaybe (return ())) -- Launch selected application
+            , ((modm, xK_z), safeSpawn "dmenu_run" dmenuArgs) --        Launch dmenu
+            , (((modm .|. shiftMask), xK_z), menuMapArgs "dmenu" dmenuArgs randomCmdsMenu >>= fromMaybe (return ())) --  Launch selected application
             -- , (((modm .|. controlMask), xK_z), unsafeSpawn ("dmenu_path | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ " | xargs " ++ myTerminal ++ " -e"))
+            , ((modm, xK_a), gotoMenuArgs (dmenuArgs ++ [ "-l", "25" ])) --        Launch dmenu of open windows
+            , (((modm .|. controlMask), xK_a), goToSelected defaultGSConfig) --   Launch GS menu of open windows
 
-            , ((modm, xK_a), gotoMenuArgs (dmenuArgs ++ [ "-l", "25" ])) --       Launch dmenu of open windows
-            , (((modm .|. controlMask), xK_a), goToSelected defaultGSConfig) --  Launch GS menu of open windows
-
-            -- %HELP% mod-Shift-Enter       Launch terminal
-            , (((controlMask .|. shiftMask), xK_Escape), spawn (myTerminal ++ " -e htop")) -- Launch htop
+            -- %HELP% mod-Shift-Enter  Launch terminal
+            , ((modm, xK_Escape), spawn (myTerminal ++ " -e htop")) --   Launch htop
             , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer")) --   Launch Alsa mixer
 
-            -- }}}
-            -- Screen helpers {{{
-            -- %HELP% mod-{w,e,r}        Switch to physical/Xinerama screens 1, 2, or 3
-            -- %HELP% mod-Shift-{w,e,r}  Move client to screen 1, 2, or 3
-
-            , (((modm .|. mod1Mask), xK_h), prevScreen) --  Previous screen
-            , (((modm .|. mod1Mask), xK_l), nextScreen) --  Next screen
-            , (((modm .|. controlMask), xK_w), swapNextScreen) -- Swap current screen with next screen
-
-            -- }}}
-            -- Workspace helpers {{{
-            -- %HELP% mod-,          Increment the number of windows in the master area
-            -- %HELP% mod-.          Deincrement the number of windows in the master area
-
-            , (((modm .|. mod1Mask), xK_k), removeExtraWs prevWS) --  Previous workspace
-            , (((modm .|. mod1Mask), xK_j), removeExtraWs nextWS) --  Next workspace
-            , ((modm, xK_Tab), removeExtraWs toggleWS) --    Switch to last selected workspace
-
-            , ((modm, xK_n), removeExtraWs (moveTo Next EmptyWS)) --      Switch to next empty workspace
-            , (((modm .|. mod1Mask), xK_n), removeExtraWs (moveTo Next EmptyWS) <+> spawn myBrowser) --  Switch to next empty workspace and launch browser
-            , (((modm .|. controlMask), xK_n), removeExtraWs (moveTo Next EmptyWS) <+> spawn myTerminal) -- Switch to next empty workspace and launch terminal
-
-            , (((modm .|. shiftMask .|. controlMask), xK_k), removeExtraWs (moveTo Prev NonEmptyWS)) -- Switch to previous non-empty workspace
-            , (((modm .|. shiftMask .|. controlMask), xK_j), removeExtraWs (moveTo Next NonEmptyWS)) -- Switch to next non-empty workspace
-
-            -- %HELP% mod-[0..9,-,=]       Switch to indicated workspace
-            -- %HELP% mod-Ctrl-[0..9,-,=]  Swap current workspace with indicated workspace
-
-            -- %HELP% mod-Space          Rotate through the available layout algorithms
-            -- %HELP% mod-Shift-Space    Reset the layouts on the current workSpace to default
-            , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout) -- Toggles alternate layouts
+            , ((0, xF86XK_Launch1), spawn myTerminal) --       Launch terminal (ThinkPad)
+            , ((shiftMask, xF86XK_Launch1), spawn myBrowser) -- Launch browser (ThinkPad)
 
             -- }}}
             -- Window helpers {{{
+            , ((mod1Mask, xK_F4), kill) --       Close/kill the focused window
+            -- %HELP% mod-Shift-c      Close/kill the focused window
+
             , ((modm, xK_j), focusDown) -- Switch to next window in layout order but ignoring minimized
             , ((modm, xK_k), focusUp) -- Switch to previous window in layout order but ignoring minimized
             , ((modm, xK_m), focusMaster) -- Switch to master window but ignores minimized
@@ -238,6 +209,38 @@ myKeys =    [
             -- %HELP% mod-t           Push window back into tiling; unfloat and re-tile it
 
             -- }}}
+            -- Workspace helpers {{{
+            -- %HELP% mod-,           Increment the number of windows in the master area
+            -- %HELP% mod-.           Deincrement the number of windows in the master area
+
+            , (((modm .|. mod1Mask), xK_k), removeExtraWs prevWS) --   Previous workspace
+            , (((modm .|. mod1Mask), xK_j), removeExtraWs nextWS) --   Next workspace
+            , ((modm, xK_Tab), removeExtraWs toggleWS) --     Switch to last selected workspace
+
+            , ((modm, xK_n), removeExtraWs (moveTo Next EmptyWS)) --       Switch to next empty workspace
+            , (((modm .|. mod1Mask), xK_n), removeExtraWs (moveTo Next EmptyWS) <+> spawn myBrowser) --   Switch to next empty workspace and launch browser
+            , (((modm .|. controlMask), xK_n), removeExtraWs (moveTo Next EmptyWS) <+> spawn myTerminal) --  Switch to next empty workspace and launch terminal
+
+            , (((modm .|. shiftMask .|. controlMask), xK_k), removeExtraWs (moveTo Prev NonEmptyWS)) -- Switch to previous non-empty workspace
+            , (((modm .|. shiftMask .|. controlMask), xK_j), removeExtraWs (moveTo Next NonEmptyWS)) -- Switch to next non-empty workspace
+
+            -- %HELP% mod-[0..9,-,=]       Switch to indicated workspace
+            -- %HELP% mod-Ctrl-[0..9,-,=]  Swap current workspace with indicated workspace
+
+            -- %HELP% mod-space            Rotate through the available layout algorithms
+            -- %HELP% mod-Shift-space      Reset the layouts on the current workSpace to default
+            , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout) --   Toggles alternate layouts
+
+            -- }}}
+            -- Screen helpers {{{
+            -- %HELP% mod-{w,e,r}        Switch to physical/Xinerama screens 1, 2, or 3
+            -- %HELP% mod-Shift-{w,e,r}  Move client to screen 1, 2, or 3
+
+            , (((modm .|. mod1Mask), xK_h), prevScreen) --  Previous screen
+            , (((modm .|. mod1Mask), xK_l), nextScreen) --  Next screen
+            , (((modm .|. controlMask), xK_w), swapNextScreen) -- Swap current screen with next screen
+
+            -- }}}
             -- Media controls {{{
             , ((0, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 1+")) -- %SKIPHELP%
             , ((controlMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 10+")) --  Raise volume at 10% steps
@@ -259,11 +262,8 @@ myKeys =    [
             , ((0, xK_Print), spawn "scrot") -- %SKIPHELP%
             , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s") -- %SKIPHELP%
             , (((mod1Mask .|. controlMask), xK_l), spawn "slock") -- %SKIPHELP%
-            -- }}}
-            -- ThinkPad-specific {{{
-            , ((0, xF86XK_Launch1), spawn myTerminal) --       Launch terminal
-            , ((shiftMask, xF86XK_Launch1), spawn myBrowser) -- Launch browser
-
+                                                                  -- %SKIPHELP%
+            --- ThinkPad-specific -- %SKIPHELP%
             , ((0, xF86XK_WebCam), spawn "toggle-bluetooth") -- %SKIPHELP%
             , ((0, xF86XK_Display), spawn "toggle-video-input HDMI1") -- %SKIPHELP%
             -- }}}
