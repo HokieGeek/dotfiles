@@ -174,7 +174,7 @@ myKeys =    [
 
             -- }}}
             -- Launchers {{{
-            , ((modm, xK_z), safeSpawn "dmenu_run" dmenuArgs) --        Launch dmenu
+            , ((modm, xK_z), safeSpawn "dmenu_run_mfu" dmenuArgs) --        Launch dmenu application launcher
             , (((modm .|. shiftMask), xK_z), menuMapArgs "dmenu" dmenuArgs randomCmdsMenu >>= fromMaybe (return ())) --  Launch selected application
             -- , (((modm .|. controlMask), xK_z), unsafeSpawn ("dmenu_path | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ " | xargs " ++ myTerminal ++ " -e"))
             , ((modm, xK_a), gotoMenuArgs (dmenuArgs ++ [ "-l", "25" ])) --        Launch dmenu of open windows
