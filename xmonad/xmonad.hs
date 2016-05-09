@@ -262,7 +262,7 @@ myKeys =    [
             , ((0, xF86XK_WebCam), spawn "toggle-bluetooth") -- %SKIPHELP%
             , ((0, xF86XK_Display), spawn "toggle-video-input HDMI1") -- %SKIPHELP%
             -- }}}
-            -- Poker-specific (Calculator) {{{
+            -- Poker-specific (Calculator) -- %SKIPHELP% {{{
             -- , ((0, xF86XK_Calculator), spawn "xmessage 'testing'")
             -- }}}
             -- Mouse bindings
