@@ -11,17 +11,18 @@ import Graphics.X11.ExtraTypes.XorgDefault
 import System.IO
 
 import XMonad
+import XMonad.Actions.Commands
 import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
 import XMonad.Actions.DynamicWorkspaces
-import XMonad.Actions.FloatKeys
-import XMonad.Actions.GridSelect
+-- import XMonad.Actions.FloatKeys
 import XMonad.Actions.GroupNavigation -- historyHook
 import XMonad.Actions.Promote
 import XMonad.Actions.RotSlaves
 import XMonad.Actions.SwapWorkspaces
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.WindowBringer
+import XMonad.Actions.WithAll
 import XMonad.Core
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops --fullScreenEventHook
@@ -29,6 +30,7 @@ import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.FadeWindows -- fadeWindowEventHook
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.ToggleHook
 import XMonad.Hooks.UrgencyHook
 import XMonad.Layout.BoringWindows
 import XMonad.Layout.IM
@@ -99,7 +101,7 @@ myManageHook = composeAll
     , className =? "VASSAL-launch-ModuleManager"        --> doFloat <+> doShift "="
     , className =? "VASSAL-launch-Player"               --> doFloat <+> doShift "="
     , appName =? "crx_nckgahadagoaajjgafhacjanaoiihapd" --> doFloat
-    ] <+> manageDocks
+    ] <+> manageDocks <+> toggleHook "float" doFloat
     where
         viewShift = doF . liftM2 (.) W.greedyView W.shift
         shiftToNew ws = liftX (addWorkspace ws) >> viewShift ws
@@ -177,8 +179,8 @@ myKeys =    [
             , ((modm, xK_z), safeSpawn "dmenu_run_mfu" dmenuArgs) --        Launch dmenu application launcher
             , (((modm .|. shiftMask), xK_z), menuMapArgs "dmenu" dmenuArgs randomCmdsMenu >>= fromMaybe (return ())) --  Launch selected application
             -- , (((modm .|. controlMask), xK_z), unsafeSpawn ("dmenu_path | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ " | xargs " ++ myTerminal ++ " -e"))
-            , ((modm, xK_a), gotoMenuArgs (dmenuArgs ++ [ "-l", "25" ])) --        Launch dmenu of open windows
-            , (((modm .|. controlMask), xK_a), goToSelected defaultGSConfig) --   Launch GS menu of open windows
+            , ((modm, xK_a), gotoMenuArgs (dmenuArgs ++ ["-l", "25"])) --        Launch dmenu of open windows
+            , (((modm .|. controlMask), xK_a), defaultCommands >>= runCommand) --   Execute xmonad commands from dmenu
 
             -- %HELP% mod-Shift-Enter  Launch terminal
             , ((modm, xK_Escape), spawn (myTerminal ++ " -e htop")) --   Launch htop
@@ -211,6 +213,9 @@ myKeys =    [
             -- %HELP% mod-Shift-c     Close/kill the focused window
 
             -- %HELP% mod-t           Push window back into tiling; unfloat and re-tile it
+            , (((modm .|. shiftMask), xK_t), withAll' W.sink) -- Sink all floating windows on the current workspace
+
+            , ((modm, xK_o), toggleHookAllNew "float" >> runLogHook) --       Toggle floating all new windows
 
             -- }}}
             -- Workspace helpers {{{
@@ -244,8 +249,8 @@ myKeys =    [
             -- %HELP% mod-{w,e,r}          Switch to physical/Xinerama screens 1, 2, or 3
             -- %HELP% mod-Shift-{w,e,r}    Move client to screen 1, 2, or 3
 
-            , (((modm .|. mod1Mask), xK_h), prevScreen) --  Previous screen
-            , (((modm .|. mod1Mask), xK_l), nextScreen) --  Next screen
+            -- , (((modm .|. mod1Mask), xK_h), prevScreen) --  Previous screen
+            -- , (((modm .|. mod1Mask), xK_l), nextScreen) --  Next screen
             , (((modm .|. controlMask), xK_w), swapNextScreen) -- Swap current screen with next screen
             -- }}}
             -- Other {{{ -- %SKIPHELP%
