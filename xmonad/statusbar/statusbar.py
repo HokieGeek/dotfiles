@@ -87,6 +87,8 @@ f.write("^fg({})\\\n".format(colorschemeFgHex))
 f.write("${endif}\\\n")
 if distro == "arch":
     f.write(" ^i({}/arch.xbm) \\\n".format(imagesDir))
+elif distro == "centos":
+    f.write(" ^i({}/centos.xbm) \\\n".format(imagesDir))
 else:
     f.write(" ^c(7) \\\n")
 f.write("^fg({})${{kernel}}\\\n".format(colorschemeGreyHex))
@@ -177,28 +179,35 @@ f.write("  ^fg({})${{uptime}}^fg({})\\\n".format(colorschemeDimHex, colorschemeW
 f.write(sectionSpacing)
 
 ## BATTERY
-f.write("^fg({})\\\n".format(colorschemeDarkHex))
-f.write("${{if_match ${{battery_percent}} < 99}}^fg({})${{endif}}\\\n".format(colorschemeFgHex))
-f.write("${{if_match ${{battery_percent}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeYellowHex))
-f.write("${{if_match ${{battery_percent}} < 20}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
+def hasBattery():
+    return os.path.islink("/sys/class/power_supply/BAT0") or \
+            os.path.isfile("/sys/class/power_supply/BAT0") or \
+            os.path.islink("/sys/class/power_supply/BAT1") or \
+            os.path.isfile("/sys/class/power_supply/BAT1")
 
-batteryWidth=16
-batteryStep = int(100 / height)
-batterySteps = list(range(batteryStep, 100, batteryStep))
-batteryHeight = 1
-batteryHeightStep = 1
-f.write("${if_match ${battery_percent} < 100}\\\n")
-f.write("^p()^p(;-1)^fg({})^bg({})\\\n".format(colorschemeDimHex, colorschemeFgHex))
-for perc in reversed(batterySteps):
-    f.write("${{if_match ${{battery_percent}} > {}}}^r({}x{})${{else}}\\\n".format(perc, batteryWidth, batteryHeight))
-    batteryHeight += batteryHeightStep
-f.write("^r({}x0)\\\n".format(batteryWidth))
-for i in range(len(batterySteps)):
-    f.write("${endif}")
-f.write("\\\n")
-f.write("${else}\\\n")
-f.write("^fg({})^r({}x{})\\\n".format(colorschemeBgHex, batteryWidth, height))
-f.write("${endif}\\\n")
+if hasBattery():
+    f.write("^fg({})\\\n".format(colorschemeDarkHex))
+    f.write("${{if_match ${{battery_percent}} < 99}}^fg({})${{endif}}\\\n".format(colorschemeFgHex))
+    f.write("${{if_match ${{battery_percent}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeYellowHex))
+    f.write("${{if_match ${{battery_percent}} < 20}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
+
+    batteryWidth=16
+    batteryStep = int(100 / height)
+    batterySteps = list(range(batteryStep, 100, batteryStep))
+    batteryHeight = 1
+    batteryHeightStep = 1
+    f.write("${if_match ${battery_percent} < 100}\\\n")
+    f.write("^p()^p(;-1)^fg({})^bg({})\\\n".format(colorschemeDimHex, colorschemeFgHex))
+    for perc in reversed(batterySteps):
+        f.write("${{if_match ${{battery_percent}} > {}}}^r({}x{})${{else}}\\\n".format(perc, batteryWidth, batteryHeight))
+        batteryHeight += batteryHeightStep
+    f.write("^r({}x0)\\\n".format(batteryWidth))
+    for i in range(len(batterySteps)):
+        f.write("${endif}")
+    f.write("\\\n")
+    f.write("${else}\\\n")
+    f.write("^fg({})^r({}x{})\\\n".format(colorschemeBgHex, batteryWidth, height))
+    f.write("${endif}\\\n")
 
 ## Done and done
 f.close()
