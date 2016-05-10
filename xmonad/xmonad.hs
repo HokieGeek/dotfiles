@@ -69,15 +69,6 @@ myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 
 dmenuArgs  = ["-nb", colorBackground, "-nf", colorWhite, "-sb", colorForeground]
 dzenArgs  = ["-bg", colorBackground, "-fg", colorWhite, "-fn", termFont]
-randomCmdsMenu = M.fromList
-              [ ("browser", spawn myBrowser)
-              , ("netflix", spawn (myBrowser ++ " --new-window http://netflix.com"))
-              , ("irssi", spawn (myTerminal ++ " -e irssi"))
-              , ("skype", spawn "apulse32 skype")
-              , ("mpc", spawn (myTerminal ++ " -e ncmpcpp"))
-              , ("steam", spawn "playonlinux --run \"Steam\" %F")
-              , ("ranger", spawn (myTerminal ++ " -e ranger"))
-              ]
 
 xF86XK_AudioMicMute :: KeySym
 xF86XK_AudioMicMute = 0x1008ffb2
@@ -184,13 +175,10 @@ myKeys =    [
 
             -- }}}
             -- Launchers {{{
-            , ((modm, xK_z), safeSpawn "dmenu_run_mfu" dmenuArgs) --        Launch dmenu application launcher
-            , (((modm .|. shiftMask), xK_z), menuMapArgs "dmenu" dmenuArgs randomCmdsMenu >>= fromMaybe (return ())) --  Launch selected application
-            -- , (((modm .|. controlMask), xK_z), unsafeSpawn ("dmenu_path | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ " | xargs " ++ myTerminal ++ " -e"))
+            , ((modm, xK_z), safeSpawn "dmenu_run_mfu" (dmenuArgs ++ ["--threshold", "2", "--terminal", myTerminal])) --        Launch dmenu command launcher
             , ((modm, xK_a), gotoMenuArgs (dmenuArgs ++ ["-l", "25"])) --        Launch dmenu of open windows
 
             -- %HELP% mod-Shift-Enter  Launch terminal
-            , ((modm, xK_Escape), spawn (myTerminal ++ " -e htop")) --   Launch htop
             , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer")) --   Launch Alsa mixer
 
             -- , ((0, xF86XK_Launch1), spawn myTerminal) --       Launch terminal (ThinkPad)
