@@ -189,7 +189,7 @@ My focus was to enable layouts that let me take advantage of my small laptop scr
 
 Using `dzen2` to display the workspaces.
 
-Also using `dzen2` for some application launchers as well as the selector which lets me change the color theme.
+Also using `dmenu` for some application launchers as well as the selector which lets me change the color theme.
 
 ##### A few sample custom key bindings that I love
 | Binding | What it does |
