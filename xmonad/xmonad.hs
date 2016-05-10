@@ -8,10 +8,10 @@ import Data.Ratio ((%))
 import Graphics.X11.ExtraTypes.XF86
 import Graphics.X11.ExtraTypes.XorgDefault
 
+import System.Process
 import System.IO
 
 import XMonad
-import XMonad.Actions.Commands
 import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
 import XMonad.Actions.DynamicWorkspaces
@@ -52,14 +52,15 @@ import qualified Data.Map as M
 -- }}}
 
 -- Local Variables {{{
-modm            = mod4Mask
-myTerminal      = "st"
-myBrowser       = "google-chrome-unstable"
-colorForeground = "#5f0087"
-colorBackground = "#1b1d1e"
-colorWhite      = "#cdcdcd"
-termFont        = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
-statusbarHeight = "14"
+modm              = mod4Mask
+myTerminal        = "st"
+myBrowser         = "google-chrome-unstable"
+colorForeground   = "#5f0087"
+colorBackground   = "#1b1d1e"
+colorWhite        = "#cdcdcd"
+termFont          = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
+statusbarHeight   = 14
+workspaceBarWidth = 310
 
 unmuteAllChannels = "amixer -q set Master unmute ; "
 
@@ -150,6 +151,15 @@ myDzen h = defaultPP
 -- HandleEvent {{{
 myHandleEventHook = fadeWindowsEventHook <+> fullscreenEventHook
 -- }}}
+-- Startup {{{
+
+myStartupHook = do
+    spawn "xcompmgr"
+    spawn conkyStatusBar
+    where
+        screenwidth_cmd = "$(expr $(xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1) - " ++ show workspaceBarWidth ++ ")"
+        conkyStatusBar = "~/.xmonad/statusbar/statusbar.sh --width " ++ screenwidth_cmd ++ " --height '" ++ show statusbarHeight ++ "' --bg '" ++ colorBackground ++ "' --fg '" ++ colorForeground ++ "' --font '" ++ termFont ++ "' --xpos '" ++ show workspaceBarWidth ++ "'"
+-- }}}
 -- }}}
 
 -- Keybindings {{{
@@ -163,7 +173,7 @@ myKeys =    [
 
             , ((0, xF86XK_Sleep), spawn "systemctl suspend") -- %SKIPHELP%
             , ((shiftMask, xF86XK_Sleep), spawn "systemctl hibernate") -- %SKIPHELP%
-            , (((modm .|. shiftMask), xK_slash), spawn ("$HOME/.xmonad/display-keybindings.sh " ++ statusbarHeight ++ " 1600 62 " ++ unwords(map surroundInQuotes dzenArgs))) -- %SKIPHELP%
+            , (((modm .|. shiftMask), xK_slash), spawn ("$HOME/.xmonad/display-keybindings.sh " ++ show statusbarHeight ++ " 1600 62 " ++ unwords(map surroundInQuotes dzenArgs))) -- %SKIPHELP%
                                                                         -- %SKIPHELP%
             , ((0, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 1+")) -- %SKIPHELP%
             , ((controlMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 10+")) --  Raise volume at 10% steps
@@ -180,7 +190,6 @@ myKeys =    [
             , (((modm .|. shiftMask), xK_z), menuMapArgs "dmenu" dmenuArgs randomCmdsMenu >>= fromMaybe (return ())) --  Launch selected application
             -- , (((modm .|. controlMask), xK_z), unsafeSpawn ("dmenu_path | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ " | xargs " ++ myTerminal ++ " -e"))
             , ((modm, xK_a), gotoMenuArgs (dmenuArgs ++ ["-l", "25"])) --        Launch dmenu of open windows
-            , (((modm .|. controlMask), xK_a), defaultCommands >>= runCommand) --   Execute xmonad commands from dmenu
 
             -- %HELP% mod-Shift-Enter  Launch terminal
             , ((modm, xK_Escape), spawn (myTerminal ++ " -e htop")) --   Launch htop
@@ -285,13 +294,8 @@ myKeys =    [
 --}}}
 
 -- Main {{{
-compmgr   = "xcompmgr"
-screenwidth_cmd    = "`xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1`"
-conkyStatusBar     = "~/.xmonad/statusbar/statusbar.sh --width " ++ screenwidth_cmd ++ " --height '" ++ statusbarHeight ++ "' --bg '" ++ colorBackground ++ "' --fg '" ++ colorForeground ++ "' --font '" ++ termFont ++ "'"
-workspaceStatusBar = "sleep 2s; dzen2 -fn '" ++ termFont ++ "' -x '0' -y '0' -h '" ++ statusbarHeight ++ "' -w '310' -fg '" ++ colorWhite ++ "' -bg '" ++ colorBackground ++ "' -ta l"
+workspaceStatusBar = "dzen2 -fn '" ++ termFont ++ "' -x '0' -y '0' -h '" ++ show statusbarHeight ++ "' -w '" ++ show workspaceBarWidth ++ "' -fg '" ++ colorWhite ++ "' -bg '" ++ colorBackground ++ "' -ta l"
 main = do
-        compMgrStart <- spawn compmgr
-        dzenRightBar <- spawn conkyStatusBar
         dzenLeftBar  <- spawnPipe workspaceStatusBar
         xmonad $ withUrgencyHook dzenUrgencyHook { args = ["-bg", colorForeground, "-xs", "1"] }
                $ defaultConfig
@@ -304,6 +308,7 @@ main = do
             , layoutHook        = myLayoutHook
             , logHook           = myLogHook dzenLeftBar
             , handleEventHook   = myHandleEventHook
+            , startupHook       = myStartupHook
             }
             `additionalKeys` myKeys
 --}}}
