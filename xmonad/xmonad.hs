@@ -51,7 +51,7 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 -- }}}
 
--- Local Variables {{{
+-- Local Functions {{{
 modm              = mod4Mask
 myTerminal        = "st"
 myBrowser         = "google-chrome-unstable"
@@ -78,9 +78,7 @@ randomCmdsMenu = M.fromList
               , ("steam", spawn "playonlinux --run \"Steam\" %F")
               , ("ranger", spawn (myTerminal ++ " -e ranger"))
               ]
---}}}
 
--- Local Methods {{{
 xF86XK_AudioMicMute :: KeySym
 xF86XK_AudioMicMute = 0x1008ffb2
 
