@@ -28,6 +28,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops --fullScreenEventHook
 import XMonad.Hooks.FadeInactive
 import XMonad.Hooks.FadeWindows -- fadeWindowEventHook
+import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.ToggleHook
@@ -82,7 +83,7 @@ removeExtraWs c = removeEmptyWorkspaceAfterExcept myWorkspaces c
 
 -- Hooks {{{
 -- Manage {{{
-myManageHook = composeAll
+myManageHook = insertPosition Master Newer <+> composeAll
     [
       isFullscreen --> doFullFloat
     , className =? "Xmessage" --> doCenterFloat
