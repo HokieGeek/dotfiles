@@ -209,8 +209,7 @@ myKeys =    [
 
             -- %HELP% mod-t           Push window back into tiling; unfloat and re-tile it
             , (((modm .|. shiftMask), xK_t), withAll' W.sink) -- Sink all floating windows on the current workspace
-
-            , ((modm, xK_o), toggleHookAllNew "float" >> runLogHook) --       Toggle floating all new windows
+            , (((modm .|. controlMask), xK_t), toggleHookAllNew "float" >> runLogHook) --  Toggle floating all new windows
 
             -- }}}
             -- Workspace helpers {{{
