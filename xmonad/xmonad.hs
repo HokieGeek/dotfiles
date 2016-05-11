@@ -1,6 +1,7 @@
 -- Imports {{{
 import Control.Monad(liftM2)
 
+import Data.Default
 import Data.IORef
 import Data.Maybe
 import Data.Ratio ((%))
@@ -118,7 +119,7 @@ myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
                                             >> fadeInactiveCurrentWSLogHook 0.4
                                             >> updatePointer (1, 1) (0, 0)
 
-myDzen h = defaultPP
+myDzen h = def
     {
         ppCurrent         = dzenColor colorForeground colorBackground . pad . dzenWorkspaceSymbol
       , ppVisible         = dzenColor "white" colorBackground . pad . dzenWorkspaceSymbol
@@ -284,7 +285,7 @@ workspaceStatusBar = "dzen2 -fn '" ++ termFont ++ "' -x '0' -y '0' -h '" ++ show
 main = do
         dzenLeftBar  <- spawnPipe workspaceStatusBar
         xmonad $ withUrgencyHook dzenUrgencyHook { args = ["-bg", colorForeground, "-xs", "1"] }
-               $ defaultConfig
+               $ def
             { workspaces        = myWorkspaces
             , terminal          = myTerminal
             , modMask           = modm
