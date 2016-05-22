@@ -197,7 +197,7 @@ if hasBattery():
     batterySteps = list(range(batteryStep, 100, batteryStep))
     batteryHeight = 1
     batteryHeightStep = 1
-    f.write("${if_match ${battery_percent} < 100}\\\n")
+    f.write("${if_match ${battery_percent} < 99}\\\n")
     f.write("^p()^p(;-1)^fg({})^bg({})\\\n".format(colorschemeDimHex, colorschemeFgHex))
     for perc in reversed(batterySteps):
         f.write("${{if_match ${{battery_percent}} > {}}}^r({}x{})${{else}}\\\n".format(perc, batteryWidth, batteryHeight))
