@@ -78,6 +78,17 @@ myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
 dmenuArgs  = ["-nb", colorBackground, "-nf", colorWhite, "-sb", colorForeground]
 dzenArgs  = ["-bg", colorBackground, "-fg", colorWhite, "-fn", termFont]
 
+myXPConfig = defaultXPConfig {
+                  font = termFont
+                , bgColor = colorBackground
+                , fgColor = colorWhite
+                , bgHLight = colorForeground
+                , fgHLight = colorWhite
+                , borderColor = colorBackground
+                , position = Top
+                , height = statusbarHeight
+             }
+
 xF86XK_AudioMicMute :: KeySym
 xF86XK_AudioMicMute = 0x1008ffb2
 
@@ -184,8 +195,6 @@ myKeys =    [
             , ((0, xF86XK_AudioMute), spawn "amixer set Master toggle") -- %SKIPHELP%
             , ((0, xF86XK_AudioMicMute), spawn "amixer set Capture toggle") -- %SKIPHELP%
 
-            , (((modm .|. shiftMask), xK_x), changeDir defaultXPConfig) -- Change the default working directory
-
             -- }}}
             -- Launchers {{{
             , ((modm, xK_z), safeSpawn "dmenu_run_mfu" (dmenuArgs ++ ["--threshold", "2", "--terminal", myTerminal])) --        Launch dmenu command launcher
@@ -193,6 +202,7 @@ myKeys =    [
 
             -- %HELP% mod-Shift-Enter  Launch terminal
             , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer")) --   Launch Alsa mixer
+
             -- }}}
             -- Window helpers {{{
             , ((modm, xK_j), focusDown) -- Switch to next window in layout order but ignoring minimized
@@ -247,6 +257,8 @@ myKeys =    [
             -- %HELP% mod-space            Rotate through the available layout algorithms
             -- %HELP% mod-Shift-space      Reset the layouts on the current workSpace to default
             , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout) --   Toggle alternate layouts
+
+            , (((modm .|. shiftMask), xK_d), changeDir myXPConfig) --  Change the default working directory for the current workspace
 
             -- }}}
             -- Screen helpers {{{
