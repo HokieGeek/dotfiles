@@ -47,16 +47,16 @@ def handleSigTERM():
 infoFirehose = False
 imagesDir = "{}/imgs".format(os.path.dirname(os.path.realpath(__file__)))
 height = int(args["height"])
-colorschemeFgHex = "\\{}".format(args["color_fg"])
-colorschemeBgHex = "\\{}".format(args["color_bg"])
-colorschemeGreyHex = "\\#606060"
-colorschemeDimHex = "\\#3a3a3a"
-colorschemeDarkHex = "\\#282828"
-colorschemeWhiteHex = "\\#cdcdcd"
-colorschemeRedHex = "\\#ff0000"
-colorschemeGreenHex = "\\#006400"
+colorschemeFgHex     = "\\{}".format(args["color_fg"])
+colorschemeBgHex     = "\\{}".format(args["color_bg"])
+colorschemeGreyHex   = "\\#606060"
+colorschemeDimHex    = "\\#3a3a3a"
+colorschemeDarkHex   = "\\#282828"
+colorschemeWhiteHex  = "\\#cdcdcd"
+colorschemeRedHex    = "\\#ff0000"
+colorschemeGreenHex  = "\\#006400"
 colorschemeYellowHex = "\\#ffcc00"
-sectionSpacing = "       \\\n"
+sectionSpacing       = "       \\\n"
 
 conkyFile = tempfile.NamedTemporaryFile('w', delete = False).name
 signal.signal(signal.SIGTERM, handleSigTERM)
@@ -107,6 +107,7 @@ for interface in [intf.decode("utf-8") for intf in interfaces]:
     f.write("  ${{if_up {}}}^fg({})\\\n".format(interface, colorschemeFgHex))
 
     if interface[0] == "w":
+        # f.write("Steve Taylor's Guest Network \\\n".format(interface))
         f.write("${{wireless_essid {}}} \\\n".format(interface))
         f.write("^fg({})\\\n".format(colorschemeWhiteHex))
         f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 95}}^i({}/wifi_100.xbm)${{else}}\\\n".format(interface, imagesDir))
