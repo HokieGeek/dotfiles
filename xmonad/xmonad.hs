@@ -1,6 +1,7 @@
 -- Imports {{{
 import Control.Monad(liftM2)
 
+import Data.Char
 import Data.Default
 import Data.IORef
 import Data.Maybe
@@ -45,6 +46,8 @@ import XMonad.Layout.ResizableTile
 import XMonad.Layout.StackTile
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.TwoPane
+import XMonad.Layout.WorkspaceDir
+import XMonad.Prompt
 import XMonad.Util.Dmenu
 import XMonad.Util.EZConfig
 import XMonad.Util.Run
@@ -54,15 +57,18 @@ import qualified Data.Map as M
 -- }}}
 
 -- Local Functions {{{
-modm              = mod4Mask
+modm                = mod4Mask
+colorForeground     = "#5f0087"
+colorBackground     = "#1b1d1e"
+colorWhite          = "#cdcdcd"
+termFont            = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
+statusbarHeight     = 14
+workspaceBarWidth   = 310
+defaultWorkspaceDir = "~"
+
 myTerminal        = "st"
-myBrowser         = "google-chrome-unstable"
-colorForeground   = "#5f0087"
-colorBackground   = "#1b1d1e"
-colorWhite        = "#cdcdcd"
-termFont          = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
-statusbarHeight   = 14
-workspaceBarWidth = 310
+-- myTerminal = runProcessWithInput "get-terminal" [] []
+myBrowser  = runProcessWithInput "get-browser" [] []
 
 unmuteAllChannels = "amixer -q set Master unmute ; "
 
@@ -100,12 +106,12 @@ myManageHook = insertPosition Master Newer <+> composeAll
 -- }}}
 -- Layout{{{
 myLayoutHook = avoidStruts
-               $ onWorkspace "1" (boringWindows (minimize (reflectHoriz $ withIM (12%1) (ClassName "crx_nckgahadagoaajjgafhacjanaoiihapd") (ResizableTall 1 incDelta (1/6) []) ||| Full)))
-               $ onWorkspace "2" (boringWindows (minimize (magicFocus (Mirror (TwoPane incDelta (2/3)) ||| Full))))
+               $ onWorkspace "1" (workspaceDir defaultWorkspaceDir (boringWindows (minimize (reflectHoriz $ withIM (12%1) (ClassName "crx_nckgahadagoaajjgafhacjanaoiihapd") (ResizableTall 1 incDelta (1/6) []) ||| Full))))
+               $ onWorkspace "2" (workspaceDir defaultWorkspaceDir (boringWindows (minimize (magicFocus (Mirror (TwoPane incDelta (2/3)) ||| Full)))))
                $ onWorkspace "gimp" (boringWindows (minimize ((ResizableTall 2 incDelta (1/6) []) ||| Full)))
                $ onWorkspace "skype" (boringWindows (minimize Full))
-               $ toggleLayouts (boringWindows (minimize (Mirror tiledStd ||| stacked ||| Mirror twoPanes ||| Full))) -- alternate
-               $ boringWindows (minimize (tiledStd ||| twoPanes ||| big ||| Full)) -- default
+               $ toggleLayouts (workspaceDir defaultWorkspaceDir (boringWindows (minimize (Mirror tiledStd ||| stacked ||| Mirror twoPanes ||| Full)))) -- alternate
+               $ workspaceDir defaultWorkspaceDir (boringWindows (minimize (tiledStd ||| twoPanes ||| big ||| Full))) -- default
     where
         incDelta = 3/100
         tiledStd = ResizableTall 1 incDelta (1/2) [] -- # masters, % to inc when resizing, % of screen used by master, slaves
@@ -178,6 +184,8 @@ myKeys =    [
             , ((0, xF86XK_AudioMute), spawn "amixer set Master toggle") -- %SKIPHELP%
             , ((0, xF86XK_AudioMicMute), spawn "amixer set Capture toggle") -- %SKIPHELP%
 
+            , (((modm .|. shiftMask), xK_x), changeDir defaultXPConfig) -- Change the default working directory
+
             -- }}}
             -- Launchers {{{
             , ((modm, xK_z), safeSpawn "dmenu_run_mfu" (dmenuArgs ++ ["--threshold", "2", "--terminal", myTerminal])) --        Launch dmenu command launcher
@@ -185,9 +193,6 @@ myKeys =    [
 
             -- %HELP% mod-Shift-Enter  Launch terminal
             , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer")) --   Launch Alsa mixer
-
-            -- , ((0, xF86XK_Launch1), spawn myTerminal) --       Launch terminal (ThinkPad)
-            -- , ((shiftMask, xF86XK_Launch1), spawn myBrowser) -- Launch browser (ThinkPad)
             -- }}}
             -- Window helpers {{{
             , ((modm, xK_j), focusDown) -- Switch to next window in layout order but ignoring minimized
@@ -227,7 +232,7 @@ myKeys =    [
 
             , ((modm, xK_n), removeExtraWs (moveTo Next EmptyWS)) --       Switch to next empty workspace
             , (((modm .|. mod1Mask), xK_n), removeExtraWs (moveTo Next EmptyWS) <+> spawn myTerminal) --   Switch to next empty workspace and launch terminal
-            , (((modm .|. controlMask), xK_n), removeExtraWs (moveTo Next EmptyWS) <+> spawn myBrowser) --  Switch to next empty workspace and launch browser
+            , (((modm .|. controlMask), xK_n), do { removeExtraWs (moveTo Next EmptyWS); liftIO myBrowser >>= spawn }) --  Switch to next empty workspace and launch browser
 
             , (((modm .|. shiftMask .|. controlMask), xK_k), removeExtraWs (moveTo Prev NonEmptyWS)) -- Switch to previous non-empty workspace
             , (((modm .|. shiftMask .|. controlMask), xK_j), removeExtraWs (moveTo Next NonEmptyWS)) -- Switch to next non-empty workspace
