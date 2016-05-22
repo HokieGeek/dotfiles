@@ -139,12 +139,9 @@ myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
 myDzen h = def
     {
         ppCurrent         = dzenColor colorForeground colorBackground . pad . dzenWorkspaceSymbol
-      , ppVisible         = dzenColor "#606060" colorBackground . pad . dzenWorkspaceSymbol
+      , ppVisible         = dzenColor "#474747" colorBackground . pad . dzenWorkspaceSymbol
       , ppHidden          = dzenColor "#cdcdcd" colorBackground . pad . dzenWorkspaceSymbol
-      , ppHiddenNoWindows = dzenColor "#3a3a3a" colorBackground . pad . dzenWorkspaceSymbol
-      -- , ppVisible         = dzenColor "#cdcdcd" colorBackground . pad . dzenWorkspaceSymbol
-      -- , ppHidden          = dzenColor "#3a3a3a" colorBackground . pad . dzenWorkspaceSymbol
-      -- , ppHiddenNoWindows = dzenColor "#282828" colorBackground . pad . dzenWorkspaceSymbol
+      , ppHiddenNoWindows = dzenColor "#282828" colorBackground . pad . dzenWorkspaceSymbol
       , ppUrgent          = dzenColor "#ff0000" colorBackground . pad . dzenAlertWorkspaceSymbol
       , ppLayout          = (\x -> "")
       , ppTitle           = (\x -> "")
