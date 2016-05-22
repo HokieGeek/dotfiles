@@ -1,7 +1,6 @@
 -- Imports {{{
 import Control.Monad(liftM2)
 
-import Data.Char
 import Data.Default
 import Data.IORef
 import Data.Maybe
