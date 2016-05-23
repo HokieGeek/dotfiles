@@ -16,7 +16,7 @@ import XMonad
 import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
 import XMonad.Actions.DynamicWorkspaces
--- import XMonad.Actions.FloatKeys
+import XMonad.Actions.FloatKeys
 import XMonad.Actions.GroupNavigation -- historyHook
 import XMonad.Actions.Promote
 import XMonad.Actions.RotSlaves
@@ -224,10 +224,6 @@ myKeys =    [
             , ((mod1Mask, xK_F4), kill) --      Close/kill the focused window
             -- %HELP% mod-Shift-c     Close/kill the focused window
 
-            -- %HELP% mod-t           Push window back into tiling; unfloat and re-tile it
-            , (((modm .|. shiftMask), xK_t), withAll' W.sink) -- Sink all floating windows on the current workspace
-            , (((modm .|. controlMask), xK_t), toggleHookAllNew "float" >> runLogHook) --  Toggle floating all new windows
-
             -- }}}
             -- Workspace helpers {{{
             -- %HELP% mod-[0..9,-,=]       Switch to indicated workspace
@@ -265,6 +261,28 @@ myKeys =    [
             -- , (((modm .|. mod1Mask), xK_h), prevScreen) --  Previous screen
             -- , (((modm .|. mod1Mask), xK_l), nextScreen) --  Next screen
             , (((modm .|. controlMask), xK_w), swapNextScreen) -- Swap current screen with next screen
+
+            -- }}}
+            -- Floating window helpers {{{
+            -- %HELP% mod-t           Push window back into tiling; unfloat and re-tile it
+            , (((modm .|. shiftMask), xK_t), withAll' W.sink) -- Sink all floating windows on the current workspace
+            , (((modm .|. controlMask), xK_t), toggleHookAllNew "float" >> runLogHook) --  Toggle floating all new windows
+
+            , ((modm, xK_y), withFocused (keysMoveWindow (-10,0))) --       Move floating window left
+            , (((modm .|. controlMask), xK_y), withFocused (keysResizeWindow (10,0) (1,1))) --  Expand left edge of floating window
+            , (((modm .|. shiftMask), xK_y), withFocused (keysResizeWindow (-10,0) (1,1))) -- Shrink right edge of floating window
+            , ((modm, xK_u), withFocused (keysMoveWindow (0,10))) --       Move floating window down
+            , (((modm .|. controlMask), xK_u), withFocused (keysResizeWindow (10,10) (1,1))) --  Expand top-left corner of floating window
+            , ((modm, xK_i), withFocused (keysMoveWindow (0,-10))) --       Move floating window up
+            , (((modm .|. controlMask), xK_i), withFocused (keysResizeWindow (0,10) (1,1))) --  Expand upper edge of floating window
+            , (((modm .|. shiftMask), xK_i), withFocused (keysResizeWindow (0,-10) (1,1))) -- Shrink upper edge of floating window
+            , ((modm, xK_o), withFocused (keysMoveWindow (10,0))) --       Move floating window right
+            , (((modm .|. controlMask), xK_o), withFocused (keysResizeWindow (-10,-10) (1,1))) --  Shrink top-left corner of floating window
+
+            -- %HELP% mod-button1     Set the window to floating mode and move by dragging
+            -- %HELP% mod-button2     Raise the window to the top of the stack
+            -- %HELP% mod-button3     Set the window to floating mode and resize by dragging
+
             -- }}}
             -- Other {{{ -- %SKIPHELP%
             , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight -inc 5") -- %SKIPHELP%
@@ -283,10 +301,6 @@ myKeys =    [
             -- Poker-specific (Calculator) -- %SKIPHELP% {{{
             -- , ((0, xF86XK_Calculator), spawn "xmessage 'testing'")
             -- }}}
-            -- Mouse bindings
-            -- %HELP% mod-button1    Set the window to floating mode and move by dragging
-            -- %HELP% mod-button2    Raise the window to the top of the stack
-            -- %HELP% mod-button3    Set the window to floating mode and resize by dragging
             ]
             ++
             [((m .|. modm, k), windows $ f i)
