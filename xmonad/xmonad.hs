@@ -86,6 +86,7 @@ myXPConfig = defaultXPConfig {
                 , borderColor = colorBackground
                 , position = Top
                 , height = statusbarHeight
+                , showCompletionOnTab = True
              }
 
 xF86XK_AudioMicMute :: KeySym
