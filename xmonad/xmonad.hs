@@ -251,7 +251,7 @@ myKeys =    [
             -- %HELP% mod-Shift-space      Reset the layouts on the current workSpace to default
             , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout) --   Toggle alternate layouts
 
-            , (((modm .|. shiftMask), xK_d), changeDir myXPConfig) --  Change the default working directory for the current workspace
+            , ((modm, xK_d), changeDir myXPConfig) --  Change the default working directory for the current workspace
 
             -- }}}
             -- Screen helpers {{{
