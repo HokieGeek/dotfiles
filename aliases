@@ -17,7 +17,9 @@ alias broadcast='script -qf | tee >(nc -kl 5000)'
     alias w5='wego -days 5'
 }
 
-vwhich() { vim $(which "$@") }
+vwhich() {
+    vim $(which "$@")
+}
 ## }}}
 
 ## Development {{{
