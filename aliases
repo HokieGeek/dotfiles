@@ -17,9 +17,9 @@ alias broadcast='script -qf | tee >(nc -kl 5000)'
     alias w5='wego -days 5'
 }
 
-vwhich() {
-    vim $(which "$@")
-}
+vwhich() { vim $(which "$@"); }
+mkcd() { mkdir -p "$1" && cd "$1"; }
+cdls() { cd "$1" && ls; }
 ## }}}
 
 ## Development {{{
@@ -92,6 +92,7 @@ alias emacs='echo "Correcting typos in command..."; sleep 1s; gvim'
 alias xemacs='emacs'
 alias :q='exit'
 alias :qa='exit'
+alias cd..='cd ..'
 ## }}}
 
 # vim: set ft=sh foldmethod=marker:
