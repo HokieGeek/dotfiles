@@ -31,8 +31,6 @@ vip() {
 
 alias make='make -j$(($(egrep -c "^processor" /proc/cpuinfo)+1))'
 alias scons='scons -j$(($(egrep -c "^processor" /proc/cpuinfo)+1))'
-alias klean='make clean && make'
-alias cant='ant clean && ant'
 
 # gtrack() {
 #     [ $# -eq 1 ] && {
@@ -51,8 +49,6 @@ alias ts='awk "{ printf(\"[%s] %s\n\", strftime(\"%F %T\")); }"' #NOCSH
 tsfmt() {
     echo $@ | awk 'BEGIN{ RS=" " } { printf("%s: %s\n", $1, strftime("%F %T", $1)); }'
 }
-
-alias dev='docker run -ti -v /var/run/docker.sock:/var/run/docker.sock hokiegeek/dev'
 ## }}}
 
 ## Search aliases {{{
