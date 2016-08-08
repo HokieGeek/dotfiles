@@ -22,8 +22,8 @@
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(cyan)<%an>%Creset'
     diff = diff --patience
     df = diff --ext-diff --patience
-    dt = difftool -y
-    mt = mergetool -y
+    difftool = difftool -y
+    mergetool = mergetool -y
     branch-sort = !git-sorted-branches
     sublog = !git-submodules-log
 [core]
