@@ -24,6 +24,7 @@ cdls() { cd "$1" && ls; }
 
 ## Development {{{
 alias vi='vim'
+alias view='vim -R'
 
 vip() {
     vim --cmd 'profile start /tmp/vim.profile' --cmd 'profile func *' --cmd 'profile file *' $* && vi /tmp/vim.profile +/SORTED
@@ -32,16 +33,6 @@ vip() {
 alias make='make -j$(($(egrep -c "^processor" /proc/cpuinfo)+1))'
 alias scons='scons -j$(($(egrep -c "^processor" /proc/cpuinfo)+1))'
 
-# gtrack() {
-#     [ $# -eq 1 ] && {
-#         remote='origin'
-#         branch=$1
-#     } || {
-#         remote=$1
-#         branch=$2
-#     }
-#     git branch --set-upstream-to=${remote}/${branch} ${branch}
-# }
 alias gp='git pull --prune'
 alias smgp='git pull --prune && git submodule foreach --recursive "git pull --prune || :"'
 
