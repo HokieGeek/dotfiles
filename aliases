@@ -1,21 +1,6 @@
 ## Random {{{
-#alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo sunny || echo error)" "$(history|tail -n1|sed -e '\''s/$\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-`which notify-send >/dev/null 2>&1` && {
-    alias notify-failed='notify-send --urgency=critical -i error "Failed" `pwd`'
-    alias notify-succeeded='notify-send --urgency=normal -i sunny "Succeeded" `pwd`'
-    alias notify='notify-succeeded || notify-failed'
-}
-
-alias tattach='tmux attach-session -t'
-
 alias roll='echo $(($((RANDOM%20))+1))'
 alias broadcast='script -qf | tee >(nc -kl 5000)'
-
-`which wego >/dev/null 2>&1` && {
-    alias w1='wego -days 1'
-    alias w2='wego -days 2'
-    alias w5='wego -days 5'
-}
 
 vwhich() { vim $(which "$@"); }
 mkcd() { mkdir -p "$1" && cd "$1"; }
@@ -67,9 +52,9 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 du() {
-    /usr/bin/du -h $@ | awk '$1 ~ /.*G/ { printf "\033[31m" } \
-                             $1 ~ /.*M/ { printf "\033[33m" } \
-                                        { print $0"\033[0m" }'
+    du -h $@ | awk '$1 ~ /.*G/ { printf "\033[31m" } \
+                    $1 ~ /.*M/ { printf "\033[33m" } \
+                               { print $0"\033[0m" }'
 }
 alias du1='du --max-depth=1'
 ## }}}
