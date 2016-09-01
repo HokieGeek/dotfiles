@@ -53,6 +53,7 @@ export EDITOR="vim"
 setopt vi
 
 bindkey -M vicmd v edit-command-line
+bindkey -M vicmd '?' history-incremental-search-backward
 zle -N edit-command-line
 autoload -Uz edit-command-line
 
