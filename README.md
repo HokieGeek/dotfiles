@@ -43,6 +43,7 @@ The following plugins are being used:
 | | [mbbill/undotree](https://github.com/mbbill/undotree.git) | |
 | | [tpope/vim-endwise](https://github.com/tpope/vim-endwise.git) | |
 | | [welle/targets](https://github.com/wellle/targets.vim.git) | |
+| | [derekwyatt/vim-scala](https://github.com/derekwyatt/vim-scala.git) | |
 #### List of new commands and mappings
 
 ##### Commands

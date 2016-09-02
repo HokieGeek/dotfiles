@@ -121,3 +121,6 @@
 [submodule "vim/bundle/targets.vim"]
 	path = vim/bundle/targets.vim
 	url = https://github.com/wellle/targets.vim.git
+[submodule "vim/bundle/vim-scala"]
+	path = vim/bundle/vim-scala
+	url = git@github.com:derekwyatt/vim-scala.git
