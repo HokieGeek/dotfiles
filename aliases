@@ -25,6 +25,9 @@ alias ts='awk "{ printf(\"[%s] %s\n\", strftime(\"%F %T\")); }"' #NOCSH
 tsfmt() {
     echo $@ | awk 'BEGIN{ RS=" " } { printf("%s: %s\n", $1, strftime("%F %T", $1)); }'
 }
+
+alias amm='docker run -it --rm -v $PWD:/app hokiegeek/amm'
+alias sbt='docker run -it --rm -v $PWD:/app hokiegeek/scala-sbt'
 ## }}}
 
 ## Search aliases {{{
