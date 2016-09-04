@@ -374,6 +374,7 @@ augroup FiletypeOptions
     autocmd FileType cpp setlocal foldmethod=syntax
     autocmd FileType go set nolist " foldmethod=syntax
     autocmd BufNewFile,BufRead *.pkgbuild set filetype=sh
+    autocmd BufNewFile,BufRead *.sc set filetype=scala
 augroup END
 
 augroup HighlightingOptions
