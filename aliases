@@ -26,9 +26,11 @@ tsfmt() {
     echo $@ | awk 'BEGIN{ RS=" " } { printf("%s: %s\n", $1, strftime("%F %T", $1)); }'
 }
 
+alias scalac='docker run -it --rm -v $PWD:/app hokiegeek/scala scalac'
+alias scala='docker run -it --rm -v $PWD:/app hokiegeek/scala scala'
 alias amm='docker run -it --rm -v $PWD:/app hokiegeek/amm'
 alias sbt='docker run -it --rm -v $PWD:/app hokiegeek/scala-sbt'
-alias dhrs='docker run -it --rm -v ~/Dropbox/.work.hours:/root/.hours hokiegeek/hrs'
+alias hrs='docker run -it --rm -v ~/.hours:/root/.hours hokiegeek/hrs'
 alias jenkins='docker run -p 8888:8080 -p 50000:50000 jenkins'
 ## }}}
 
