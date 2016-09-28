@@ -363,18 +363,19 @@ augroup FiletypeOptions
 
     autocmd BufNewFile,BufRead *.confluence set filetype=confluencewiki
     autocmd FileType confluencewiki setlocal wrap linebreak nolist spell foldmethod=manual
-
-    autocmd BufNewFile,BufRead *.conkyrc set filetype=conkyrc
-    autocmd BufNewFile,BufRead SConstruct set filetype=python
     autocmd FileType markdown setlocal spell
     autocmd FileType gitcommit setlocal spell
+
+    autocmd BufNewFile,BufRead *.conkyrc set filetype=conkyrc
+    autocmd BufNewFile,BufRead *.gradle set filetype=groovy
+    autocmd BufNewFile,BufRead SConstruct set filetype=python
+    autocmd BufNewFile,BufRead *.pkgbuild set filetype=sh
+    autocmd BufNewFile,BufRead *.sc set filetype=scala
+
     autocmd FileType make setlocal noexpandtab nolist
-    " autocmd Filetype vim colorscheme herald
     autocmd FileType qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
     autocmd FileType cpp setlocal foldmethod=syntax
     autocmd FileType go set nolist " foldmethod=syntax
-    autocmd BufNewFile,BufRead *.pkgbuild set filetype=sh
-    autocmd BufNewFile,BufRead *.sc set filetype=scala
 augroup END
 
 augroup HighlightingOptions
