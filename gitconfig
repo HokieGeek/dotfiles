@@ -19,7 +19,8 @@
     st = status -sb
     sf = submodule foreach
     sp = submodule foreach 'git pull --prune || :'
-    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(cyan)<%an>%Creset'
+    k = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(cyan)<%an>%Creset'
+    lg = !git k
     diff = diff --patience
     df = diff --ext-diff --patience
     difftool = difftool -y
