@@ -4,7 +4,7 @@ alias broadcast='script -qf | tee >(nc -kl 5000)'
 
 vwhich() { vim $(which "$@"); }
 mkcd() { mkdir -p "$1" && cd "$1"; }
-cdls() { cd "$1" && ls; }
+cdl() { cd "$1" && ls; }
 ## }}}
 
 ## Development {{{
@@ -63,7 +63,7 @@ du() {
                     $1 ~ /.*M/ { printf "\033[33m" } \
                                { print $0"\033[0m" }'
 }
-alias du1='du --max-depth=1'
+alias du1='du --max-depth=1 -h'
 ## }}}
 
 ## Typo fixing {{{
