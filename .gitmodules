@@ -73,9 +73,6 @@
 [submodule "vim/bundle/vit"]
 	path = vim/bundle/vit
 	url = git@github.com:HokieGeek/vit.git
-[submodule "vim/bundle/SearchComplete"]
-	path = vim/bundle/SearchComplete
-	url = git@github.com:vim-scripts/SearchComplete.git
 [submodule "vim/bundle/matchit.zip"]
 	path = vim/bundle/matchit.zip
 	url = git@github.com:vim-scripts/matchit.zip.git

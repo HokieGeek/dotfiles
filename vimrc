@@ -115,8 +115,6 @@ if exists("&relativenumber")
 endif
 execute "set laststatus=".(has("win32unix") ? 0 : 2)
 execute "set clipboard=".(exists('$TMUX') ? "" : "unnamed")
-" set shell=bash
-" set shellpipe=2>&1\|tee
 if has("win32") || has("win64") || has("win32unix")
     set shellslash
 endif
@@ -236,6 +234,7 @@ if g:have_plugins
     " Split the term
     nnoremap <silent> gsh :Split<cr>
     nnoremap <silent> gsv :Vsplit<cr>
+    nnoremap <silent> gR :Run<cr>
 
     " Other random ones
     nnoremap <silent> ga :ArgsToggle<cr>
@@ -298,8 +297,6 @@ nnoremap <silent> cos :setlocal spell!<cr>
 nnoremap <silent> col :setlocal list!<cr>
 nnoremap <silent> cox :if exists("syntax_on")<bar>syntax off<bar>else<bar>syntax enable<bar>endif<cr>
 nnoremap <silent> cot :let &laststatus = (&laststatus == 2 ? 1 : 2)<cr>
-" nnoremap <silent> cob :let &background = (&background == "dark" ? "light" : "dark")<cr>
-" nnoremap <silent> cob :let &background = (&background == "dark" ? "light" : "dark")<bar>execute "colorscheme ".g:my_current_scheme<cr>
 nnoremap <silent> coh :setlocal hlsearch!<cr>
 nnoremap <silent> coH :nohlsearch<cr>
 nnoremap <silent> cop :setlocal paste!<cr>
@@ -328,24 +325,8 @@ nnoremap n nzz
 
 nnoremap [[ [[z<CR>
 nnoremap ]] ]]z<CR>
-" }}}
 
-"" Completion " {{{
-" word
-" inoremap jj <c-n>
-" inoremap kk <c-p>
-" line
-" inoremap JJ <c-x><c-l>
-" filename
-" inoremap FF <c-x><c-f>
-" dictionary
-" inoremap DD <c-x><c-k>
-" user
-" inoremap UU <c-x><c-u>
-" omni
-" inoremap KK <c-x><c-o>
-" tag
-" inoremap TT <c-x><c-]>
+nnoremap gr :!%:p<cr><cr>
 " }}}
 
 "" I feel like being a pain in the ass " {{{
@@ -353,7 +334,6 @@ noremap <left> :echoerr "Use h instead! :-p"<cr>
 noremap <right> :echoerr "Use l instead! :-p"<cr>
 noremap <up> :echoerr "Use k instead! :-p"<cr>
 noremap <down> :echoerr "Use j instead! :-p"<cr>
-" noremap <down> ggdG:x<cr>
 " }}}
 " }}}
 
@@ -403,14 +383,6 @@ augroup MiscOptions
 
     " Automatically reload this file
     autocmd BufWritePost $MYVIMRC source $MYVIMRC
-
-    " Turn off diffing when exiting otherwise the view stuff below won't work well
-    " autocmd VimLeave * windo diffoff
-
-    " if ! &diff
-        " autocmd BufWinLeave * if expand("%") != "" | mkview! | endif
-        " autocmd BufWinEnter * if expand("%") != "" | silent loadview | endif
-    " endif
 
     " Stole this straight out of tpope/vim-eunuch (and modified it a bit)
     autocmd BufNewFile * let b:brand_new_file = 1
