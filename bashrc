@@ -52,7 +52,10 @@ shopt -s histappend
 # Combine multiline commands into one in history
 shopt -s cmdhist
 
+export GOPATH=${HOME}/go
 export PATH=${PATH}:${HOME}/.bin
+export PATH=${PATH}:/sbin:/usr/sbin:/usr/local/sbin
+export PATH=${PATH}:${GOPATH}/bin:~/.bin
 export EDITOR="nvim"
 
 . $HOME/.shell-plugins/prompt.sh

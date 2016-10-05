@@ -79,7 +79,7 @@ export LESS_TERMCAP_us=$(printf "\e[1;32m")     # begin underline
 # }}}
 
 # PATHing {{{
-export GOPATH=${HOME}/src/go
+export GOPATH=${HOME}/go
 export PATH=${PATH}:/sbin:/usr/sbin:/usr/local/sbin
 export PATH=${PATH}:${GOPATH}/bin:~/.bin
 # }}}
