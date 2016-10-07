@@ -1,0 +1,17 @@
+set imap_user=andres.f.perez@gmail.com
+set folder=imaps://imap.gmail.com/
+set spoolfile = +INBOX
+mailboxes =INBOX
+
+unset imap_passive
+
+set imap_keepalive = 300
+set mail_check = 30
+set timeout = 30
+
+set sort=threads
+set text_flowed=yes
+set pager_index_lines=15
+
+color indicator blue white
+color index black blue "~h From: keri.perez@gmail.com"
