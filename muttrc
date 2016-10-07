@@ -1,3 +1,4 @@
+### Connection
 set imap_user=andres.f.perez@gmail.com
 set folder=imaps://imap.gmail.com/
 set spoolfile = +INBOX
@@ -9,9 +10,14 @@ set imap_keepalive = 300
 set mail_check = 30
 set timeout = 30
 
+### View
 set sort=threads
+set sort_aux=reverse-last-date-received
+
 set text_flowed=yes
 set pager_index_lines=15
 
+
+### Colors
 color indicator blue white
 color index black blue "~h From: keri.perez@gmail.com"
