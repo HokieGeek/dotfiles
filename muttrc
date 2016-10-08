@@ -1,15 +1,33 @@
 ### Connection
+set realname='Andrés Pérez'
 set imap_user=andres.f.perez@gmail.com
+set smtp_url = 'smtps://andres.f.perez@smtp.gmail.com'
+set record=""
+source ~/.mutt_pass
+
 set folder=imaps://imap.gmail.com/
 set spoolfile = +INBOX
-mailboxes =INBOX
-source ~/.muttrc_pwd
+# mailboxes =INBOX
+set imap_check_subscribed
+
+# set postponed="imaps://imap.gmail.com/[Gmail]/Drafts"
+
+set header_cache="~/.mutt/cache/headers"
+set message_cachedir="~/.mutt/cache/bodies"
+set certificate_file="~/.mutt/certificates"
 
 unset imap_passive
 
 set imap_keepalive = 300
 set mail_check = 30
 set timeout = 30
+
+set mailcap_path = ~/.mutt/mailcap
+auto_view text/html
+
+### Fast reply
+set fast_reply=yes
+set include=yes
 
 ### View
 set sort=threads
@@ -18,7 +36,19 @@ set sort_aux=reverse-last-date-received
 set text_flowed=yes
 set pager_index_lines=15
 
-
 ### Colors
-color indicator blue white
-color index black blue "~h From: keri.perez@gmail.com"
+color indicator blue brightwhite
+
+color status black brightblack
+
+# color index black red "~h \"From: [kK]eri\""
+color index red white "~h \"From: [kK]eri\""
+
+### Sidebar
+set sidebar_visible = yes
+bind index,pager B sidebar-toggle-visible
+# Ctrl-n, Ctrl-p to select next, previous folder.
+# Ctrl-o to open selected folder.
+bind index,pager \CP sidebar-prev
+bind index,pager \CN sidebar-next
+bind index,pager \CO sidebar-open
