@@ -7,10 +7,9 @@ source ~/.mutt_pass
 
 set folder=imaps://imap.gmail.com/
 set spoolfile = +INBOX
-# mailboxes =INBOX
 set imap_check_subscribed
 
-# set postponed="imaps://imap.gmail.com/[Gmail]/Drafts"
+set postponed="imaps://imap.gmail.com/[Gmail]/Drafts"
 
 set header_cache="~/.mutt/cache/headers"
 set message_cachedir="~/.mutt/cache/bodies"
@@ -25,27 +24,32 @@ set timeout = 30
 set mailcap_path = ~/.mutt/mailcap
 auto_view text/html
 
+set beep_new
+
 ### Fast reply
 set fast_reply=yes
 set include=yes
 
 ### View
 set sort=threads
-set sort_aux=reverse-last-date-received
+set sort_browser=reverse-date
+set sort_aux=last-date-received
 
 set text_flowed=yes
 set pager_index_lines=15
 
 ### Colors
-color indicator blue brightwhite
+color status color238 color233
+color indicator black color54
 
-color status black brightblack
+color index color197 black "~h \"From: [kK]eri\""
 
-# color index black red "~h \"From: [kK]eri\""
-color index red white "~h \"From: [kK]eri\""
+color header color17 black "^(To):"
+color header color20 black "^(From|Subject):"
+color body yellow black "Sorry"
 
 ### Sidebar
-set sidebar_visible = yes
+set sidebar_visible = no
 bind index,pager B sidebar-toggle-visible
 # Ctrl-n, Ctrl-p to select next, previous folder.
 # Ctrl-o to open selected folder.
