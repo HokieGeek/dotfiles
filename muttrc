@@ -38,6 +38,8 @@ set sort_aux=last-date-received
 set text_flowed=yes
 set pager_index_lines=15
 
+set index_format='%3C %Z %{%b %d} (%-15.15L) %s'
+
 ### Colors
 color status color238 color233
 color indicator black color54
