@@ -44,6 +44,7 @@ The following plugins are being used:
 | | [tpope/vim-endwise](https://github.com/tpope/vim-endwise.git) | |
 | | [welle/targets](https://github.com/wellle/targets.vim.git) | |
 | | [derekwyatt/vim-scala](https://github.com/derekwyatt/vim-scala.git) | |
+| | [leafgarland/typescript-vim](https://github.com/leafgarland/typescript-vim) | |
 #### List of new commands and mappings
 
 ##### Commands
