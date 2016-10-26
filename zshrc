@@ -86,9 +86,9 @@ export PATH=${PATH}:${GOPATH}/bin:~/.bin
 
 # Misc {{{
 ## Get notified when someone logs in
-watch=all                       # watch all logins
-logcheck=30                     # every 30 seconds
-WATCHFMT="%n from %M has %a tty%l at %T %W"
+# watch=all                       # watch all logins
+# logcheck=30                     # every 30 seconds
+# WATCHFMT="%n from %M has %a tty%l at %T %W"
 
 alias fuckit="autoload -U tetris && tetris" # heh
 
