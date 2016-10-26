@@ -21,6 +21,11 @@ alias scons='scons -j$(($(egrep -c "^processor" /proc/cpuinfo)+1))'
 alias gp='git pull --prune'
 alias smgp='git pull --prune && git submodule foreach --recursive "git pull --prune || :"'
 
+gimme() {
+    repo=$1; shift
+    git clone --recursive git@github.com:HokieGeek/${repo}.git $@
+}
+
 alias ts='awk "{ printf(\"[%s] %s\n\", strftime(\"%F %T\")); }"' #NOCSH
 tsfmt() {
     echo $@ | awk 'BEGIN{ RS=" " } { printf("%s: %s\n", $1, strftime("%F %T", $1)); }'
@@ -30,7 +35,6 @@ alias scalac='docker run -it --rm -v $PWD:/app hokiegeek/scala scalac'
 alias scala='docker run -it --rm -v $PWD:/app hokiegeek/scala scala'
 alias amm='docker run -it --rm -v $PWD:/app hokiegeek/amm'
 alias sbt='docker run -it --rm -v $PWD:/app hokiegeek/scala-sbt'
-alias dhrs='docker run -it --rm -v ~/.hours:/root/.hours hokiegeek/hrs'
 alias jenkins='docker run -p 8888:8080 -p 50000:50000 jenkins'
 ## }}}
 
