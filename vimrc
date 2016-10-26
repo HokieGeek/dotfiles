@@ -351,6 +351,7 @@ augroup FiletypeOptions
     autocmd BufNewFile,BufRead SConstruct set filetype=python
     autocmd BufNewFile,BufRead *.pkgbuild set filetype=sh
     autocmd BufNewFile,BufRead *.sc set filetype=scala
+    autocmd BufNewFile,BufRead .bowerrc set filetype=json
 
     autocmd FileType make setlocal noexpandtab nolist
     autocmd FileType qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
