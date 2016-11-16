@@ -45,7 +45,6 @@ import XMonad.Layout.ResizableTile
 import XMonad.Layout.StackTile
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.TwoPane
-import XMonad.Layout.WorkspaceDir
 import XMonad.Prompt
 import XMonad.Util.Dmenu
 import XMonad.Util.EZConfig
@@ -63,7 +62,6 @@ colorWhite          = "#cdcdcd"
 termFont            = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
 statusbarHeight     = 14
 workspaceBarWidth   = 310
-defaultWorkspaceDir = "~"
 
 myTerminal        = "st"
 -- myTerminal = runProcessWithInput "get-terminal" [] []
@@ -117,12 +115,11 @@ myManageHook = insertPosition Master Newer <+> composeAll
 -- }}}
 -- Layout{{{
 myLayoutHook = avoidStruts
-               $ onWorkspace "1" (workspaceDir defaultWorkspaceDir (boringWindows (minimize (reflectHoriz $ withIM (12%1) (ClassName "crx_nckgahadagoaajjgafhacjanaoiihapd") (ResizableTall 1 incDelta (1/6) []) ||| Full))))
-               $ onWorkspace "2" (workspaceDir defaultWorkspaceDir (boringWindows (minimize (magicFocus (Mirror (TwoPane incDelta (2/3)) ||| Full)))))
+               $ onWorkspace "1" (boringWindows (minimize (reflectHoriz $ withIM (12%1) (ClassName "crx_nckgahadagoaajjgafhacjanaoiihapd") (ResizableTall 1 incDelta (1/6) []) ||| Full)))
                $ onWorkspace "gimp" (boringWindows (minimize ((ResizableTall 2 incDelta (1/6) []) ||| Full)))
                $ onWorkspace "skype" (boringWindows (minimize Full))
-               $ toggleLayouts (workspaceDir defaultWorkspaceDir (boringWindows (minimize (Mirror tiledStd ||| stacked ||| Mirror twoPanes ||| Full)))) -- alternate
-               $ workspaceDir defaultWorkspaceDir (boringWindows (minimize (tiledStd ||| twoPanes ||| big ||| Full))) -- default
+               $ toggleLayouts (boringWindows (minimize (Mirror tiledStd ||| stacked ||| Mirror twoPanes ||| Full))) -- alternate
+               $ boringWindows (minimize (tiledStd ||| twoPanes ||| big ||| Full)) -- default
     where
         incDelta = 3/100
         tiledStd = ResizableTall 1 incDelta (1/2) [] -- # masters, % to inc when resizing, % of screen used by master, slaves
@@ -250,9 +247,6 @@ myKeys =    [
             -- %HELP% mod-space            Rotate through the available layout algorithms
             -- %HELP% mod-Shift-space      Reset the layouts on the current workSpace to default
             , (((modm .|. controlMask), xK_space), sendMessage ToggleLayout) --   Toggle alternate layouts
-
-            , ((modm, xK_d), changeDir myXPConfig) --  Change the default working directory for the current workspace
-
             -- }}}
             -- Screen helpers {{{
             -- %HELP% mod-{w,e,r}          Switch to physical/Xinerama screens 1, 2, or 3
