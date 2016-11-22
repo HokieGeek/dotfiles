@@ -32,6 +32,7 @@ import XMonad.Hooks.FadeWindows -- fadeWindowEventHook
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
+import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ToggleHook
 import XMonad.Hooks.UrgencyHook
 import XMonad.Layout.BoringWindows
@@ -132,6 +133,7 @@ myLayoutHook = avoidStruts
 myLogHook h = (dynamicLogWithPP (myDzen h)) <+> historyHook
                                             >> fadeInactiveCurrentWSLogHook 0.4
                                             >> updatePointer (1, 1) (0, 0)
+                                            >> setWMName "LG3D"
 
 myDzen h = def
     {
