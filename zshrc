@@ -1,5 +1,5 @@
 [[ $- != *i* ]] && return
-[[ -z "$TMUX" && -f "/usr/bin/tmux" ]] && exec tmux
+[[ -z "$TMUX" ]] && { `which tmux >/dev/null 2>&1` && exec tmux }
 
 # Completion {{{
 autoload -Uz compinit && compinit # Turn on tab completion
@@ -118,7 +118,7 @@ function zle-line-finish () { echoti rmkx }
 zle -N zle-line-init
 zle -N zle-line-finish
 
-export BROWSER=$(get-browser)
+which get-browser >/dev/null 2>&1 && export BROWSER=$(get-browser)
 # }}}
 
 # Source the things {{{
