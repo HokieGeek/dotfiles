@@ -24,15 +24,17 @@ Running a dark theme and using the cVim plugin to use vim bindings. This makes m
 The following plugins are being used:
 
 #### Mine
-| [vit](https://github.com/HokieGeek/vit) |
-| [¿que?](https://github.com/HokieGeek/que) |
-| [comentarista](https://github.com/HokieGeek/comentarista) |
-| [shai-hulud](https://github.com/HokieGeek/shai-hulud) |
-| [argh](https://github.com/HokieGeek/argh) |
-| [sessioner](https://github.com/HokieGeek/sessioner) |
-| [splitter](https://github.com/HokieGeek/splitter) |
-| [uvix](https://github.com/HokieGeek/uvix) |
-| [unembed](https://github.com/HokieGeek/unembed) |
+| Repo | Description |
+| ---- | ----------- |
+| [vit](https://github.com/HokieGeek/vit) | |
+| [¿que?](https://github.com/HokieGeek/que) | |
+| [comentarista](https://github.com/HokieGeek/comentarista) | |
+| [shai-hulud](https://github.com/HokieGeek/shai-hulud) | |
+| [argh](https://github.com/HokieGeek/argh) | |
+| [sessioner](https://github.com/HokieGeek/sessioner) | |
+| [splitter](https://github.com/HokieGeek/splitter) | |
+| [uvix](https://github.com/HokieGeek/uvix) | |
+| [unembed](https://github.com/HokieGeek/unembed) | |
 
 #### Third-party
 | Workflow-intrusive | Non-intrusive |
@@ -41,12 +43,12 @@ The following plugins are being used:
 | [mbbill/undotree](https://github.com/mbbill/undotree.git) | [tpope/vim-pathogen](https://github.com/tpope/vim-pathogen) |
 | [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange) | [tpope/vim-repeat](https://github.com/tpope/vim-repeat) |
 | [tpope/vim-surround](https://github.com/tpope/vim-surround) | [tpope/vim-endwise](https://github.com/tpope/vim-endwise.git) |
-| [michaeljsmith/vim-indent-object](https://github.com/michaeljsmith/vim-indent-object) 
-| [welle/targets](https://github.com/wellle/targets.vim.git) | [tpope/vim-markdown](https://github.com/tpope/vim-markdown) |
-| [junegunn/vim-easy-align](https://github.com/junegunn/vim-easy-align) | [elzr/vim-json](https://github.com/elzr/vim-json.git) |
-| [SirVer/ultisnips](https://github.com/SirVer/ultisnips.git) | [fatih/vim-go](https://github.com/fatih/vim-go.git) |
-| [taglist](http://www.vim.org/scripts/script.php?script_id=273 "vim.org #273") | [derekwyatt/vim-scala](https://github.com/derekwyatt/vim-scala.git) |
-| [bkad/CamelCaseMotion](https://github.com/bkad/CamelCaseMotion) | [leafgarland/typescript-vim](https://github.com/leafgarland/typescript-vim) |
+| [michaeljsmith/vim-indent-object](https://github.com/michaeljsmith/vim-indent-object) [tpope/vim-markdown](https://github.com/tpope/vim-markdown) |
+| [welle/targets](https://github.com/wellle/targets.vim.git) | [elzr/vim-json](https://github.com/elzr/vim-json.git) |
+| [junegunn/vim-easy-align](https://github.com/junegunn/vim-easy-align) | [fatih/vim-go](https://github.com/fatih/vim-go.git) |
+| [SirVer/ultisnips](https://github.com/SirVer/ultisnips.git) | [derekwyatt/vim-scala](https://github.com/derekwyatt/vim-scala.git) |
+| [taglist](http://www.vim.org/scripts/script.php?script_id=273 "vim.org #273") | [leafgarland/typescript-vim](https://github.com/leafgarland/typescript-vim) |
+| [bkad/CamelCaseMotion](https://github.com/bkad/CamelCaseMotion) | |
 | [ynkdir/vim-vimlparser](https://github.com/ynkdir/vim-vimlparser) | |
 | [scrooloose/syntastic](https://github.com/scrooloose/syntastic) | |
 | [syngan/vim-vimlint](https://github.com/syngan/vim-vimlint) | |
