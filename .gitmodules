@@ -58,9 +58,6 @@
 [submodule "vim/bundle/vim-markdown"]
 	path = vim/bundle/vim-markdown
 	url = git@github.com:tpope/vim-markdown
-[submodule "vim/bundle/vim-multiple-cursors"]
-	path = vim/bundle/vim-multiple-cursors
-	url = git@github.com:terryma/vim-multiple-cursors
 [submodule "vim/bundle/vim-pathogen"]
 	path = vim/bundle/vim-pathogen
 	url = git@github.com:tpope/vim-pathogen

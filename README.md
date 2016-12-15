@@ -23,28 +23,34 @@ Running a dark theme and using the cVim plugin to use vim bindings. This makes m
 ### vim
 The following plugins are being used:
 
-| Mine | GitHub | vim.org |
-| ---- | ------ | ------- |
-| [vit](https://github.com/HokieGeek/vit) | [tpope/vim-pathogen](https://github.com/tpope/vim-pathogen) | [matchit](http://www.vim.org/scripts/script.php?script_id=39 "vim.org #39") |
-| [¿que?](https://github.com/HokieGeek/que) | [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange) | [vim-indent-object](http://www.vim.org/scripts/script.php?script_id=3037 "vim.org #3037") |
-| [comentarista](https://github.com/HokieGeek/comentarista) | [terryma/vim-multiple-cursors](https://github.com/terryma/vim-multiple-cursors) | [taglist](http://www.vim.org/scripts/script.php?script_id=273 "vim.org #273") |
-| [shai-hulud](https://github.com/HokieGeek/shai-hulud) | [tpope/vim-markdown](https://github.com/tpope/vim-markdown) |  |
-| [argh](https://github.com/HokieGeek/argh) | [ynkdir/vim-vimlparser](https://github.com/ynkdir/vim-vimlparser) | |
-| [sessioner](https://github.com/HokieGeek/sessioner) | [junegunn/vim-easy-align](https://github.com/junegunn/vim-easy-align) | |
-| [splitter](https://github.com/HokieGeek/splitter) | [SirVer/ultisnips](https://github.com/SirVer/ultisnips.git) | |
-| [uvix](https://github.com/HokieGeek/uvix) | [elzr/vim-json](https://github.com/elzr/vim-json.git) | |
-| [unembed](https://github.com/HokieGeek/unembed) | [tpope/vim-surround](https://github.com/tpope/vim-surround) | |
-| | [bkad/CamelCaseMotion](https://github.com/bkad/CamelCaseMotion) | |
-| | [tpope/vim-repeat](https://github.com/tpope/vim-repeat) | |
-| | [scrooloose/syntastic](https://github.com/scrooloose/syntastic) | |
-| | [syngan/vim-vimlint](https://github.com/syngan/vim-vimlint) | |
-| | [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim) | |
-| | [fatih/vim-go](https://github.com/fatih/vim-go.git) | |
-| | [mbbill/undotree](https://github.com/mbbill/undotree.git) | |
-| | [tpope/vim-endwise](https://github.com/tpope/vim-endwise.git) | |
-| | [welle/targets](https://github.com/wellle/targets.vim.git) | |
-| | [derekwyatt/vim-scala](https://github.com/derekwyatt/vim-scala.git) | |
-| | [leafgarland/typescript-vim](https://github.com/leafgarland/typescript-vim) | |
+#### Mine
+| [vit](https://github.com/HokieGeek/vit) |
+| [¿que?](https://github.com/HokieGeek/que) |
+| [comentarista](https://github.com/HokieGeek/comentarista) |
+| [shai-hulud](https://github.com/HokieGeek/shai-hulud) |
+| [argh](https://github.com/HokieGeek/argh) |
+| [sessioner](https://github.com/HokieGeek/sessioner) |
+| [splitter](https://github.com/HokieGeek/splitter) |
+| [uvix](https://github.com/HokieGeek/uvix) |
+| [unembed](https://github.com/HokieGeek/unembed) |
+
+#### Third-party
+| Workflow-intrusive | Non-intrusive |
+| ------------------ | ------------- |
+| [kien/ctrlp.vim](https://github.com/kien/ctrlp.vim) | [matchit](http://www.vim.org/scripts/script.php?script_id=39 "vim.org #39") |
+| [mbbill/undotree](https://github.com/mbbill/undotree.git) | [tpope/vim-pathogen](https://github.com/tpope/vim-pathogen) |
+| [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange) | [tpope/vim-repeat](https://github.com/tpope/vim-repeat) |
+| [tpope/vim-surround](https://github.com/tpope/vim-surround) | [tpope/vim-endwise](https://github.com/tpope/vim-endwise.git) |
+| [michaeljsmith/vim-indent-object](https://github.com/michaeljsmith/vim-indent-object) 
+| [welle/targets](https://github.com/wellle/targets.vim.git) | [tpope/vim-markdown](https://github.com/tpope/vim-markdown) |
+| [junegunn/vim-easy-align](https://github.com/junegunn/vim-easy-align) | [elzr/vim-json](https://github.com/elzr/vim-json.git) |
+| [SirVer/ultisnips](https://github.com/SirVer/ultisnips.git) | [fatih/vim-go](https://github.com/fatih/vim-go.git) |
+| [taglist](http://www.vim.org/scripts/script.php?script_id=273 "vim.org #273") | [derekwyatt/vim-scala](https://github.com/derekwyatt/vim-scala.git) |
+| [bkad/CamelCaseMotion](https://github.com/bkad/CamelCaseMotion) | [leafgarland/typescript-vim](https://github.com/leafgarland/typescript-vim) |
+| [ynkdir/vim-vimlparser](https://github.com/ynkdir/vim-vimlparser) | |
+| [scrooloose/syntastic](https://github.com/scrooloose/syntastic) | |
+| [syngan/vim-vimlint](https://github.com/syngan/vim-vimlint) | |
+
 #### List of new commands and mappings
 
 ##### Commands
