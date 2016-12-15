@@ -43,7 +43,7 @@ The following plugins are being used:
 | [mbbill/undotree](https://github.com/mbbill/undotree.git) | [tpope/vim-pathogen](https://github.com/tpope/vim-pathogen) |
 | [tommcdo/vim-exchange](https://github.com/tommcdo/vim-exchange) | [tpope/vim-repeat](https://github.com/tpope/vim-repeat) |
 | [tpope/vim-surround](https://github.com/tpope/vim-surround) | [tpope/vim-endwise](https://github.com/tpope/vim-endwise.git) |
-| [michaeljsmith/vim-indent-object](https://github.com/michaeljsmith/vim-indent-object) [tpope/vim-markdown](https://github.com/tpope/vim-markdown) |
+| [michaeljsmith/vim-indent-object](https://github.com/michaeljsmith/vim-indent-object) | [tpope/vim-markdown](https://github.com/tpope/vim-markdown) |
 | [welle/targets](https://github.com/wellle/targets.vim.git) | [elzr/vim-json](https://github.com/elzr/vim-json.git) |
 | [junegunn/vim-easy-align](https://github.com/junegunn/vim-easy-align) | [fatih/vim-go](https://github.com/fatih/vim-go.git) |
 | [SirVer/ultisnips](https://github.com/SirVer/ultisnips.git) | [derekwyatt/vim-scala](https://github.com/derekwyatt/vim-scala.git) |
