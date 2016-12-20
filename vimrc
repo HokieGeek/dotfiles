@@ -13,9 +13,9 @@ filetype off
 filetype plugin indent off
 
 "" Add the Go plugins and such to the path
-if exists("$GOROOT")
-    execute "set runtimepath+=".expand("$GOROOT")."/misc/vim"
-endif
+" if exists("$GOROOT")
+"     execute "set runtimepath+=".expand("$GOROOT")."/misc/vim"
+" endif
 
 "" Add the pathogen path to the rtp
 let g:have_plugins = 0
@@ -29,8 +29,20 @@ if g:have_plugins
         let g:que__vcs_section_enabled = 0
     endif
     silent! execute pathogen#infect()
+
     let g:syntastic_javascript_checkers = ['jslint']
+
     let g:Que__vcs_funcref = function("vit#Statusline")
+
+    " vim-go specific mappings
+    autocmd FileType go nmap <leader>b <Plug>(go-build)
+    autocmd FileType go nmap <leader>t <Plug>(go-test)
+    autocmd FileType go nmap <leader>c <Plug>(go-coverage-toggle)
+    autocmd FileType go nmap <leader>a <Plug>(go-alternate-edit)
+    autocmd FileType go nmap <leader>r <Plug>(go-rename)
+    autocmd FileType go nmap <leader>i <Plug>(go-info)
+    " autocmd BufWritePost *.go call go#cmd#Test(!g:go_jump_to_error, 0)
+    " let g:go_metalinter_autosave = 1
 endif
 
 filetype plugin indent on
@@ -356,7 +368,7 @@ augroup FiletypeOptions
     autocmd FileType make setlocal noexpandtab nolist
     autocmd FileType qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
     autocmd FileType cpp setlocal foldmethod=syntax
-    autocmd FileType go set nolist " foldmethod=syntax
+    autocmd FileType go set nolist
 augroup END
 
 augroup HighlightingOptions
