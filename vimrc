@@ -42,7 +42,7 @@ if g:have_plugins
     autocmd FileType go nmap <leader>r <Plug>(go-rename)
     autocmd FileType go nmap <leader>i <Plug>(go-info)
     " autocmd BufWritePost *.go call go#cmd#Test(!g:go_jump_to_error, 0)
-    " let g:go_metalinter_autosave = 1
+    let g:go_metalinter_autosave = 1
 endif
 
 filetype plugin indent on
@@ -368,7 +368,8 @@ augroup FiletypeOptions
     autocmd FileType make setlocal noexpandtab nolist
     autocmd FileType qf setlocal number | if exists("&relativenumber") | setlocal norelativenumber | endif
     autocmd FileType cpp setlocal foldmethod=syntax
-    autocmd FileType go set nolist
+
+    autocmd FileType go set nolist makeprg=go\ build
 augroup END
 
 augroup HighlightingOptions
