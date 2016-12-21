@@ -164,7 +164,7 @@ myStartupHook = do
     spawn "xcompmgr"
     spawn conkyStatusBar
     where
-        screenwidth_cmd = "$(expr $(xrandr | grep '*' | awk '{ print $1 }' | cut -dx -f1) - " ++ show workspaceBarWidth ++ ")"
+        screenwidth_cmd = "$(expr $(xrandr | awk -Fx '/\\*/ { print $1; exit }') - " ++ show workspaceBarWidth ++ ")"
         conkyStatusBar = "~/.xmonad/statusbar/statusbar.sh --width " ++ screenwidth_cmd ++ " --height '" ++ show statusbarHeight ++ "' --bg '" ++ colorBackground ++ "' --fg '" ++ colorForeground ++ "' --font '" ++ termFont ++ "' --xpos '" ++ show workspaceBarWidth ++ "'"
 -- }}}
 -- }}}
