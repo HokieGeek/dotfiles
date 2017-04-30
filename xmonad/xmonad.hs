@@ -60,8 +60,8 @@ modm                = mod4Mask
 colorForeground     = "#5f0087"
 colorBackground     = "#1b1d1e"
 colorWhite          = "#cdcdcd"
-termFont            = "-*-terminus-bold-r-*-*-12-*-*-*-*-*-*-*"
-statusbarHeight     = 14
+termFont            = "-*-terminus-*-*-*-*-10-*-*-*-*-*-*-*"
+statusbarHeight     = 13
 workspaceBarWidth   = 310
 
 myTerminal        = "st"
@@ -88,8 +88,8 @@ myXPConfig = defaultXPConfig {
                 , showCompletionOnTab = True
              }
 
-xF86XK_AudioMicMute :: KeySym
-xF86XK_AudioMicMute = 0x1008ffb2
+-- xF86XK_AudioMicMute :: KeySym
+-- xF86XK_AudioMicMute = 0x1008ffb2
 
 surroundInQuotes :: String -> String
 surroundInQuotes str = "'" ++ str ++ "'"
@@ -116,7 +116,6 @@ myManageHook = insertPosition Master Newer <+> composeAll
 -- }}}
 -- Layout{{{
 myLayoutHook = avoidStruts
-               $ onWorkspace "1" (boringWindows (minimize (reflectHoriz $ withIM (12%1) (ClassName "crx_nckgahadagoaajjgafhacjanaoiihapd") (ResizableTall 1 incDelta (1/6) []) ||| Full)))
                $ onWorkspace "gimp" (boringWindows (minimize ((ResizableTall 2 incDelta (1/6) []) ||| Full)))
                $ onWorkspace "skype" (boringWindows (minimize Full))
                $ toggleLayouts (boringWindows (minimize (Mirror tiledStd ||| stacked ||| Mirror twoPanes ||| Full))) -- alternate
