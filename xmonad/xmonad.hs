@@ -307,11 +307,11 @@ myKeys =    [
 --}}}
 
 -- Main {{{
-workspaceStatusBar = "dzen2 -fn '" ++ termFont ++ "' -x '0' -y '0' -h '" ++ show statusbarHeight ++ "' -w '" ++ show workspaceBarWidth ++ "' -fg '" ++ colorWhite ++ "' -bg '" ++ colorBackground ++ "' -ta l"
+workspaceStatusBar = "dzen2 -dock -fn '" ++ termFont ++ "' -x '0' -y '0' -h '" ++ show statusbarHeight ++ "' -w '" ++ show workspaceBarWidth ++ "' -fg '" ++ colorWhite ++ "' -bg '" ++ colorBackground ++ "' -ta l"
 main = do
         dzenLeftBar  <- spawnPipe workspaceStatusBar
         xmonad $ withUrgencyHook dzenUrgencyHook { args = ["-bg", colorForeground, "-xs", "1"] }
-               $ def
+               $ docks def
             { workspaces        = myWorkspaces
             , terminal          = myTerminal
             , modMask           = modm
