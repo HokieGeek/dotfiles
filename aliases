@@ -39,11 +39,10 @@ alias jenkins='docker run -p 8888:8080 -p 50000:50000 jenkins'
 ## }}}
 
 ## Search aliases {{{
-`which s >/dev/null 2>&1` && {
-    alias g='s -g'
-    alias gq='s -g -q'
-    alias f='s -f'
-    alias fq='s -f -q'
+`which g >/dev/null 2>&1` && {
+    alias gq='g -q'
+    alias f='g -f'
+    alias fq='g -f -q'
 } || {
     alias g='grep -rnIE'
     alias gq='g'
