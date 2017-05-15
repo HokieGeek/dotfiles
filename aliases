@@ -50,7 +50,8 @@ alias jenkins='docker run -p 8888:8080 -p 50000:50000 jenkins'
     alias fq='f'
 }
 alias gi='g -i'
-alias todo='g "(TODO\|FIXME)"'
+# alias todo='g "(TODO\|FIXME)"'
+alias todo='g "(todo\|TODO\|fixme\|FIXME)"'
 ## }}}
 
 ## Color aliases {{{
