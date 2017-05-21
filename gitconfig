@@ -26,6 +26,7 @@
     mt = mergetool -y
     branch-sort = !git-sorted-branches
     sublog = !git-submodules-log
+    tg = !git-tag-enhanced
 [core]
     eol = lf
     excludesfile = ~/.gitignore
