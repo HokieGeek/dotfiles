@@ -61,7 +61,7 @@ colorForeground     = "#5f0087"
 colorBackground     = "#1b1d1e"
 colorWhite          = "#cdcdcd"
 termFont            = "-*-terminus-*-*-*-*-10-*-*-*-*-*-*-*"
-statusbarHeight     = 13
+statusbarHeight     = 15
 workspaceBarWidth   = 310
 
 myTerminal        = "st"
