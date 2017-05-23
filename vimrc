@@ -43,6 +43,8 @@ if g:have_plugins
     autocmd FileType go nmap <leader>i <Plug>(go-info)
     " autocmd BufWritePost *.go call go#cmd#Test(!g:go_jump_to_error, 0)
     let g:go_metalinter_autosave = 1
+    
+    let g:undotree_WindowLayout = 2
 endif
 
 filetype plugin indent on
@@ -73,7 +75,6 @@ set viminfo=h,'50,"100,<10000,s1000 " Remembers stuff. RTFM
 set history=1000
 set undolevels=5000
 if has("persistent_undo")
-    " set undodir=~/.undodir/
     set undofile " Create an undo file so you can undo even after closing a file
 endif
 set foldenable " Close folds on open
