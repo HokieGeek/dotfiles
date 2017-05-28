@@ -4,9 +4,6 @@
 [submodule "look"]
 	path = look
 	url = git@github.com:HokieGeek/look.git
-[submodule "vim/bundle/CamelCaseMotion"]
-	path = vim/bundle/CamelCaseMotion
-	url = git@github.com:bkad/CamelCaseMotion
 [submodule "vim/bundle/argh"]
 	path = vim/bundle/argh
 	url = git@github.com:HokieGeek/argh.git

@@ -48,7 +48,6 @@ The following plugins are being used:
 | [junegunn/vim-easy-align](https://github.com/junegunn/vim-easy-align) | [fatih/vim-go](https://github.com/fatih/vim-go.git) |
 | [SirVer/ultisnips](https://github.com/SirVer/ultisnips.git) | [derekwyatt/vim-scala](https://github.com/derekwyatt/vim-scala.git) |
 | [taglist](http://www.vim.org/scripts/script.php?script_id=273 "vim.org #273") | [leafgarland/typescript-vim](https://github.com/leafgarland/typescript-vim) |
-| [bkad/CamelCaseMotion](https://github.com/bkad/CamelCaseMotion) | |
 | [ynkdir/vim-vimlparser](https://github.com/ynkdir/vim-vimlparser) | |
 | [scrooloose/syntastic](https://github.com/scrooloose/syntastic) | |
 | [syngan/vim-vimlint](https://github.com/syngan/vim-vimlint) | |
@@ -65,7 +64,6 @@ The following plugins are being used:
 | ArgsAll | argh | |
 | Badd | argh | |
 | Bd | argh | |
-| Tear | argh | |
 | Build | shai-hulud | |
 | Split | splitter | |
 | Vsplit | splitter | |
@@ -87,8 +85,8 @@ The following plugins are being used:
 
 | Mapping | Source plugin | What it does |
 | ------- | ------------- | ------------ |
-| &lt;Tab&gt; | comentarista | |
-| &lt;shift&gt;&lt;Tab&gt; | comentarista | |
+| g&lt;Tab&gt; | comentarista | |
+| g&lt;shift&gt;&lt;Tab&gt; | comentarista | |
 | cs | vim-surround | |
 | ds | vim-surround | |
 | yss | vim-surround | |
@@ -96,18 +94,11 @@ The following plugins are being used:
 | cxx | vim-exchange | |
 | X | vim-exchange | |
 | cxc | vim-exchange | |
-| ,w | CamelCaseMotion | |
-| ,b | CamelCaseMotion | |
-| ,e | CamelCaseMotion | |
-| ctrl-n | vim-multiple-cursors |
-| ctrl-p | vim-multiple-cursors |
-| ctrl-x | vim-multiple-cursors |
 
 ## Text-objects
 
 | Object | Source plugin | What it does |
 | ------ | ------------- | ------------ |
-| a | argtextobj | |
 | ai | vim-indent-object | |
 | ii | vim-indent-object | |
 | al | vim-indent-object | |
