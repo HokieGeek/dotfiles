@@ -3,28 +3,28 @@
     url = https://github.com/tarruda/zsh-autosuggestions
 [submodule "look"]
 	path = look
-	url = git@github.com:HokieGeek/look.git
+	url = git@gitlab.com:HokieGeek/look.git
 [submodule "vim/bundle/argh"]
 	path = vim/bundle/argh
-	url = git@github.com:HokieGeek/argh.git
+	url = git@gitlab.com:HokieGeek/argh.git
 [submodule "vim/bundle/comentarista"]
 	path = vim/bundle/comentarista
-	url = git@github.com:HokieGeek/comentarista.git
+	url = git@gitlab.com:HokieGeek/comentarista.git
 [submodule "vim/bundle/ctrlp.vim"]
 	path = vim/bundle/ctrlp.vim
 	url = git@github.com:kien/ctrlp.vim
 [submodule "vim/bundle/que"]
 	path = vim/bundle/que
-	url = git@github.com:HokieGeek/que.git
+	url = git@gitlab.com:HokieGeek/que.git
 [submodule "vim/bundle/sessioner"]
 	path = vim/bundle/sessioner
-	url = git@github.com:HokieGeek/sessioner.git
+	url = git@gitlab.com:HokieGeek/sessioner.git
 [submodule "vim/bundle/shai-hulud"]
 	path = vim/bundle/shai-hulud
-	url = git@github.com:HokieGeek/shai-hulud.git
+	url = git@gitlab.com:HokieGeek/shai-hulud.git
 [submodule "vim/bundle/splitter"]
 	path = vim/bundle/splitter
-	url = git@github.com:HokieGeek/splitter.git
+	url = git@gitlab.com:HokieGeek/splitter.git
 [submodule "vim/bundle/syntastic"]
 	path = vim/bundle/syntastic
 	url = git@github.com:scrooloose/syntastic.git
@@ -36,7 +36,7 @@
 	url = git@github.com:mbbill/undotree.git
 [submodule "vim/bundle/uvix"]
 	path = vim/bundle/uvix
-	url = git@github.com:HokieGeek/uvix.git
+	url = git@gitlab.com:HokieGeek/uvix.git
 [submodule "vim/bundle/vim-easy-align"]
 	path = vim/bundle/vim-easy-align
 	url = git@github.com:junegunn/vim-easy-align
@@ -66,7 +66,7 @@
 	url = git@github.com:tpope/vim-surround.git
 [submodule "vim/bundle/vit"]
 	path = vim/bundle/vit
-	url = git@github.com:HokieGeek/vit.git
+	url = git@gitlab.com:HokieGeek/vit.git
 [submodule "vim/bundle/matchit.zip"]
 	path = vim/bundle/matchit.zip
 	url = git@github.com:vim-scripts/matchit.zip.git
@@ -105,7 +105,7 @@
 	url = https://github.com/hickop/vim-hickop-colors.git
 [submodule "vim/bundle/unembed"]
 	path = vim/bundle/unembed
-	url = git@github.com:HokieGeek/unembed.git
+	url = git@gitlab.com:HokieGeek/unembed.git
 [submodule "vim/bundle/vim-endwise"]
 	path = vim/bundle/vim-endwise
 	url = git://github.com/tpope/vim-endwise.git
