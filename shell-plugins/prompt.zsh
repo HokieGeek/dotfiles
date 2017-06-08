@@ -32,6 +32,8 @@ prompt_gitInfo() {
     branch=`git branch 2>/dev/null | grep "^*" | sed "s/^\*\s*//"`
     info="${info}${branch}"
 
+    [ "`git stash list | wc -l`" -gt 0 ] && info=${info}"%{$fg[blue]%}∾%{$reset_color%}"
+
     status_out=`git status --porcelain -sb -uno 2>/dev/null`
 
     # Add indicator if repository is behind remote
