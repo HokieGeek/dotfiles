@@ -286,7 +286,7 @@ myKeys =    [
             , ((shiftMask, xF86XK_MonBrightnessDown), spawn "xbacklight -set 20") -- %SKIPHELP%
 
             , ((0, xK_Print), spawn "scrot") -- %SKIPHELP%
-            , ((mod1Mask, xK_Print), spawn "sleep 0.2; scrot -s") -- %SKIPHELP%
+            , ((mod1Mask, xK_Print), spawn "scrot -d 1 -s") -- %SKIPHELP%
             , (((mod1Mask .|. controlMask), xK_l), spawn "slock") -- %SKIPHELP%
                                                                   -- %SKIPHELP%
             --- ThinkPad-specific -- %SKIPHELP%
