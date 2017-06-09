@@ -60,3 +60,4 @@ export PATH=${PATH}:${GOPATH}/bin:~/.bin
 export EDITOR="nvim"
 
 . $HOME/.shell-plugins/prompt.sh
+[ -f $HOME/.bashrc_alt ] && . $HOME/.bashrc_alt
