@@ -12,11 +12,6 @@ endif
 filetype off
 filetype plugin indent off
 
-"" Add the Go plugins and such to the path
-" if exists("$GOROOT")
-"     execute "set runtimepath+=".expand("$GOROOT")."/misc/vim"
-" endif
-
 "" Add the pathogen path to the rtp
 let g:have_plugins = 0
 if has("vim_starting") && isdirectory(expand(g:dot_vim_dir."/bundle/vim-pathogen"))
@@ -43,7 +38,7 @@ if g:have_plugins
     autocmd FileType go nmap <leader>i <Plug>(go-info)
     " autocmd BufWritePost *.go call go#cmd#Test(!g:go_jump_to_error, 0)
     let g:go_metalinter_autosave = 1
-    
+
     let g:undotree_WindowLayout = 2
 endif
 
@@ -73,9 +68,9 @@ set wildignore=*.d,*.o,*.obj,*.bak,*.exe,*.swp,*~,tags,.hg,.git,*.pyc,*.orig " T
 set wildmode=list:longest,full
 set viminfo=h,'50,"100,<10000,s1000 " Remembers stuff. RTFM
 set history=1000
-set undolevels=5000
+set undolevels=2000 " The number of undos which will be stored. This will affect mem footprint
 if has("persistent_undo")
-    set undofile " Create an undo file so you can undo even after closing a file
+    set undofile " Persist an undo file so you can undo even after closing a file
 endif
 set foldenable " Close folds on open
 set foldnestmax=5 " I think 5 nests is enough, thank you
@@ -146,12 +141,19 @@ if has("gui_running")
     set guioptions-=T guioptions-=m guioptions-=r guioptions-=R guioptions-=l guioptions-=L guioptions-=b
     set guioptions+=c " Use console dialogs instead of popup dialogs
 else
-    let g:sierra_Pitch = 1
+	if exists("$SSH_CONNECTION")
+		let g:scheme="ir_black"
+	else
+    	let g:sierra_Pitch = 1
+		let g:scheme="sierra"
+	endif
+
     try
-        colorscheme sierra
+        execute "colorscheme ".g:scheme
     catch /E185:/
         colorscheme desert
     endtry
+	unlet g:scheme
 endif
 syntax on
 " }}}
