@@ -20,7 +20,7 @@
     sf = submodule foreach
     sp = submodule foreach 'git pull --prune || :'
     k = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(cyan)<%an>%Creset'
-    df = diff --ext-diff --patience
+    df = diff --ext-diff --patience --submodule
     dt = difftool -y
     mt = mergetool -y
 [core]
