@@ -27,7 +27,7 @@ if g:have_plugins
 
     let g:syntastic_javascript_checkers = ['jslint']
 
-    let g:que__vcs_funcref = function("vit#Statusline")
+    let g:Que__vcs_funcref = function("vit#Statusline")
 
     " vim-go specific mappings
     autocmd FileType go nmap <leader>b <Plug>(go-build)
