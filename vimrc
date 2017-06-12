@@ -373,6 +373,8 @@ augroup FiletypeOptions
     autocmd FileType cpp setlocal foldmethod=syntax
 
     autocmd FileType go set nolist makeprg=go\ build
+    
+    autocmd FileType Vit* let w:que__disabled=1 | call QueDisableStatusLine()
 augroup END
 
 augroup HighlightingOptions
