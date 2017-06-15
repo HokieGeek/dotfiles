@@ -27,7 +27,7 @@ if g:have_plugins
 
     let g:syntastic_javascript_checkers = ['jslint']
 
-    let g:Que__vcs_funcref = function("vit#Statusline")
+    let g:Que__vcs_funcref = function("vit#statusline#get")
 
     " vim-go specific mappings
     autocmd FileType go nmap <leader>b <Plug>(go-build)
@@ -373,7 +373,7 @@ augroup FiletypeOptions
     autocmd FileType cpp setlocal foldmethod=syntax
 
     autocmd FileType go set nolist makeprg=go\ build
-    
+
     autocmd FileType Vit* let w:que__disabled=1 | call QueDisableStatusLine()
 augroup END
 
