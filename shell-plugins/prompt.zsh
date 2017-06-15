@@ -26,13 +26,11 @@ prompt_mercurialInfo() {
 }
 
 prompt_gitInfo() {
-    info=" %{$fg[yellow]%}"
+    [ "`git stash list | wc -l`" -gt 0 ] && info=${info}"%{$fg_no_bold[blue]%}‛%{$reset_color%}" || info=" "
 
     # Determine the branch
     branch=`git branch 2>/dev/null | grep "^*" | sed "s/^\*\s*//"`
-    info="${info}${branch}"
-
-    [ "`git stash list | wc -l`" -gt 0 ] && info=${info}"%{$fg[blue]%}∾%{$reset_color%}"
+    info="${info}%{$fg[yellow]%}${branch}"
 
     status_out=`git status --porcelain -sb -uno 2>/dev/null`
 
