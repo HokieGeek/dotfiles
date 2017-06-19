@@ -26,33 +26,34 @@ prompt_mercurialInfo() {
 }
 
 prompt_gitInfo() {
-    [ "`git stash list | wc -l`" -gt 0 ] && info=${info}"%{$fg_no_bold[blue]%}‛%{$reset_color%}" || info=" "
+    [ "`git stash list | wc -l`" -gt 0 ] && echo -n "%{$fg[blue]%}∾%{$reset_color%}" || echo -n " "
 
-    # Determine the branch
-    branch=`git branch 2>/dev/null | grep "^*" | sed "s/^\*\s*//"`
-    info="${info}%{$fg[yellow]%}${branch}"
+    git status --porcelain --branch --untracked-files=no 2>/dev/null | while read line; do
+        if [[ $line =~ ^## ]]; then
+            # Determine the branch
+            branch=${line/\#\# }
+            info="%{$fg[yellow]%}${branch%%...*}"
+            # Add indicator if repository is behind remote
+            [[ $line =~ behind[[:space:]]*[0-9]+\] ]] && info=${info}"%{$fg_no_bold[yellow]%}◂"
+            # # U+25C2 - ◂
 
-    status_out=`git status --porcelain -sb -uno 2>/dev/null`
+            # Add indicator if there are unpushed changes
+            [[ $line =~ ahead[[:space:]]*[0-9]+\] ]] && info=${info}"%{$fg_no_bold[yellow]%}▸"
+            # U+25B8 - ▸
+            echo -n ${info}
+        elif [[ $line =~ ^[[:space:]]*(A|M|D)[[:space:]] ]]; then
+            # Add indicator if there are modified files
+            echo -n "%{$fg[red]%}±"
+            break
+        fi
+    done
 
-    # Add indicator if repository is behind remote
-    isBehind=`echo $status_out | grep -c "##.*\[.*[,\s]*behind.*\]"`
-    [ $isBehind -gt 0 ] && info=${info}"%{$fg_no_bold[yellow]%}◂%{$reset_color%}"
-    # U+25C2 - ◂
-
-    # Add indicator if there are unpushed changes
-    isAhead=`echo $status_out | grep -c "##.*\[ahead.*\]"`
-    [ $isAhead -gt 0 ] && info=${info}"%{$fg_no_bold[yellow]%}▸%{$reset_color%}"
-    # U+25B8 - ▸
-
-    # Add indicator if there are modified files
-    numMods=`echo $status_out | egrep -c "(A|M|D)"`
-    [ $numMods -gt 0 ] && info=${info}"%{$fg[red]%}±%{$reset_color%} "
-
-    echo -n "${info}%{$reset_color%}"
+    echo -n "%{$reset_color%}"
 }
 
 prompt_repoInfo() {
-    which git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1 && prompt_gitInfo
+    # which git >/dev/null 2>&1 &&
+    git rev-parse --is-inside-work-tree >/dev/null 2>&1 && prompt_gitInfo
     which hg >/dev/null 2>&1 && hg status >/dev/null 2>&1 && prompt_mercurialInfo
     which cvs >/dev/null 2>&1 && cvs status >/dev/null 2>&1 && prompt_cvsInfo
 }
