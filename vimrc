@@ -12,19 +12,23 @@ endif
 filetype off
 filetype plugin indent off
 
-"" Add the pathogen path to the rtp
+if has("win32unix") || has("win32") || has("win64") " Cygwin and windows can't handle it
+    let g:que__vcs_section_enabled = 0
+endif
+
 let g:have_plugins = 0
-if has("vim_starting") && isdirectory(expand(g:dot_vim_dir."/bundle/vim-pathogen"))
-    execute "set runtimepath+=".g:dot_vim_dir.",".g:dot_vim_dir."/bundle/vim-pathogen"
-    let g:have_plugins = 1
+if has("vim_starting")
+    if has("packages") " If native package manager exists, use it
+        let g:have_plugins = 1
+    elseif isdirectory(expand(g:dot_vim_dir."/vim-pathogen"))
+        " If no native package manager, load pathogen and use that instead
+        let g:have_plugins = 1
+        execute "set runtimepath+=".g:dot_vim_dir.",".g:dot_vim_dir."/vim-pathogen"
+        silent! execute pathogen#infect()
+    endif
 endif
 
 if g:have_plugins
-    if has("win32unix") || has("win32") || has("win64") " Cygwin and windows can't handle it
-        let g:que__vcs_section_enabled = 0
-    endif
-    silent! execute pathogen#infect()
-
     let g:syntastic_javascript_checkers = ['jslint']
 
     let g:Que__vcs_funcref = function("vit#statusline#get")
@@ -141,19 +145,19 @@ if has("gui_running")
     set guioptions-=T guioptions-=m guioptions-=r guioptions-=R guioptions-=l guioptions-=L guioptions-=b
     set guioptions+=c " Use console dialogs instead of popup dialogs
 else
-	if exists("$SSH_CONNECTION")
-		let g:scheme="ir_black"
-	else
-    	let g:sierra_Pitch = 1
-		let g:scheme="sierra"
-	endif
+    if exists("$SSH_CONNECTION")
+        let g:scheme="ir_black"
+    else
+        let g:sierra_Pitch = 1
+        let g:scheme="sierra"
+    endif
 
     try
         execute "colorscheme ".g:scheme
     catch /E185:/
         colorscheme desert
     endtry
-	unlet g:scheme
+    unlet g:scheme
 endif
 syntax on
 " }}}
