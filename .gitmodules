@@ -56,7 +56,7 @@
 	path = vim/bundle/vim-markdown
 	url = git@github.com:tpope/vim-markdown
 [submodule "vim/bundle/vim-pathogen"]
-	path = vim/bundle/vim-pathogen
+	path = vim/vim-pathogen
 	url = git@github.com:tpope/vim-pathogen
 [submodule "vim/bundle/vim-repeat"]
 	path = vim/bundle/vim-repeat
