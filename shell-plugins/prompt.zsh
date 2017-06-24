@@ -52,7 +52,7 @@ prompt_gitInfo() {
 }
 
 prompt_repoInfo() {
-    [ "`git rev-parse --is-inside-work-tree 2>dev/null`" = "true" ] && prompt_gitInfo
+    [ "`git rev-parse --is-inside-work-tree 2>/dev/null`" = "true" ] && prompt_gitInfo
     which hg >/dev/null 2>&1 && hg status >/dev/null 2>&1 && prompt_mercurialInfo
     which cvs >/dev/null 2>&1 && cvs status >/dev/null 2>&1 && prompt_cvsInfo
 }
