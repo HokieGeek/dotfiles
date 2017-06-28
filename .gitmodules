@@ -118,3 +118,6 @@
 [submodule "vim/bundle/typescript-vim"]
 	path = vim/pack/plugs/start/typescript-vim
 	url = git@github.com:leafgarland/typescript-vim.git
+[submodule "vim/pack/plugs/start/devug"]
+	path = vim/pack/plugs/start/devug
+	url = git@gitlab.com:HokieGeek/devug.git
