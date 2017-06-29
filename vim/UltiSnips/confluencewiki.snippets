@@ -1,0 +1,50 @@
+snippet meetingnotes
+h2. Date
+${1:`date +'%B %d, %Y'`}
+
+h2. Attendees
+* [~andres.f.perez]
+${2:* }
+
+h2. Goals
+${3:TODO}
+
+h2. Discussion Items
+|| Time || Item || Who || Notes ||
+mn-item$0
+
+h2. Action Items
+TODO
+endsnippet
+snippet mn-item
+|`date +%H%M`|${1: }|${2: }|${3:* $4}|
+mn-item$0
+endsnippet
+snippet mn-att-aic
+* [~matthew.b.fadoul]
+* [~michael.g.depp]
+* [~william.l.blevins]
+* [~whitehouser]
+* [~edward.a.donaldson]
+* [~kate.park]
+* [~jeff.smith]
+endsnippet
+snippet mn-att-smmtt
+* [~ben.gompf]
+* [~kevin.m.young]
+* [~scot.a.hart]
+* [~magnum.o.vassell]
+* [~kenneth.j.mikkalson]
+* [~david.e.montgomery]
+* [~byl.walker]
+* [~frederick.j.krutz]
+endsnippet
+snippet mn-goal-planning
+* Determine what work we will commit to for the new sprint
+endsnippet
+snippet jiraissue
+{jira:anonymous=true|url=https://trac.cdpdf.net/jira/browse/$0}
+endsnippet
+snippet wikipage
+[${2}${3:|}https://trac.cdpdf.net/confluence/display/$1]$0
+endsnippet

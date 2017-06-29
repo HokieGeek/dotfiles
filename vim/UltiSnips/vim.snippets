@@ -1,0 +1,12 @@
+snippet guard
+if exists("g:autoloaded_${1:`!p snip.rv = snip.basename`}") || v:version < 700
+    finish
+endif
+let g:autoloaded_$1 = 1
+
+$0
+endsnippet
+
+snippet modeline
+" vim:set formatoptions-=tc foldmethod=expr foldexpr=getline(v\:lnum)=~#'^\s*fu[nction]*'?'a1'\:getline(v\:lnum)=~#'^\s*endf[unction]*'?'s1'\:'=':
+endsnippet
