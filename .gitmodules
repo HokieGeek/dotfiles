@@ -4,76 +4,76 @@
 [submodule "look"]
 	path = look
 	url = git@gitlab.com:HokieGeek/look.git
-[submodule "vim/bundle/argh"]
+[submodule "vim/pack/plugs/start/argh"]
 	path = vim/pack/plugs/start/argh
 	url = git@gitlab.com:HokieGeek/argh.git
-[submodule "vim/bundle/comentarista"]
+[submodule "vim/pack/plugs/start/comentarista"]
 	path = vim/pack/plugs/start/comentarista
 	url = git@gitlab.com:HokieGeek/comentarista.git
-[submodule "vim/bundle/ctrlp.vim"]
+[submodule "vim/pack/plugs/start/ctrlp.vim"]
 	path = vim/pack/plugs/start/ctrlp.vim
 	url = git@github.com:kien/ctrlp.vim
-[submodule "vim/bundle/que"]
+[submodule "vim/pack/plugs/start/que"]
 	path = vim/pack/plugs/start/que
 	url = git@gitlab.com:HokieGeek/que.git
-[submodule "vim/bundle/sessioner"]
+[submodule "vim/pack/plugs/start/sessioner"]
 	path = vim/pack/plugs/start/sessioner
 	url = git@gitlab.com:HokieGeek/sessioner.git
-[submodule "vim/bundle/shai-hulud"]
+[submodule "vim/pack/plugs/start/shai-hulud"]
 	path = vim/pack/plugs/start/shai-hulud
 	url = git@gitlab.com:HokieGeek/shai-hulud.git
-[submodule "vim/bundle/splitter"]
+[submodule "vim/pack/plugs/start/splitter"]
 	path = vim/pack/plugs/start/splitter
 	url = git@gitlab.com:HokieGeek/splitter.git
-[submodule "vim/bundle/syntastic"]
+[submodule "vim/pack/plugs/start/syntastic"]
 	path = vim/pack/plugs/start/syntastic
 	url = git@github.com:scrooloose/syntastic.git
-[submodule "vim/bundle/ultisnips"]
+[submodule "vim/pack/plugs/start/ultisnips"]
 	path = vim/pack/plugs/start/ultisnips
 	url = git@github.com:SirVer/ultisnips.git
-[submodule "vim/bundle/undotree"]
+[submodule "vim/pack/plugs/start/undotree"]
 	path = vim/pack/plugs/start/undotree
 	url = git@github.com:mbbill/undotree.git
-[submodule "vim/bundle/uvix"]
+[submodule "vim/pack/plugs/start/uvix"]
 	path = vim/pack/plugs/start/uvix
 	url = git@gitlab.com:HokieGeek/uvix.git
-[submodule "vim/bundle/vim-easy-align"]
+[submodule "vim/pack/plugs/start/vim-easy-align"]
 	path = vim/pack/plugs/start/vim-easy-align
 	url = git@github.com:junegunn/vim-easy-align
-[submodule "vim/bundle/vim-exchange"]
+[submodule "vim/pack/plugs/start/vim-exchange"]
 	path = vim/pack/plugs/start/vim-exchange
 	url = git@github.com:tommcdo/vim-exchange
-[submodule "vim/bundle/vim-go"]
+[submodule "vim/pack/plugs/start/vim-go"]
 	path = vim/pack/plugs/start/vim-go
 	url = git@github.com:fatih/vim-go.git
-[submodule "vim/bundle/vim-indent-object"]
+[submodule "vim/pack/plugs/start/vim-indent-object"]
 	path = vim/pack/plugs/start/vim-indent-object
 	url = git@github.com:michaeljsmith/vim-indent-object
-[submodule "vim/bundle/vim-json"]
+[submodule "vim/pack/plugs/start/vim-json"]
 	path = vim/pack/plugs/start/vim-json
 	url = git@github.com:elzr/vim-json.git
-[submodule "vim/bundle/vim-markdown"]
+[submodule "vim/pack/plugs/start/vim-markdown"]
 	path = vim/pack/plugs/start/vim-markdown
 	url = git@github.com:tpope/vim-markdown
-[submodule "vim/bundle/vim-pathogen"]
+[submodule "vim/pack/plugs/start/vim-pathogen"]
 	path = vim/vim-pathogen
 	url = git@github.com:tpope/vim-pathogen
-[submodule "vim/bundle/vim-repeat"]
+[submodule "vim/pack/plugs/start/vim-repeat"]
 	path = vim/pack/plugs/start/vim-repeat
 	url = git@github.com:tpope/vim-repeat
-[submodule "vim/bundle/vim-surround"]
+[submodule "vim/pack/plugs/start/vim-surround"]
 	path = vim/pack/plugs/start/vim-surround
 	url = git@github.com:tpope/vim-surround.git
-[submodule "vim/bundle/vit"]
+[submodule "vim/pack/plugs/start/vit"]
 	path = vim/pack/plugs/start/vit
 	url = git@gitlab.com:HokieGeek/vit.git
-[submodule "vim/bundle/matchit.zip"]
-	path = vim/bundle/matchit.zip
+[submodule "vim/pack/plugs/start/matchit.zip"]
+	path = vim/pack/plugs/start/matchit.zip
 	url = git@github.com:vim-scripts/matchit.zip.git
-[submodule "vim/bundle/matchit"]
+[submodule "vim/pack/plugs/start/matchit"]
 	path = vim/pack/plugs/start/matchit
 	url = git@github.com:vim-scripts/matchit.zip.git
-[submodule "vim/bundle/taglist.vim"]
+[submodule "vim/pack/plugs/start/taglist.vim"]
 	path = vim/pack/plugs/start/taglist.vim
 	url = git@github.com:vim-scripts/taglist.vim.git
 [submodule "vim/colors/.badwolf"]
@@ -103,19 +103,19 @@
 [submodule "vim/colors/.hickop"]
 	path = vim/colors/.hickop
 	url = https://github.com/hickop/vim-hickop-colors.git
-[submodule "vim/bundle/unembed"]
+[submodule "vim/pack/plugs/start/unembed"]
 	path = vim/pack/plugs/start/unembed
 	url = git@gitlab.com:HokieGeek/unembed.git
-[submodule "vim/bundle/vim-endwise"]
+[submodule "vim/pack/plugs/start/vim-endwise"]
 	path = vim/pack/plugs/start/vim-endwise
 	url = git://github.com/tpope/vim-endwise.git
-[submodule "vim/bundle/targets.vim"]
+[submodule "vim/pack/plugs/start/targets.vim"]
 	path = vim/pack/plugs/start/targets.vim
 	url = https://github.com/wellle/targets.vim.git
-[submodule "vim/bundle/vim-scala"]
+[submodule "vim/pack/plugs/start/vim-scala"]
 	path = vim/pack/plugs/start/vim-scala
 	url = git@github.com:derekwyatt/vim-scala.git
-[submodule "vim/bundle/typescript-vim"]
+[submodule "vim/pack/plugs/start/typescript-vim"]
 	path = vim/pack/plugs/start/typescript-vim
 	url = git@github.com:leafgarland/typescript-vim.git
 [submodule "vim/pack/plugs/start/devug"]
