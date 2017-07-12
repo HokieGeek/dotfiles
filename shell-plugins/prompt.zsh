@@ -26,7 +26,7 @@ prompt_mercurialInfo() {
 }
 
 prompt_gitInfo() {
-    [ "`git stash list | wc -l`" -gt 0 ] && echo -n "%{$fg[blue]%}∾%{$reset_color%}" || echo -n " "
+    [ "`git stash list | wc -l`" -gt 0 ] && echo -n "%{$fg[blue]%}'%{$reset_color%}" || echo -n " "
 
     git status --porcelain --branch --untracked-files=no 2>/dev/null | while read line; do
         if [[ $line =~ ^## ]]; then
