@@ -1,6 +1,6 @@
 [submodule "shell-plugins/zsh-autosuggestions"]
 	path = shell-plugins/zsh/zsh-autosuggestions
-    url = https://github.com/tarruda/zsh-autosuggestions
+    url = https://github.com/zsh-users/zsh-autosuggestions
 [submodule "look"]
 	path = look
 	url = git@gitlab.com:HokieGeek/look.git
