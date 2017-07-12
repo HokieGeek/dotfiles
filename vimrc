@@ -336,8 +336,6 @@ noremap gk k
 
 nnoremap ZZ :xa<cr>
 nnoremap ZQ :qa!<cr>
-nnoremap <space> :
-vnoremap <space> :
 
 nnoremap Y y$
 nnoremap n nzz
