@@ -49,7 +49,6 @@ The following plugins are being used:
 | [SirVer/ultisnips](https://github.com/SirVer/ultisnips.git) | [derekwyatt/vim-scala](https://github.com/derekwyatt/vim-scala.git) |
 | [taglist](http://www.vim.org/scripts/script.php?script_id=273 "vim.org #273") | [leafgarland/typescript-vim](https://github.com/leafgarland/typescript-vim) |
 | [ynkdir/vim-vimlparser](https://github.com/ynkdir/vim-vimlparser) | |
-| [scrooloose/syntastic](https://github.com/scrooloose/syntastic) | |
 | [syngan/vim-vimlint](https://github.com/syngan/vim-vimlint) | |
 
 #### List of new commands and mappings

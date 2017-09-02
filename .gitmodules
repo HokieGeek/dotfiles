@@ -25,9 +25,6 @@
 [submodule "vim/pack/plugs/start/splitter"]
 	path = vim/pack/plugs/start/splitter
 	url = git@gitlab.com:HokieGeek/splitter.git
-[submodule "vim/pack/plugs/start/syntastic"]
-	path = vim/pack/plugs/start/syntastic
-	url = git@github.com:scrooloose/syntastic.git
 [submodule "vim/pack/plugs/start/ultisnips"]
 	path = vim/pack/plugs/start/ultisnips
 	url = git@github.com:SirVer/ultisnips.git
