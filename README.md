@@ -26,15 +26,15 @@ The following plugins are being used:
 #### Mine
 | Repo | Description |
 | ---- | ----------- |
-| [vit](https://github.com/HokieGeek/vit) | |
-| [¿que?](https://github.com/HokieGeek/que) | |
-| [comentarista](https://github.com/HokieGeek/comentarista) | |
-| [shai-hulud](https://github.com/HokieGeek/shai-hulud) | |
-| [argh](https://github.com/HokieGeek/argh) | |
-| [sessioner](https://github.com/HokieGeek/sessioner) | |
-| [splitter](https://github.com/HokieGeek/splitter) | |
-| [uvix](https://github.com/HokieGeek/uvix) | |
-| [unembed](https://github.com/HokieGeek/unembed) | |
+| [vit](https://gitlab.com/HokieGeek/vit) | |
+| [¿que?](https://gitlab.com/HokieGeek/que) | |
+| [comentarista](https://gitlab.com/HokieGeek/comentarista) | |
+| [shai-hulud](https://gitlab.com/HokieGeek/shai-hulud) | |
+| [argh](https://gitlab.com/HokieGeek/argh) | |
+| [sessioner](https://gitlab.com/HokieGeek/sessioner) | |
+| [splitter](https://gitlab.com/HokieGeek/splitter) | |
+| [uvix](https://gitlab.com/HokieGeek/uvix) | |
+| [unembed](https://gitlab.com/HokieGeek/unembed) | |
 
 #### Third-party
 | Workflow-intrusive | Non-intrusive |
