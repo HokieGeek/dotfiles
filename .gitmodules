@@ -118,3 +118,6 @@
 [submodule "vim/pack/plugs/start/devug"]
 	path = vim/pack/plugs/start/devug
 	url = git@gitlab.com:HokieGeek/devug.git
+[submodule "vim/pack/plugs/start/vim-ng"]
+	path = vim/pack/plugs/start/vim-ng
+	url = git@gitlab.com:HokieGeek/vim-ng.git

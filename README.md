@@ -35,6 +35,7 @@ The following plugins are being used:
 | [splitter](https://gitlab.com/HokieGeek/splitter) | |
 | [uvix](https://gitlab.com/HokieGeek/uvix) | |
 | [unembed](https://gitlab.com/HokieGeek/unembed) | |
+| [vim-ng](https://gitlab.com/HokieGeek/vim-ng) | |
 
 #### Third-party
 | Workflow-intrusive | Non-intrusive |
