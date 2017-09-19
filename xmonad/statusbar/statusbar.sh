@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# exec 2>&1 >>/tmp/xmsb
+exec 2>&1 >>/tmp/xmsb
 echo "ARGS: $@"
 
 here=$(cd ${0%/*}; pwd)

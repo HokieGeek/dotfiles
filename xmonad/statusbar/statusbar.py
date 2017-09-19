@@ -63,10 +63,12 @@ signal.signal(signal.SIGTERM, handleSigTERM)
 f = open(conkyFile, 'w')
 
 ## CONKY SETTINGS
-f.write("out_to_console yes\n")
-f.write("out_to_x no\n")
-f.write("update_interval 1\n")
-f.write("\nTEXT\n")
+f.write("conky.config = {\n")
+f.write("\tout_to_console = true,\n")
+f.write("\tout_to_x = false,\n")
+f.write("\tupdate_interval = 1,\n")
+f.write("};\n")
+f.write("\nconky.text = [[\n")
 
 ## Set the background
 f.write("^bg({})\\\n".format(colorschemeBgHex))
@@ -127,7 +129,7 @@ for interface in [intf.decode("utf-8") for intf in interfaces]:
 
 # Lastly, output the external IP
 f.write("  ^fg({})".format(colorschemeDimHex))
-f.write("${texeci 3 wget -q -O /dev/stdout http://checkip.dyndns.org/ | cut -d : -f 2- | cut -d \< -f -1 | awk '{ print $1 }' | sed '/null/d' }")
+#f.write("${texeci 5 wget -q -O /dev/stdout http://checkip.dyndns.org/ | awk -F\": \" '{ sub(\"<.*$\", \"\", $2); print $2 }' }")
 f.write(sectionSpacing)
 
 ## MEDIA
@@ -209,6 +211,8 @@ if hasBattery():
     f.write("${else}\\\n")
     f.write("^fg({})^r({}x{})\\\n".format(colorschemeBgHex, batteryWidth, height))
     f.write("${endif}\\\n")
+
+f.write("]];\n")
 
 ## Done and done
 f.close()
