@@ -121,3 +121,6 @@
 [submodule "vim/pack/plugs/start/vim-ng"]
 	path = vim/pack/plugs/start/vim-ng
 	url = git@gitlab.com:HokieGeek/vim-ng.git
+[submodule "vim/pack/plugs/start/rust.vim"]
+	path = vim/pack/plugs/start/rust.vim
+	url = https://github.com/rust-lang/rust.vim
