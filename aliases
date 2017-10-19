@@ -36,6 +36,7 @@ alias scala='docker run -it --rm -v $PWD:/app hokiegeek/scala scala'
 alias amm='docker run -it --rm -v $PWD:/app hokiegeek/amm'
 alias sbt='docker run -it --rm -v $PWD:/app hokiegeek/scala-sbt'
 alias jenkins='docker run -p 8888:8080 -p 50000:50000 jenkins'
+alias gradle='docker run --rm -v $PWD:/project -w /project --name gradle gradle:alpine gradle'
 ## }}}
 
 ## Search aliases {{{
