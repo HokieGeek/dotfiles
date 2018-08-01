@@ -213,8 +213,8 @@ myKeys =    [
             , (((modm .|. controlMask), xK_j), rotSlavesDown) --  Move current slave window down
             , (((modm .|. controlMask), xK_k), rotSlavesUp) --  Move current slave window up
 
-            , (((modm .|. controlMask), xK_apostrophe), withFocused minimizeWindow) --  Minimize current window
-            , (((modm .|. shiftMask), xK_apostrophe), sendMessage RestoreNextMinimizedWin) -- Restore a minimized window
+            -- , (((modm .|. controlMask), xK_apostrophe), withFocused minimizeWindow) --  Minimize current window
+            -- , (((modm .|. shiftMask), xK_apostrophe), sendMessage RestoreNextMinimizedWin) -- Restore a minimized window
 
             , ((modm, xK_v), windows copyToAll) --       Make active window sticky across all desktops
             , (((modm .|. shiftMask), xK_v), killAllOtherCopies) -- Remove sticky from active window
