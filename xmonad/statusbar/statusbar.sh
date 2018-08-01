@@ -1,7 +1,7 @@
 #!/bin/bash
 
 exec 2>&1 >>/tmp/xmsb
-echo "ARGS: $@"
+echo "$@"
 
 here=$(cd ${0%/*}; pwd)
 tmprc=/tmp/xmonad.conkyrc

@@ -99,33 +99,36 @@ f.write("  \\\n")
 ## NETWORK
 # Retrieve interfaces
 tempFile = tempfile.NamedTemporaryFile()
+# tempFile = "/tmp/conky.interfaces"
 # TODO: this is ugly
 os.system("netstat -i | awk '$NF ~ /R/ && $1 !~ /lo/ {{ print $1 }}' > {}".format(tempFile.name))
 interfaces = [line.strip() for line in tempFile]
 tempFile.close()
 
 # For each interface, generate conky output
-for interface in [intf.decode("utf-8") for intf in interfaces]:
-    f.write("  ${{if_up {}}}^fg({})\\\n".format(interface, colorschemeFgHex))
-
-    if interface[0] == "w":
-        # f.write("Steve Taylor's Guest Network \\\n".format(interface))
-        f.write("${{wireless_essid {}}} \\\n".format(interface))
-        f.write("^fg({})\\\n".format(colorschemeWhiteHex))
-        f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 95}}^i({}/wifi_100.xbm)${{else}}\\\n".format(interface, imagesDir))
-        f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 75}}^i({}/wifi_75.xbm)${{else}}\\\n".format(interface, imagesDir))
-        f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 50}}^i({}/wifi_50.xbm)${{else}}\\\n".format(interface, imagesDir))
-        f.write("^i({}/wifi_25.xbm)\\\n".format(imagesDir))
-        f.write("${endif}${endif}${endif} \\\n")
-    elif interface[0] == "e":
-        f.write("^fg({})\\\n".format(colorschemeFgHex))
-        f.write("^i({}/ethernet.xbm)\\\n".format(imagesDir))
-    f.write("^fg({})${{addr {}}}^fg({}) \\\n".format(colorschemeGreyHex, interface, colorschemeWhiteHex))
-    f.write("^fg({})${{if_match ${{downspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
-    f.write("^i({}/net_down.xbm)\\\n".format(imagesDir))
-    f.write("^fg({})${{if_match ${{upspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
-    f.write("^i({}/net_up.xbm)\\\n".format(imagesDir))
-    f.write("${endif}\\\n")
+# for interface in [intf.decode("utf-8") for intf in interfaces]:
+#     f.write("  ${{if_up {}}}^fg({})\\\n".format(interface, colorschemeFgHex))
+# 
+#     if interface[0] == "w":
+#         f.write("${{wireless_essid {}}} \\\n".format(interface))
+        # f.write("^fg({})\\\n".format(colorschemeWhiteHex))
+        # f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 95}}^i({}/wifi_100.xbm)${{else}}\\\n".format(interface, imagesDir))
+        # f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 75}}^i({}/wifi_75.xbm)${{else}}\\\n".format(interface, imagesDir))
+        # f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 50}}^i({}/wifi_50.xbm)${{else}}\\\n".format(interface, imagesDir))
+        # f.write("^i({}/wifi_25.xbm)\\\n".format(imagesDir))
+        # f.write("${endif}${endif}${endif} \\\n")
+#     elif interface[0] == "e":
+#         f.write("^fg({})\\\n".format(colorschemeFgHex))
+#         f.write("^i({}/ethernet.xbm)\\\n".format(imagesDir))
+#     else:
+#         f.write("${endif}\\\n")
+#         continue
+#     f.write("^fg({})${{addr {}}}^fg({}) \\\n".format(colorschemeGreyHex, interface, colorschemeWhiteHex))
+#     f.write("^fg({})${{if_match ${{downspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
+#     f.write("^i({}/net_down.xbm)\\\n".format(imagesDir))
+#     f.write("^fg({})${{if_match ${{upspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
+#     f.write("^i({}/net_up.xbm)\\\n".format(imagesDir))
+#     f.write("${endif}\\\n")
 
 # Lastly, output the external IP
 f.write("  ^fg({})".format(colorschemeDimHex))
