@@ -68,7 +68,7 @@ myTerminal        = "st"
 -- myTerminal = runProcessWithInput "get-terminal" [] []
 myBrowser  = runProcessWithInput "get-browser" [] []
 
-unmuteAllChannels = "amixer -q set Master unmute ; "
+pulseAudioCtl = "pactl set-sink-mute 0 false ; pactl set-sink-volume 0 "
 
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-","="]
 myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
@@ -181,12 +181,12 @@ myKeys =    [
             , ((shiftMask, xF86XK_Sleep), spawn "systemctl hibernate") -- %SKIPHELP%
             , (((modm .|. shiftMask), xK_slash), spawn ("$HOME/.xmonad/display-keybindings.sh " ++ show statusbarHeight ++ " 1600 62 " ++ unwords(map surroundInQuotes dzenArgs))) -- %SKIPHELP%
                                                                         -- %SKIPHELP%
-            , ((0, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 1+")) -- %SKIPHELP%
-            , ((controlMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 10+")) --  Raise volume at 10% steps
-            , ((shiftMask, xF86XK_AudioRaiseVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 100")) -- Raise volume to 100%
-            , ((0, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 1-")) -- %SKIPHELP%
-            , ((controlMask, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 10-")) --  Lower volume at 10% steps
-            , ((shiftMask, xF86XK_AudioLowerVolume), spawn (unmuteAllChannels ++ " amixer set Master playback 30")) -- Lower volume to 30%
+            , ((0, xF86XK_AudioRaiseVolume), spawn (pulseAudioCtl ++ " +2%")) -- %SKIPHELP%
+            , ((controlMask, xF86XK_AudioRaiseVolume), spawn (pulseAudioCtl ++ " +10%")) --  Raise volume at 10% steps
+            , ((shiftMask, xF86XK_AudioRaiseVolume), spawn (pulseAudioCtl ++ " 100%")) -- Raise volume to 100%
+            , ((0, xF86XK_AudioLowerVolume), spawn (pulseAudioCtl ++ " -2%")) -- %SKIPHELP%
+            , ((controlMask, xF86XK_AudioLowerVolume), spawn (pulseAudioCtl ++ " -10%")) --  Lower volume at 10% steps
+            , ((shiftMask, xF86XK_AudioLowerVolume), spawn (pulseAudioCtl ++ " -30%")) -- Lower volume to 30%
             , ((0, xF86XK_AudioMute), spawn "amixer set Master toggle") -- %SKIPHELP%
             , ((0, xF86XK_AudioMicMute), spawn "amixer set Capture toggle") -- %SKIPHELP%
 
