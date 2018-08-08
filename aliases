@@ -2,6 +2,9 @@
 alias roll='echo $(($((RANDOM%20))+1))'
 alias broadcast='script -qf | tee >(nc -kl 5000)'
 
+alias iclip='xclip -i -sel clipboard'
+alias oclip='xclip -o -sel clipboard'
+
 vwhich() { vim $(which "$@"); }
 mkcd() { mkdir -p "$1" && cd "$1"; }
 cdl() { cd "$1" && ls; }
