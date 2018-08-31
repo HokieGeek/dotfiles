@@ -177,8 +177,8 @@ myKeys =    [
             , ((modm, xK_b), spawn "rotate-wallpaper $HOME/.look/bgs") --        Cycle wallpapers
             , (((modm .|. shiftMask), xK_b), unsafeSpawn ("schemecolor --colors | dmenu " ++ unwords(map surroundInQuotes dmenuArgs) ++ "| xargs schemecolor")) --  Select a new color scheme
 
-            , ((0, xF86XK_Sleep), spawn "systemctl suspend") -- %SKIPHELP%
-            , ((shiftMask, xF86XK_Sleep), spawn "systemctl hibernate") -- %SKIPHELP%
+            -- , ((0, xF86XK_Sleep), spawn "systemctl suspend") -- %SKIPHELP%
+            -- , ((shiftMask, xF86XK_Sleep), spawn "systemctl hibernate") -- %SKIPHELP%
             , (((modm .|. shiftMask), xK_slash), spawn ("$HOME/.xmonad/display-keybindings.sh " ++ show statusbarHeight ++ " 1600 62 " ++ unwords(map surroundInQuotes dzenArgs))) -- %SKIPHELP%
                                                                         -- %SKIPHELP%
             , ((0, xF86XK_AudioRaiseVolume), spawn (pulseAudioCtl ++ " +2%")) -- %SKIPHELP%
@@ -196,13 +196,15 @@ myKeys =    [
             , ((modm, xK_a), gotoMenuArgs (dmenuArgs ++ ["-l", "25"])) --        Launch dmenu of open windows
 
             -- %HELP% mod-Shift-Enter  Launch terminal
-            , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e alsamixer")) --   Launch Alsa mixer
+            , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e pulsemixer")) --   Launch Alsa mixer
 
             -- }}}
             -- Window helpers {{{
             , ((modm, xK_j), focusDown) -- Switch to next window in layout order but ignoring minimized
             , ((modm, xK_k), focusUp) -- Switch to previous window in layout order but ignoring minimized
             , ((modm, xK_m), focusMaster) -- Switch to master window but ignores minimized
+            , ((modm, xK_n), focusDown) -- Switch to next window in layout order but ignoring minimized
+            , ((modm, xK_e), focusUp) -- Switch to previous window in layout order but ignoring minimized
 
             -- %HELP% mod-Shift-[0..9,-,=]    Move window to indicated workspace
             , (((modm .|. shiftMask), xK_n), shiftTo Next EmptyWS) --         Move window to next empty workspace
@@ -212,6 +214,8 @@ myKeys =    [
             -- %HELP% mod-Shift-k     Swap the focused window with the previous window
             , (((modm .|. controlMask), xK_j), rotSlavesDown) --  Move current slave window down
             , (((modm .|. controlMask), xK_k), rotSlavesUp) --  Move current slave window up
+            , (((modm .|. controlMask), xK_n), rotSlavesDown) --  Move current slave window down
+            , (((modm .|. controlMask), xK_e), rotSlavesUp) --  Move current slave window up
 
             -- , (((modm .|. controlMask), xK_apostrophe), withFocused minimizeWindow) --  Minimize current window
             -- , (((modm .|. shiftMask), xK_apostrophe), sendMessage RestoreNextMinimizedWin) -- Restore a minimized window
@@ -229,14 +233,18 @@ myKeys =    [
 
             , (((modm .|. mod1Mask), xK_k), removeExtraWs prevWS) --   Previous workspace
             , (((modm .|. mod1Mask), xK_j), removeExtraWs nextWS) --   Next workspace
+            , (((modm .|. mod1Mask), xK_e), removeExtraWs prevWS) --   Previous workspace
+            , (((modm .|. mod1Mask), xK_n), removeExtraWs nextWS) --   Next workspace
             , ((modm, xK_Tab), removeExtraWs toggleWS) --     Switch to last selected workspace
 
-            , ((modm, xK_n), removeExtraWs (moveTo Next EmptyWS)) --       Switch to next empty workspace
-            , (((modm .|. mod1Mask), xK_n), removeExtraWs (moveTo Next EmptyWS) <+> spawn myTerminal) --   Switch to next empty workspace and launch terminal
-            , (((modm .|. controlMask), xK_n), do { removeExtraWs (moveTo Next EmptyWS); liftIO myBrowser >>= spawn }) --  Switch to next empty workspace and launch browser
+            , ((modm, xK_u), removeExtraWs (moveTo Next EmptyWS)) --       Switch to next empty workspace
+            , (((modm .|. mod1Mask), xK_u), removeExtraWs (moveTo Next EmptyWS) <+> spawn myTerminal) --   Switch to next empty workspace and launch terminal
+            , (((modm .|. controlMask), xK_u), do { removeExtraWs (moveTo Next EmptyWS); liftIO myBrowser >>= spawn }) --  Switch to next empty workspace and launch browser
 
             , (((modm .|. shiftMask .|. controlMask), xK_k), removeExtraWs (moveTo Prev NonEmptyWS)) -- Switch to previous non-empty workspace
             , (((modm .|. shiftMask .|. controlMask), xK_j), removeExtraWs (moveTo Next NonEmptyWS)) -- Switch to next non-empty workspace
+            , (((modm .|. shiftMask .|. controlMask), xK_e), removeExtraWs (moveTo Prev NonEmptyWS)) -- Switch to previous non-empty workspace
+            , (((modm .|. shiftMask .|. controlMask), xK_n), removeExtraWs (moveTo Next NonEmptyWS)) -- Switch to next non-empty workspace
 
             -- %HELP% mod-,           Increment the number of windows in the master area
             -- %HELP% mod-.           Deincrement the number of windows in the master area
@@ -263,16 +271,16 @@ myKeys =    [
             , (((modm .|. shiftMask), xK_t), withAll' W.sink) -- Sink all floating windows on the current workspace
             , (((modm .|. controlMask), xK_t), toggleHookAllNew "float" >> runLogHook) --  Toggle floating all new windows
 
-            , ((modm, xK_y), withFocused (keysMoveWindow (-10,0))) --       Move floating window left
-            , (((modm .|. controlMask), xK_y), withFocused (keysResizeWindow (10,0) (1,1))) --  Expand left edge of floating window
-            , (((modm .|. shiftMask), xK_y), withFocused (keysResizeWindow (-10,0) (1,1))) -- Shrink right edge of floating window
-            , ((modm, xK_u), withFocused (keysMoveWindow (0,10))) --       Move floating window down
-            , (((modm .|. controlMask), xK_u), withFocused (keysResizeWindow (10,10) (1,1))) --  Expand top-left corner of floating window
-            , ((modm, xK_i), withFocused (keysMoveWindow (0,-10))) --       Move floating window up
-            , (((modm .|. controlMask), xK_i), withFocused (keysResizeWindow (0,10) (1,1))) --  Expand upper edge of floating window
-            , (((modm .|. shiftMask), xK_i), withFocused (keysResizeWindow (0,-10) (1,1))) -- Shrink upper edge of floating window
-            , ((modm, xK_o), withFocused (keysMoveWindow (10,0))) --       Move floating window right
-            , (((modm .|. controlMask), xK_o), withFocused (keysResizeWindow (-10,-10) (1,1))) --  Shrink top-left corner of floating window
+            -- , ((modm, xK_y), withFocused (keysMoveWindow (-10,0))) --       Move floating window left
+            -- , (((modm .|. controlMask), xK_y), withFocused (keysResizeWindow (10,0) (1,1))) --  Expand left edge of floating window
+            -- , (((modm .|. shiftMask), xK_y), withFocused (keysResizeWindow (-10,0) (1,1))) -- Shrink right edge of floating window
+            -- , ((modm, xK_u), withFocused (keysMoveWindow (0,10))) --       Move floating window down
+            -- , (((modm .|. controlMask), xK_u), withFocused (keysResizeWindow (10,10) (1,1))) --  Expand top-left corner of floating window
+            -- , ((modm, xK_i), withFocused (keysMoveWindow (0,-10))) --       Move floating window up
+            -- , (((modm .|. controlMask), xK_i), withFocused (keysResizeWindow (0,10) (1,1))) --  Expand upper edge of floating window
+            -- , (((modm .|. shiftMask), xK_i), withFocused (keysResizeWindow (0,-10) (1,1))) -- Shrink upper edge of floating window
+            -- , ((modm, xK_o), withFocused (keysMoveWindow (10,0))) --       Move floating window right
+            -- , (((modm .|. controlMask), xK_o), withFocused (keysResizeWindow (-10,-10) (1,1))) --  Shrink top-left corner of floating window
 
             -- %HELP% mod-button1     Set the window to floating mode and move by dragging
             -- %HELP% mod-button2     Raise the window to the top of the stack
@@ -282,17 +290,24 @@ myKeys =    [
             -- Other {{{ -- %SKIPHELP%
             , ((0, xF86XK_MonBrightnessUp), spawn "xbacklight -inc 5") -- %SKIPHELP%
             , ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -dec 5") -- %SKIPHELP%
-            , ((shiftMask, xF86XK_MonBrightnessUp), spawn "xbacklight -set 100") -- %SKIPHELP%
-            , ((shiftMask, xF86XK_MonBrightnessDown), spawn "xbacklight -set 20") -- %SKIPHELP%
+            -- , ((shiftMask, xF86XK_MonBrightnessUp), spawn "xbacklight -set 100") -- %SKIPHELP%
+            -- , ((shiftMask, xF86XK_MonBrightnessDown), spawn "xbacklight -set 20") -- %SKIPHELP%
+            , ((0, xK_Find), spawn "xbacklight -inc 5") -- %SKIPHELP%
+            , ((0, xK_Help), spawn "xbacklight -dec 5") -- %SKIPHELP%
+            -- , ((shiftMask, xK_Find), spawn "xbacklight -set 100") -- %SKIPHELP%
+            -- , ((shiftMask, xK_Help), spawn "xbacklight -set 20") -- %SKIPHELP%
 
             , ((0, xK_Print), spawn "scrot") -- %SKIPHELP%
             , ((mod1Mask, xK_Print), spawn "scrot -d 1 -s") -- %SKIPHELP%
+
             , (((mod1Mask .|. controlMask), xK_l), spawn "slock") -- %SKIPHELP%
+
+            , ((0, xK_Cancel), spawn "sct 4000") -- %SKIPHELP%
+            , ((0, xK_Undo), spawn "sct 8000") -- %SKIPHELP%
                                                                   -- %SKIPHELP%
             --- ThinkPad-specific -- %SKIPHELP%
-            , ((0, xF86XK_WebCam), spawn "toggle-bluetooth") -- %SKIPHELP%
-            , ((0, xF86XK_Display), spawn "toggle-screens") -- %SKIPHELP%
-            , ((0, xF86XK_Launch1), spawn "toggle-laptop-kbd") -- %SKIPHELP%
+            -- , ((0, xF86XK_WebCam), spawn "toggle-bluetooth") -- %SKIPHELP%
+            -- , ((0, xF86XK_Display), spawn "toggle-screens") -- %SKIPHELP%
             -- }}}
             ]
             ++
