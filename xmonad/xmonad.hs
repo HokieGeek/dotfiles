@@ -302,8 +302,10 @@ myKeys =    [
 
             , (((mod1Mask .|. controlMask), xK_l), spawn "slock") -- %SKIPHELP%
 
-            , ((0, xK_Cancel), spawn "sct 4000") -- %SKIPHELP%
-            , ((0, xK_Undo), spawn "sct 8000") -- %SKIPHELP%
+            , ((0, xK_Cancel), spawn "sctw -250") -- %SKIPHELP%
+            , ((controlMask, xK_Cancel), spawn "sctw -100") -- %SKIPHELP%
+            , ((0, xK_Undo), spawn "sctw +250") -- %SKIPHELP%
+            , ((controlMask, xK_Undo), spawn "sctw +100") -- %SKIPHELP%
                                                                   -- %SKIPHELP%
             --- ThinkPad-specific -- %SKIPHELP%
             -- , ((0, xF86XK_WebCam), spawn "toggle-bluetooth") -- %SKIPHELP%
