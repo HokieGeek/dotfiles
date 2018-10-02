@@ -124,3 +124,6 @@
 [submodule "vim/pack/plugs/start/rust.vim"]
 	path = vim/pack/plugs/start/rust.vim
 	url = https://github.com/rust-lang/rust.vim
+[submodule "vim/pack/plugs/start/vim-tiddlywiki"]
+	path = vim/pack/plugs/start/vim-tiddlywiki
+	url = git@gitlab.com:HokieGeek/vim-tiddlywiki.git

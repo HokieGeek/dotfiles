@@ -70,8 +70,8 @@ myBrowser  = runProcessWithInput "get-browser" [] []
 
 pulseAudioCtl = "pactl set-sink-mute 0 false ; pactl set-sink-volume 0 "
 
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-","="]
-myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0,xK_minus,xK_equal]
+myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0"]
+myWorkspaceKeys = [xK_1..xK_9] ++ [xK_0]
 
 dmenuArgs  = ["-nb", colorBackground, "-nf", colorWhite, "-sb", colorForeground]
 dzenArgs  = ["-bg", colorBackground, "-fg", colorWhite, "-fn", termFont]
