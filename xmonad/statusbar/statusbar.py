@@ -192,18 +192,20 @@ def hasBattery():
             os.path.isfile("/sys/class/power_supply/BAT1")
 
 if hasBattery():
-    f.write("^fg({})\\\n".format(colorschemeDarkHex))
-    f.write("${{if_match ${{battery_percent}} < 99}}^fg({})${{endif}}\\\n".format(colorschemeFgHex))
-    f.write("${{if_match ${{battery_percent}} < 50}}^fg({})${{endif}}\\\n".format(colorschemeYellowHex))
-    f.write("${{if_match ${{battery_percent}} < 20}}^fg({})${{endif}}\\\n".format(colorschemeRedHex))
-
     batteryWidth=16
     batteryStep = int(100 / height)
     batterySteps = list(range(batteryStep, 100, batteryStep))
     batteryHeight = 1
     batteryHeightStep = 1
-    f.write("${if_match ${battery_percent} < 99}\\\n")
-    f.write("^p()^p(;-1)^fg({})^bg({})\\\n".format(colorschemeDimHex, colorschemeFgHex))
+    f.write("^fg({})\\\n".format(colorschemeDarkHex))
+    f.write("${if_match ${battery_percent} < 100}\\\n")
+    f.write("^p()^p(;-1)^fg({})\\\n".format(colorschemeDimHex))
+    f.write("${if_existing /sys/class/power_supply/BAT0/status Discharging}\\\n")
+    f.write("^bg({})\\\n".format(colorschemeRedHex))
+    f.write("${else}\\\n")
+    f.write("${{if_match ${{battery_percent}} < 100}}^bg({})${{endif}}\\\n".format(colorschemeFgHex))
+    f.write("${{if_match ${{battery_percent}} < 50}}^bg({})${{endif}}\\\n".format(colorschemeYellowHex))
+    f.write("${endif}\\\n")
     for perc in reversed(batterySteps):
         f.write("${{if_match ${{battery_percent}} > {}}}^r({}x{})${{else}}\\\n".format(perc, batteryWidth, batteryHeight))
         batteryHeight += batteryHeightStep
