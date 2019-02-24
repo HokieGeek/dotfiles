@@ -169,7 +169,7 @@ myStartupHook = do
 -- }}}
 
 -- Keybindings {{{
-myKeys =    [
+genericKeys =    [
             -- General {{{
               ((modm, xK_q), spawn "~/.xmonad/restart") --        Restart xmonad
             -- %HELP% mod-Shift-q      Quit xmonad
@@ -192,30 +192,17 @@ myKeys =    [
 
             -- }}}
             -- Launchers {{{
-            , ((modm, xK_z), safeSpawn "dmenu_run_mfu" (dmenuArgs ++ ["--threshold", "2", "--terminal", myTerminal])) --        Launch dmenu command launcher
-            , ((modm, xK_a), gotoMenuArgs (dmenuArgs ++ ["-l", "25"])) --        Launch dmenu of open windows
-
             -- %HELP% mod-Shift-Enter  Launch terminal
             , ((shiftMask, xF86XK_AudioMute), spawn (myTerminal ++ " -e pulsemixer")) --   Launch Alsa mixer
 
             -- }}}
             -- Window helpers {{{
-            , ((modm, xK_j), focusDown) -- Switch to next window in layout order but ignoring minimized
-            , ((modm, xK_k), focusUp) -- Switch to previous window in layout order but ignoring minimized
             , ((modm, xK_m), focusMaster) -- Switch to master window but ignores minimized
-            , ((modm, xK_n), focusDown) -- Switch to next window in layout order but ignoring minimized
-            , ((modm, xK_e), focusUp) -- Switch to previous window in layout order but ignoring minimized
 
-            -- %HELP% mod-Shift-[0..9,-,=]    Move window to indicated workspace
+            -- %HELP% mod-Shift-[1..9,0]    Move window to indicated workspace
             , (((modm .|. shiftMask), xK_n), shiftTo Next EmptyWS) --         Move window to next empty workspace
 
             , ((modm, xK_Return), promote) --  Swap the focused window and the master window
-            -- %HELP% mod-Shift-j     Swap the focused window with the next window
-            -- %HELP% mod-Shift-k     Swap the focused window with the previous window
-            , (((modm .|. controlMask), xK_j), rotSlavesDown) --  Move current slave window down
-            , (((modm .|. controlMask), xK_k), rotSlavesUp) --  Move current slave window up
-            , (((modm .|. controlMask), xK_n), rotSlavesDown) --  Move current slave window down
-            , (((modm .|. controlMask), xK_e), rotSlavesUp) --  Move current slave window up
 
             -- , (((modm .|. controlMask), xK_apostrophe), withFocused minimizeWindow) --  Minimize current window
             -- , (((modm .|. shiftMask), xK_apostrophe), sendMessage RestoreNextMinimizedWin) -- Restore a minimized window
@@ -223,35 +210,20 @@ myKeys =    [
             , ((modm, xK_v), windows copyToAll) --       Make active window sticky across all desktops
             , (((modm .|. shiftMask), xK_v), killAllOtherCopies) -- Remove sticky from active window
 
-            , ((mod1Mask, xK_F4), kill) --      Close/kill the focused window
             -- %HELP% mod-Shift-c     Close/kill the focused window
 
             -- }}}
             -- Workspace helpers {{{
-            -- %HELP% mod-[0..9,-,=]       Switch to indicated workspace
-            -- %HELP% mod-Ctrl-[0..9,-,=]  Swap current workspace with indicated workspace
+            -- %HELP% mod-[1..9,0]       Switch to indicated workspace
+            -- %HELP% mod-Ctrl-[1..9,0]  Swap current workspace with indicated workspace
 
-            , (((modm .|. mod1Mask), xK_k), removeExtraWs prevWS) --   Previous workspace
-            , (((modm .|. mod1Mask), xK_j), removeExtraWs nextWS) --   Next workspace
-            , (((modm .|. mod1Mask), xK_e), removeExtraWs prevWS) --   Previous workspace
-            , (((modm .|. mod1Mask), xK_n), removeExtraWs nextWS) --   Next workspace
+            -- , (((modm .|. mod1Mask), xK_k), removeExtraWs prevWS) --   Previous workspace
+            -- , (((modm .|. mod1Mask), xK_j), removeExtraWs nextWS) --   Next workspace
             , ((modm, xK_Tab), removeExtraWs toggleWS) --     Switch to last selected workspace
 
             , ((modm, xK_u), removeExtraWs (moveTo Next EmptyWS)) --       Switch to next empty workspace
             , (((modm .|. mod1Mask), xK_u), removeExtraWs (moveTo Next EmptyWS) <+> spawn myTerminal) --   Switch to next empty workspace and launch terminal
             , (((modm .|. controlMask), xK_u), do { removeExtraWs (moveTo Next EmptyWS); liftIO myBrowser >>= spawn }) --  Switch to next empty workspace and launch browser
-
-            , (((modm .|. shiftMask .|. controlMask), xK_k), removeExtraWs (moveTo Prev NonEmptyWS)) -- Switch to previous non-empty workspace
-            , (((modm .|. shiftMask .|. controlMask), xK_j), removeExtraWs (moveTo Next NonEmptyWS)) -- Switch to next non-empty workspace
-            , (((modm .|. shiftMask .|. controlMask), xK_e), removeExtraWs (moveTo Prev NonEmptyWS)) -- Switch to previous non-empty workspace
-            , (((modm .|. shiftMask .|. controlMask), xK_n), removeExtraWs (moveTo Next NonEmptyWS)) -- Switch to next non-empty workspace
-
-            -- %HELP% mod-,           Increment the number of windows in the master area
-            -- %HELP% mod-.           Deincrement the number of windows in the master area
-            -- %HELP% mod-h           Shrink the master area
-            -- %HELP% mod-l           Expand the master area
-            , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- Shrink the slave area
-            , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- Expand the slave area
 
             -- %HELP% mod-space            Rotate through the available layout algorithms
             -- %HELP% mod-Shift-space      Reset the layouts on the current workSpace to default
@@ -261,15 +233,13 @@ myKeys =    [
             -- %HELP% mod-{w,e,r}          Switch to physical/Xinerama screens 1, 2, or 3
             -- %HELP% mod-Shift-{w,e,r}    Move client to screen 1, 2, or 3
 
-            -- , (((modm .|. mod1Mask), xK_h), prevScreen) --  Previous screen
-            -- , (((modm .|. mod1Mask), xK_l), nextScreen) --  Next screen
             , (((modm .|. controlMask), xK_w), swapNextScreen) -- Swap current screen with next screen
 
             -- }}}
             -- Floating window helpers {{{
-            -- %HELP% mod-t           Push window back into tiling; unfloat and re-tile it
-            , (((modm .|. shiftMask), xK_t), withAll' W.sink) -- Sink all floating windows on the current workspace
-            , (((modm .|. controlMask), xK_t), toggleHookAllNew "float" >> runLogHook) --  Toggle floating all new windows
+            , ((modm, xK_g), withFocused $ windows . W.sink) -- Push window back into tiling
+            , (((modm .|. shiftMask), xK_g), withAll' W.sink) -- Sink all floating windows on the current workspace
+            , (((modm .|. controlMask), xK_g), toggleHookAllNew "float" >> runLogHook) --  Toggle floating all new windows
 
             -- , ((modm, xK_y), withFocused (keysMoveWindow (-10,0))) --       Move floating window left
             -- , (((modm .|. controlMask), xK_y), withFocused (keysResizeWindow (10,0) (1,1))) --  Expand left edge of floating window
@@ -316,10 +286,82 @@ myKeys =    [
             [((m .|. modm, k), windows $ f i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys
                 , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]] -- %SKIPHELP%
+
+qwertyKeys =    [
+            -- Launchers {{{
+              ((modm, xK_f), safeSpawn "dmenu_run_mfu" (dmenuArgs ++ ["--threshold", "2", "--terminal", myTerminal])) --        Launch dmenu command launcher
+            , (((modm .|. controlMask), xK_f), gotoMenuArgs (dmenuArgs ++ ["-l", "25"])) --        Launch dmenu of open windows
+            -- }}}
+
+            -- Window helpers {{{
+            , ((modm, xK_j), focusDown) -- Switch to next window in layout order but ignoring minimized
+            , ((modm, xK_k), focusUp) -- Switch to previous window in layout order but ignoring minimized
+
+            -- %HELP% mod-Shift-j     Swap the focused window with the next window
+            -- %HELP% mod-Shift-k     Swap the focused window with the previous window
+            , (((modm .|. controlMask), xK_j), rotSlavesDown) --  Move current slave window down
+            , (((modm .|. controlMask), xK_k), rotSlavesUp) --  Move current slave window up
+            -- }}}
+            -- Workspace helpers {{{
+            , (((modm .|. mod1Mask), xK_k), removeExtraWs prevWS) --   Previous workspace
+            , (((modm .|. mod1Mask), xK_j), removeExtraWs nextWS) --   Next workspace
+
+            , (((modm .|. shiftMask .|. controlMask), xK_k), removeExtraWs (moveTo Prev NonEmptyWS)) -- Switch to previous non-empty workspace
+            , (((modm .|. shiftMask .|. controlMask), xK_j), removeExtraWs (moveTo Next NonEmptyWS)) -- Switch to next non-empty workspace
+
+            -- %HELP% mod-h           Shrink the master area
+            -- %HELP% mod-l           Expand the master area
+            , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- Shrink the slave area
+            , (((modm .|. shiftMask), xK_l), sendMessage MirrorExpand) -- Expand the slave area
+            -- }}}
+            -- Screen helpers {{{
+            -- %HELP% mod-{w,e,r}          Switch to physical/Xinerama screens 1, 2, or 3
+            -- %HELP% mod-Shift-{w,e,r}    Move client to screen 1, 2, or 3
+
+            , (((modm .|. mod1Mask), xK_h), prevScreen) --  Previous screen
+            , (((modm .|. mod1Mask), xK_l), nextScreen) --  Next screen
+            -- }}}
+            ]
+
+colemakKeys =    [
+            -- Launchers {{{
+              ((modm, xK_t), safeSpawn "dmenu_run_mfu" (dmenuArgs ++ ["--threshold", "2", "--terminal", myTerminal])) --        Launch dmenu command launcher
+            , (((modm .|. controlMask), xK_t), gotoMenuArgs (dmenuArgs ++ ["-l", "25"])) --        Launch dmenu of open windows
+            -- }}}
+
+            -- Window helpers {{{
+            , ((modm, xK_n), focusDown) -- Switch to next window in layout order but ignoring minimized
+            , ((modm, xK_e), focusUp) -- Switch to previous window in layout order but ignoring minimized
+
+            , (((modm .|. shiftMask), xK_n), shiftTo Next EmptyWS) --         Move window to next empty workspace
+
+            , (((modm .|. controlMask), xK_n), rotSlavesDown) --  Move current slave window down
+            , (((modm .|. controlMask), xK_e), rotSlavesUp) --  Move current slave window up
+
+            -- }}}
+            -- Workspace helpers {{{
+            , (((modm .|. mod1Mask), xK_e), removeExtraWs prevWS) --   Previous workspace
+            , (((modm .|. mod1Mask), xK_n), removeExtraWs nextWS) --   Next workspace
+
+            , (((modm .|. shiftMask .|. controlMask), xK_e), removeExtraWs (moveTo Prev NonEmptyWS)) -- Switch to previous non-empty workspace
+            , (((modm .|. shiftMask .|. controlMask), xK_n), removeExtraWs (moveTo Next NonEmptyWS)) -- Switch to next non-empty workspace
+
+            -- %HELP% mod-h           Shrink the master area
+            , ((modm, xK_i), sendMessage Expand) -- Expand the master area
+            , (((modm .|. shiftMask), xK_h), sendMessage MirrorShrink) -- Shrink the slave area
+            , (((modm .|. shiftMask), xK_i), sendMessage MirrorExpand) -- Expand the slave area
+            -- }}}
+            ]
             ++
             [((modm .|. controlMask, k), windows $ swapWithCurrent i)
                 | (i, k) <- zip myWorkspaces myWorkspaceKeys]
+            ++
+            [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
+                | (key, sc) <- zip [xK_w, xK_f, xK_p] [0..]
+                , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 --}}}
+-- myKeys = genericKeys ++ qwertyKeys
+myKeys = genericKeys ++ colemakKeys
 
 -- Main {{{
 workspaceStatusBar = "dzen2 -dock -fn '" ++ termFont ++ "' -x '0' -y '0' -h '" ++ show statusbarHeight ++ "' -w '" ++ show workspaceBarWidth ++ "' -fg '" ++ colorWhite ++ "' -bg '" ++ colorBackground ++ "' -ta l"

@@ -106,11 +106,12 @@ interfaces = [line.strip() for line in tempFile]
 tempFile.close()
 
 # For each interface, generate conky output
-# for interface in [intf.decode("utf-8") for intf in interfaces]:
-#     f.write("  ${{if_up {}}}^fg({})\\\n".format(interface, colorschemeFgHex))
-# 
-#     if interface[0] == "w":
-#         f.write("${{wireless_essid {}}} \\\n".format(interface))
+for interface in [intf.decode("utf-8") for intf in interfaces]:
+    f.write("  ${{if_up {}}}^fg({})\\\n".format(interface, colorschemeFgHex))
+
+    if interface[0] == "w":
+        f.write("${{wireless_essid {}}} \\\n".format(interface))
+#       f.write("${{wireless_essid {}}} \\\n".format(interface))
         # f.write("^fg({})\\\n".format(colorschemeWhiteHex))
         # f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 95}}^i({}/wifi_100.xbm)${{else}}\\\n".format(interface, imagesDir))
         # f.write("${{if_match ${{wireless_link_qual_perc {}}} >= 75}}^i({}/wifi_75.xbm)${{else}}\\\n".format(interface, imagesDir))
@@ -123,12 +124,12 @@ tempFile.close()
 #     else:
 #         f.write("${endif}\\\n")
 #         continue
-#     f.write("^fg({})${{addr {}}}^fg({}) \\\n".format(colorschemeGreyHex, interface, colorschemeWhiteHex))
-#     f.write("^fg({})${{if_match ${{downspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
-#     f.write("^i({}/net_down.xbm)\\\n".format(imagesDir))
-#     f.write("^fg({})${{if_match ${{upspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
-#     f.write("^i({}/net_up.xbm)\\\n".format(imagesDir))
-#     f.write("${endif}\\\n")
+    #f.write("^fg({})${{addr {}}}^fg({}) \\\n".format(colorschemeGreyHex, interface, colorschemeWhiteHex))
+    f.write("^fg({})${{if_match ${{downspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
+    f.write("^i({}/net_down.xbm)\\\n".format(imagesDir))
+    f.write("^fg({})${{if_match ${{upspeedf {}}} > 1.5}}^fg({})${{endif}}\\\n".format(colorschemeDimHex, interface, colorschemeFgHex))
+    f.write("^i({}/net_up.xbm)\\\n".format(imagesDir))
+    f.write("${endif}\\\n")
 
 # Lastly, output the external IP
 f.write("  ^fg({})".format(colorschemeDimHex))
