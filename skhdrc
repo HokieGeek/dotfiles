@@ -101,29 +101,26 @@
 #    "qutebrowser"
 # ]
 
-# open terminal, blazingly fast compared to iTerm/Hyper
-cmd + shift - return : /Applications/Kitty.app/Contents/MacOS/kitty --single-instance -d ~
-
 # close focused window
-cmd + shift - c : chunkc tiling::window --close
+# alt - w : chunkc tiling::window --close
 
 # focus window
-alt - h : chunkc tiling::window --focus west
-alt - j : chunkc tiling::window --focus south
-alt - k : chunkc tiling::window --focus north
-alt - l : chunkc tiling::window --focus east
+# alt - h : chunkc tiling::window --focus west
+# alt - j : chunkc tiling::window --focus south
+# alt - k : chunkc tiling::window --focus north
+# alt - l : chunkc tiling::window --focus east
 
-cmd - j : chunkc tiling::window --focus prev
-cmd - k : chunkc tiling::window --focus next
+shift + ctrl + alt - n : chunkc tiling::window --focus prev
+shift + ctrl + alt - e : chunkc tiling::window --focus next
 
 # equalize size of windows
 shift + alt - 0 : chunkc tiling::desktop --equalize
 
 # swap window
-shift + alt - h : chunkc tiling::window --swap west
-shift + alt - j : chunkc tiling::window --swap south
-shift + alt - k : chunkc tiling::window --swap north
-shift + alt - l : chunkc tiling::window --swap east
+# shift + alt - h : chunkc tiling::window --swap west
+# shift + alt - j : chunkc tiling::window --swap south
+# shift + alt - k : chunkc tiling::window --swap north
+# shift + alt - l : chunkc tiling::window --swap east
 
 # move window
 shift + cmd - h : chunkc tiling::window --warp west
@@ -132,13 +129,13 @@ shift + cmd - k : chunkc tiling::window --warp north
 shift + cmd - l : chunkc tiling::window --warp east
 
 # make floating window fill screen
-shift + alt - up     : chunkc tiling::window --grid-layout 1:1:0:0:1:1
+# shift + alt - up     : chunkc tiling::window --grid-layout 1:1:0:0:1:1
 
 # make floating window fill left-half of screen
-shift + alt - left   : chunkc tiling::window --grid-layout 1:2:0:0:1:1
+# shift + alt - left   : chunkc tiling::window --grid-layout 1:2:0:0:1:1
 
 # make floating window fill right-half of screen
-shift + alt - right  : chunkc tiling::window --grid-layout 1:2:1:0:1:1
+# shift + alt - right  : chunkc tiling::window --grid-layout 1:2:1:0:1:1
 
 # create desktop, move window and follow focus
 shift + cmd - n : chunkc tiling::desktop --create;\
@@ -154,27 +151,30 @@ cmd + alt - n : chunkc tiling::desktop --create;\
 cmd + alt - w : chunkc tiling::desktop --annihilate
 
 # fast focus desktop
-cmd + alt - x : chunkc tiling::desktop --focus $(chunkc get _last_active_desktop)
-cmd + alt - z : chunkc tiling::desktop --focus prev
-cmd + alt - c : chunkc tiling::desktop --focus next
-cmd + alt - 1 : chunkc tiling::desktop --focus 1
-cmd + alt - 2 : chunkc tiling::desktop --focus 2
-cmd + alt - 3 : chunkc tiling::desktop --focus 3
-cmd + alt - 4 : chunkc tiling::desktop --focus 4
-cmd + alt - 5 : chunkc tiling::desktop --focus 5
-cmd + alt - 6 : chunkc tiling::desktop --focus 6
+# cmd - tab : chunkc tiling::desktop --focus $(chunkc get _last_active_desktop)
+# cmd + alt - n : chunkc tiling::desktop --focus prev
+# cmd + alt - e : chunkc tiling::desktop --focus next
+ctrl + cmd + alt - 1 : chunkc tiling::desktop --focus 1
+ctrl + cmd + alt - 2 : chunkc tiling::desktop --focus 2
+ctrl + cmd + alt - 3 : chunkc tiling::desktop --focus 3
+ctrl + cmd + alt - 4 : chunkc tiling::desktop --focus 4
+ctrl + cmd + alt - 5 : chunkc tiling::desktop --focus 5
+ctrl + cmd + alt - 6 : chunkc tiling::desktop --focus 6
+ctrl + cmd + alt - 7 : chunkc tiling::desktop --focus 7
+ctrl + cmd + alt - 8 : chunkc tiling::desktop --focus 8
+ctrl + cmd + alt - 9 : chunkc tiling::desktop --focus 9
 # cmd + alt - 7 : chunkc tiling::desktop --focus 7
 
 # send window to desktop
-shift + cmd - x : chunkc tiling::window --send-to-desktop $(chunkc get _last_active_desktop)
-shift + cmd - z : chunkc tiling::window --send-to-desktop prev
-shift + cmd - c : chunkc tiling::window --send-to-desktop next
-shift + cmd - 1 : chunkc tiling::window --send-to-desktop 1
-shift + cmd - 2 : chunkc tiling::window --send-to-desktop 2
-shift + cmd - 3 : chunkc tiling::window --send-to-desktop 3
-shift + cmd - 4 : chunkc tiling::window --send-to-desktop 4
-shift + cmd - 5 : chunkc tiling::window --send-to-desktop 5
-shift + cmd - 6 : chunkc tiling::window --send-to-desktop 6
+shift + alt - x : chunkc tiling::window --send-to-desktop $(chunkc get _last_active_desktop)
+shift + alt - z : chunkc tiling::window --send-to-desktop prev
+shift + alt - c : chunkc tiling::window --send-to-desktop next
+shift + alt - 1 : chunkc tiling::window --send-to-desktop 1
+shift + alt - 2 : chunkc tiling::window --send-to-desktop 2
+shift + alt - 3 : chunkc tiling::window --send-to-desktop 3
+shift + alt - 4 : chunkc tiling::window --send-to-desktop 4
+shift + alt - 5 : chunkc tiling::window --send-to-desktop 5
+shift + alt - 6 : chunkc tiling::window --send-to-desktop 6
 # shift + alt - 7 : chunkc tiling::window --send-to-desktop 7
 
 # send window to desktop and follow focus
@@ -190,11 +190,11 @@ shift + cmd - 6 : chunkc tiling::window --send-to-desktop 6; chunkc tiling::desk
 # shift + cmd - 7 : chunkc tiling::window --send-to-desktop 7; chunkc tiling::desktop --focus 7
 
 # focus monitor
-ctrl + alt - z  : chunkc tiling::monitor -f prev
-ctrl + alt - c  : chunkc tiling::monitor -f next
-ctrl + alt - 1  : chunkc tiling::monitor -f 1
-ctrl + alt - 2  : chunkc tiling::monitor -f 2
-ctrl + alt - 3  : chunkc tiling::monitor -f 3
+# ctrl + alt - z  : chunkc tiling::monitor -f prev
+# ctrl + alt - c  : chunkc tiling::monitor -f next
+ctrl + alt + shift + cmd - w  : chunkc tiling::monitor -f 1
+ctrl + alt + shift + cmd - f  : chunkc tiling::monitor -f 2
+ctrl + alt + shift + cmd - p  : chunkc tiling::monitor -f 3
 
 # send window to monitor and follow focus
 ctrl + cmd - z  : chunkc tiling::window --send-to-monitor prev; chunkc tiling::monitor -f prev
