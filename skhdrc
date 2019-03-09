@@ -121,12 +121,14 @@ meh - n : chunkc tiling::window --focus next
 # shift + alt - j : chunkc tiling::window --swap south
 # shift + alt - k : chunkc tiling::window --swap north
 # shift + alt - l : chunkc tiling::window --swap east
+meh - m : chunkc tiling::window --focus biggest
+
 
 # move window
 shift + cmd - h : chunkc tiling::window --warp west
 shift + cmd - n : chunkc tiling::window --warp south
-shift + cmd - i : chunkc tiling::window --warp north
-shift + cmd - o : chunkc tiling::window --warp east
+shift + cmd - e : chunkc tiling::window --warp north
+shift + cmd - i : chunkc tiling::window --warp east
 
 # make floating window fill screen
 # shift + alt - up     : chunkc tiling::window --grid-layout 1:1:0:0:1:1
@@ -186,10 +188,10 @@ meh - h : chunkc tiling::window --use-temporary-ratio 0.1 --adjust-window-edge w
 meh - i : chunkc tiling::window --use-temporary-ratio 0.1 --adjust-window-edge east
 
 # decrease region size
-# shift + cmd - a : chunkc tiling::window --use-temporary-ratio -0.1 --adjust-window-edge west
+hyper - h : chunkc tiling::window --use-temporary-ratio -0.1 --adjust-window-edge west
 # shift + cmd - s : chunkc tiling::window --use-temporary-ratio -0.1 --adjust-window-edge south
 # shift + cmd - w : chunkc tiling::window --use-temporary-ratio -0.1 --adjust-window-edge north
-# shift + cmd - d : chunkc tiling::window --use-temporary-ratio -0.1 --adjust-window-edge east
+hyper - i : chunkc tiling::window --use-temporary-ratio -0.1 --adjust-window-edge east
 
 # set insertion point for focused container
 # ctrl + alt - f : chunkc tiling::window --use-insertion-point cancel

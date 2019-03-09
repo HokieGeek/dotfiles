@@ -83,8 +83,8 @@ chunkc set mouse_follows_focus           intrinsic
 chunkc set window_float_next             0
 chunkc set window_region_locked          1
 
-chunkc set mouse_move_window             \"fn 1\"
-chunkc set mouse_resize_window           \"fn 2\"
+chunkc set mouse_move_window             \"cmd 1\"
+chunkc set mouse_resize_window           \"cmd 2\"
 chunkc set mouse_motion_interval         35
 
 chunkc set preselect_border_color        0xffd75f5f
@@ -99,7 +99,7 @@ chunkc set preselect_border_outline      0
 
 chunkc set window_float_topmost          0
 chunkc set window_fade_inactive          1
-chunkc set window_fade_alpha             0.85
+chunkc set window_fade_alpha             0.50
 chunkc set window_fade_duration          0.25
 chunkc set window_use_cgs_move           0
 
