@@ -65,7 +65,7 @@ chunkc set 1_desktop_mode                monocle
 # chunkc set 3_desktop_offset_left         190
 # chunkc set 3_desktop_offset_right        190
 # chunkc set 3_desktop_offset_gap          30
-chunkc set 9_bsp_split_mode                horizontal
+# chunkc set 9_bsp_split_mode                horizontal
 #
 
 chunkc set desktop_padding_step_size     0.0

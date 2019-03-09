@@ -107,9 +107,10 @@
 # alt - k : chunkc tiling::window --focus north
 # alt - l : chunkc tiling::window --focus east
 
-# meh - n : chunkc tiling::window --focus prev
-meh - e : chunkc tiling::window --focus prev
-meh - n : chunkc tiling::window --focus next
+# meh - e : chunkc tiling::window --focus prev
+# meh - n : chunkc tiling::window --focus next
+shift + ctrl - e : chunkc tiling::window --focus prev
+shift + ctrl - n : chunkc tiling::window --focus next
 
 # meh - m : chunkc tiling::window --focus west
 
@@ -121,7 +122,7 @@ meh - n : chunkc tiling::window --focus next
 # shift + alt - j : chunkc tiling::window --swap south
 # shift + alt - k : chunkc tiling::window --swap north
 # shift + alt - l : chunkc tiling::window --swap east
-meh - m : chunkc tiling::window --focus biggest
+meh - m : chunkc tiling::window --swap biggest
 
 
 # move window
@@ -228,11 +229,10 @@ hyper - space : chunkc tiling::window --toggle parent
 # alt - q : chunkc tiling::window --toggle fade
 
 # float / unfloat window and center on screen
-# alt - t : chunkc tiling::window --toggle float;\
-#           chunkc tiling::window --grid-layout 4:4:1:1:2:2
+hyper - g : chunkc tiling::window --toggle float
 
 # toggle sticky
-# hyper - s : chunkc tiling::window --toggle sticky
+meh - v : chunkc tiling::window --toggle sticky
 
 # toggle sticky, float and resize to picture-in-picture size
 # alt - p : chunkc tiling::window --toggle sticky;\
@@ -242,8 +242,10 @@ hyper - space : chunkc tiling::window --toggle parent
 # shift + alt - t : chunkc set window_float_next 1
 
 # change layout of desktop
-meh - a : chunkc tiling::desktop --layout bsp
-meh - r : chunkc tiling::desktop --layout monocle
+# $(chunkc tiling::query --desktop mode)
+# cmd - z : chunkc tiling::desktop --layout $(mode=$(chunkc tiling::query --desktop mode); [[ $mode == "bsp" ]] && echo monocle || echo bsp)
+# meh - a : chunkc tiling::desktop --layout bsp
+# meh - r : chunkc tiling::desktop --layout monocle
 # ctrl + alt - s : chunkc tiling::desktop --layout float
 
 # ctrl + alt - w : chunkc tiling::desktop --deserialize ~/.chunkwm_layouts/dev_1
