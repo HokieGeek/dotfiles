@@ -12,6 +12,17 @@
 #
 # launch a new terminal instance when in either 'default' or 'test' mode
 # default, test < cmd - return : open -na /Applications/Terminal.app
+shift + cmd - return : open -na /Applications/iTerm.app
+
+f13 : chunkc tiling::monitor -f 1;\
+      chunkc tiling::desktop --focus 1;\
+      id=$(chunkc tiling::query --desktop windows | awk -F, '$2 ~ /Google Chrome/ && $3 ~ /Demo/ { print $1 }');\
+      chunkc tiling::window --focus ${id};\
+meh - f13 : /usr/bin/env PATH=${PATH}:/usr/local/bin $HOME/work/se-scripts/andres/demo/ctl restart
+hyper - f13 : /usr/bin/env PATH=${PATH}:/usr/local/bin $HOME/work/se-scripts/andres/demo/ctl stop
+
+meh - f15 : open -a /Applications/Slack.app
+meh - f16 : open -a /Applications/Evernote.app
 
 # focus window
 # meh - e : chunkc tiling::window --focus prev
