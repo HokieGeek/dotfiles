@@ -98,9 +98,9 @@ chunkc set preselect_border_outline      0
 #
 
 chunkc set window_float_topmost          0
-chunkc set window_fade_inactive          0
-chunkc set window_fade_alpha             0.50
-chunkc set window_fade_duration          0.25
+chunkc set window_fade_inactive          1
+chunkc set window_fade_alpha             0.70
+chunkc set window_fade_duration          0.10
 chunkc set window_use_cgs_move           0
 
 #
@@ -129,7 +129,7 @@ chunkc set focused_border_skip_monocle   0
 # NOTE: specify plugins to load when chunkwm starts.
 #
 
-chunkc core::load border.so
+# chunkc core::load border.so
 chunkc core::load tiling.so
 # chunkc core::load ffm.so
 
