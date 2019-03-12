@@ -19,6 +19,13 @@ f13 : chunkc tiling::monitor -f 1;\
       skhd -k 'cmd - 1';sleep 0.5s;\
       id=$(chunkc tiling::query --desktop windows | awk -F, '$2 ~ /Google Chrome/ && $3 ~ /Demo/ { print $1 }');\
       chunkc tiling::window --focus ${id}
+# f13 : chunkc tiling::monitor -f 1;\
+#       for desk in $(chunkc tiling::query --desktops-for-monitor 1); do\
+#         chunkc tiling::desktop --focus ${desk};\
+#         skhd -k 'cmd - ${desk}';sleep 0.5s;\
+#         win=$(chunkc tiling::query --desktop windows | awk -F, '$2 ~ /Google Chrome/ && $3 ~ /Demo/ { print $1 }');\
+#         [[ ! -z "${win}" ]] && chunkc tiling::window --focus ${win};\
+#       done
 meh - f13 : /usr/bin/env PATH=${PATH}:/usr/local/bin $HOME/work/se-scripts/andres/demo/ctl restart
 hyper - f13 : /usr/bin/env PATH=${PATH}:/usr/local/bin $HOME/work/se-scripts/andres/demo/ctl stop
 
@@ -89,16 +96,21 @@ lctrl + cmd - 2  : chunkc tiling::monitor -f 2
 lctrl + cmd - 3  : chunkc tiling::monitor -f 3
 
 # increase region size
-meh - h : chunkc tiling::window --use-temporary-ratio 0.1 --adjust-window-edge west
+meh - h : chunkc tiling::window --use-temporary-ratio 0.05 --adjust-window-edge west
 # shift + alt - s : chunkc tiling::window --use-temporary-ratio 0.1 --adjust-window-edge south
 # shift + alt - w : chunkc tiling::window --use-temporary-ratio 0.1 --adjust-window-edge north
-meh - i : chunkc tiling::window --use-temporary-ratio 0.1 --adjust-window-edge east
+meh - i : chunkc tiling::window --use-temporary-ratio 0.05 --adjust-window-edge east
 
 # decrease region size
-hyper - h : chunkc tiling::window --use-temporary-ratio -0.1 --adjust-window-edge west
+hyper - h : chunkc tiling::window --use-temporary-ratio -0.05 --adjust-window-edge west
 # shift + cmd - s : chunkc tiling::window --use-temporary-ratio -0.1 --adjust-window-edge south
 # shift + cmd - w : chunkc tiling::window --use-temporary-ratio -0.1 --adjust-window-edge north
-hyper - i : chunkc tiling::window --use-temporary-ratio -0.1 --adjust-window-edge east
+hyper - i : chunkc tiling::window --use-temporary-ratio -0.05 --adjust-window-edge east
+
+meh - z : chunkc tiling::window --use-temporary-ratio 0.05 --adjust-window-edge west; chunkc tiling::window --use-temporary-ratio -0.05 --adjust-window-edge east
+# meh - x : chunkc tiling::window --use-temporary-ratio 0.05 --adjust-window-edge south; chunkc tiling::window --use-temporary-ratio -0.05 --adjust-window-edge north
+# meh - c : chunkc tiling::window --use-temporary-ratio 0.05 --adjust-window-edge north; chunkc tiling::window --use-temporary-ratio -0.05 --adjust-window-edge south
+meh - x : chunkc tiling::window --use-temporary-ratio 0.05 --adjust-window-edge east; chunkc tiling::window --use-temporary-ratio -0.05 --adjust-window-edge west
 
 # rotate tree
 lctrl + cmd + lalt - space : chunkc tiling::desktop --rotate 90
