@@ -12,7 +12,7 @@
 #
 # launch a new terminal instance when in either 'default' or 'test' mode
 # default, test < cmd - return : open -na /Applications/Terminal.app
-shift + cmd - return : open -na /Applications/iTerm.app
+shift + cmd - return : open -na /Applications/Alacritty.app
 
 f13 : for desk in $(chunkc tiling::query --desktops-for-monitor 1); do\
         chunkc tiling::desktop --focus ${desk};\
@@ -59,18 +59,18 @@ shift + cmd - i : chunkc tiling::window --warp east
 # cmd + alt - w : chunkc tiling::desktop --annihilate
 
 # fast focus desktop
-# meh - tab : chunkc tiling::desktop --focus $(chunkc get _last_active_desktop)
-# cmd + alt - n : chunkc tiling::desktop --focus prev
-# cmd + alt - e : chunkc tiling::desktop --focus next
-# lctrl + cmd + lalt - 1 : chunkc tiling::desktop --focus 1
-# lctrl + cmd + lalt - 2 : chunkc tiling::desktop --focus 2
-# lctrl + cmd + lalt - 3 : chunkc tiling::desktop --focus 3
-# lctrl + cmd + lalt - 4 : chunkc tiling::desktop --focus 4
-# lctrl + cmd + lalt - 5 : chunkc tiling::desktop --focus 5
-# lctrl + cmd + lalt - 6 : chunkc tiling::desktop --focus 6
-# lctrl + cmd + lalt - 7 : chunkc tiling::desktop --focus 7
-# lctrl + cmd + lalt - 8 : chunkc tiling::desktop --focus 8
-# lctrl + cmd + lalt - 9 : chunkc tiling::desktop --focus 9
+meh - tab : chunkc tiling::desktop --focus $(chunkc get _last_active_desktop)
+shift + ctrl + alt - n : chunkc tiling::desktop --focus next
+shift + ctrl + alt - e : chunkc tiling::desktop --focus prev
+cmd - 1 : chunkc tiling::desktop --focus 1
+cmd - 2 : chunkc tiling::desktop --focus 2
+cmd - 3 : chunkc tiling::desktop --focus 3
+cmd - 4 : chunkc tiling::desktop --focus 4
+cmd - 5 : chunkc tiling::desktop --focus 5
+cmd - 6 : chunkc tiling::desktop --focus 6
+cmd - 7 : chunkc tiling::desktop --focus 7
+cmd - 8 : chunkc tiling::desktop --focus 8
+cmd - 9 : chunkc tiling::desktop --focus 9
 
 # send window to desktop
 shift + cmd - 1 : chunkc tiling::window --send-to-desktop 1
@@ -110,7 +110,7 @@ hyper - space : chunkc tiling::window --toggle parent
 # alt - e : chunkc tiling::window --toggle split
 
 # toggle window fade
-# alt - q : chunkc tiling::window --toggle fade
+alt - q : chunkc tiling::window --toggle fade
 
 # float / unfloat window and center on screen
 hyper - g : chunkc tiling::window --toggle float
