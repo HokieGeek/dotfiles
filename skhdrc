@@ -12,7 +12,8 @@
 #
 # launch a new terminal instance when in either 'default' or 'test' mode
 # default, test < cmd - return : open -na /Applications/Terminal.app
-shift + cmd - return : open -na /Applications/Alacritty.app
+shift + cmd - return : open -na /Applications/iTerm.app
+# shift + cmd - return : open -na /Applications/Alacritty.app
 
 f13 : for desk in $(chunkc tiling::query --desktops-for-monitor 1); do\
         chunkc tiling::desktop --focus ${desk};\
@@ -23,7 +24,20 @@ meh - f13 : /usr/bin/env PATH=${PATH}:/usr/local/bin $HOME/work/se-scripts/andre
 hyper - f13 : /usr/bin/env PATH=${PATH}:/usr/local/bin $HOME/work/se-scripts/andres/demo/ctl stop
 
 meh - f15 : open -a /Applications/Slack.app
-meh - f16 : open -a /Applications/Evernote.app
+meh - f16 : chrome-cli activate -t $(chrome-cli list tabs | sed '/Sonatype Mail$/!d;s/\[[^:]*:\([^]]*\)].*/\1/');\
+            for desk in $(chunkc tiling::query --desktops-for-monitor 2); do\
+                chunkc tiling::desktop --focus ${desk};\
+                win=$(chunkc tiling::query --desktop windows | awk -F, '$2 ~ /Google Chrome/ && $3 ~ /Sonatype Mail/ { print $1 }');\
+                [[ ! -z "${win}" ]] && { chunkc tiling::window --focus ${win}; break; }\
+            done
+meh - f17 : chrome-cli activate -t $(chrome-cli list tabs | sed '/Sonatype - Calendar$/!d;s/\[[^:]*:\([^]]*\)].*/\1/');\
+            for desk in $(chunkc tiling::query --desktops-for-monitor 2); do\
+                chunkc tiling::desktop --focus ${desk};\
+                win=$(chunkc tiling::query --desktop windows | awk -F, '$2 ~ /Google Chrome/ && $3 ~ /Sonatype - Calendar/ { print $1 }');\
+                [[ ! -z "${win}" ]] && { chunkc tiling::window --focus ${win}; break; }\
+            done
+meh - f18 : open -a /Applications/OnSIP.app
+meh - f19 : open -a /Applications/Evernote.app
 
 # focus window
 # meh - e : chunkc tiling::window --focus prev
