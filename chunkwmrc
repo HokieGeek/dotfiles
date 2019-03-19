@@ -67,10 +67,11 @@ chunkc set window_use_cgs_move           0
 chunkc core::load tiling.so
 
 # tiling rules
-# chunkc tiling::rule --owner \"System Preferences\" --subrole AXStandardWindow --state tile &
+chunkc tiling::rule --owner \"System Preferences\" --subrole AXStandardWindow --state tile &
 chunkc tiling::rule --owner \"Key Codes\" --state tile &
 chunkc tiling::rule --owner Finder --name Copy --state float &
 chunkc tiling::rule --owner \"Google Chrome\" --name \"Meet -\" --monitor 1 --state native-fullscreen --alpha 1 --follow-desktop &
 chunkc tiling::rule --owner \"Cisco WebEx Meeting Center\" --name \"Cisco Webex Meetings\" --monitor 1 --alpha 1 --follow-desktop &
 chunkc tiling::rule --owner Slack --name \"Slack call\" --monitor 1 --alpha 1 --follow-desktop  &
 chunkc tiling::rule --owner zoom.us --name \"Zoom Meeting\" --monitor 1 --alpha 1 --follow-desktop  &
+chunkc tiling::rule --owner join.me --monitor 1 --alpha 1 --follow-desktop  &
