@@ -2,3 +2,4 @@
 .*.un~
 tags
 .DS_Store
+.terraform
