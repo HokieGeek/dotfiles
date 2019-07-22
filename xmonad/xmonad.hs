@@ -57,7 +57,7 @@ import qualified Data.Map as M
 
 -- Local Functions {{{
 modm                = mod4Mask
-colorForeground     = "#5f0087"
+colorForeground     = "#af5f00"
 colorBackground     = "#1b1d1e"
 colorWhite          = "#cdcdcd"
 termFont            = "-*-terminus-*-*-*-*-10-*-*-*-*-*-*-*"
