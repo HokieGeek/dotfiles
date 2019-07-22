@@ -1,5 +1,5 @@
 [[ $- != *i* ]] && return
-[[ -z "$TMUX" ]] && { `which tmux >/dev/null 2>&1` && exec tmux }
+[[ -z "$TMUX" && -z "$SSH_CLIENT" ]] && { `which tmux >/dev/null 2>&1` && exec tmux }
 
 # Completion {{{
 autoload -Uz compinit && compinit # Turn on tab completion
@@ -124,6 +124,7 @@ which get-browser >/dev/null 2>&1 && export BROWSER=$(get-browser)
 # Source the things {{{
 . $HOME/.aliases
 . $HOME/.shell-plugins/prompt.zsh
+
 [ -f $HOME/.zshrc_alt ] && . $HOME/.zshrc_alt
 # }}}
 
