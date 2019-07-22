@@ -38,9 +38,9 @@ if g:have_plugins
     autocmd FileType go nmap <leader>t <Plug>(go-test)
     autocmd FileType go nmap <leader>c <Plug>(go-coverage-toggle)
     autocmd FileType go nmap <leader>a <Plug>(go-alternate-edit)
-    autocmd FileType go nmap <leader>r <Plug>(go-rename)
+    autocmd FileType go nmap <leader>m <Plug>(go-rename)
+    autocmd FileType go nmap <leader>r <Plug>(go-run)
     autocmd FileType go nmap <leader>i <Plug>(go-info)
-    " autocmd BufWritePost *.go call go#cmd#Test(!g:go_jump_to_error, 0)
     let g:go_metalinter_autosave = 1
 
     let g:undotree_WindowLayout = 2
