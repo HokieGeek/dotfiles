@@ -41,7 +41,13 @@ if g:have_plugins
     autocmd FileType go nmap <leader>m <Plug>(go-rename)
     autocmd FileType go nmap <leader>r <Plug>(go-run)
     autocmd FileType go nmap <leader>i <Plug>(go-info)
-    let g:go_metalinter_autosave = 1
+    " let g:go_metalinter_autosave = 1
+    " let g:go_metalinter_autosave_enabled = ['golint']
+    " let g:go_metalinter_enabled = ['golint']
+    " let g:go_metalinter_autosave_enabled = ['vet', 'golint', 'errcheck']
+    " let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+    " let g:go_list_autoclose = 0
+    " let g:go_list_type = "quickfix"
 
     let g:undotree_WindowLayout = 2
 endif

@@ -23,6 +23,7 @@
     df = diff --ext-diff --patience --submodule
     dt = difftool -y
     mt = mergetool -y
+    co = checkout
 [core]
     eol = lf
     excludesfile = ~/.gitignore
