@@ -24,18 +24,18 @@ meh - f13 : /usr/bin/env PATH=${PATH}:/usr/local/bin $HOME/work/se-scripts/andre
 hyper - f13 : /usr/bin/env PATH=${PATH}:/usr/local/bin $HOME/work/se-scripts/andres/demo/ctl stop
 
 meh - f15 : open -a /Applications/Slack.app
-meh - f16 : chrome-cli activate -t $(chrome-cli list tabs | sed '/Sonatype Mail$/!d;s/\[[^:]*:\([^]]*\)].*/\1/');\
-            for desk in $(chunkc tiling::query --desktops-for-monitor 2); do\
-                chunkc tiling::desktop --focus ${desk};\
-                win=$(chunkc tiling::query --desktop windows | awk -F, '$2 ~ /Google Chrome/ && $3 ~ /Sonatype Mail/ { print $1 }');\
-                [[ ! -z "${win}" ]] && { chunkc tiling::window --focus ${win}; break; }\
-            done
-meh - f17 : chrome-cli activate -t $(chrome-cli list tabs | sed '/Sonatype - Calendar$/!d;s/\[[^:]*:\([^]]*\)].*/\1/');\
-            for desk in $(chunkc tiling::query --desktops-for-monitor 2); do\
-                chunkc tiling::desktop --focus ${desk};\
-                win=$(chunkc tiling::query --desktop windows | awk -F, '$2 ~ /Google Chrome/ && $3 ~ /Sonatype - Calendar/ { print $1 }');\
-                [[ ! -z "${win}" ]] && { chunkc tiling::window --focus ${win}; break; }\
-            done
+# meh - f16 : chrome-cli activate -t $(chrome-cli list tabs | sed '/Sonatype Mail$/!d;s/\[[^:]*:\([^]]*\)].*/\1/');\
+#             for desk in $(chunkc tiling::query --desktops-for-monitor 2); do\
+#                 chunkc tiling::desktop --focus ${desk};\
+#                 win=$(chunkc tiling::query --desktop windows | awk -F, '$2 ~ /Google Chrome/ && $3 ~ /Sonatype Mail/ { print $1 }');\
+#                 [[ ! -z "${win}" ]] && { chunkc tiling::window --focus ${win}; break; }\
+#             done
+# meh - f17 : chrome-cli activate -t $(chrome-cli list tabs | sed '/Sonatype - Calendar$/!d;s/\[[^:]*:\([^]]*\)].*/\1/');\
+#             for desk in $(chunkc tiling::query --desktops-for-monitor 2); do\
+#                 chunkc tiling::desktop --focus ${desk};\
+#                 win=$(chunkc tiling::query --desktop windows | awk -F, '$2 ~ /Google Chrome/ && $3 ~ /Sonatype - Calendar/ { print $1 }');\
+#                 [[ ! -z "${win}" ]] && { chunkc tiling::window --focus ${win}; break; }\
+#             done
 meh - f18 : open -a /Applications/OnSIP.app
 meh - f19 : open -a /Applications/Evernote.app
 
@@ -87,15 +87,15 @@ cmd - 8 : chunkc tiling::desktop --focus 8
 cmd - 9 : chunkc tiling::desktop --focus 9
 
 # send window to desktop
-shift + cmd - 1 : chunkc tiling::window --send-to-desktop 1
-shift + cmd - 2 : chunkc tiling::window --send-to-desktop 2
-shift + cmd - 3 : chunkc tiling::window --send-to-desktop 3
-shift + cmd - 4 : chunkc tiling::window --send-to-desktop 4
-shift + cmd - 5 : chunkc tiling::window --send-to-desktop 5
-shift + cmd - 6 : chunkc tiling::window --send-to-desktop 6
-shift + cmd - 7 : chunkc tiling::window --send-to-desktop 7
-shift + cmd - 8 : chunkc tiling::window --send-to-desktop 8
-shift + cmd - 9 : chunkc tiling::window --send-to-desktop 9
+# shift + cmd - 1 : chunkc tiling::window --send-to-desktop 1
+# shift + cmd - 2 : chunkc tiling::window --send-to-desktop 2
+# shift + cmd - 3 : chunkc tiling::window --send-to-desktop 3
+# shift + cmd - 4 : chunkc tiling::window --send-to-desktop 4
+# shift + cmd - 5 : chunkc tiling::window --send-to-desktop 5
+# shift + cmd - 6 : chunkc tiling::window --send-to-desktop 6
+# shift + cmd - 7 : chunkc tiling::window --send-to-desktop 7
+# shift + cmd - 8 : chunkc tiling::window --send-to-desktop 8
+# shift + cmd - 9 : chunkc tiling::window --send-to-desktop 9
 
 # focus monitor
 lctrl + cmd - 1  : chunkc tiling::monitor -f 1
